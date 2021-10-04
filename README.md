@@ -109,5 +109,5 @@ const SpanWithPopup = styled("span", {
 ```
 
 [1]: https://mui.com/system/styled/
-[2]: https://mui.com/system/typography/
+[2]: https://mui.com/components/typography/
 [3]: https://mui.com/getting-started/usage/
