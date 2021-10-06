@@ -18,10 +18,12 @@ const heading = "Users List";
 or
 
 ```jsx
-<Box>
-  <Typography component="span">Users List</Typography>
-  <Button>Add row</Button>
-</Box>
+const heading = (
+  <Box>
+    <Typography component="span">Users List</Typography>
+    <Button>Add row</Button>
+  </Box>
+);
 ```
 
 headers:
@@ -70,7 +72,7 @@ const headers = ["FIRST NAME", "LAST NAME", "CITY", "PHONE"];
 
 const rows = [
   { id: 1, items: ["John", "Doe", "Bangalore", <Phone>+911234567890</Phone>] },
-  { id: 1, items: ["Jane", "Doe", "Bangalore", <Phone>+11234567890</Phone>] },
+  { id: 2, items: ["Jane", "Doe", "New York", <Phone>+11234567890</Phone>] },
 ];
 
 const pagination = (
