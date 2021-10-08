@@ -1,6 +1,6 @@
 import { Pagination } from "@mui/material";
 
-const CustomPagination = ({ count, activePage, onChange }) => (
+const CustomPagination = ({ sx, variant, shape, ...otherProps }) => (
   <Pagination
     sx={{
       "& ul": {
@@ -16,11 +16,9 @@ const CustomPagination = ({ count, activePage, onChange }) => (
         },
       },
     }}
-    count={count}
     variant="outlined"
     shape="rounded"
-    page={activePage}
-    onChange={onChange}
+    {...otherProps}
   />
 );
 

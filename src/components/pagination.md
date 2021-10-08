@@ -3,7 +3,7 @@
 ## props
 
 - count: total count of pages (integer)
-- activePage: currently active page (integer)
+- page: currently active page (integer)
 - onChange: page change event handler
 
 ### prop examples
@@ -14,10 +14,10 @@ count:
 const count = pages.length;
 ```
 
-activePage:
+page:
 
 ```js
-const activePage = activePageState;
+const page = pageState;
 ```
 
 onChange:
@@ -36,7 +36,7 @@ export default function PaginationControlled() {
   };
 
   return (
-    <CustomPagination count={10} activePage={page} onChange={handleChange} />
+    <CustomPagination count={10} page={page} onChange={handleChange} />
   );
 }
 ```
