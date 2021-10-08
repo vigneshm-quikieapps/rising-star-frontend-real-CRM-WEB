@@ -17,7 +17,7 @@ const rows = Array(10)
       "Zippy Totz Pre-school Gymnastics",
       "Glasgow",
       "G46 7TL",
-      <Status status="active" title="Active" />,
+      <Status status="green" title="Active" />,
       <Actions />,
     ],
   }));

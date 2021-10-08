@@ -26,7 +26,8 @@ function App() {
       {/* <CheckBox /> */}
       {/* <InputFieldOne /> */}
       {/* <InputFieldTwo /> */}
-      <Popup />
+      {/* <Popup /> */}
+      <Classes />
     </ThemeProvider>
   );
 }

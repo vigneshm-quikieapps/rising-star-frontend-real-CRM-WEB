@@ -11,7 +11,7 @@ const StatusBadge = styled(Typography, {
   backgroundColor: `${theme.palette[status].main}`,
 }));
 
-const colors = { active: "success", inactive: "error", draft: "warning" };
+const colors = { green: "success", red: "error", yellow: "warning" };
 
 const Status = ({ status, title }) => {
   return (

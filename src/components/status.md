@@ -2,13 +2,13 @@
 
 ## props
 
-- status: one of `active`, `inactive`, `draft` (active for success(green), inactive for error(red), draft for warning(yellow))
+- status: one of `green`, `red`, `yellow`
 - title: the title beside the badge
 
 ## Example
 
 ```jsx
-      <Status status="active" title="Active" />
-      <Status status="inactive" title="In-Active" />
-      <Status status="draft" title="In draft" />
+      <Status status="green" title="Active" />
+      <Status status="red" title="In-Active" />
+      <Status status="yellow" title="In draft" />
 ```
