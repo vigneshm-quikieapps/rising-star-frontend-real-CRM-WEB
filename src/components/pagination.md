@@ -36,7 +36,12 @@ export default function PaginationControlled() {
   };
 
   return (
-    <CustomPagination count={10} page={page} onChange={handleChange} />
+    <CustomPagination
+      variant="outlined"
+      count={10}
+      page={page}
+      onChange={handleChange}
+    />
   );
 }
 ```

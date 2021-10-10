@@ -13,8 +13,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      {/* <Classes /> */}
-      <Box sx={{ textAlign: "center" }}>
+      <Classes />
+      {/* <Box sx={{ textAlign: "center" }}>
         <Notifications
           show={true}
           items={[
@@ -27,7 +27,7 @@ function App() {
           ]}
           sx={{ marginLeft: "300px" }}
         ></Notifications>
-      </Box>
+      </Box> */}
     </ThemeProvider>
   );
 }

@@ -22,7 +22,9 @@ const rows = Array(10)
     ],
   }));
 
-const pagination = <CustomPagination count={3} activePage={2} />;
+const pagination = (
+  <CustomPagination count={3} activePage={2} variant="outlined" />
+);
 
 const ClassList = ({ list = rows }) => (
   <CustomTable
