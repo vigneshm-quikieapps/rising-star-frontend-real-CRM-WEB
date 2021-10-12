@@ -1,15 +1,9 @@
-import {
-  Badge,
-  Box,
-  IconButton,
-  List,
-  ListItem,
-  Popover,
-  Typography,
-} from "@mui/material";
-import { NotificationsOutlined as NotificationsIcon } from "@mui/icons-material";
-import { styled } from "@mui/material/styles";
 import { useState } from "react";
+import { styled } from "@mui/material/styles";
+import { Badge, Box, List, ListItem, Popover, Typography } from "@mui/material";
+import { NotificationsOutlined as NotificationsIcon } from "@mui/icons-material";
+
+import IconButton from "./icon-button";
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
   marginTop: theme.spacing(3),
@@ -53,19 +47,28 @@ const Notifications = ({ items = [] }) => {
 
   return (
     <Box sx={{ display: "inline-block" }}>
-      <IconButton onClick={handleClick}>
-        <Badge
-          color="secondary"
-          variant="dot"
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          invisible={!hasItems}
-        >
+      <Badge
+        color="secondary"
+        variant="dot"
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        sx={{
+          "& .MuiBadge-dot": {
+            minWidth: "12px",
+            height: "12px",
+            mt: "2px",
+            mr: "2px",
+            borderRadius: "50%",
+          },
+        }}
+        invisible={!hasItems}
+      >
+        <IconButton onClick={handleClick}>
           <NotificationsIcon />
-        </Badge>
-      </IconButton>
+        </IconButton>
+      </Badge>
       {hasItems && (
         <StyledPopover
           anchorEl={anchorEl}

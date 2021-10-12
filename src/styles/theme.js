@@ -4,6 +4,7 @@ const theme = createTheme({
   palette: {
     primary: { main: "#fff" },
     secondary: { main: "#f0292d" },
+    ternary: { main: "#e9e7f1" },
     darkIndigo: { main: "#140a35" },
     success: { main: "#2acc7e" },
     warning: { main: "#eab900" },
