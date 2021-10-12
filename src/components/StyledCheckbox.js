@@ -10,7 +10,6 @@ const StyledCheckIcon = styled(CheckIcon)({
 });
 
 const CheckboxTheme = styled(Checkbox)(({ theme }) => {
-  console.log(theme);
   return {
     "&.Mui-checked": {
       backgroundImage: "linear-gradient(133deg, #ff1a6d, #ff6e2d 100%)",
