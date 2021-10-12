@@ -1,5 +1,6 @@
 // It's just for demonstration purposes
 // Do not use it in production
+import { Box } from "@mui/material";
 
 import { classListHeaders } from "../../helper/constants";
 import CustomTable from "../../components/table";
@@ -22,17 +23,23 @@ const rows = Array(10)
     ],
   }));
 
-const pagination = (
-  <CustomPagination count={3} activePage={2} variant="outlined" />
-);
+const pagination = <CustomPagination count={3} page={2} variant="outlined" />;
 
 const ClassList = ({ list = rows }) => (
-  <CustomTable
-    headers={classListHeaders}
-    rows={list}
-    heading={<Heading title="Class List" />}
-    pagination={pagination}
-  />
+  <Box
+    sx={{
+      justifyContent: "center",
+      maxWidth: 880,
+      margin: "auto",
+    }}
+  >
+    <CustomTable
+      headers={classListHeaders}
+      rows={list}
+      heading={<Heading title="Class List" />}
+      pagination={pagination}
+    />
+  </Box>
 );
 
 export default ClassList;
