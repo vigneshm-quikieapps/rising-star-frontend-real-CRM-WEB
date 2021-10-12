@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 
 const StatusBadge = styled(Typography, {
   shouldForwardProp: (prop) => prop !== "status",
-})(({ theme }) => ({ status }) => ({
+})(({ theme, status }) => ({
   display: "inline-block",
   borderRadius: "50%",
   width: 8,
