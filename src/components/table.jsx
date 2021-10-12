@@ -52,8 +52,8 @@ const CustomTable = ({ heading, headers, rows, pagination }) => {
           <TableBody>
             {rows.map((row, index) => (
               <StyledTableRow key={row.id || index}>
-                {row.items.map((item) => (
-                  <StyledTableCell>{item}</StyledTableCell>
+                {row.items.map((item, index) => (
+                  <StyledTableCell key={index}>{item}</StyledTableCell>
                 ))}
               </StyledTableRow>
             ))}

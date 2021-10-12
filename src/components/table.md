@@ -54,7 +54,7 @@ pagination:
 
 ```jsx
 const pagination = (
-  <Pagination count={5} activePage={2} onChange={pageChangeHandler} />
+  <Pagination count={5} page={2} onChange={pageChangeHandler} />
 );
 ```
 
@@ -76,7 +76,7 @@ const rows = [
 ];
 
 const pagination = (
-  <Pagination count={5} activePage={2} onChange={pageChangeHandler} />
+  <Pagination count={5} page={2} onChange={pageChangeHandler} />
 );
 
 const UsersTable = () => {
