@@ -1,20 +1,17 @@
-import { ThemeProvider } from "@mui/material/styles";
+import { BrowserRouter } from "react-router-dom";
 
 import MainLayout from "./hoc/main-layout";
 import "./styles/global.css";
-import theme from "./styles/theme";
 import Classes from "./containers/class-list";
-import Notifications from "./components/notifications";
-import { Box } from "@mui/system";
-import { CssBaseline } from "@mui/material";
+// import Notifications from "./components/notifications";
+// import { Box } from "@mui/system";
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-
-      <Classes />
-      {/* <Box sx={{ textAlign: "center" }}>
+    <BrowserRouter>
+      <MainLayout>
+        <Classes />
+        {/* <Box sx={{ textAlign: "center" }}>
         <Notifications
           show={true}
           items={[
@@ -28,7 +25,8 @@ function App() {
           sx={{ marginLeft: "300px" }}
         ></Notifications>
       </Box> */}
-    </ThemeProvider>
+      </MainLayout>
+    </BrowserRouter>
   );
 }
 
