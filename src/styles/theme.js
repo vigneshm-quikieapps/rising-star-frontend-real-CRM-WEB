@@ -26,6 +26,7 @@ const theme = createTheme({
     borderRadius: {
       primary: "12px",
       secondary: "20px",
+      ternary: "10px",
     },
   },
   typography: {
