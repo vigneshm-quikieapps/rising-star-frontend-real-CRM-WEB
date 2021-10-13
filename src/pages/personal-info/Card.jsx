@@ -1,7 +1,7 @@
 import "./styles.css";
 import { makeStyles } from "@mui/styles";
-import { Typography } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Output from "../../components/output";
 
 const useStyles = makeStyles({
   cardContainer: {
@@ -59,6 +59,17 @@ const useStyles = makeStyles({
     letterSpacing: "normal",
     color: "#000",
   },
+
+  body: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+
+  items: {
+    width: "25%",
+  },
 });
 
 const Card = () => {
@@ -75,7 +86,23 @@ const Card = () => {
       </div>
 
       <div className={styles.subHeader}>
-        <p className={styles.subHeading}>Student/Member</p>
+        <p classes={styles.subHeading}>Student/Member</p>
+      </div>
+
+      <div className={styles.body}>
+        <div className={styles.items}>
+          <Output title="Full Name" description="Ayman Mogal" variant="title" />
+        </div>
+        <div className={styles.items}>
+          <Output title="Gender*" description="Boy" variant="title" />
+        </div>
+        <div className={styles.items}>
+          <Output
+            title="Date of Birth*"
+            description="5th January, 1992"
+            variant="title"
+          />
+        </div>
       </div>
     </div>
   );

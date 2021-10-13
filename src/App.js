@@ -9,7 +9,7 @@ import StyledTexField from "./components/input-field";
 import StyledCheckbox from "./components/StyledCheckbox";
 import "./styles/global.css";
 import PersonalInfo from "./pages/personal-info";
-
+import Output from "./components/output";
 function App() {
   const [value, setValue] = useState(null);
   const [checked, setChecked] = useState(true);
