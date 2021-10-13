@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 const style1 = (theme) => {
   return {
     width: "100%",
+    borderRadius: "8px",
     "& .Mui-focused::after": {
       content: '""',
       position: "absolute",
@@ -11,7 +12,7 @@ const style1 = (theme) => {
       left: 0,
       right: 0,
       bottom: 0,
-      borderRadius: "8px",
+      borderRadius: theme.spacing(1),
       border: "1px solid transparent" /*2*/,
       "-webkit-mask":
         "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
@@ -23,11 +24,11 @@ const style1 = (theme) => {
     "& .MuiOutlinedInput-root": {
       outline: "none",
       "& fieldset": {
-        borderColor: "grey",
-        borderRadius: 8,
+        borderColor: "#e2e2e1",
+        borderRadius: theme.spacing(1),
       },
       "&:hover fieldset": {
-        borderColor: "grey",
+        borderColor: "#e2e2e1",
       },
       "&.Mui-focused fieldset": {
         border: "none",
@@ -38,7 +39,7 @@ const style1 = (theme) => {
       "&::after": {
         border: "none",
         content: '""',
-        background: "white",
+        background: "#fff",
       },
 
       padding: "0px 10px",
@@ -62,7 +63,7 @@ const style2 = (theme) => {
       left: 0,
       right: 0,
       bottom: 0,
-      borderRadius: "8px",
+      borderRadius: theme.spacing(1),
       border: "1px solid transparent" /*2*/,
       "-webkit-mask":
         "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
@@ -71,31 +72,31 @@ const style2 = (theme) => {
       background: theme.palette.gradients.diagonal,
     },
     "& .MuiFilledInput-root": {
-      borderRadius: 8,
+      borderRadius: theme.spacing(1),
 
-      backgroundColor: "white",
+      backgroundColor: theme.palette.text.disabled,
       transition: theme.transitions.create([
         "border-color",
         "background-color",
         "box-shadow",
       ]),
       "&:hover": {
-        backgroundColor: "transparent",
+        backgroundColor: theme.palette.text.disabled,
       },
       "&.Mui-focused": {
         border: "none",
         background: "white",
       },
     },
-    "& label.Mui-focused": {
-      "&::after": {
-        border: "none",
-        content: '""',
-        background: "white",
-      },
-      color: "#ff1a6d",
-      background: "inherit",
-    },
+    // "& label.Mui-focused": {
+    //   "&::after": {
+    //     border: "none",
+    //     content: '""',
+    //     background: "white",
+    //   },
+    //   color: "#ff1a6d",
+    //   background: "inherit",
+    // },
   };
 };
 

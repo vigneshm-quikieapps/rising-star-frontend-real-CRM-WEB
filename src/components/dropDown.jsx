@@ -39,6 +39,12 @@ const style1 = (theme) => {
       },
     },
 
+    "& label": {
+      padding: "0px 10px",
+      //   color: "#ff1a6d",
+      background: "white",
+      letterSpacing: "0.9px",
+    },
     "& label.Mui-focused": {
       "&::after": {
         border: "none",
@@ -89,8 +95,9 @@ const style2 = (theme) => {
       },
       "&:hover": {
         backgroundColor: "transparent",
+        // border: "none",
         "&::before": {
-          border: "none",
+          border: "none !important",
         },
       },
       "&.Mui-focused": {
@@ -118,7 +125,8 @@ const MenuProps = {
   PaperProps: {
     style: {
       borderRadius: 20,
-      height: "auto",
+      marginLeft: "-6px",
+      marginTop: "6px",
     },
   },
 };
