@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import { styled } from "@mui/material/styles";
 import CheckIcon from "@mui/icons-material/Check";
@@ -9,10 +8,10 @@ const StyledCheckIcon = styled(CheckIcon)({
   color: "#fff",
 });
 
-const CheckboxTheme = styled(Checkbox)(({ theme }) => {
+const StyledCheckbox = styled(Checkbox)(({ theme }) => {
   return {
     "&.Mui-checked": {
-      backgroundImage: "linear-gradient(133deg, #ff1a6d, #ff6e2d 100%)",
+      backgroundImage: theme.palette.gradients.diagonal,
       borderColor: "transparent !important",
     },
     "&.MuiCheckbox-root": {
@@ -26,8 +25,8 @@ const CheckboxTheme = styled(Checkbox)(({ theme }) => {
   };
 });
 
-const StyledCheckbox = ({ ...rest }) => {
-  return <CheckboxTheme checkedIcon={<StyledCheckIcon />} {...rest} />;
+StyledCheckbox.defaultProps = {
+  checkedIcon: <StyledCheckIcon />,
 };
 
 export default StyledCheckbox;
