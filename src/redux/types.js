@@ -1,0 +1,2 @@
+export const GET_CLASS_LIST_SAGA = 'GET_CLASS_LIST_SAGA';
+export const GET_CLASS_LIST = 'GET_CLASS_LIST';
