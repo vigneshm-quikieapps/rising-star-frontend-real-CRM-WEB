@@ -88,15 +88,15 @@ const style2 = (theme) => {
         background: "white",
       },
     },
-    // "& label.Mui-focused": {
-    //   "&::after": {
-    //     border: "none",
-    //     content: '""',
-    //     background: "white",
-    //   },
-    //   color: "#ff1a6d",
-    //   background: "inherit",
-    // },
+    "& label.Mui-focused": {
+      "&::after": {
+        border: "none",
+        content: '""',
+        background: "white",
+      },
+      // color: "#ff1a6d",
+      background: "inherit",
+    },
   };
 };
 
