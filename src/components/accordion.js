@@ -41,6 +41,9 @@ const AccordionSummary = styled((props) => (
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
   borderTop: '1px solid rgba(0, 0, 0, .125)',
+  fontFamily: theme.typography.fontFamily,
+  fontSize: '20px',
+  letterSpacing: '0.2px',
 }));
 
 const Label = styled((props) => (
@@ -48,9 +51,9 @@ const Label = styled((props) => (
 ))(({theme }) => ({
   color: theme.palette.text.primary,
   fontFamily: theme.typography.fontFamily,
-  fontWeight: theme.typography.fontWeight,
-  fontSize: theme.typography.fontSize,
-  letterSpacing: theme.typography.letterSpacing
+  fontWeight: 'bold',
+  fontSize: '20px',
+  letterSpacing: '0.2px',
 }));
 
 
@@ -68,7 +71,7 @@ export default function CustomizedAccordions() {
           <Label variant="h4" label="Collapsible" />
         </AccordionSummary>
         <AccordionDetails>
-          Lorem
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
         </AccordionDetails>
       </Accordion>
     </div>
