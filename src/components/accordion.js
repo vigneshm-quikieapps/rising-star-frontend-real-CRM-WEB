@@ -7,7 +7,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiTypography from '@mui/material/Typography';
 
 const Accordion = styled((props) => (
-  <MuiAccordion disableGutters elevation={0} {...props} />
+  <MuiAccordion elevation={0} {...props} />
 ))(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: `${theme.shape.borderRadius.secondary}`,
@@ -47,7 +47,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const Label = styled((props) => (
-  <MuiTypography {...props}>{props.label}</MuiTypography>
+  <MuiTypography {...props}>{props.text}</MuiTypography>
 ))(({theme }) => ({
   color: theme.palette.text.primary,
   fontFamily: theme.typography.fontFamily,
@@ -68,7 +68,15 @@ export default function CustomizedAccordions() {
     <div>
       <Accordion expanded={open === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Label variant="h4" label="Collapsible" />
+          <Label variant="h4" text="Collapsible #1" />
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={open === 'panel2'} onChange={handleChange('panel2')}>
+        <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
+          <Label variant="h4" text="Collapsible #2" />
         </AccordionSummary>
         <AccordionDetails>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
