@@ -86,7 +86,7 @@ const Card = () => {
       </div>
 
       <div className={styles.subHeader}>
-        <p classes={styles.subHeading}>Student/Member</p>
+        <p className={styles.subHeading}>Student/Member</p>
       </div>
 
       <div className={styles.body}>
