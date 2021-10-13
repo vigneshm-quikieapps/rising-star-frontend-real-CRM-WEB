@@ -2,7 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store/configureStore";
 
-import MainLayout from "./hoc/main-layout";
+// import MainLayout from "./hoc/main-layout";
 import "./styles/global.css";
 
 function App() {
@@ -17,6 +17,7 @@ function App() {
 
 export default App;
 
+<<<<<<< HEAD
 {
   /* <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
@@ -52,3 +53,10 @@ export default App;
       <br />
       <StyledCheckbox onChange={handleChange} checked={checked} /> */
 }
+=======
+
+// display: "flex",
+// flexDirection: "row",
+// justifyContent: "space-around",
+
+>>>>>>> shubham
