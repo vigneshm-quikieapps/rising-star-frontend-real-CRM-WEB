@@ -85,20 +85,21 @@ const style2 = (theme) => {
       borderRadius: 8,
 
       backgroundColor: "white",
+      "&:before": {
+        borderBottomColor: "#00000000 !important",
+        transition: "width 0s !important",
+      },
+      "&:after": {
+        borderBottomColor: "#00000000 !important",
+        transition: "width 0s !important",
+      },
       transition: theme.transitions.create([
         "border-color",
         "background-color",
         "box-shadow",
       ]),
-      "&::before": {
-        border: "none",
-      },
       "&:hover": {
         backgroundColor: "transparent",
-        // border: "none",
-        "&::before": {
-          border: "none !important",
-        },
       },
       "&.Mui-focused": {
         border: "none",
