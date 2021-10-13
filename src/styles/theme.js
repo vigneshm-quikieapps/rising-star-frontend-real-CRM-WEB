@@ -28,6 +28,9 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "'Manrope', 'sans-serif'",
+    fontWeight: 'bold',
+    fontSize: 20,
+    letterSpacing: 0.2,
   },
 });
 
