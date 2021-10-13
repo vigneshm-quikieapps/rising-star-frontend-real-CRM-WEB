@@ -1,87 +1,73 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+import {styled} from '@mui/material/styles';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiTypography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-const Accordion = styled((props) => (
-  <MuiAccordion elevation={0} {...props} />
-))(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
-  borderRadius: `${theme.shape.borderRadius.secondary}`,
-}));
+const style = (theme) => {
+  return {
+    border: `2px solid ${theme.palette.highlight.main}`,
+    borderRadius: `${theme.shape.borderRadius.primary}`,
+    "& .MuiAccordionSummary-root": {
+      "& .MuiTypography-root": {
+        fontFamily: `${theme.typography.fontFamily}`,
+        fontWeight: 'bold',
+        fontSize: '20px',
+      }
+    },
+    "& .MuiAccordionDetails-root": {
+      borderTop: `2px solid ${theme.palette.highlight.main}`
+    }
+  }
+}
 
-const AccordionSummary = styled((props) => (
-  <MuiAccordionSummary
-    expandIcon={<ArrowForwardIosSharpIcon 
-                  sx={{
-                    fontSize: '2rem', 
-                    color: '#000', 
-                    padding: '3px', 
-                    border: '2px solid #f2f1f6', 
-                    borderRadius: '12px'
-                  }} 
-                />}
-    {...props}
-  />
-))(({ theme }) => ({
-  borderRadius: `${theme.shape.borderRadius.secondary}`,
-  backgroundColor: '#fff',
-  flexDirection: 'row',
-  '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-    transform: 'rotate(90deg)',
-  },
-  '& .MuiAccordionSummary-content': {
-    marginLeft: theme.spacing(1),
-  },
-}));
+const Accordion = styled(MuiAccordion)(({theme}) => 
+  style(theme)
+);
 
-const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderTop: '1px solid rgba(0, 0, 0, .125)',
-  fontFamily: theme.typography.fontFamily,
-  fontSize: '20px',
-  letterSpacing: '0.2px',
-}));
+export default function CustomAccordion() {
 
-const Label = styled((props) => (
-  <MuiTypography {...props}>{props.text}</MuiTypography>
-))(({theme }) => ({
-  color: theme.palette.text.primary,
-  fontFamily: theme.typography.fontFamily,
-  fontWeight: 'bold',
-  fontSize: '20px',
-  letterSpacing: '0.2px',
-}));
+  const [expanded, setExpanded] = React.useState(false);
 
-
-export default function CustomizedAccordions() {
-  const [open, setOpen] = React.useState('panel1');
-
-  const handleChange = (panel) => (event, newExpanded) => {
-    setOpen(newExpanded ? panel : false);
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
   };
+
 
   return (
     <div>
-      <Accordion expanded={open === 'panel1'} onChange={handleChange('panel1')}>
-        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Label variant="h4" text="Collapsible #1" />
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
+      <Accordion elevation={0} expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+        <MuiAccordionSummary
+          expandIcon={<ExpandMoreIcon sx={{borderRadius: '12px', border: '2px solid #f2f1f6', width: '30px', height: '30px', color: '#000', padding: '5px'}}  />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <MuiTypography>Accordion 1</MuiTypography>
+        </MuiAccordionSummary>
+        <MuiAccordionDetails>
+          <MuiTypography>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+            malesuada lacus ex, sit amet blandit leo lobortis eget.
+          </MuiTypography>
+        </MuiAccordionDetails>
       </Accordion>
-      <Accordion expanded={open === 'panel2'} onChange={handleChange('panel2')}>
-        <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-          <Label variant="h4" text="Collapsible #2" />
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
+      <Accordion elevation={0} expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+        <MuiAccordionSummary
+          expandIcon={<ExpandMoreIcon sx={{borderRadius: '12px', border: '2px solid #f2f1f6', width: '30px', height: '30px', color: '#000', padding: '5px'}}  />}
+          aria-controls="panel2a-content"
+          id="panel2a-header"
+        >
+          <MuiTypography>Accordion 2</MuiTypography>
+        </MuiAccordionSummary>
+        <MuiAccordionDetails>
+          <MuiTypography>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+            malesuada lacus ex, sit amet blandit leo lobortis eget.
+          </MuiTypography>
+        </MuiAccordionDetails>
       </Accordion>
     </div>
-  );
+  )
 }
