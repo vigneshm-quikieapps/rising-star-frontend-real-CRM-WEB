@@ -23,6 +23,10 @@ const theme = createTheme({
       verticalLinear: "linear-gradient(171deg, #ff1a6d, #ff6e2d)",
       diagonal: "linear-gradient(133deg, #ff1a6d, #ff6e2d 100%);",
     },
+    checkbox: {
+      border: "#b3b3b3",
+      background: "#f4f4f4",
+    },
   },
   shape: {
     borderRadius: {

@@ -9,12 +9,46 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <MainLayout>
-          {/* dry run your component inside here */}
-        </MainLayout>
+        <MainLayout>{/* dry run your component inside here */}</MainLayout>
       </BrowserRouter>
     </Provider>
   );
 }
 
 export default App;
+
+{
+  /* <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DatePicker
+          label="Pay Month"
+          value={value}
+          onChange={(newValue) => {
+            setValue(newValue);
+          }}
+          renderInput={(params) => (
+            <StyledTexField variant="filled" {...params} />
+          )}
+        />
+      </LocalizationProvider>
+      <br />
+      <br />
+      <br />
+      <br />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DatePicker
+          label="Pay Month"
+          value={value}
+          onChange={(newValue) => {
+            setValue(newValue);
+          }}
+          renderInput={(params) => (
+            <StyledTexField variant="outlined" {...params} />
+          )}
+        />
+      </LocalizationProvider>
+      <br />
+      <br />
+      <br />
+      <br />
+      <StyledCheckbox onChange={handleChange} checked={checked} /> */
+}
