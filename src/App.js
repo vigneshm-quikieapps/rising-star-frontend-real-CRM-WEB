@@ -1,15 +1,14 @@
 import MainLayout from "./hoc/main-layout";
+import { useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./styles/theme";
 import DatePicker from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-
-import "./styles/global.css";
-import { useState } from "react";
 import StyledTexField from "./components/input-field";
-import StyledTexField2 from "./components/inputfield";
 import StyledCheckbox from "./components/StyledCheckbox";
+import "./styles/global.css";
+import PersonalInfo from "./pages/personal-info";
 
 function App() {
   const [value, setValue] = useState(null);
@@ -19,7 +18,16 @@ function App() {
   };
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      {/* dry run your component inside here */}
+      <PersonalInfo />
+    </ThemeProvider>
+  );
+}
+
+export default App;
+
+{
+  /* <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
           label="Pay Month"
           value={value}
@@ -51,13 +59,5 @@ function App() {
       <br />
       <br />
       <br />
-      <StyledCheckbox onChange={handleChange} checked={checked} />
-
-      {/* dry run your component inside here */}
-    </ThemeProvider>
-  );
+      <StyledCheckbox onChange={handleChange} checked={checked} /> */
 }
-
-export default App;
-
-// for date picker
