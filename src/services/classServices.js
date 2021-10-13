@@ -1,7 +1,7 @@
 import API from "../helper/config";
 
-export default fetchGetClass = () => {
-  return fetch(API.GetBussinessClassListAPI, {
+export default function fetchGetClass() {
+  return fetch(API.GetBusinessClassListAPI, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -12,4 +12,4 @@ export default fetchGetClass = () => {
     .catch((error) => {
       throw error;
     });
-};
+}
