@@ -48,6 +48,8 @@ const MainLayout = ({ children }) => {
       <Header
         open={navOpen}
         drawerWidth={drawerWidth}
+        userRole="Business Admin"
+        userName="Carole Chimako"
         handleDrawerOpen={toggleNav}
       />
       <SideNav

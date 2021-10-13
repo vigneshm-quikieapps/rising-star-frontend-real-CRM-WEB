@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { Badge, Box, List, ListItem, Popover, Typography } from "@mui/material";
-import { NotificationsOutlined as NotificationsIcon } from "@mui/icons-material";
 
 import IconButton from "./icon-button";
+import ImgIcon from "./img-icon";
+import notificationsIcon from "../assets/icons/icon-notificaton.png";
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
   marginTop: theme.spacing(3),
@@ -66,7 +67,7 @@ const Notifications = ({ items = [] }) => {
         invisible={!hasItems}
       >
         <IconButton onClick={handleClick}>
-          <NotificationsIcon />
+          <ImgIcon>{notificationsIcon}</ImgIcon>
         </IconButton>
       </Badge>
       {hasItems && (

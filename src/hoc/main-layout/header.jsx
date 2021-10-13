@@ -2,14 +2,19 @@ import { cloneElement } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Box,
-  IconButton,
   AppBar as MuiAppBar,
   Toolbar,
   useScrollTrigger,
+  Typography,
 } from "@mui/material";
-import { MenuOutlined as MenuIcon } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
+import IconButton from "../../components/icon-button";
+import ImgIcon from "../../components/img-icon";
 import Notifications from "../../components/notifications";
+import menuIcon from "../../assets/icons/icon-menu.png";
+import homeIcon from "../../assets/icons/icon-home.png";
+import userIcon from "../../assets/icons/icon-user.png";
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => ["open", "drawerWidth"].indexOf(prop) === -1,
@@ -44,7 +49,14 @@ function ElevationScroll(props) {
   });
 }
 
-const Header = ({ handleDrawerOpen, open, drawerWidth, ...otherProps }) => (
+const Header = ({
+  handleDrawerOpen,
+  open,
+  drawerWidth,
+  userRole,
+  userName,
+  ...otherProps
+}) => (
   <>
     <ElevationScroll {...otherProps}>
       <AppBar position="fixed" open={open} drawerWidth={drawerWidth}>
@@ -56,9 +68,12 @@ const Header = ({ handleDrawerOpen, open, drawerWidth, ...otherProps }) => (
             edge="start"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <ImgIcon>{menuIcon}</ImgIcon>
           </IconButton>
           <Box sx={{ flex: 1 }} />
+          <IconButton sx={{ mr: "20px" }} LinkComponent={Link} to="/">
+            <ImgIcon>{homeIcon}</ImgIcon>
+          </IconButton>
           <Notifications
             show={true}
             items={[
@@ -70,6 +85,28 @@ const Header = ({ handleDrawerOpen, open, drawerWidth, ...otherProps }) => (
               "notification 6",
             ]}
           />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              ml: "20px",
+              mr: "10px",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: 12,
+                color: (theme) => theme.palette.text.secondary,
+              }}
+            >
+              {userRole}
+            </Typography>
+            <Typography>{userName}</Typography>
+          </Box>
+          <IconButton>
+            <ImgIcon>{userIcon}</ImgIcon>
+          </IconButton>
         </Toolbar>
       </AppBar>
     </ElevationScroll>
