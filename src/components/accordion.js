@@ -10,7 +10,7 @@ const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
 ))(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
-  borderRadius: theme.shape.borderRadius.secondary,
+  borderRadius: `${theme.shape.borderRadius.secondary}`,
 }));
 
 const AccordionSummary = styled((props) => (
@@ -27,7 +27,7 @@ const AccordionSummary = styled((props) => (
     {...props}
   />
 ))(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius.secondary,
+  borderRadius: `${theme.shape.borderRadius.secondary}`,
   backgroundColor: '#fff',
   flexDirection: 'row',
   '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
