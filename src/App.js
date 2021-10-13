@@ -7,7 +7,8 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
 import "./styles/global.css";
 import { useState } from "react";
-import StyledTexField from "./components/date-input-field";
+import StyledTexField from "./components/input-field";
+import StyledTexField2 from "./components/inputfield";
 import StyledCheckbox from "./components/StyledCheckbox";
 
 function App() {
@@ -26,11 +27,30 @@ function App() {
             setValue(newValue);
           }}
           renderInput={(params) => (
+            <StyledTexField variant="filled" {...params} />
+          )}
+        />
+      </LocalizationProvider>
+      <br />
+      <br />
+      <br />
+      <br />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DatePicker
+          label="Pay Month"
+          value={value}
+          onChange={(newValue) => {
+            setValue(newValue);
+          }}
+          renderInput={(params) => (
             <StyledTexField variant="outlined" {...params} />
           )}
         />
       </LocalizationProvider>
-
+      <br />
+      <br />
+      <br />
+      <br />
       <StyledCheckbox onChange={handleChange} checked={checked} />
 
       {/* dry run your component inside here */}
