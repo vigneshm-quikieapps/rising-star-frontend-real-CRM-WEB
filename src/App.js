@@ -4,12 +4,19 @@ import store from "./redux/store/configureStore";
 
 import MainLayout from "./hoc/main-layout";
 import "./styles/global.css";
+import PersonalInfo from "./pages/personal-info";
+import Attendance from "./pages/attendance";
 
 function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <MainLayout>{/* dry run your component inside here */}</MainLayout>
+        <MainLayout>
+          {
+            /* dry run your component inside here */
+            <Attendance />
+          }
+        </MainLayout>
       </BrowserRouter>
     </Provider>
   );
