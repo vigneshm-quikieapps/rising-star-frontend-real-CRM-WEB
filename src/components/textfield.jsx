@@ -5,6 +5,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   // applied to label of all variants
   "& label": {
     color: theme.palette.text.secondary,
+    lineHeight: 1,
     "&.Mui-focused": {
       color: theme.palette.secondary.main,
     },
@@ -16,6 +17,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
   // applied to InputBase (FormControl) of all variants
   "& .MuiInputBase-root": {
+    height: "48px",
     borderRadius: "8px",
     border: "1px solid #b3b3b3",
     "&.Mui-focused": {
@@ -25,6 +27,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
       backgroundOrigin: "border-box",
       backgroundClip: "padding-box, border-box",
     },
+    "& .MuiOutlinedInput-input": { padding: "13px 16px" },
   },
   // applied to InputBase (FormControl) of filled variant
   "& .MuiFilledInput-root": {
