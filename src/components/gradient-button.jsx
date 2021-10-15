@@ -8,9 +8,9 @@ const GradientButton = styled(Button, {
   color: discard ? "#ff2c60" : "#fff",
   height: "48px",
   padding: "0px 25px",
-  fontSize: theme.shape.borderRadius.secondary,
+  fontSize: theme.shape.borderRadiuses.secondary,
   border: `1px solid ${theme.palette.highlight.main}`,
-  borderRadius: theme.shape.borderRadius.ternary,
+  borderRadius: theme.shape.borderRadiuses.ternary,
 }));
 
 export default GradientButton;

@@ -4,7 +4,7 @@ import MuiAccordion from "@mui/material/Accordion";
 const style = (theme) => {
   return {
     border: `1.7px solid ${theme.palette.highlight.main}`,
-    borderRadius: `${theme.shape.borderRadius.primary}`,
+    borderRadius: `${theme.shape.borderRadiuses.primary}`,
     "& .MuiAccordionSummary-root": {
       "& .MuiTypography-root": {
         fontFamily: `${theme.typography.fontFamily}`,
@@ -14,7 +14,7 @@ const style = (theme) => {
     },
     "& .MuiAccordionSummary-expandIconWrapper": {
       border: `1.7px solid ${theme.palette.highlight.main}`,
-      borderRadius: `${theme.shape.borderRadius.primary}`,
+      borderRadius: `${theme.shape.borderRadiuses.primary}`,
       color: `${theme.palette.text.primary}`,
       padding: "10px",
     },
