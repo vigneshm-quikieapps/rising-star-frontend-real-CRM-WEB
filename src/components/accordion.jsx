@@ -3,23 +3,26 @@ import MuiAccordion from "@mui/material/Accordion";
 
 const style = (theme) => {
   return {
-    border: `1.7px solid ${theme.palette.highlight.main}`,
-    borderRadius: `${theme.shape.borderRadiuses.primary}`,
+    "&.MuiAccordion-root": {
+      border: `1px solid ${theme.palette.ternary.main}`,
+      borderRadius: `${theme.shape.borderRadiuses.secondary}`,
+      boxShadow: "none",
+    },
     "& .MuiAccordionSummary-root": {
+      height: "68px",
       "& .MuiTypography-root": {
-        fontFamily: `${theme.typography.fontFamily}`,
         fontWeight: "bold",
         fontSize: "20px",
       },
     },
     "& .MuiAccordionSummary-expandIconWrapper": {
-      border: `1.7px solid ${theme.palette.highlight.main}`,
+      border: `1px solid ${theme.palette.ternary.main}`,
       borderRadius: `${theme.shape.borderRadiuses.primary}`,
       color: `${theme.palette.text.primary}`,
       padding: "10px",
     },
     "& .MuiAccordionDetails-root": {
-      borderTop: `2px solid ${theme.palette.highlight.main}`,
+      borderTop: `1px solid ${theme.palette.ternary.main}`,
     },
   };
 };
