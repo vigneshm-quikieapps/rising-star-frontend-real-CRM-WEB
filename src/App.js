@@ -9,7 +9,9 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <MainLayout>{/* dry run your component inside here */}</MainLayout>
+        <MainLayout>
+          {/* dry run your component inside here */}
+        </MainLayout>
       </BrowserRouter>
     </Provider>
   );
