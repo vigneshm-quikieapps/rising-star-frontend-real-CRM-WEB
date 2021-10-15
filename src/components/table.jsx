@@ -19,7 +19,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const ClassListContainer = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.highlight.main}`,
-  borderRadius: theme.shape.borderRadius.secondary,
+  borderRadius: theme.shape.borderRadiuses.secondary,
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
