@@ -14,7 +14,7 @@ function App() {
         <MainLayout>
           {
             /* dry run your component inside here */
-            <PersonalInfo />
+            <Enrollment />
           }
         </MainLayout>
       </BrowserRouter>
