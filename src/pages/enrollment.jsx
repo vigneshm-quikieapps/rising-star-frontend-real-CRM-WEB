@@ -4,7 +4,7 @@ import {
   HeadingText,
   SubHeadingText,
 } from "../components/common";
-import { Box, MenuItem, Pagination } from "@mui/material";
+import { Box, MenuItem } from "@mui/material";
 import TextField from "../components/textfield";
 import CustomTable from "../components/table";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -19,6 +19,8 @@ import {
   enrollmentRows,
 } from "../helper/constants";
 import { Outputs, TitleDescription } from "../containers/outputs";
+import Pagination from "./../components/pagination";
+import { useState } from "react";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -33,7 +35,14 @@ const UpIconButton = () => (
 );
 
 const Enrollment = () => {
-  const pagination = <Pagination count={5} page={2} onChange={() => {}} />;
+  const [page, setPage] = useState(1);
+  const pagination = (
+    <Pagination
+      count={3}
+      page={page}
+      onChange={(event, value) => setPage(value)}
+    />
+  );
   const heading = (
     <CardRow
       sx={{

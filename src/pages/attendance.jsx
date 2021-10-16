@@ -5,7 +5,7 @@ import {
   HeadingText,
   SubHeadingText,
 } from "../components/common";
-import { Box, MenuItem, Pagination } from "@mui/material";
+import { Box, MenuItem } from "@mui/material";
 import TextField from "../components/textfield";
 import CustomTable from "../components/table";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -21,6 +21,7 @@ import {
   attendanceObject1,
   attendanceObject2,
 } from "../helper/constants";
+import Pagination from "./../components/pagination";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -36,7 +37,14 @@ const UpIconButton = () => (
 
 const Attendance = () => {
   const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
-  const pagination = <Pagination count={5} page={2} onChange={() => {}} />;
+  const [page, setPage] = useState(1);
+  const pagination = (
+    <Pagination
+      count={3}
+      page={page}
+      onChange={(event, value) => setPage(value)}
+    />
+  );
   const heading = (
     <CardRow
       sx={{
