@@ -1,61 +1,51 @@
-import Output from "../components/output";
 import Accordion from "./../components/accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Card from "./../containers/card";
+import {
+  AccordionContainer,
+  Card,
+  CardRow,
+  HeadingText,
+  SubHeadingText,
+} from "../components/common";
 import { Typography, Box } from "@mui/material";
+import moreIcon from "../assets/icons/icon-more.png";
+import IconButton from "../components/icon-button";
+import ImgIcon from "../components/img-icon";
+import { objectToArray } from "../utils";
+import {
+  personalInfoObject1,
+  personalInfoObject2,
+  personalInfoObject3,
+  personalInfoObject4,
+} from "../helper/constants";
+import { Outputs } from "../containers/outputs";
+
+const MoreIconButton = () => (
+  <IconButton>
+    <ImgIcon alt="more">{moreIcon}</ImgIcon>
+  </IconButton>
+);
 
 const PersonalInfo = () => {
+  const arr1 = objectToArray(personalInfoObject1);
+  const arr2 = objectToArray(personalInfoObject2);
+  const arr3 = objectToArray(personalInfoObject3);
+  const arr4 = objectToArray(personalInfoObject4);
   return (
     <Box>
-      <Card heading={"Ayman Mogal"} subHeading={"Student/Member"}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Box
-            sx={{
-              width: "25%",
-            }}
-          >
-            <Output
-              title="Full Name"
-              description="Ayman Mogal"
-              variant="title"
-            />
-          </Box>
-          <Box
-            sx={{
-              width: "25%",
-            }}
-          >
-            <Output title="Gender*" description="Boy" variant="title" />
-          </Box>
-          <Box
-            sx={{
-              width: "25%",
-            }}
-          >
-            <Output
-              title="Date of Birth*"
-              description="5th January, 1992"
-              variant="title"
-            />
-          </Box>
-        </Box>
+      <Card>
+        <CardRow>
+          <HeadingText>Ayman Mogal</HeadingText>
+          <MoreIconButton />
+        </CardRow>
+        <SubHeadingText>Student/Member</SubHeadingText>
+        <CardRow sx={{ justifyContent: "flex-start" }}>
+          <Outputs arr={arr1} />
+        </CardRow>
       </Card>
-      <Box
-        sx={{
-          width: "880px",
-          padding: "10px 0px",
-          margin: "0",
-        }}
-      >
+      <AccordionContainer>
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -65,70 +55,14 @@ const PersonalInfo = () => {
             <Typography>Parent / Carer Details</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "flex-start",
-              }}
-            >
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Parent User ID*"
-                  description="Driving Licence"
-                  variant="title"
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Full Name*"
-                  description="Nizam Mogal"
-                  variant="title"
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Email"
-                  description="ni@gmail.com"
-                  variant="title"
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Contact Number"
-                  description="0757576757"
-                  variant="title"
-                />
-              </Box>
-            </Box>
+            <CardRow sx={{ justifyContent: "flex-start" }}>
+              <Outputs arr={arr2} />
+            </CardRow>
           </AccordionDetails>
         </Accordion>
-      </Box>
+      </AccordionContainer>
 
-      <Box
-        sx={{
-          width: "880px",
-          padding: "10px 0px",
-          margin: "0",
-        }}
-      >
+      <AccordionContainer>
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -138,59 +72,14 @@ const PersonalInfo = () => {
             <Typography> Emergency Contact (Primary)</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "flex-start",
-              }}
-            >
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Name"
-                  description="Marama Petera"
-                  variant="title"
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Relationship"
-                  description="Uncle"
-                  variant="title"
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Contact Number*"
-                  description="0757576757"
-                  variant="title"
-                />
-              </Box>
-            </Box>
+            <CardRow sx={{ justifyContent: "flex-start" }}>
+              <Outputs arr={arr3} />
+            </CardRow>
           </AccordionDetails>
         </Accordion>
-      </Box>
+      </AccordionContainer>
 
-      <Box
-        sx={{
-          width: "880px",
-          padding: "10px 0px",
-          margin: "0",
-        }}
-      >
+      <AccordionContainer>
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -200,51 +89,12 @@ const PersonalInfo = () => {
             <Typography> Emergency Contact (Secondary)</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "flex-start",
-              }}
-            >
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Name"
-                  description="Marama Petera"
-                  variant="title"
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Relationship"
-                  description="Friend"
-                  variant="title"
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: "25%",
-                }}
-              >
-                <Output
-                  title="Contact Number*"
-                  description="0757576757"
-                  variant="title"
-                />
-              </Box>
-            </Box>
+            <CardRow sx={{ justifyContent: "flex-start" }}>
+              <Outputs arr={arr4} />
+            </CardRow>
           </AccordionDetails>
         </Accordion>
-      </Box>
+      </AccordionContainer>
     </Box>
   );
 };

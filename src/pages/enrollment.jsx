@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Card,
   CardRow,
@@ -9,18 +8,17 @@ import { Box, MenuItem, Pagination } from "@mui/material";
 import TextField from "../components/textfield";
 import CustomTable from "../components/table";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import DatePicker from "./../components/date-picker";
 import ImgIcon from "../components/img-icon";
 import IconButton from "../components/icon-button";
 import moreIcon from "../assets/icons/icon-more.png";
 import { objectToArray } from "../utils";
-import { Outputs, TitleDescription } from "../containers/outputs";
 import {
-  attendanceRows,
-  attendanceHeaders,
   attendanceObject1,
-  attendanceObject2,
+  enrollmentHeaders,
+  enrollmentObject2,
+  enrollmentRows,
 } from "../helper/constants";
+import { Outputs, TitleDescription } from "../containers/outputs";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -34,8 +32,7 @@ const UpIconButton = () => (
   </IconButton>
 );
 
-const Attendance = () => {
-  const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
+const Enrollment = () => {
   const pagination = <Pagination count={5} page={2} onChange={() => {}} />;
   const heading = (
     <CardRow
@@ -52,14 +49,13 @@ const Attendance = () => {
   );
 
   const arr1 = objectToArray(attendanceObject1);
-  const arr2 = objectToArray(attendanceObject2);
+  const arr2 = objectToArray(enrollmentObject2);
 
   return (
     <Box>
       <Card>
         <CardRow>
           <HeadingText>Pre-school gymnastics (Age: 1-3)</HeadingText>
-          <MoreIconButton />
         </CardRow>
 
         <SubHeadingText>Zippy Totz Pre-school Gymnastics</SubHeadingText>
@@ -69,8 +65,8 @@ const Attendance = () => {
         </CardRow>
       </Card>
 
-      <Card sx={{ height: "194px" }}>
-        <CardRow>
+      <Card sx={{ height: "249px" }}>
+        <CardRow sx={{ justifyContent: "flex-start" }}>
           <TextField
             select
             labelId="demo-simple-select-label"
@@ -79,7 +75,7 @@ const Attendance = () => {
             label="Term"
             onChange={() => {}}
             variant="filled"
-            sx={{ width: "272px" }}
+            sx={{ width: "272px", marginRight: "15px" }}
           >
             <MenuItem value={10}>2022 Summer</MenuItem>
             <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
@@ -99,19 +95,11 @@ const Attendance = () => {
             <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
             <MenuItem value={30}>Thirty</MenuItem>
           </TextField>
-
-          <DatePicker
-            label="Date"
-            date={date}
-            onChange={(newDate) => setDate(newDate)}
-            sx={{ width: "272px" }}
-          />
         </CardRow>
 
         <CardRow
           sx={{
             marginTop: "15px",
-            flexWrap: "wrap",
             justifyContent: "flex-start",
           }}
         >
@@ -131,12 +119,12 @@ const Attendance = () => {
       </CardRow>
       <CustomTable
         heading={heading}
-        headers={attendanceHeaders}
-        rows={attendanceRows}
+        headers={enrollmentHeaders}
+        rows={enrollmentRows}
         pagination={pagination}
       />
     </Box>
   );
 };
 
-export default Attendance;
+export default Enrollment;
