@@ -1,9 +1,9 @@
-import {
-  HomeOutlined as DashboardIcon,
-  Computer as ClassIcon,
-  PeopleAltOutlined as MembersIcon,
-  SettingsOutlined as SetupIcon,
-} from "@mui/icons-material";
+import ImgIcon from "../components/img-icon";
+
+import dashboardIcon from "../assets/icons/icon-dashboard-dark.png";
+import classIcon from "../assets/icons/icon-class.png";
+import membersIcon from "../assets/icons/icon-member.png";
+import setupIcon from "../assets/icons/icon-setup and processes.png";
 
 export const classListHeaders = [
   "Class Name",
@@ -15,12 +15,17 @@ export const classListHeaders = [
 ];
 
 export const navItems = [
-  { id: "1", title: "Dash Board", urlPath: "/", icon: <DashboardIcon /> },
+  {
+    id: "1",
+    title: "Dash Board",
+    urlPath: "/",
+    icon: <ImgIcon>{dashboardIcon}</ImgIcon>,
+  },
   {
     id: "2",
     title: "Class",
     urlPath: "/classes",
-    icon: <ClassIcon />,
+    icon: <ImgIcon>{classIcon}</ImgIcon>,
     items: [
       { id: "2-1", title: "Definitions", urlPath: "/classes/definitions" },
       { id: "2-2", title: "Enrollments", urlPath: "/classes/enrollments" },
@@ -32,7 +37,7 @@ export const navItems = [
     id: "3",
     title: "Members",
     urlPath: "/members",
-    icon: <MembersIcon />,
+    icon: <ImgIcon>{membersIcon}</ImgIcon>,
     items: [
       { id: "3-1", title: "Personal Info", urlPath: "/members/info" },
       { id: "3-2", title: "Enrollments", urlPath: "/members/enrollments" },
@@ -45,7 +50,7 @@ export const navItems = [
     id: "4",
     title: "Setup and Processes",
     urlPath: "/setup",
-    icon: <SetupIcon />,
+    icon: <ImgIcon>{setupIcon}</ImgIcon>,
     items: [
       { id: "4-1", title: "Term", urlPath: "/setup/term" },
       { id: "4-2", title: "Payment Upload", urlPath: "/setup/payment" },

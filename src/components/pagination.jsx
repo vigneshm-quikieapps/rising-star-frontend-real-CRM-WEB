@@ -7,7 +7,7 @@ const StyledPagination = styled(Pagination)(({ theme }) => ({
     "& .MuiButtonBase-root": {
       width: 48,
       height: 48,
-      borderRadius: theme.shape.borderRadius.primary,
+      borderRadius: theme.shape.borderRadiuses.primary,
     },
     "& .Mui-selected": {
       backgroundColor: theme.palette.darkIndigo.main,

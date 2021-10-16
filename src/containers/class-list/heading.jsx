@@ -3,7 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 
 const AddButton = styled(Button)(({ theme }) => ({
   backgroundImage: theme.palette.gradients.diagonal,
-  borderRadius: theme.shape.borderRadius.primary,
+  borderRadius: theme.shape.borderRadiuses.primary,
   color: "#fff",
   width: 52,
   minWidth: 52,

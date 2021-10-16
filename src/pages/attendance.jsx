@@ -2,11 +2,9 @@ import Output from "../components/output";
 import Status from "../components/status";
 import Card from "./../containers/card";
 import { Typography, Box, MenuItem, Pagination, Button } from "@mui/material";
-import { Select, FormControl } from "../components/drop-down";
+import TextField from "../components/textfield";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/lab";
-import { InputLabel } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import StyledTexField from "../components/text-field";
 import { useState } from "react";
 import CustomTable from "../components/table";
 import { Phone } from "@mui/icons-material";
@@ -245,7 +243,7 @@ const Attendance = () => {
               width: "25%",
             }}
           >
-            <Box>
+            {/* <Box>
               <Typography
                 sx={{
                   width: "195px",
@@ -264,7 +262,12 @@ const Attendance = () => {
                 Status
               </Typography>
               <Status status="green" title="Active" />
-            </Box>
+            </Box> */}
+
+            <Output
+              title="Post Code"
+              description={<Status status="green" title="Active" />}
+            />
           </Box>
         </Box>
       </Card>
@@ -279,36 +282,31 @@ const Attendance = () => {
           }}
         >
           <Box width={"90%"} sx={{ marginRight: "20px" }}>
-            <FormControl variant="filled">
-              <InputLabel>Session</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={10}
-                label="Session"
-                onChange={() => {}}
-                variant="filled"
-              >
-                <MenuItem value={10}>2022 Summer</MenuItem>
-                <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </FormControl>
+            <TextField
+              select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={10}
+              label="Session"
+              onChange={() => {}}
+              variant="filled"
+            >
+              <MenuItem value={10}>2022 Summer</MenuItem>
+              <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </TextField>
           </Box>
           <Box width={"90%"} sx={{ marginRight: "20px" }}>
-            <FormControl variant="filled">
-              <InputLabel>Term</InputLabel>
-              <Select
-                id="demo-simple-select"
-                value={20}
-                onChange={() => {}}
-                variant="filled"
-              >
-                <MenuItem value={10}>2022 Summer</MenuItem>
-                <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </FormControl>
+            <TextField
+              id="demo-simple-select"
+              value={20}
+              onChange={() => {}}
+              variant="filled"
+            >
+              <MenuItem value={10}>2022 Summer</MenuItem>
+              <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </TextField>
           </Box>
           <Box width={"90%"} sx={{ marginRight: "20px" }}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -318,7 +316,7 @@ const Attendance = () => {
                 value={value}
                 onChange={handleChange}
                 renderInput={(params) => (
-                  <StyledTexField variant="filled" {...params} />
+                  <TextField variant="filled" {...params} />
                 )}
               />
             </LocalizationProvider>

@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
-    primary: { main: "#fff" },
+    primary: { main: "#888" },
     secondary: { main: "#f0292d" },
     ternary: { main: "#e9e7f1" },
     darkIndigo: { main: "#140a35" },
@@ -10,9 +10,10 @@ const theme = createTheme({
     warning: { main: "#eab900" },
     error: { main: "#f0292d" },
     highlight: { main: "#f2f1f6" },
+    background: { main: "#fff" },
     text: {
       primary: "#000",
-      secondary: "#0007",
+      secondary: "#0008",
       ternary: "#fff",
       disabled: "#e9e7f1",
       navItem: "#fff7",
@@ -29,7 +30,7 @@ const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: {
+    borderRadiuses: {
       primary: "12px",
       secondary: "20px",
       ternary: "10px",

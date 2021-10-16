@@ -1,7 +1,7 @@
 import API from "../helper/config";
 
-export default function fetchGetClass() {
-  return fetch(API.GetBusinessClassListAPI, {
+export default function fetchGetClass(id) {
+  return fetch(API.GetBusinessClassListAPI+id+'/classes', {
     method: "GET",
     headers: {
       Accept: "application/json",
