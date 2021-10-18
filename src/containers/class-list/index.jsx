@@ -5,8 +5,6 @@ import { Box } from "@mui/material";
 import { classListHeaders } from "../../helper/constants";
 import CustomTable from "../../components/table";
 import CustomPagination from "../../components/pagination";
-import Actions from "../../components/actions";
-import Status from "../../components/status";
 import Heading from "./heading";
 
 const rows = Array(10)
@@ -14,12 +12,11 @@ const rows = Array(10)
   .map((_, index) => ({
     id: index,
     items: [
-      "Pre-school gymnastics",
-      "Zippy Totz Pre-school Gymnastics",
-      "Glasgow",
-      "G46 7TL",
-      <Status status="green" title="Active" />,
-      <Actions />,
+      "Jannifer Reid",
+      "Boy",
+      "Afonso Pinto",
+      "ni@gmail.com",
+      "075757532",
     ],
   }));
 
