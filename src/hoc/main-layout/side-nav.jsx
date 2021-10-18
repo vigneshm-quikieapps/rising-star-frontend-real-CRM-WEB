@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useRouteMatch } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
   Drawer,
@@ -13,6 +13,7 @@ import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
+import { useEffect } from "react";
 
 const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== "drawerWidth",
@@ -21,6 +22,7 @@ const StyledDrawer = styled(Drawer, {
   flexShrink: 0,
   color: theme.palette.text.navItem,
   backgroundColor: theme.palette.darkIndigo.main,
+  "& .Mui-disabled": { opacity: 1 },
   "& .activeNavLink": {
     color: theme.palette.text.navItemActive,
   },
@@ -32,6 +34,7 @@ const StyledDrawer = styled(Drawer, {
     border: "none",
   },
   "& .MuiListItemButton-root": { padding: theme.spacing(0.5) },
+  "& .MuiListItem-root": { padding: theme.spacing(0.5), color: "inherit" },
   "& .MuiListItemIcon-root": {
     color: "inherit",
     minWidth: theme.spacing(5),
@@ -58,7 +61,13 @@ const CloseButton = styled("button")(({ theme }) => ({
 }));
 
 const NestedList = ({ item }) => {
-  const [open, setOpen] = useState(false);
+  const match = useRouteMatch({
+    path: item.urlPath,
+    sensitive: true,
+  });
+  const [open, setOpen] = useState(!!match);
+
+  useEffect(() => setOpen(!!match), [match]);
 
   const toggleOpen = (e) => {
     e.preventDefault();
@@ -69,10 +78,11 @@ const NestedList = ({ item }) => {
     <>
       <ListItemButton
         sx={{ mb: 1 }}
-        onClick={toggleOpen}
+        // onClick={toggleOpen}
         component={NavLink}
         to={item.urlPath || "#"}
         activeClassName="activeNavLink"
+        disabled={item.disabled}
       >
         {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
         <ListItemText primary={item.title} />
@@ -97,7 +107,8 @@ const ExtractedItems = ({ items, nested }) => {
           to={item.urlPath}
           activeClassName="activeNavLink"
           sx={{ mb: (theme) => (nested ? 0 : theme.spacing(3)) }}
-          exact
+          // onClick={(e) => e.preventDefault()}
+          disabled={!item.disabled}
         >
           {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
           <ListItemText primary={item.title} />

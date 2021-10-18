@@ -28,7 +28,7 @@ export const navItems = [
     icon: <ImgIcon>{classIcon}</ImgIcon>,
     items: [
       { id: "2-1", title: "Definitions", urlPath: "/classes/definitions" },
-      { id: "2-2", title: "Enrollments", urlPath: "/classes/enrollments" },
+      { id: "2-2", title: "Enrolments", urlPath: "/classes/enrolments" },
       { id: "2-3", title: "Attendance", urlPath: "/classes/attendance" },
       { id: "2-4", title: "Payments", urlPath: "/classes/payments" },
     ],
@@ -40,7 +40,7 @@ export const navItems = [
     icon: <ImgIcon>{membersIcon}</ImgIcon>,
     items: [
       { id: "3-1", title: "Personal Info", urlPath: "/members/info" },
-      { id: "3-2", title: "Enrollments", urlPath: "/members/enrollments" },
+      { id: "3-2", title: "Enrollments", urlPath: "/members/enrolments" },
       { id: "3-3", title: "Consent Record", urlPath: "/members/consent" },
       { id: "3-4", title: "Evaluations", urlPath: "/members/evaluations" },
       { id: "3-5", title: "Finance Record", urlPath: "/members/finance" },
