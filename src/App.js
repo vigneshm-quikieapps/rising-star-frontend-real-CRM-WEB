@@ -5,12 +5,14 @@ import store from "./redux/store/configureStore";
 import MainLayout from "./hoc/main-layout";
 import "./styles/global.css";
 
+import ClassesDefinition from "./pages/classes-definition";
+
 function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
         <MainLayout>
-          {/* dry run your component inside here */}
+          <ClassesDefinition />
         </MainLayout>
       </BrowserRouter>
     </Provider>
