@@ -21,6 +21,8 @@ import {
   personalInfoObject4,
 } from "../helper/constants";
 import { Outputs } from "../containers/outputs";
+import { useEffect, useState } from "react";
+import { getAllMembers, getMemberById } from "../services/membersServices";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -29,20 +31,73 @@ const MoreIconButton = () => (
 );
 
 const PersonalInfo = () => {
-  const arr1 = objectToArray(personalInfoObject1);
+  const [allMembers, setAllMembers] = useState([]);
+  const [curMemberInfo, setCurMemberInfo] = useState();
+  const [basicInfoArr, setBasicInfoArr] = useState([]);
+  const [parentInfoArr, setParentInfoArr] = useState([]);
+  const [primaryContactInfoArr, setPrimaryContactInfoArr] = useState([]);
+  const [secondaryContactInfoArr, setSecondaryContactInfoArr] = useState([]);
+
   const arr2 = objectToArray(personalInfoObject2);
-  const arr3 = objectToArray(personalInfoObject3);
-  const arr4 = objectToArray(personalInfoObject4);
+
+  const getMemberInfo = (member) => {
+    const { name, gender, dob, contacts } = member;
+    let info = {},
+      parentInfo = {};
+
+    // setting basic info object
+    info["Full Name"] = name;
+    info["Gender*"] = gender;
+    info["Date of Birth*"] = dob;
+    setBasicInfoArr(objectToArray(info));
+
+    // setting primary and secondary contact info arrays
+    contacts.forEach((item) => {
+      let obj = {
+        Name: item.name,
+        Relationship: item.relationship,
+        "Contact Number*": item.contact,
+      };
+      let arr = objectToArray(obj);
+      item.type == "PRIMARY"
+        ? setPrimaryContactInfoArr(arr)
+        : setSecondaryContactInfoArr(arr);
+    });
+  };
+
+  useEffect(() => {
+    // checking API -> getting all members
+    getAllMembers((allMembersData) => {
+      setAllMembers(allMembersData.docs);
+      let curUId = allMembersData.docs[0]._id;
+
+      // getting particular member
+      getMemberById(curUId, (curMember) => {
+        setCurMemberInfo(curMember.member);
+        getMemberInfo(curMember.member);
+      });
+    });
+
+    return () => {
+      setAllMembers([]);
+      setCurMemberInfo();
+      setBasicInfoArr([]);
+      setParentInfoArr([]);
+      setPrimaryContactInfoArr([]);
+      setSecondaryContactInfoArr([]);
+    };
+  }, []);
+
   return (
     <Box>
       <Card>
         <CardRow>
-          <HeadingText>Ayman Mogal</HeadingText>
+          <HeadingText>{curMemberInfo && curMemberInfo.name}</HeadingText>
           <MoreIconButton />
         </CardRow>
         <SubHeadingText>Student/Member</SubHeadingText>
         <CardRow sx={{ justifyContent: "flex-start" }}>
-          <Outputs arr={arr1} />
+          <Outputs arr={basicInfoArr} />
         </CardRow>
       </Card>
       <AccordionContainer>
@@ -73,7 +128,7 @@ const PersonalInfo = () => {
           </AccordionSummary>
           <AccordionDetails>
             <CardRow sx={{ justifyContent: "flex-start" }}>
-              <Outputs arr={arr3} />
+              <Outputs arr={primaryContactInfoArr} />
             </CardRow>
           </AccordionDetails>
         </Accordion>
@@ -90,7 +145,7 @@ const PersonalInfo = () => {
           </AccordionSummary>
           <AccordionDetails>
             <CardRow sx={{ justifyContent: "flex-start" }}>
-              <Outputs arr={arr4} />
+              <Outputs arr={secondaryContactInfoArr} />
             </CardRow>
           </AccordionDetails>
         </Accordion>
