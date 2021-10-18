@@ -22,7 +22,6 @@ const StyledDrawer = styled(Drawer, {
   flexShrink: 0,
   color: theme.palette.text.navItem,
   backgroundColor: theme.palette.darkIndigo.main,
-  "& .Mui-disabled": { opacity: 1 },
   "& .activeNavLink": {
     color: theme.palette.text.navItemActive,
   },
@@ -32,6 +31,7 @@ const StyledDrawer = styled(Drawer, {
     backgroundColor: "inherit",
     color: "inherit",
     border: "none",
+    "& .Mui-disabled": { opacity: 1 },
   },
   "& .MuiListItemButton-root": { padding: theme.spacing(0.5) },
   "& .MuiListItem-root": { padding: theme.spacing(0.5), color: "inherit" },
@@ -69,10 +69,10 @@ const NestedList = ({ item }) => {
 
   useEffect(() => setOpen(!!match), [match]);
 
-  const toggleOpen = (e) => {
-    e.preventDefault();
-    setOpen(!open);
-  };
+  // const toggleOpen = (e) => {
+  //   e.preventDefault();
+  //   setOpen(!open);
+  // };
 
   return (
     <>
@@ -83,6 +83,7 @@ const NestedList = ({ item }) => {
         to={item.urlPath || "#"}
         activeClassName="activeNavLink"
         disabled={item.disabled}
+        exact={item.exact}
       >
         {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
         <ListItemText primary={item.title} />
@@ -107,8 +108,8 @@ const ExtractedItems = ({ items, nested }) => {
           to={item.urlPath}
           activeClassName="activeNavLink"
           sx={{ mb: (theme) => (nested ? 0 : theme.spacing(3)) }}
-          // onClick={(e) => e.preventDefault()}
-          disabled={!item.disabled}
+          disabled={item.disabled}
+          exact={item.exact}
         >
           {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
           <ListItemText primary={item.title} />
