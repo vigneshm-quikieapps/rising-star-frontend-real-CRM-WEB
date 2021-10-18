@@ -5,6 +5,29 @@ import {
   SettingsOutlined as SetupIcon,
 } from "@mui/icons-material";
 
+import arrowDownDark from "../assets/icons/icon- arrw down-dark.png";
+import arrowDown from "../assets/icons/icon- arrw down.png";
+import back from "../assets/icons/icon- back.png";
+import calendar from "../assets/icons/icon- calendar.png";
+import copy from "../assets/icons/icon- copy 3.png";
+import add from "../assets/icons/icon-add.png";
+import allergy from "../assets/icons/icon-allergy.png";
+import iconClass from "../assets/icons/icon-class.png";
+import dashboardDark from "../assets/icons/icon-dashboard-dark.png";
+import iconDelete from "../assets/icons/icon-delete.png";
+import edit from "../assets/icons/icon-edit.png";
+import home from "../assets/icons/icon-home.png";
+import member from "../assets/icons/icon-member.png";
+import menu from "../assets/icons/icon-menu.png";
+import more from "../assets/icons/icon-more.png";
+import notification from "../assets/icons/icon-notificaton.png";
+import payment from "../assets/icons/icon-payment.png";
+import phone from "../assets/icons/icon-phone.png";
+import setupAndProcess from "../assets/icons/icon-setup and processes.png";
+import term from "../assets/icons/icon-term.png";
+import user from "../assets/icons/icon-user.png";
+import loginPageImage from "../assets/images/illustration-login.png";
+
 export const classListHeaders = [
   "Class Name",
   "Business Name",
@@ -52,3 +75,28 @@ export const navItems = [
     ],
   },
 ];
+
+export const icons = {
+  arrowDownDark,
+  arrowDown,
+  back,
+  calendar,
+  add,
+  copy,
+  allergy,
+  iconClass,
+  dashboardDark,
+  iconDelete,
+  edit,
+  home,
+  member,
+  menu,
+  more,
+  payment,
+  notification,
+  setupAndProcess,
+  phone,
+  term,
+  user,
+  loginPageImage,
+};

@@ -122,7 +122,6 @@ const MenuProps = {
   PaperProps: {
     style: {
       borderRadius: 20,
-      marginLeft: "-6px",
       marginTop: "6px",
     },
   },
