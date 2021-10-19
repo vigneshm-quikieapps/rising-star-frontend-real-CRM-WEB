@@ -22,7 +22,14 @@ const Main = styled("main", {
 
 const MainRoot = ({ children, drawerWidth, open }) => (
   <Main drawerWidth={drawerWidth} open={open}>
-    <Box sx={{ maxWidth: 880, margin: "auto" }}>{children}</Box>
+    <Box
+      sx={{
+        maxWidth: { xs: "100%", lg: "1040px" },
+        mx: { xs: "16px", md: "32px", lg: "auto" },
+      }}
+    >
+      {children}
+    </Box>
   </Main>
 );
 

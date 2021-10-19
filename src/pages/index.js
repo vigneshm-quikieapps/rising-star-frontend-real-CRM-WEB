@@ -1,0 +1,17 @@
+export { default as Dashboard } from "./dashboard";
+export { default as Login } from "./login";
+export { default as Classes } from "./classes";
+export { default as ClassDefinitions } from "./classes/definitions";
+export { default as ClassEnrolments } from "./classes/enrolments";
+export { default as ClassAttendance } from "./classes/attendance";
+export { default as ClassPayments } from "./classes/payments";
+export { default as ClassAddEdit } from "./classes/add-edit";
+export { default as Members } from "./members";
+export { default as MembersInfo } from "./members/info";
+export { default as MembersEnrollments } from "./members/enrolments";
+export { default as MembersConsent } from "./members/consent";
+export { default as MembersEvaluations } from "./members/evaluations";
+export { default as MembersFinance } from "./members/finance";
+export { default as SetupTerm } from "./setup/term";
+export { default as SetupPaymentUpload } from "./setup/payment-upload";
+export { default as NoMatch } from "./404";

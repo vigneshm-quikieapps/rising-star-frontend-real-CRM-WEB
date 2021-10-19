@@ -30,7 +30,7 @@ const Output = ({ title, description, variant = "default" }) => {
           {description}
         </Typography>
       ) : (
-        { description }
+        description
       )}
     </StyledBox>
   );

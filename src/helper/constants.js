@@ -19,6 +19,7 @@ export const navItems = [
     id: "1",
     title: "Dash Board",
     urlPath: "/",
+    exact: true,
     icon: <ImgIcon>{dashboardIcon}</ImgIcon>,
   },
   {
@@ -27,10 +28,30 @@ export const navItems = [
     urlPath: "/classes",
     icon: <ImgIcon>{classIcon}</ImgIcon>,
     items: [
-      { id: "2-1", title: "Definitions", urlPath: "/classes/definitions" },
-      { id: "2-2", title: "Enrollments", urlPath: "/classes/enrollments" },
-      { id: "2-3", title: "Attendance", urlPath: "/classes/attendance" },
-      { id: "2-4", title: "Payments", urlPath: "/classes/payments" },
+      {
+        id: "2-1",
+        title: "Definitions",
+        urlPath: "/classes/definitions",
+        disabled: true,
+      },
+      {
+        id: "2-2",
+        title: "Enrolments",
+        urlPath: "/classes/enrolments",
+        disabled: true,
+      },
+      {
+        id: "2-3",
+        title: "Attendance",
+        urlPath: "/classes/attendance",
+        disabled: true,
+      },
+      {
+        id: "2-4",
+        title: "Payments",
+        urlPath: "/classes/payments",
+        disabled: true,
+      },
     ],
   },
   {
@@ -39,11 +60,36 @@ export const navItems = [
     urlPath: "/members",
     icon: <ImgIcon>{membersIcon}</ImgIcon>,
     items: [
-      { id: "3-1", title: "Personal Info", urlPath: "/members/info" },
-      { id: "3-2", title: "Enrollments", urlPath: "/members/enrollments" },
-      { id: "3-3", title: "Consent Record", urlPath: "/members/consent" },
-      { id: "3-4", title: "Evaluations", urlPath: "/members/evaluations" },
-      { id: "3-5", title: "Finance Record", urlPath: "/members/finance" },
+      {
+        id: "3-1",
+        title: "Personal Info",
+        urlPath: "/members/info",
+        disabled: true,
+      },
+      {
+        id: "3-2",
+        title: "Enrolments",
+        urlPath: "/members/enrolments",
+        disabled: true,
+      },
+      {
+        id: "3-3",
+        title: "Consent Record",
+        urlPath: "/members/consent",
+        disabled: true,
+      },
+      {
+        id: "3-4",
+        title: "Evaluations",
+        urlPath: "/members/evaluations",
+        disabled: true,
+      },
+      {
+        id: "3-5",
+        title: "Finance Record",
+        urlPath: "/members/finance",
+        disabled: true,
+      },
     ],
   },
   {
@@ -53,7 +99,7 @@ export const navItems = [
     icon: <ImgIcon>{setupIcon}</ImgIcon>,
     items: [
       { id: "4-1", title: "Term", urlPath: "/setup/term" },
-      { id: "4-2", title: "Payment Upload", urlPath: "/setup/payment" },
+      { id: "4-2", title: "Payment Upload", urlPath: "/setup/paymentUpload" },
     ],
   },
 ];
