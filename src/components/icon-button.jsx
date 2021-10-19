@@ -5,9 +5,9 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
   width: "48px",
   height: "48px",
   padding: "12px",
-  borderRadius: theme.shape.borderRadius.primary,
+  borderRadius: theme.shape.borderRadiuses.primary,
   border: `solid 1px ${theme.palette.ternary.main}`,
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: theme.palette.background.main,
   color: theme.palette.text.primary,
 }));
 

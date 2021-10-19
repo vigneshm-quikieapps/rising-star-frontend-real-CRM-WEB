@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useRouteMatch } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
   Drawer,
@@ -13,6 +13,7 @@ import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
+import { useEffect } from "react";
 
 const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== "drawerWidth",
@@ -30,8 +31,10 @@ const StyledDrawer = styled(Drawer, {
     backgroundColor: "inherit",
     color: "inherit",
     border: "none",
+    "& .Mui-disabled": { opacity: 1 },
   },
   "& .MuiListItemButton-root": { padding: theme.spacing(0.5) },
+  "& .MuiListItem-root": { padding: theme.spacing(0.5), color: "inherit" },
   "& .MuiListItemIcon-root": {
     color: "inherit",
     minWidth: theme.spacing(5),
@@ -58,21 +61,29 @@ const CloseButton = styled("button")(({ theme }) => ({
 }));
 
 const NestedList = ({ item }) => {
-  const [open, setOpen] = useState(false);
+  const match = useRouteMatch({
+    path: item.urlPath,
+    sensitive: true,
+  });
+  const [open, setOpen] = useState(!!match);
 
-  const toggleOpen = (e) => {
-    e.preventDefault();
-    setOpen(!open);
-  };
+  useEffect(() => setOpen(!!match), [match]);
+
+  // const toggleOpen = (e) => {
+  //   e.preventDefault();
+  //   setOpen(!open);
+  // };
 
   return (
     <>
       <ListItemButton
         sx={{ mb: 1 }}
-        onClick={toggleOpen}
+        // onClick={toggleOpen}
         component={NavLink}
         to={item.urlPath || "#"}
         activeClassName="activeNavLink"
+        disabled={item.disabled}
+        exact={item.exact}
       >
         {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
         <ListItemText primary={item.title} />
@@ -97,7 +108,8 @@ const ExtractedItems = ({ items, nested }) => {
           to={item.urlPath}
           activeClassName="activeNavLink"
           sx={{ mb: (theme) => (nested ? 0 : theme.spacing(3)) }}
-          exact
+          disabled={item.disabled}
+          exact={item.exact}
         >
           {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
           <ListItemText primary={item.title} />

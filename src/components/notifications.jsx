@@ -10,7 +10,7 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
   marginTop: theme.spacing(3),
   "& .MuiPaper-root": {
     border: `1px solid ${theme.palette.text.disabled}`,
-    borderRadius: theme.shape.borderRadius.primary,
+    borderRadius: theme.shape.borderRadiuses.primary,
     overflow: "visible",
     "&::before": {
       content: '" "',

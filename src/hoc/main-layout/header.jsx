@@ -59,17 +59,35 @@ const Header = ({
 }) => (
   <>
     <ElevationScroll {...otherProps}>
-      <AppBar position="fixed" open={open} drawerWidth={drawerWidth}>
+      <AppBar
+        position="fixed"
+        open={open}
+        drawerWidth={drawerWidth}
+        color="background"
+      >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2 }}
+          <Box
+            sx={{
+              position: "absolute",
+              left: 0,
+              width: "100%",
+            }}
           >
-            <ImgIcon>{menuIcon}</ImgIcon>
-          </IconButton>
+            <Box
+              sx={{
+                maxWidth: { xs: "100%", lg: "1040px" },
+                mx: { xs: "16px", md: "32px", lg: "auto" },
+              }}
+            >
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+              >
+                <ImgIcon>{menuIcon}</ImgIcon>
+              </IconButton>
+            </Box>
+          </Box>
           <Box sx={{ flex: 1 }} />
           <IconButton sx={{ mr: "20px" }} LinkComponent={Link} to="/">
             <ImgIcon>{homeIcon}</ImgIcon>
