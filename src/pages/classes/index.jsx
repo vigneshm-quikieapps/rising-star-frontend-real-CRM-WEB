@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Box, InputAdornment, MenuItem, Typography } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
@@ -6,6 +7,8 @@ import TextField from "../../components/textfield";
 import Button from "../../components/simple-button";
 import GradientButton from "../../components/gradient-button";
 import ClassList from "../../containers/class-list";
+import { getClassList } from "../../redux/action/classAction";
+import { useSelector } from "react-redux";
 
 const AdvancedSearch = ({ open, setOpen }) => {
   const [selectedBusiness, setSelectedBusiness] = useState("");
@@ -50,7 +53,6 @@ const AdvancedSearch = ({ open, setOpen }) => {
         >
           Basic Search
         </Button>
-
         <TextField label="Class Name" sx={{ width: "calc(50% - 120px)" }} />
         <TextField label="Status" sx={{ width: "calc(50% - 120px)" }} />
         <TextField
@@ -92,8 +94,16 @@ const AdvancedSearch = ({ open, setOpen }) => {
 };
 
 const Classes = () => {
-  const [classList, setClassList] = useState([]);
+  const classList = useSelector((state) => state.classes.classList);
+  const dispatch = useDispatch();
   const [advancedSearch, setAdvancedSearch] = useState(false);
+
+  useEffect(
+    () => dispatch(getClassList("614ae0f9c265630cd520ab36")),
+    [dispatch]
+  );
+  useEffect(() => console.log(classList), [classList]);
+
   return (
     <Box>
       <Box sx={{ display: "flex", flexDirection: "column", mb: 2 }}>
