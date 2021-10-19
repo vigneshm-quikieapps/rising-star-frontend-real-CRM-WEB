@@ -14,15 +14,11 @@ import moreIcon from "../assets/icons/icon-more.png";
 import IconButton from "../components/icon-button";
 import ImgIcon from "../components/img-icon";
 import { objectToArray } from "../utils";
-import {
-  personalInfoObject1,
-  personalInfoObject2,
-  personalInfoObject3,
-  personalInfoObject4,
-} from "../helper/constants";
+import { personalInfoObject2 } from "../helper/constants";
 import { Outputs } from "../containers/outputs";
 import { useEffect, useState } from "react";
-import { getAllMembers, getMemberById } from "../services/membersServices";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { getAllMembersList, getMemberById } from "../redux/action/memberAction";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -31,25 +27,37 @@ const MoreIconButton = () => (
 );
 
 const PersonalInfo = () => {
-  const [allMembers, setAllMembers] = useState([]);
-  const [curMemberInfo, setCurMemberInfo] = useState();
+  const [currentMemberId, setCurrentMemberId] = useState();
   const [basicInfoArr, setBasicInfoArr] = useState([]);
   const [parentInfoArr, setParentInfoArr] = useState([]);
   const [primaryContactInfoArr, setPrimaryContactInfoArr] = useState([]);
   const [secondaryContactInfoArr, setSecondaryContactInfoArr] = useState([]);
 
-  const arr2 = objectToArray(personalInfoObject2);
+  const dispatch = useDispatch();
+  const allMembers = useSelector((state) => state.members.allMembers);
+  const currentMember = useSelector(
+    (state) => state.members.currentMember && state.members.currentMember.member
+  );
 
-  const getMemberInfo = (member) => {
-    const { name, gender, dob, contacts } = member;
-    let info = {},
-      parentInfo = {};
+  const getMemberInfo = () => {
+    const { name, gender, dob, contacts, userId } = currentMember;
+    const { email, name: pName, mobileNo } = userId;
+
+    let info = {};
+    let parentInfo = {};
 
     // setting basic info object
     info["Full Name"] = name;
     info["Gender*"] = gender;
     info["Date of Birth*"] = dob;
     setBasicInfoArr(objectToArray(info));
+
+    // setting parent info
+    parentInfo["Parent User ID*"] = "Driving Licence";
+    parentInfo["Full Name*"] = pName;
+    parentInfo.Email = email;
+    parentInfo["Contact Number"] = mobileNo;
+    setParentInfoArr(objectToArray(parentInfo));
 
     // setting primary and secondary contact info arrays
     contacts.forEach((item) => {
@@ -66,21 +74,9 @@ const PersonalInfo = () => {
   };
 
   useEffect(() => {
-    // checking API -> getting all members
-    getAllMembers((allMembersData) => {
-      setAllMembers(allMembersData.docs);
-      let curUId = allMembersData.docs[0]._id;
-
-      // getting particular member
-      getMemberById(curUId, (curMember) => {
-        setCurMemberInfo(curMember.member);
-        getMemberInfo(curMember.member);
-      });
-    });
+    dispatch(getAllMembersList());
 
     return () => {
-      setAllMembers([]);
-      setCurMemberInfo();
       setBasicInfoArr([]);
       setParentInfoArr([]);
       setPrimaryContactInfoArr([]);
@@ -88,11 +84,21 @@ const PersonalInfo = () => {
     };
   }, []);
 
+  useEffect(() => {
+    let id = allMembers.docs && allMembers.docs[0]._id;
+    setCurrentMemberId(id);
+    id && dispatch(getMemberById(id));
+  }, [allMembers]);
+
+  useEffect(() => {
+    currentMember && getMemberInfo();
+  }, [currentMember]);
+
   return (
     <Box>
       <Card>
         <CardRow>
-          <HeadingText>{curMemberInfo && curMemberInfo.name}</HeadingText>
+          <HeadingText>{currentMember && currentMember.name}</HeadingText>
           <MoreIconButton />
         </CardRow>
         <SubHeadingText>Student/Member</SubHeadingText>
@@ -111,7 +117,7 @@ const PersonalInfo = () => {
           </AccordionSummary>
           <AccordionDetails>
             <CardRow sx={{ justifyContent: "flex-start" }}>
-              <Outputs arr={arr2} />
+              <Outputs arr={parentInfoArr} />
             </CardRow>
           </AccordionDetails>
         </Accordion>
@@ -154,4 +160,12 @@ const PersonalInfo = () => {
   );
 };
 
-export default PersonalInfo;
+const mapStateToProps = (state) => {
+  console.log("state: ", state);
+  return {
+    allMembers: state.members.allMembers,
+    currentMember: state.members.currentMember,
+  };
+};
+
+export default connect(mapStateToProps, null)(PersonalInfo);

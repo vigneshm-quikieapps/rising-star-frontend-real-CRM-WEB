@@ -1,19 +1,20 @@
 import axios from "axios";
 import API from "../helper/config";
 
-export const getAllMembers = async (callback) => {
+export const axiosGetMemberList = async () => {
+  const api = API.MembersAPI;
   try {
-    const allMembers = await axios.get(API.MembersAPI);
-    callback && callback(allMembers.data);
+    const allMembers = await axios.get(api);
+    return allMembers.data;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const getMemberById = async (id, callback) => {
+export const axiosGetMember = async (id) => {
   try {
     const member = await axios.get(`${API.MembersAPI}${id}`);
-    callback && callback(member.data);
+    return member.data;
   } catch (error) {
     console.error(error);
   }

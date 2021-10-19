@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const Card = styled(Box)({
-  width: "880px",
+  width: "100%",
   height: "148px",
   margin: "25px 150px 10px 0",
   padding: "10px 10px 20px 20px",
