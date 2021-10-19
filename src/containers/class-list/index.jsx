@@ -29,7 +29,6 @@ const ClassList = ({ list = rows }) => (
   <Box
     sx={{
       justifyContent: "center",
-      maxWidth: 880,
       margin: "auto",
     }}
   >
