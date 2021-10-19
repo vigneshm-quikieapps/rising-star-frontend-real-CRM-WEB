@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Card, Typography } from "@mui/material";
 import { styled } from "@mui/styles";
 import { Box } from "@mui/material";
-import GradientButton from "../components/gradient-button";
-import StyledPagination from "../components/pagination";
-import ImgIcon from "../components/img-icon";
-import IconButton from "../components/icon-button";
-import deleteIcon from "../assets/icons/icon-delete.png";
-import DatePicker from "../components/date-picker";
-import TextField from "../components/textfield";
+import GradientButton from "../../components/gradient-button";
+import StyledPagination from "../../components/pagination";
+import ImgIcon from "../../components/img-icon";
+import IconButton from "../../components/icon-button";
+import deleteIcon from "../../assets/icons/icon-delete.png";
+import DatePicker from "../../components/date-picker";
+import TextField from "../../components/textfield";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import addIcon from "../assets/icons/icon-add.png";
+import addIcon from "../../assets/icons/icon-add.png";
 
 const Term = () => {
   const listarray = ["sds", "cwcwc", "vvevev", "EFveve"];
