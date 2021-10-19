@@ -27,7 +27,7 @@ export const CardCol4 = styled(Box)({
 export const HeadingText = styled(Typography)({
   // width: "605px",
   height: "38px",
-  margin: "10px 193px 6px 0",
+  flexGrow: 1,
   fontFamily: "Manrope",
   fontSize: "28px",
   fontWeight: "bold",
@@ -41,7 +41,7 @@ export const HeadingText = styled(Typography)({
 export const SubHeadingText = styled(Typography)({
   //   width: "118px",
   height: "19px",
-  margin: "6px 97px 10px 0",
+  margin: "6px 0px 10px 0",
   opacity: "0.5",
   fontFamily: "Manrope",
   fontSize: "14px",
@@ -83,7 +83,7 @@ export const Description = styled(Typography)({
 });
 
 export const AccordionContainer = styled(Typography)({
-  width: "880px",
+  width: "100%",
   padding: "10px 0px",
   margin: "0",
 });
