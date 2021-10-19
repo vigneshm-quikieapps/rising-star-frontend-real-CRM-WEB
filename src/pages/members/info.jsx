@@ -49,11 +49,11 @@ const MemberInfo = () => {
 
     let info = {};
     let parentInfo = {};
-
+    let date = new Date(dob.split("T")[0]);
     // setting basic info object
     info["Full Name"] = name;
     info["Gender*"] = gender;
-    info["Date of Birth*"] = dob;
+    info["Date of Birth*"] = date.toDateString();
     setBasicInfoArr(objectToArray(info));
 
     // setting parent info
@@ -87,16 +87,17 @@ const MemberInfo = () => {
       setPrimaryContactInfoArr([]);
       setSecondaryContactInfoArr([]);
     };
-  }, []);
+  }, [id, currentMemberId, dispatch]);
 
   useEffect(() => {
     let tempId = allMembers.docs && allMembers.docs[0]._id;
     setCurrentMemberId(tempId);
     tempId && dispatch(getMemberById(tempId));
-  }, [allMembers]);
+  }, [allMembers, dispatch]);
 
   useEffect(() => {
     currentMember && getMemberInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMember]);
 
   return (

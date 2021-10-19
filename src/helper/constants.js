@@ -164,7 +164,6 @@ export const enrollmentObject2 = {
   Facility: "Gym Hall",
   "Session Enrolment Status": "Open for Enrolment",
   "Coach Name": "Bethany Lafferty",
-  Pattern: "Mon",
   "Full class capacity": "20",
   Enrolled: "15",
   "Waitlist capacity": "10",
