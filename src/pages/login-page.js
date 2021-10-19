@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, styled, Typography, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import TextField from "../components/text-field";
 import Button from "../components/gradient-button";
 import { icons } from "../helper/constants";
+
+import { useDispatch } from "react-redux";
+import { logInStart } from "../redux/action/authAction";
 
 const GridContainer = styled(Grid)(({ theme }) => ({
   height: "100vh",
@@ -16,6 +19,24 @@ const GridContainer = styled(Grid)(({ theme }) => ({
 }));
 
 const LoginPage = () => {
+  const [credentials, setCredentials] = useState({
+    mobileNo: "",
+    password: "",
+  });
+
+  const dispatch = useDispatch();
+
+  const handleChange = (e) =>
+    setCredentials({
+      ...credentials,
+      [e.target.name]: e.target.value,
+    });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(logInStart(credentials));
+  };
+
   return (
     <GridContainer
       container
@@ -31,8 +52,11 @@ const LoginPage = () => {
           Business Admin
         </Typography>
         <TextField
-          label="Username"
+          label="Email"
           variant="outlined"
+          name="mobileNo"
+          onChange={handleChange}
+          value={credentials.mobileNo}
           InputProps={{
             endAdornment: (
               <InputAdornment position="start">
@@ -51,6 +75,9 @@ const LoginPage = () => {
         <TextField
           label="Password"
           variant="outlined"
+          name="password"
+          onChange={handleChange}
+          value={credentials.password}
           InputProps={{
             endAdornment: (
               <InputAdornment position="start">
@@ -60,8 +87,14 @@ const LoginPage = () => {
           }}
           sx={{ marginBottom: 4 }}
         />
-
-        <Button sx={{ textTransform: "none", width: "25%", fontSize: "1rem" }}>
+        <Button
+          sx={{
+            textTransform: "none",
+            width: "25%",
+            fontSize: "1rem",
+          }}
+          onClick={handleSubmit}
+        >
           Login
         </Button>
       </Grid>

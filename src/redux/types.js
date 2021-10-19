@@ -1,2 +1,9 @@
-export const GET_CLASS_LIST_SAGA = 'GET_CLASS_LIST_SAGA';
-export const GET_CLASS_LIST = 'GET_CLASS_LIST';
+export const GET_CLASS_LIST_SAGA = "GET_CLASS_LIST_SAGA";
+export const GET_CLASS_LIST = "GET_CLASS_LIST";
+
+export const LoginActionTypes = {
+  LOG_IN_START: "LOG_IN_START",
+  LOG_IN_SUCCESS: "LOG_IN_SUCCESS",
+  LOG_IN_FAILURE: "LOG_IN_FAILURE",
+  LOG_OUT: "LOG_OUT",
+};
