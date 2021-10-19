@@ -78,7 +78,6 @@ const Enrollment = () => {
         <CardRow sx={{ justifyContent: "flex-start" }}>
           <TextField
             select
-            labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={10}
             label="Term"

@@ -82,7 +82,7 @@ export const Description = styled(Typography)({
   color: "#000",
 });
 
-export const AccordionContainer = styled(Typography)({
+export const AccordionContainer = styled(Box)({
   width: "100%",
   padding: "10px 0px",
   margin: "0",

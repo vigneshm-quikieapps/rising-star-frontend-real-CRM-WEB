@@ -67,7 +67,7 @@ const PersonalInfo = () => {
         "Contact Number*": item.contact,
       };
       let arr = objectToArray(obj);
-      item.type == "PRIMARY"
+      item.type === "PRIMARY"
         ? setPrimaryContactInfoArr(arr)
         : setSecondaryContactInfoArr(arr);
     });

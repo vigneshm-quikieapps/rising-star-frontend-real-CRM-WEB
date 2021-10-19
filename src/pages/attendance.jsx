@@ -81,7 +81,6 @@ const Attendance = () => {
         <CardRow>
           <TextField
             select
-            labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={10}
             label="Term"

@@ -12,8 +12,9 @@ export const axiosGetMemberList = async () => {
 };
 
 export const axiosGetMember = async (id) => {
+  const api = `${API.MembersAPI}${id}`;
   try {
-    const member = await axios.get(`${API.MembersAPI}${id}`);
+    const member = await axios.get(api);
     return member.data;
   } catch (error) {
     console.error(error);
