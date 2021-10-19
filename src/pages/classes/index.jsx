@@ -9,19 +9,53 @@ import ClassList from "../../containers/class-list";
 
 const AdvancedSearch = ({ open, setOpen }) => {
   const [selectedBusiness, setSelectedBusiness] = useState("");
+  const [classNameOperator, setClassNameOperator] = useState("equalsTo");
+  const [statusOperator, setStatusOperator] = useState("equalsTo");
 
   const handleBusinessChange = (e) => setSelectedBusiness(e.target.value);
+  const handleClassOperatorChange = (e) => setClassNameOperator(e.target.value);
+  const handleStatusOperatorChange = (e) => setStatusOperator(e.target.value);
+
   return (
     open && (
       <Box
         sx={{
           display: open ? "flex" : "none",
+          flexWrap: "wrap",
           justifyContent: "space-between",
-          "&>*": { width: "30%" },
+          "&>*": { width: "30%", marginBottom: "16px !important" },
         }}
       >
         <TextField
+          placeholder="search class by name"
+          sx={{
+            width: "calc(100% - 220px)",
+            mr: "20px",
+            bgcolor: (theme) => theme.palette.highlight.main,
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start" sx={{ mr: "-10px" }}>
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+          variant="outlined"
+          disabled
+        />
+        <Button
+          active
+          sx={{ width: "200px !important", justifySelf: "flex-end" }}
+          onClick={() => setOpen(false)}
+        >
+          Basic Search
+        </Button>
+
+        <TextField label="Class Name" sx={{ width: "calc(50% - 120px)" }} />
+        <TextField label="Status" sx={{ width: "calc(50% - 120px)" }} />
+        <TextField
           select
+          sx={{ width: "200px" }}
           label="Business Name"
           value={selectedBusiness}
           onChange={handleBusinessChange}
@@ -29,10 +63,29 @@ const AdvancedSearch = ({ open, setOpen }) => {
           <MenuItem value="business1">Business 1</MenuItem>
           <MenuItem value="business2">Business 2</MenuItem>
         </TextField>
-        <GradientButton onClick={() => setOpen(false)}>
-          Switch to Basic
+        <TextField
+          select
+          sx={{ width: "calc(50% - 120px)" }}
+          label="Operator"
+          value={classNameOperator}
+          onChange={handleClassOperatorChange}
+        >
+          <MenuItem value="equalsTo">Equals to</MenuItem>
+          <MenuItem value="startsWith">Starts with</MenuItem>
+        </TextField>
+        <TextField
+          select
+          sx={{ width: "calc(50% - 120px)" }}
+          label="Operator"
+          value={statusOperator}
+          onChange={handleStatusOperatorChange}
+        >
+          <MenuItem value="equalsTo">Equals to</MenuItem>
+          <MenuItem value="NotEqualsTo">Not equals to</MenuItem>
+        </TextField>
+        <GradientButton sx={{ width: "200px !important" }}>
+          Search
         </GradientButton>
-        <GradientButton>Search</GradientButton>
       </Box>
     )
   );
