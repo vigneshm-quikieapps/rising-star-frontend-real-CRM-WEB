@@ -7,7 +7,6 @@ import CustomTable from "../../components/table";
 import CustomPagination from "../../components/pagination";
 import Heading from "../class-list/heading";
 
-
 const rows = Array(10)
   .fill(1)
   .map((_, index) => ({
@@ -24,6 +23,7 @@ const rows = Array(10)
 const pagination = <CustomPagination count={3} page={2} variant="outlined" />;
 
 const AdvanceSearchList = ({ list = rows }) => (
+  
   <Box
     sx={{
       justifyContent: "center",
