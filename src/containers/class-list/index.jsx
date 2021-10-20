@@ -16,8 +16,6 @@ const rows = Array(10)
     items: [
       "Pre-school gymnastics",
       "Zippy Totz Pre-school Gymnastics",
-      "Glasgow",
-      "G46 7TL",
       <Status status="green" title="Active" />,
       <Actions />,
     ],

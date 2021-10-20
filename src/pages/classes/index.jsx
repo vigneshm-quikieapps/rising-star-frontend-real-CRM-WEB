@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Box, InputAdornment, MenuItem, Typography } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
@@ -7,7 +7,7 @@ import TextField from "../../components/textfield";
 import Button from "../../components/simple-button";
 import GradientButton from "../../components/gradient-button";
 import ClassList from "../../containers/class-list";
-import { getClassList } from "../../redux/action/classAction";
+import { getClassList } from "../../redux/action/class-actions";
 import { useSelector } from "react-redux";
 
 const AdvancedSearch = ({ open, setOpen }) => {
@@ -95,6 +95,21 @@ const AdvancedSearch = ({ open, setOpen }) => {
 
 const Classes = () => {
   const classList = useSelector((state) => state.classes.classList);
+  const businesses = useSelector((state) =>
+    state.businesses.reduce((businessesObject, currentBusiness) => {
+      const { id, ...currentBusinessInfo } = currentBusiness;
+      return {
+        ...businessesObject,
+        [id]: { ...currentBusiness },
+      };
+    })
+  );
+
+  const items = useMemo(
+    () =>
+      classList.map((singleClass) => [singleClass.name, businesses.filter()]),
+    [classList, businesses]
+  );
   const dispatch = useDispatch();
   const [advancedSearch, setAdvancedSearch] = useState(false);
 
