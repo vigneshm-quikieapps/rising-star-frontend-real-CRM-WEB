@@ -13,6 +13,7 @@ const GradientButton = styled(Button, {
   fontSize: sizes[size],
   border: `1px solid ${theme.palette.highlight.main}`,
   borderRadius: theme.shape.borderRadiuses.ternary,
+  textTransform: "none",
 }));
 
 export default GradientButton;

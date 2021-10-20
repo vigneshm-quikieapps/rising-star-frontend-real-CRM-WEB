@@ -11,9 +11,9 @@ const SimpleButton = styled(Button, {
   border: select
     ? `1px solid  ${theme.palette.secondary.main}`
     : `1px solid ${theme.palette.highlight.main}`,
-
   borderRadius: theme.shape.borderRadiuses.ternary,
   fontSize: "16px",
+  textTransform: "none",
 }));
 
 export default SimpleButton;
