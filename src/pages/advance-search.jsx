@@ -48,7 +48,7 @@ const AdvanceSearch = () => {
           <CardRow>
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}
@@ -62,7 +62,7 @@ const AdvanceSearch = () => {
 
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}
@@ -76,7 +76,7 @@ const AdvanceSearch = () => {
 
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}
@@ -94,7 +94,7 @@ const AdvanceSearch = () => {
           <CardRow>
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}
@@ -108,7 +108,7 @@ const AdvanceSearch = () => {
 
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}

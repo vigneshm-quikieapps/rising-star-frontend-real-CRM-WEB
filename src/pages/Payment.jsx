@@ -80,7 +80,7 @@ const Payment = () => {
         <CardRow>
           <TextField
             select
-            labelId="demo-simple-select-label"
+            // labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={10}
             label="Term"
