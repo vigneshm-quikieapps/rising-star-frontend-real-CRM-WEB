@@ -5,10 +5,9 @@ import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 import TextField from "../components/textfield";
 import GradientButton from "../components/gradient-button";
 
-
 import { CardRow } from "../components/common";
 import { MenuItem } from "@mui/material";
-import AdvanceSearchList from "../containers/member-list"
+import AdvanceSearchList from "../containers/member-list";
 
 const AdvanceSearch = () => {
   // const [AdvanceSearchList, setAdvanceSearchList] = useState([]);
@@ -41,7 +40,9 @@ const AdvanceSearch = () => {
           }}
           variant="outlined"
         />
-        <GradientButton active  sx={{ width:"170px",fontSize: "16px" }}  >Search</GradientButton>
+        <GradientButton active sx={{ width: "170px", fontSize: "16px" }}>
+          Search
+        </GradientButton>
       </Box>
       <Box>
         <Box sx={{ display: "flex", flexDirection: "column", mb: 1 }}>

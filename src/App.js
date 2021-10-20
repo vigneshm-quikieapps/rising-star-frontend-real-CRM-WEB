@@ -1,4 +1,4 @@
-import { BrowserRouter } from "react-router-dom"; 
+import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store/configureStore";
 import MainLayout from "./hoc/main-layout";
@@ -7,7 +7,7 @@ import "./styles/global.css";
 // import PersonalInfo from "./pages/personal-info";
 // import Payment from "./pages/Payment";
 // import Enrollment from "./pages/enrollment";
-import AdvanceSearch from "./pages/advance-search"
+import AdvanceSearch from "./pages/advance-search";
 
 function App() {
   return (
@@ -19,9 +19,9 @@ function App() {
             // <Enrollment />
             // <Classes/>
             // <Attendance/>
-            
+
             // <Payment/>
-            <AdvanceSearch/>
+            <AdvanceSearch />
           }
         </MainLayout>
       </BrowserRouter>
