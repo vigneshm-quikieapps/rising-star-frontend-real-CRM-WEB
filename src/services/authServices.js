@@ -6,7 +6,11 @@ const logIn = async (mobileNo, password) => {
     password,
   });
   const AccessToken = response.data.accessToken;
+  const userInfo = response.data.user;
+  localStorage.setItem("userId", userInfo._id);
+  localStorage.setItem("userName", userInfo.name);
   localStorage.setItem("accessToken", AccessToken);
+  return userInfo;
 };
 
 export default logIn;
