@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Output from "../components/output";
+import Output from "../../components/output";
 import { FormControl, Select } from "../components/drop-down";
 import {
   InputLabel,
@@ -9,17 +9,17 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import Accordion from "../components/accordion";
-import GradientButton from "../components/gradient-button";
-import SimpleButton from "../components/simple-button";
+import Accordion from "../../components/accordion";
+import GradientButton from "../../components/gradient-button";
+import SimpleButton from "../../components/simple-button";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import IconButton from "../components/icon-button";
-import { icons } from "../helper/constants";
+import IconButton from "../../components/icon-button";
+import { icons } from "../../helper/constants";
 import TextField from "../components/text-field";
 
 const StyleBox = styled(Box)(({ theme }) => ({
