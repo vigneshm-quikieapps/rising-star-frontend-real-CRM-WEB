@@ -1,7 +1,9 @@
 import axios from "axios";
 
+import { API_URL } from "../helper/config";
+
 const axiosInstance = axios.create({
-  baseURL: "https://ismart-rising-star.herokuapp.com/api",
+  baseURL: API_URL,
   ///
   // withCredentials: true,
 });

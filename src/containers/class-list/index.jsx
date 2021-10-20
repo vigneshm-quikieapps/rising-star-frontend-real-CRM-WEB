@@ -9,21 +9,21 @@ import Actions from "../../components/actions";
 import Status from "../../components/status";
 import Heading from "./heading";
 
-const rows = Array(10)
-  .fill(1)
-  .map((_, index) => ({
-    id: index,
-    items: [
-      "Pre-school gymnastics",
-      "Zippy Totz Pre-school Gymnastics",
-      <Status status="green" title="Active" />,
-      <Actions />,
-    ],
-  }));
+// const rows = Array(10)
+//   .fill(1)
+//   .map((_, index) => ({
+//     id: index,
+//     items: [
+//       "Pre-school gymnastics",
+//       "Zippy Totz Pre-school Gymnastics",
+//       <Status status="green" title="Active" />,
+//       <Actions />,
+//     ],
+//   }));
 
 const pagination = <CustomPagination count={3} page={2} variant="outlined" />;
 
-const ClassList = ({ list = rows }) => (
+const ClassList = ({ list = [] }) => (
   <Box
     sx={{
       justifyContent: "center",

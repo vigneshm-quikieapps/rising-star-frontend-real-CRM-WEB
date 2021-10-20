@@ -1,14 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { Box, InputAdornment, MenuItem, Typography } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
 import TextField from "../../components/textfield";
 import Button from "../../components/simple-button";
 import GradientButton from "../../components/gradient-button";
+import ActionButtons from "../../components/actions";
 import ClassList from "../../containers/class-list";
-import { getClassList } from "../../redux/action/class-actions";
+import { getClassList, deleteClass } from "../../redux/action/class-actions";
+import { getBusinessList } from "../../redux/action/businesses-actions";
 import { useSelector } from "react-redux";
+import Status from "../../components/status";
 
 const AdvancedSearch = ({ open, setOpen }) => {
   const [selectedBusiness, setSelectedBusiness] = useState("");
@@ -94,30 +98,65 @@ const AdvancedSearch = ({ open, setOpen }) => {
 };
 
 const Classes = () => {
-  const classList = useSelector((state) => state.classes.classList);
-  const businesses = useSelector((state) =>
-    state.businesses.reduce((businessesObject, currentBusiness) => {
-      const { id, ...currentBusinessInfo } = currentBusiness;
-      return {
-        ...businessesObject,
-        [id]: { ...currentBusiness },
-      };
-    })
-  );
-
-  const items = useMemo(
-    () =>
-      classList.map((singleClass) => [singleClass.name, businesses.filter()]),
-    [classList, businesses]
-  );
   const dispatch = useDispatch();
-  const [advancedSearch, setAdvancedSearch] = useState(false);
-
-  useEffect(
-    () => dispatch(getClassList("614ae0f9c265630cd520ab36")),
+  const classList = useSelector((state) => state.classes.classList);
+  const businesses = useSelector((state) => state.businesses.businessList);
+  const history = useHistory();
+  // const businesses = useSelector((state) =>
+  //   state.businesses.reduce((businessesObject, currentBusiness) => {
+  //     const { id, ...currentBusinessInfo } = currentBusiness;
+  //     return {
+  //       ...businessesObject,
+  //       [id]: { ...currentBusinessInfo },
+  //     };
+  //   })
+  // );
+  const handleEdit = useCallback(
+    (id) => {
+      history.push(`/classes/add/${id}?edit=true`);
+    },
+    [history]
+  );
+  const handleDelete = useCallback(
+    (id) => {
+      dispatch(deleteClass(id));
+    },
     [dispatch]
   );
-  useEffect(() => console.log(classList), [classList]);
+  // const items = useMemo(
+  //   () =>
+  //     classList.map((singleClass) => [
+  //       singleClass.name,
+  //       businesses[singleClass.businessId],
+  //     ]),
+  //   [classList, businesses]
+  // );
+  const items = useMemo(() => {
+    return classList.map((singleClass) => {
+      const businessName = businesses.filter(
+        (business) => business._id === singleClass.businessId
+      )[0].name;
+      return {
+        id: singleClass.id,
+        items: [
+          singleClass.name,
+          businessName,
+          <Status status="green" title={singleClass.status} />,
+          <ActionButtons
+            onEdit={() => handleEdit(singleClass._id)}
+            onDelete={() => handleDelete(singleClass._id)}
+          />,
+        ],
+      };
+    });
+  }, [classList, handleEdit, handleDelete]);
+  console.log("classList", classList, "items", items);
+  const [advancedSearch, setAdvancedSearch] = useState(false);
+
+  useEffect(() => {
+    dispatch(getClassList("614ae0f9c265630cd520ab36"));
+    dispatch(getBusinessList());
+  }, [dispatch]);
 
   return (
     <Box>
@@ -152,7 +191,7 @@ const Classes = () => {
         </Button>
       </Box>
       <AdvancedSearch open={advancedSearch} setOpen={setAdvancedSearch} />
-      <ClassList />
+      <ClassList list={items} />
     </Box>
   );
 };
