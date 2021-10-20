@@ -4,7 +4,6 @@ import { CssBaseline } from "@mui/material";
 
 import theme from "./styles/theme";
 import "./styles/global.css";
-import Classes from "./pages/classes";
 import store from "./redux/store/configureStore";
 import MainRouter from "./router";
 
