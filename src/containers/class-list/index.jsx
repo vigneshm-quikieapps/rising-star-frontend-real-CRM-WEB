@@ -21,7 +21,9 @@ import Heading from "./heading";
 //     ],
 //   }));
 
-const pagination = <CustomPagination count={3} page={2} variant="outlined" />;
+const pagination = (
+  <CustomPagination sx={{ my: "20px" }} count={3} page={2} variant="outlined" />
+);
 
 const ClassList = ({ list = [] }) => (
   <Box
