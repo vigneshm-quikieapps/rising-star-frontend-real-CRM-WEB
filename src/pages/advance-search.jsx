@@ -41,7 +41,8 @@ const AdvanceSearch = () => {
           }}
           variant="outlined"
         />
-        <GradientButton active  sx={{ width:"170px",fontSize: "16px" }}  >Search</GradientButton>
+       
+       <GradientButton active="true" sx={{ width: "170px", fontSize: "16px" }}>Search</GradientButton>
       </Box>
       <Box>
         <Box sx={{ display: "flex", flexDirection: "column", mb: 1 }}>
