@@ -40,7 +40,8 @@ const AdvanceSearch = () => {
           }}
           variant="outlined"
         />
-        <GradientButton active sx={{ width: "170px", fontSize: "16px" }}>
+
+        <GradientButton active="true" sx={{ width: "170px", fontSize: "16px" }}>
           Search
         </GradientButton>
       </Box>
