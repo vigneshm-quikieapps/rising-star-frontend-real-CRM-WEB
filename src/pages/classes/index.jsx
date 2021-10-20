@@ -102,15 +102,6 @@ const Classes = () => {
   const classList = useSelector((state) => state.classes.classList);
   const businesses = useSelector((state) => state.businesses.businessList);
   const history = useHistory();
-  // const businesses = useSelector((state) =>
-  //   state.businesses.reduce((businessesObject, currentBusiness) => {
-  //     const { id, ...currentBusinessInfo } = currentBusiness;
-  //     return {
-  //       ...businessesObject,
-  //       [id]: { ...currentBusinessInfo },
-  //     };
-  //   })
-  // );
   const handleEdit = useCallback(
     (id) => {
       history.push(`/classes/add/${id}?edit=true`);
@@ -123,14 +114,6 @@ const Classes = () => {
     },
     [dispatch]
   );
-  // const items = useMemo(
-  //   () =>
-  //     classList.map((singleClass) => [
-  //       singleClass.name,
-  //       businesses[singleClass.businessId],
-  //     ]),
-  //   [classList, businesses]
-  // );
   const items = useMemo(() => {
     return classList.map((singleClass) => {
       const businessName = businesses.filter(
@@ -149,7 +132,7 @@ const Classes = () => {
         ],
       };
     });
-  }, [classList, handleEdit, handleDelete]);
+  }, [classList, handleEdit, handleDelete, businesses]);
   console.log("classList", classList, "items", items);
   const [advancedSearch, setAdvancedSearch] = useState(false);
 
