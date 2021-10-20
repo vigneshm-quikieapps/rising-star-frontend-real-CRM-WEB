@@ -1,8 +1,8 @@
-export const BASE_DOMAIN = "https://ismart-rising-star.herokuapp.com/";
-export const BASE_URL = BASE_DOMAIN + "api/";
+export const baseDomain = "https://ismart-rising-star.herokuapp.com/";
+export const baseURL = baseDomain + "api/";
 
 const API = {
-  GetBusinessClassListAPI: BASE_URL + "business/",
+  getBusinessClassListAPI: baseURL + "businesses/",
 };
 
 export default API;

@@ -2,7 +2,8 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: "https://ismart-rising-star.herokuapp.com/api",
-  withCredentials: true,
+  ///
+  // withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -26,15 +27,17 @@ axiosInstance.interceptors.response.use(
           localStorage.setItem("accessToken", accessToken);
           const { config } = error;
           config.headers = { Authorization: `Bearer ${accessToken}` };
-          config.withCredentials = true;
+          ///
+          // config.withCredentials = true;
           return new Promise((resolve) => resolve(axios(config)));
         })
         .catch((error) => {
           throw error;
         });
+    } else {
+      throw error;
     }
   }
 );
 
 export default axiosInstance;
-

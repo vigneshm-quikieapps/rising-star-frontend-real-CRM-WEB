@@ -1,5 +1,5 @@
 import { put, takeEvery, call } from "redux-saga/effects";
-import fetchGetClass from "../../services/classServices";
+import fetchGetClasses from "../../services/classServices";
 import {
   GET_CLASS_LIST,
   GET_CLASS_LIST_SUCCEEDED,
@@ -8,8 +8,8 @@ import {
 
 export function* getClassList(action) {
   try {
-    const class_list = yield call(fetchGetClass, action.payload);
-    yield put({ type: GET_CLASS_LIST_SUCCEEDED, payload: class_list });
+    const classList = yield call(fetchGetClasses, action.payload);
+    yield put({ type: GET_CLASS_LIST_SUCCEEDED, payload: classList });
   } catch (error) {
     yield put({ type: GET_CLASS_LIST_FAILED, payload: error.message });
   }

@@ -1,16 +1,14 @@
-// import axios from "axios";
 import axiosInstance from "../utils/axiosInstance";
 import API from "../helper/config";
 
-export default async function fetchGetClass(id) {
+export default async function fetchGetClasses(businessId) {
   try {
     const response = await axiosInstance.get(
-      API.GetBusinessClassListAPI + id + "/classes"
+      API.getBusinessClassListAPI + businessId + "/classes"
     );
     const classes = response.data.docs;
-    console.log(response);
     return classes;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }

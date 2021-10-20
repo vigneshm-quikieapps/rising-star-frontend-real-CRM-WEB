@@ -8,8 +8,8 @@ import setupIcon from "../assets/icons/icon-setup and processes.png";
 export const classListHeaders = [
   "Class Name",
   "Business Name",
-  "City/Town",
-  "Post Code",
+  // "City/Town",
+  // "Post Code",
   "Status",
   "Action",
 ];

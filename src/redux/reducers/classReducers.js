@@ -1,10 +1,10 @@
 import { GET_CLASS_LIST_FAILED, GET_CLASS_LIST_SUCCEEDED } from "../types";
 
-const INITIAL_STATE = {
+const initialState = {
   classList: [],
 };
 
-export default function reducer(state = INITIAL_STATE, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case GET_CLASS_LIST_SUCCEEDED:
       return { ...state, classList: action.payload };
