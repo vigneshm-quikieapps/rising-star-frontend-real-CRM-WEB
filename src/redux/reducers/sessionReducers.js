@@ -1,4 +1,4 @@
-import { GET_ALL_MEMBERS_ENROLLED_IN_A_SESSION } from "../types";
+import { memberActionTypes } from "../types";
 
 const INITIAL_STATE = {
   allMembersEnrolled: [],
@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case GET_ALL_MEMBERS_ENROLLED_IN_A_SESSION:
+    case memberActionTypes.GET_ALL_MEMBERS_ENROLLED_IN_A_SESSION:
       return { ...state, allMembersEnrolled: action.payload };
 
     default:

@@ -57,7 +57,6 @@ const MemberInfo = () => {
     setBasicInfoArr(objectToArray(info));
 
     // setting parent info
-    parentInfo["Parent User ID*"] = "Driving Licence";
     parentInfo["Full Name*"] = pName;
     parentInfo.Email = email;
     parentInfo["Contact Number"] = mobileNo;

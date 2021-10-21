@@ -1,4 +1,4 @@
-import { GET_ALL_MEMBERS, GET_MEMBER_BY_ID } from "../types";
+import { memberActionTypes } from "../types";
 
 const INITIAL_STATE = {
   allMembers: [],
@@ -7,9 +7,9 @@ const INITIAL_STATE = {
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case GET_ALL_MEMBERS:
+    case memberActionTypes.GET_ALL_MEMBERS:
       return { ...state, allMembers: action.payload };
-    case GET_MEMBER_BY_ID:
+    case memberActionTypes.GET_MEMBER_BY_ID:
       return { ...state, currentMember: action.payload };
     default:
       return state;
