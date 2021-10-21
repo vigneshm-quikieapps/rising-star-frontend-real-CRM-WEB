@@ -13,6 +13,7 @@ const rows = Array(10)
   .fill(1)
   .map((_, index) => ({
     id: index,
+    onClick: () => console.log("row clicked"),
     items: [
       "Pre-school gymnastics",
       "Zippy Totz Pre-school Gymnastics",
