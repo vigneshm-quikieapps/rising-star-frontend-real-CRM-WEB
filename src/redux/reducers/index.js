@@ -1,11 +1,17 @@
 import { combineReducers } from "redux";
-import classReducers from "./classReducers";
-import memberEnrolmentReducers from "./memberReducer";
+import authReducer from "./authReducer";
+import classReducer from "./class-reducer";
+import businessesReducer from "./businesses-reducer";
+import memberReducers from "./memberReducers";
+import sessionReducers from "./sessionReducers";
 
 const rootReducer = combineReducers({
   //By defining a field inside the reducers parameter
-  classes: classReducers,
-  memberEnrolment: memberEnrolmentReducers,
+  user: authReducer,
+  classes: classReducer,
+  businesses: businessesReducer,
+  members: memberReducers,
+  sessions: sessionReducers,
 });
 
 export default rootReducer;

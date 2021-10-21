@@ -15,7 +15,7 @@ import TextField from "../../components/textfield";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { getMemberEnrolmentList } from "../../redux/action/memberActions";
+import { getMemberEnrolmentList } from "../../redux/action/memberAction";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -38,7 +38,8 @@ const StyleBox = styled(Box)(({ theme }) => ({
 const MemberEnrollment = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const enrollmentList = useSelector((state) => state.memberEnrolment);
+  const enrollmentList = useSelector((state) => state.members.enrolmentList);
+  console.log(enrollmentList);
 
   const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
 

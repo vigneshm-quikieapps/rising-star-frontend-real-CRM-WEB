@@ -1,12 +1,28 @@
-import axios from "./axiosIntance";
+import axios from "axios";
+import API from "../helper/config";
 
-const fetchgetAllErolmentOfAMember = async (params) => {
-  console.log(params);
-  const response = await axios.post(
-    "/enrolments/of-a-member-in-a-business",
-    params
-  );
+export const fetchgetAllErolmentOfAMember = async (params) => {
+  const api = `${API.EnrolmentsAPI}of-a-member-in-a-business`;
+  const response = await axios.post(api, params);
   return response;
 };
 
-export default fetchgetAllErolmentOfAMember;
+export const axiosGetMemberList = async () => {
+  const api = API.MembersAPI;
+  try {
+    const allMembers = await axios.get(api);
+    return allMembers.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const axiosGetMember = async (id) => {
+  const api = `${API.MembersAPI}${id}`;
+  try {
+    const member = await axios.get(api);
+    return member.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

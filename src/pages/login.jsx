@@ -1,14 +1,14 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Grid, styled, Typography, InputAdornment } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { VisibilityOff } from "@mui/icons-material";
+
 import TextField from "../components/textfield";
 import Button from "../components/gradient-button";
 import { icons } from "../helper/constants";
-
-import { useDispatch } from "react-redux";
 import { logInStart } from "../redux/action/authAction";
 
-const GridContainer = styled(Grid)(({ theme }) => ({
+const GridContainer = styled(Grid)({
   height: "100vh",
   "& .MuiTypography-h5": {
     fontWeight: 700,
@@ -16,7 +16,7 @@ const GridContainer = styled(Grid)(({ theme }) => ({
   "& .MuiTypography-subtitle2": {
     marginBottom: "2.35em",
   },
-}));
+});
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
