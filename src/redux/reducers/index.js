@@ -1,9 +1,11 @@
 import { combineReducers } from "redux";
-import classReducers from "./classReducers";
+import TermReducer from "./termReducers";
+import  ClassReducer from "./classReducers"
 
 const rootReducer = combineReducers({
   //By defining a field inside the reducers parameter
-  classes: classReducers,
+  classes: ClassReducer,
+  Term: TermReducer
 });
 
 export default rootReducer;
