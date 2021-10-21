@@ -13,6 +13,10 @@ import IconButton from "../../components/icon-button";
 import { icons } from "../../helper/constants";
 import TextField from "../../components/textfield";
 
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getMemberEnrolmentList } from "../../redux/action/memberActions";
+
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
   marginBottom: "15px",
@@ -32,14 +36,18 @@ const StyleBox = styled(Box)(({ theme }) => ({
 }));
 
 const MemberEnrollment = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
+  const enrollmentList = useSelector((state) => state.memberEnrolment);
 
-  const [age, setAge] = useState("");
   const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  const businessId = "614ae0f9c265630cd520ab36";
+  const memberId = "614b270bc265630cd55a0520";
+
+  useEffect(() => {
+    dispatch(getMemberEnrolmentList({ businessId, memberId }));
+  }, []);
 
   return (
     <Box sx={{ width: "100%" }}>
