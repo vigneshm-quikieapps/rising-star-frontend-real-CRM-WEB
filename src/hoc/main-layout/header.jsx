@@ -73,7 +73,12 @@ const Header = ({
               width: "100%",
             }}
           >
-            <Box sx={{ maxWidth: "880px", m: "auto" }}>
+            <Box
+              sx={{
+                maxWidth: { xs: "100%", lg: "1040px" },
+                mx: { xs: "16px", md: "32px", lg: "auto" },
+              }}
+            >
               <IconButton
                 color="inherit"
                 aria-label="open drawer"

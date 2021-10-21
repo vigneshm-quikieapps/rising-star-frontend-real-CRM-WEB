@@ -4,7 +4,6 @@ import { Box, Container, Typography } from "@mui/material";
 import GradientButton from "../components/gradient-button";
 
 const PageNotFound = () => {
-  console.log("Page not found!");
   return (
     <Container
       sx={{
