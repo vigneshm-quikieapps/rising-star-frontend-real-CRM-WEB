@@ -103,37 +103,46 @@ const Classes = () => {
   const businesses = useSelector((state) => state.businesses.businessList);
   const history = useHistory();
   const handleEdit = useCallback(
-    (id) => {
+    (e, id) => {
+      e.stopPropagation();
       history.push(`/classes/add/${id}?edit=true`);
     },
     [history]
   );
   const handleDelete = useCallback(
-    (id) => {
+    (e, id) => {
+      e.stopPropagation();
       dispatch(deleteClass(id));
     },
     [dispatch]
+  );
+  const handleRowClick = useCallback(
+    (id) => {
+      history.push(`/classes/definitions/${id}`);
+    },
+    [history]
   );
   const items = useMemo(() => {
     return classList.map((singleClass) => {
       const businessName = businesses.filter(
         (business) => business._id === singleClass.businessId
       )[0].name;
+      const id = singleClass._id;
       return {
         id: singleClass.id,
+        onClick: () => handleRowClick(id),
         items: [
           singleClass.name,
           businessName,
           <Status status="green" title={singleClass.status} />,
           <ActionButtons
-            onEdit={() => handleEdit(singleClass._id)}
-            onDelete={() => handleDelete(singleClass._id)}
+            onEdit={(e) => handleEdit(e, id)}
+            onDelete={(e) => handleDelete(e, id)}
           />,
         ],
       };
     });
-  }, [classList, handleEdit, handleDelete, businesses]);
-  console.log("classList", classList, "items", items);
+  }, [classList, handleEdit, handleDelete, businesses, handleRowClick]);
   const [advancedSearch, setAdvancedSearch] = useState(false);
 
   useEffect(() => {
