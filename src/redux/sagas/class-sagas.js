@@ -5,7 +5,7 @@ import { classActionTypes } from "../types";
 export function* getClassList(action) {
   try {
     yield put({ type: classActionTypes.SET_LOADING, payload: true });
-    const classList = yield call(getClasses, action.payload);
+    const classList = yield call(getClasses);
     yield put({
       type: classActionTypes.GET_CLASS_LIST_SUCCEEDED,
       payload: classList,

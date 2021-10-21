@@ -1,10 +1,8 @@
 import axiosInstance from "../utils/axios-instance";
 
-export async function getClasses(businessId) {
+export async function getClasses() {
   try {
-    const response = await axiosInstance.get(
-      "/businesses/" + businessId + "/classes"
-    );
+    const response = await axiosInstance.get("/auth/user/classes");
     const classes = response.data.docs;
     return classes;
   } catch (error) {

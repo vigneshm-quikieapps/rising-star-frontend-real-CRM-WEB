@@ -126,7 +126,7 @@ const Classes = () => {
     return classList.map((singleClass) => {
       const businessName = businesses.filter(
         (business) => business._id === singleClass.businessId
-      )[0].name;
+      )[0]?.name;
       const id = singleClass._id;
       return {
         id: singleClass.id,
@@ -146,7 +146,7 @@ const Classes = () => {
   const [advancedSearch, setAdvancedSearch] = useState(false);
 
   useEffect(() => {
-    dispatch(getClassList("614ae0f9c265630cd520ab36"));
+    dispatch(getClassList());
     dispatch(getBusinessList());
   }, [dispatch]);
 
