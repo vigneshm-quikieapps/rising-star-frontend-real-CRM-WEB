@@ -17,12 +17,14 @@ import {
   attendanceObject1,
   enrollmentHeaders,
   enrollmentObject2,
-  enrollmentRows,
 } from "../../helper/constants";
-import { Outputs, TitleDescription } from "../../containers/outputs";
+import { Outputs } from "../../containers/outputs";
 import Pagination from "./../../components/pagination";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllMembersEnrolledInASession } from "../../redux/action/sessionAction";
+import verfiedIcon from "../../assets/icons/icon-allergy.png";
+import BasicModal from "../../containers/modal/modal";
 const MoreIconButton = () => (
   <IconButton>
     <ImgIcon alt="more">{moreIcon}</ImgIcon>
@@ -36,12 +38,16 @@ const UpIconButton = () => (
 );
 
 const ClassEnrolments = () => {
+  const allMembers = useSelector((state) => state.sessions.allMembersEnrolled);
   const { id } = useParams();
-  console.log(id);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(allMembers.page);
+  const [pages] = useState(allMembers.totalPages);
+  const [tableRowData, setTableRowData] = useState([]);
+  const dispatch = useDispatch();
+
   const pagination = (
     <Pagination
-      count={3}
+      count={pages}
       page={page}
       onChange={(event, value) => setPage(value)}
     />
@@ -52,7 +58,7 @@ const ClassEnrolments = () => {
         margin: "10px 20px",
       }}
     >
-      <HeadingText>Registered Members</HeadingText>
+      <HeadingText>Members</HeadingText>
       <CardRow>
         <UpIconButton />
         <MoreIconButton />
@@ -63,8 +69,46 @@ const ClassEnrolments = () => {
   const arr1 = objectToArray(attendanceObject1);
   const arr2 = objectToArray(enrollmentObject2);
 
+  const setTableRows = () => {
+    let sessionMembersDetailsArray = allMembers.docs.map((item) => {
+      return {
+        name: item.member.name,
+        allergies: item.memberConsent.consent.allergies,
+        conditions: item.memberConsent.consent.condition,
+        startDate: item.startDate ? item.startDate : "N/A",
+        enrolledDate: item.registeredDate ? item.registeredDate : "N/A",
+        enrolledStatus: item.enrolledStatus,
+        discontinuationReason: item.discontinuationReason,
+        droppedDate: item.droppedDate ? item.droppedDate : "N/A",
+      };
+    });
+    let finalRowDataArray = sessionMembersDetailsArray.map((item, index) => {
+      let itemArray = objectToArray(item);
+      return {
+        id: index,
+        items: itemArray.map((i) => {
+          if (i[0] === "allergies" || i[0] === "conditions") {
+            return <ImgIcon alt="verify">{verfiedIcon}</ImgIcon>;
+          }
+          return i[1];
+        }),
+      };
+    });
+    setTableRowData(finalRowDataArray);
+  };
+
+  useEffect(() => {
+    dispatch(getAllMembersEnrolledInASession(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    allMembers && allMembers.docs && setTableRows();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allMembers]);
+
   return (
     <Box>
+      <BasicModal />
       <Card>
         <CardRow>
           <HeadingText>Pre-school gymnastics (Age: 1-3)</HeadingText>
@@ -118,20 +162,10 @@ const ClassEnrolments = () => {
         </CardRow>
       </Card>
 
-      <CardRow sx={{ margin: "5px 0", justifyContent: "flex-start" }}>
-        <TitleDescription
-          title={"Last Updated by"}
-          description={"Bethany Lafferty"}
-        />
-        <TitleDescription
-          title={"Last Updated at"}
-          description={"13/09/2021 9:32 am"}
-        />
-      </CardRow>
       <CustomTable
         heading={heading}
         headers={enrollmentHeaders}
-        rows={enrollmentRows}
+        rows={tableRowData}
         pagination={pagination}
       />
     </Box>

@@ -78,7 +78,6 @@ const MemberInfo = () => {
   };
 
   useEffect(() => {
-    console.log("id from params", id, currentMemberId);
     dispatch(getAllMembersList());
 
     return () => {
