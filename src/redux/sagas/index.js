@@ -1,5 +1,4 @@
 import { all, call } from "@redux-saga/core/effects";
-import { watchGetClassList } from "./classSagas";
 import { watchGetMember, watchGetMemberList } from "./memberSagas";
 import { watchGetMemberEnrolledInSession } from "./sessionSagas";
 import classSagas from "./class-sagas";
@@ -8,7 +7,6 @@ import { authSagas } from "./authSagas";
 
 export default function* rootSaga() {
   yield all([
-    watchGetClassList(),
     watchGetMemberList(),
     watchGetMember(),
     watchGetMemberEnrolledInSession(),
