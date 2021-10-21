@@ -1,5 +1,9 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
-import { getClasses, deleteClassByID } from "../../services/class-services";
+import {
+  getClasses,
+  deleteClassByID,
+  axiosGetClassById,
+} from "../../services/class-services";
 import { classActionTypes } from "../types";
 
 export function* getClassList(action) {
@@ -43,6 +47,15 @@ export function* deleteClassSaga() {
   yield takeEvery(classActionTypes.DELETE_CLASS, deleteClass);
 }
 
+export function* watchGetClassById() {
+  yield takeEvery(classActionTypes.GET_CLASS_BY_ID_SAGA, getClassById);
+}
+
+export function* getClassById(action) {
+  const classObj = yield call(axiosGetClassById, action.payload);
+  yield put({ type: classActionTypes.GET_CLASS_BY_ID, payload: classObj });
+}
+
 export default function* classSagas() {
-  yield all([classListSaga(), deleteClassSaga()]);
+  yield all([classListSaga(), deleteClassSaga(), watchGetClassById()]);
 }

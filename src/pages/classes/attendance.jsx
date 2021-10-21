@@ -19,10 +19,12 @@ import { Outputs, TitleDescription } from "../../containers/outputs";
 import {
   attendanceRows,
   attendanceHeaders,
-  attendanceObject1,
   attendanceObject2,
 } from "../../helper/constants";
 import Pagination from "./../../components/pagination";
+import { useEffect } from "react";
+import { getClassById } from "../../redux/action/class-actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -38,9 +40,23 @@ const UpIconButton = () => (
 
 const ClassAttendance = () => {
   const { id } = useParams();
-  console.log(id);
   const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
   const [page, setPage] = useState(1);
+  const classObj = useSelector((state) => state.classes.class);
+  const [classInfoArray, setClassInfoArray] = useState([]);
+  const dispatch = useDispatch();
+
+  const setClassInfo = () => {
+    const { business } = classObj;
+    const classInfoObject = {
+      // "Class ID": "DL39020458",
+      "City / Town": business.city,
+      "Post Code": business.postcode,
+      Status: business.status,
+    };
+    setClassInfoArray(objectToArray(classInfoObject));
+  };
+
   const pagination = (
     <Pagination
       count={3}
@@ -62,21 +78,28 @@ const ClassAttendance = () => {
     </CardRow>
   );
 
-  const arr1 = objectToArray(attendanceObject1);
   const arr2 = objectToArray(attendanceObject2);
+
+  useEffect(() => {
+    dispatch(getClassById(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    classObj && setClassInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [classObj]);
 
   return (
     <Box>
       <Card>
         <CardRow>
-          <HeadingText>Pre-school gymnastics (Age: 1-3)</HeadingText>
-          <MoreIconButton />
+          <HeadingText>{classObj && classObj.name}</HeadingText>
         </CardRow>
 
-        <SubHeadingText>Zippy Totz Pre-school Gymnastics</SubHeadingText>
+        <SubHeadingText>{classObj && classObj.business.name}</SubHeadingText>
 
         <CardRow>
-          <Outputs arr={arr1} />
+          <Outputs arr={classInfoArray} />
         </CardRow>
       </Card>
 

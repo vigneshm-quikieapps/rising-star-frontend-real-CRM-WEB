@@ -47,19 +47,21 @@ const MemberInfo = () => {
     const { name, gender, dob, contacts, userId } = currentMember;
     const { email, name: pName, mobileNo } = userId;
 
-    let info = {};
-    let parentInfo = {};
-    let date = new Date(dob.split("T")[0]);
     // setting basic info object
-    info["Full Name"] = name;
-    info["Gender*"] = gender;
-    info["Date of Birth*"] = date.toDateString();
+    let date = new Date(dob.split("T")[0]);
+    let info = {
+      "Full Name": name,
+      "Gender*": gender,
+      "Date of Birth*": date.toDateString(),
+    };
     setBasicInfoArr(objectToArray(info));
 
     // setting parent info
-    parentInfo["Full Name*"] = pName;
-    parentInfo.Email = email;
-    parentInfo["Contact Number"] = mobileNo;
+    let parentInfo = {
+      "Full Name*": pName,
+      Email: email,
+      "Contact Number": mobileNo,
+    };
     setParentInfoArr(objectToArray(parentInfo));
 
     // setting primary and secondary contact info arrays

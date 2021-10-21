@@ -13,11 +13,7 @@ import ImgIcon from "../../components/img-icon";
 import IconButton from "../../components/icon-button";
 import moreIcon from "../../assets/icons/icon-more.png";
 import { objectToArray } from "../../utils";
-import {
-  attendanceObject1,
-  enrollmentHeaders,
-  enrollmentObject2,
-} from "../../helper/constants";
+import { enrollmentHeaders } from "../../helper/constants";
 import { Outputs } from "../../containers/outputs";
 import Pagination from "./../../components/pagination";
 import { useEffect, useState } from "react";
@@ -25,6 +21,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllMembersEnrolledInASession } from "../../redux/action/sessionAction";
 import verfiedIcon from "../../assets/icons/icon-allergy.png";
 import BasicModal from "../../containers/modal/modal";
+import { getClassById } from "../../redux/action/class-actions";
+import {
+  getAllTerms,
+  getSessionsByTermId,
+} from "../../redux/action/terms-actions";
 const MoreIconButton = () => (
   <IconButton>
     <ImgIcon alt="more">{moreIcon}</ImgIcon>
@@ -39,10 +40,20 @@ const UpIconButton = () => (
 
 const ClassEnrolments = () => {
   const allMembers = useSelector((state) => state.sessions.allMembersEnrolled);
+  const classObj = useSelector((state) => state.classes.class);
+  const allTerms = useSelector((state) => state.terms.allTerms);
+  const allSessions = useSelector((state) => state.terms.termSessions);
   const { id } = useParams();
   const [page, setPage] = useState(allMembers.page);
   const [pages] = useState(allMembers.totalPages);
   const [tableRowData, setTableRowData] = useState([]);
+  const [classInfoArray, setClassInfoArray] = useState([]);
+  const [termsData, setTermsData] = useState([]);
+  const [sessionsData, setSessionsData] = useState([]);
+  const [selectedTermId, setSelectedTermId] = useState("");
+  const [selectedSession, setSelectedSession] = useState("");
+  const [sessionDetailsArray, setSessionDetailsArray] = useState([]);
+
   const dispatch = useDispatch();
 
   const pagination = (
@@ -65,9 +76,6 @@ const ClassEnrolments = () => {
       </CardRow>
     </CardRow>
   );
-
-  const arr1 = objectToArray(attendanceObject1);
-  const arr2 = objectToArray(enrollmentObject2);
 
   const setTableRows = () => {
     let sessionMembersDetailsArray = allMembers.docs.map((item) => {
@@ -97,27 +105,114 @@ const ClassEnrolments = () => {
     setTableRowData(finalRowDataArray);
   };
 
+  const setClassInfo = () => {
+    const { business } = classObj;
+    const classInfoObject = {
+      // "Class ID": "DL39020458",
+      "City / Town": business.city,
+      "Post Code": business.postcode,
+      Status: business.status,
+    };
+    setClassInfoArray(objectToArray(classInfoObject));
+  };
+
+  const handleTermChange = (e) => {
+    let termId = e.target.value;
+    setSelectedTermId(termId);
+    termId !== 0 ? dispatch(getSessionsByTermId(termId)) : setSessionsData([]);
+    setSelectedSession();
+    setSessionDetailsArray([]);
+  };
+
+  const handleSessionChange = (e) => {
+    let sessionId = e.target.value;
+    let selectedSessionObj =
+      allSessions && allSessions.docs.find((e) => e._id === sessionId);
+    setSelectedSession(selectedSessionObj);
+    selectedSessionObj !== undefined
+      ? renderSessionData(selectedSessionObj)
+      : setSessionDetailsArray([]);
+  };
+  const renderSessionData = (Obj) => {
+    const {
+      term,
+      pattern,
+      status,
+      coach,
+      fullcapacity,
+      fullcapacityfilled,
+      waitcapacity,
+      waitcapacityfilled,
+    } = Obj;
+    let sessionsDataObject = {
+      "Start Date": term.startDate,
+      "End Date": term.endDate,
+      "Start Time": pattern[0].startTime,
+      "End Time": pattern[0].endTime,
+      Pattern: pattern[0].day,
+      Facility: "Gym Hall (static)",
+      "Session Enrolment Status": status,
+      "Coach Name": coach[0].name,
+      "Full class capacity": fullcapacity,
+      Enrolled: fullcapacityfilled,
+      "Waitlist capacity": waitcapacity,
+      "Waitlist Enrolled": waitcapacityfilled,
+    };
+
+    let sessionsDataArray = objectToArray(sessionsDataObject);
+    setSessionDetailsArray(sessionsDataArray);
+  };
   useEffect(() => {
+    dispatch(getClassById(id));
+    dispatch(getAllTerms());
     dispatch(getAllMembersEnrolledInASession(id));
   }, [dispatch, id]);
 
   useEffect(() => {
+    // setting terms data
+    let termOptions =
+      allTerms &&
+      allTerms.map((item) => {
+        return {
+          id: item._id,
+          termName: item.business[0].name,
+        };
+      });
+    setTermsData(termOptions);
+    setSelectedTermId(0);
+    setSelectedSession();
+
     allMembers && allMembers.docs && setTableRows();
+    classObj && setClassInfo();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allMembers]);
+  }, [allMembers, classObj]);
+
+  useEffect(() => {
+    let sessionOptions =
+      allSessions &&
+      allSessions.docs.map((item) => {
+        return {
+          id: item._id,
+          sessionName: item.name,
+        };
+      });
+
+    setSessionsData(sessionOptions);
+  }, [allSessions]);
 
   return (
     <Box>
       <BasicModal />
       <Card>
         <CardRow>
-          <HeadingText>Pre-school gymnastics (Age: 1-3)</HeadingText>
+          <HeadingText>{classObj && classObj.name}</HeadingText>
         </CardRow>
 
-        <SubHeadingText>Zippy Totz Pre-school Gymnastics</SubHeadingText>
+        <SubHeadingText>{classObj && classObj.business.name}</SubHeadingText>
 
         <CardRow>
-          <Outputs arr={arr1} />
+          <Outputs arr={classInfoArray} />
         </CardRow>
       </Card>
 
@@ -126,29 +221,39 @@ const ClassEnrolments = () => {
           <TextField
             select
             id="demo-simple-select"
-            value={10}
+            value={selectedTermId}
             label="Term"
-            onChange={() => {}}
+            onChange={handleTermChange}
             variant="filled"
             sx={{ width: "272px", marginRight: "15px" }}
           >
-            <MenuItem value={10}>2022 Summer</MenuItem>
-            <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={0}>Select Term</MenuItem>
+            {termsData &&
+              termsData.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  {item.termName}
+                </MenuItem>
+              ))}
           </TextField>
 
           <TextField
             select
             label="Session"
             id="demo-simple-select"
-            value={20}
-            onChange={() => {}}
+            value={selectedSession ? selectedSession._id : ""}
+            onChange={handleSessionChange}
             variant="filled"
             sx={{ width: "272px" }}
           >
-            <MenuItem value={10}>2022 Summer</MenuItem>
-            <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={0}>Select Session</MenuItem>
+            {sessionsData &&
+              sessionsData.map((item) => {
+                return (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.sessionName}
+                  </MenuItem>
+                );
+              })}
           </TextField>
         </CardRow>
 
@@ -158,7 +263,7 @@ const ClassEnrolments = () => {
             justifyContent: "flex-start",
           }}
         >
-          <Outputs arr={arr2} />
+          <Outputs arr={sessionDetailsArray} />
         </CardRow>
       </Card>
 
