@@ -17,9 +17,9 @@ export const UpdateTerm = (id,value) => {
   return { type: UPDATE_TERM_SAGA, payload: {id:id,value:value} };
 };
 
-export const RemoveTerm = (id) => {
+export const RemoveTerm = (id,businessId) => {
   console.log("removeTerm");
-  return { type: DELETE_TERM_SAGA, payload: id };
+  return { type: DELETE_TERM_SAGA, payload: {id:id,businessId:businessId} };
 };
 export default {
   GetTerm,

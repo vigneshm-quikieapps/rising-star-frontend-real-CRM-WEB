@@ -26,6 +26,7 @@ export function* GetTerm(action) {
 export function* CreateTerm(action) {
   console.log("ggg");
   const Create_term = yield call(fetchCreateTerm, action.payload);
+  yield put({type:GET_TERM_SAGA, payload:action.payload.id})
   yield put({ type: CREATE_TERM, payload: Create_term });
 }
 export function* EditTerm(action) {
@@ -44,8 +45,10 @@ export function* UpdateTerm(action) {
 }
 export function* DeleteTerm(action) {
   console.log("ggfg");
-  const deleted_term = yield call(fetchDeleteTerm, action.payload);
+  const deleted_term = yield call(fetchDeleteTerm, action.payload.id);
+  yield put({ type: GET_TERM_SAGA,payload:action.payload.businessId });
   yield put({ type: DELETE_TERM });
+ 
 }
 export function* watchGetTerm() {
   yield takeEvery(GET_TERM_SAGA, GetTerm);

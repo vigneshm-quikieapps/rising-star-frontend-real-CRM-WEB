@@ -34,6 +34,7 @@ const Term = () => {
   const [label, setLabel] = useState("");
   const [startDate, setStartDate] = useState(new Date("2014-08-18T21:11:54"));
   const [endDate, setEndDate] = useState(new Date("2014-08-18T21:11:54"));
+  const [dummy,setDummy] = useState(0);
   const Edit = (index) => {
     setEditable(index);
   };
@@ -41,10 +42,15 @@ const Term = () => {
     setEditable(-1);
     dispatch(UpdateTerm(Termlist[index]._id, EditTermlist));
   };
-
+  const inc =()=>{
+    setDummy(dummy+1);
+  }
   useEffect(() => {
     dispatch(GetClassList());
+   
   }, []);
+
+  
   return (
     <Box>
       <Typography sx={{ fontSize: "28px", fontWeight: "bold" }}>
@@ -252,7 +258,7 @@ const Term = () => {
                       />
                     </Box>
                   )}
-                  <Button onClick={() => dispatch(RemoveTerm(item._id))}>
+                  <Button onClick={() => dispatch(RemoveTerm(item._id,item.businessId))}>
                     <Box
                       sx={{
                         marginLeft: "10px",
@@ -339,8 +345,9 @@ const Term = () => {
                       date={startDate}
                       defaultValue={startDate}
                       onChange={(newDate) => {
-                        let dateFormat = moment(newDate).utc().format();
-                        setStartDate(newDate);
+                        let dateFormat = moment(newDate).utc().format('MM/DD/YYYY');
+                        console.log(dateFormat)
+                        setStartDate(dateFormat);
                       }}
                       sx={{ width: "138px" }}
                     />
@@ -351,8 +358,9 @@ const Term = () => {
                       date={endDate}
                       defaultValue={endDate}
                       onChange={(newDate) => {
-                        let dateFormat = moment(newDate).utc().format();
-                        setEndDate(newDate);
+                        let dateFormat = moment(newDate).utc().format('MM/DD/YYYY');
+                        console.log(dateFormat)
+                        setEndDate(dateFormat);
                       }}
                       sx={{ width: "138px" }}
                     />
@@ -369,7 +377,7 @@ const Term = () => {
                       />
                     </Box>
                   )}
-                  <Button onClick={() => newTermList.pop()}>
+                  <Button onClick={() => {newTermList.pop();dispatch(GetClassList());} }>
                     <Box
                       sx={{
                         marginLeft: "10px",
@@ -390,6 +398,8 @@ const Term = () => {
                         )
                       );
                       newTermList.pop();
+                     
+ 
                     }}
                   >
                     <Box

@@ -16,20 +16,21 @@ export async function fetchGetTerm(id) {
   export async function fetchCreateTerm(payload) {
       console.log(payload);
       let value = {
-        "business" : payload.id,
-        "code" : "354",
-        "label" : payload.label,
-        "startdate": payload.startDate,
-        "enddate" : payload.endDate,
-        "classsequence": 1,
-        "updatedBy" : "6144750a44b01da23b80d107",
-        "createdBy" : "6144750a44b01da23b80d107"
-        }
+        businessId:payload.id,
+        code:144755,
+        label:payload.label,
+        startdate:payload.startDate,
+        enddate:payload.endDate,
+        classsequence:1541,
+        
+    
+    }
+    console.log(value);
     try {
         const response = await axios({
             method: "POST",
             data:value,
-            url: API.CreateTeamAPI,
+            url: API.CreateUpdateDeleteTermAPI,
         });
         console.log("_response", response);
         return response.data.docs
@@ -48,7 +49,7 @@ export async function fetchUpdateTerm(payload) {
         const response = await axios({
             method: "PUT",
             data:value,
-            url: API.UpdateDeleteTermAPI + payload.id,
+            url: API.CreateUpdateDeleteTermAPI + payload.id,
         });
         console.log("_response", response);
     } catch (error) {
@@ -61,7 +62,7 @@ export async function fetchDeleteTerm(id) {
     try {
         const response = await axios({
             method: "DELETE",
-            url: API.UpdateDeleteTermAPI + id,
+            url: API.CreateUpdateDeleteTermAPI + id,
         });
         console.log("_response", response);
     } catch (error) {
