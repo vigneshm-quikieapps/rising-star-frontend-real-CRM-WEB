@@ -123,7 +123,7 @@ export default function ClassDefinitions() {
                         businessDetails &&
                         <Output
                             title='Status'
-                            description={businessDetails.status}
+                            description={<Status status="green" title={businessDetails.status} />}
                         />
                     }
                 </Box>
