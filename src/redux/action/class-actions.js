@@ -1,7 +1,7 @@
 import { classActionTypes } from "../types";
 
-export const getClassList = (id) => {
-  return { type: classActionTypes.GET_CLASS_LIST, payload: id };
+export const getClassList = (params) => {
+  return { type: classActionTypes.GET_CLASS_LIST, payload: params };
 };
 
 export const deleteClass = (id) => {

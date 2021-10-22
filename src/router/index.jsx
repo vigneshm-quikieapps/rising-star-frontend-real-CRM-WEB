@@ -63,6 +63,11 @@ const MainRouter = () => (
           <ClassAddEdit />
         </MainLayout>
       </Route>
+      <Route path="/classes/add" exact>
+        <MainLayout>
+          <ClassAddEdit />
+        </MainLayout>
+      </Route>
       <Route path="/members" exact>
         <MainLayout>
           <Members />
