@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { ThemeProvider, styled } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { Divider, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-import theme from "../../styles/theme";
 import Header from "./header";
 import Footer from "./footer";
 import SideNav from "./side-nav";
@@ -43,8 +41,7 @@ const MainLayout = ({ children }) => {
   const toggleNav = () => setNavOpen((open) => !open);
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <>
       <Header
         open={navOpen}
         drawerWidth={drawerWidth}
@@ -63,7 +60,7 @@ const MainLayout = ({ children }) => {
         {children}
       </Main>
       <Footer />
-    </ThemeProvider>
+    </>
   );
 };
 

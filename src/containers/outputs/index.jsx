@@ -11,7 +11,7 @@ export const Outputs = ({ arr }) => {
             <Output
               title={item[0]}
               description={
-                item[0] == "Status" ? (
+                item[0] === "Status" ? (
                   <Status status="green" title={item[1]} />
                 ) : (
                   item[1]

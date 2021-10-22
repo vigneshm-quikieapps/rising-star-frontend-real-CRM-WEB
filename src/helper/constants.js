@@ -8,12 +8,37 @@ import verfiedIcon from "../assets/icons/icon-allergy.png";
 import phoneIcon from "../assets/icons/icon-phone.png";
 import Status from "../components/status";
 
-export const memberListHeaders = [
-  "Member Name",
-  "Gender",
-  "Parent/Carer Name",
-  "Parent/Carer Email",
-  "Phone",
+
+import arrowDownDark from "../assets/icons/icon- arrw down-dark.png";
+import arrowDown from "../assets/icons/icon- arrw down.png";
+import back from "../assets/icons/icon- back.png";
+import calendar from "../assets/icons/icon- calendar.png";
+import copy from "../assets/icons/icon- copy 3.png";
+import add from "../assets/icons/icon-add.png";
+import allergy from "../assets/icons/icon-allergy.png";
+import iconClass from "../assets/icons/icon-class.png";
+import dashboardDark from "../assets/icons/icon-dashboard-dark.png";
+import iconDelete from "../assets/icons/icon-delete.png";
+import edit from "../assets/icons/icon-edit.png";
+import home from "../assets/icons/icon-home.png";
+import member from "../assets/icons/icon-member.png";
+import menu from "../assets/icons/icon-menu.png";
+import more from "../assets/icons/icon-more.png";
+import notification from "../assets/icons/icon-notificaton.png";
+import payment from "../assets/icons/icon-payment.png";
+import phone from "../assets/icons/icon-phone.png";
+import setupAndProcess from "../assets/icons/icon-setup and processes.png";
+import term from "../assets/icons/icon-term.png";
+import user from "../assets/icons/icon-user.png";
+import loginPageImage from "../assets/images/illustration-login.png";
+
+export const classListHeaders = [
+  "Class Name",
+  "Business Name",
+  // "City/Town",
+  // "Post Code",
+  "Status",
+  "Action",
 ];
 
 export const navItems = [
@@ -21,6 +46,7 @@ export const navItems = [
     id: "1",
     title: "Dash Board",
     urlPath: "/",
+    exact: true,
     icon: <ImgIcon>{dashboardIcon}</ImgIcon>,
   },
   {
@@ -29,10 +55,30 @@ export const navItems = [
     urlPath: "/classes",
     icon: <ImgIcon>{classIcon}</ImgIcon>,
     items: [
-      { id: "2-1", title: "Definitions", urlPath: "/classes/definitions" },
-      { id: "2-2", title: "Enrollments", urlPath: "/classes/enrollments" },
-      { id: "2-3", title: "Attendance", urlPath: "/classes/attendance" },
-      { id: "2-4", title: "Payments", urlPath: "/classes/payments" },
+      {
+        id: "2-1",
+        title: "Definitions",
+        urlPath: "/classes/definitions",
+        disabled: true,
+      },
+      {
+        id: "2-2",
+        title: "Enrolments",
+        urlPath: "/classes/enrolments",
+        disabled: true,
+      },
+      {
+        id: "2-3",
+        title: "Attendance",
+        urlPath: "/classes/attendance",
+        disabled: true,
+      },
+      {
+        id: "2-4",
+        title: "Payments",
+        urlPath: "/classes/payments",
+        disabled: true,
+      },
     ],
   },
   {
@@ -41,11 +87,36 @@ export const navItems = [
     urlPath: "/members",
     icon: <ImgIcon>{membersIcon}</ImgIcon>,
     items: [
-      { id: "3-1", title: "Personal Info", urlPath: "/members/info" },
-      { id: "3-2", title: "Enrollments", urlPath: "/members/enrollments" },
-      { id: "3-3", title: "Consent Record", urlPath: "/members/consent" },
-      { id: "3-4", title: "Evaluations", urlPath: "/members/evaluations" },
-      { id: "3-5", title: "Finance Record", urlPath: "/members/finance" },
+      {
+        id: "3-1",
+        title: "Personal Info",
+        urlPath: "/members/info",
+        disabled: true,
+      },
+      {
+        id: "3-2",
+        title: "Enrolments",
+        urlPath: "/members/enrolments",
+        disabled: true,
+      },
+      {
+        id: "3-3",
+        title: "Consent Record",
+        urlPath: "/members/consent",
+        disabled: true,
+      },
+      {
+        id: "3-4",
+        title: "Evaluations",
+        urlPath: "/members/evaluations",
+        disabled: true,
+      },
+      {
+        id: "3-5",
+        title: "Finance Record",
+        urlPath: "/members/finance",
+        disabled: true,
+      },
     ],
   },
   {
@@ -55,7 +126,7 @@ export const navItems = [
     icon: <ImgIcon>{setupIcon}</ImgIcon>,
     items: [
       { id: "4-1", title: "Term", urlPath: "/setup/term" },
-      { id: "4-2", title: "Payment Upload", urlPath: "/setup/payment" },
+      { id: "4-2", title: "Payment Upload", urlPath: "/setup/paymentUpload" },
     ],
   },
 ];
@@ -106,7 +177,6 @@ export const enrollmentObject2 = {
   Facility: "Gym Hall",
   "Session Enrolment Status": "Open for Enrolment",
   "Coach Name": "Bethany Lafferty",
-  Pattern: "Mon",
   "Full class capacity": "20",
   Enrolled: "15",
   "Waitlist capacity": "10",
@@ -165,3 +235,35 @@ export const personalInfoObject4 = {
   "Contact Number*": "0757576757",
 };
 
+export const icons = {
+  arrowDownDark,
+  arrowDown,
+  back,
+  calendar,
+  add,
+  copy,
+  allergy,
+  iconClass,
+  dashboardDark,
+  iconDelete,
+  edit,
+  home,
+  member,
+  menu,
+  more,
+  payment,
+  notification,
+  setupAndProcess,
+  phone,
+  term,
+  user,
+  loginPageImage,
+};
+
+export const memberListHeaders = [
+  "Member Name",
+  "Gender",
+  "Parent/Carer Name",
+  "Parent/Carer Email",
+  "Phone",
+]

@@ -1,21 +1,20 @@
-import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from "./redux/store/configureStore";
-import MainLayout from "./hoc/main-layout";
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+
+import theme from "./styles/theme";
 import "./styles/global.css";
-import SearchMembers from "./pages/searchMembers";
+import store from "./redux/store/configureStore";
+import MainRouter from "./router";
+// import SearchMembers from "./pages/searchMembers";
 
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <MainLayout>
-          {
-            /* dry run your component inside here */
-            <SearchMembers />
-          }
-        </MainLayout>
-      </BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <MainRouter />
+      </ThemeProvider>
     </Provider>
   );
 }

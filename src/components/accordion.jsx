@@ -7,6 +7,9 @@ const style = (theme) => {
       border: `1px solid ${theme.palette.ternary.main}`,
       borderRadius: `${theme.shape.borderRadiuses.secondary}`,
       boxShadow: "none",
+      "&::before": {
+        display: "none !important",
+      },
     },
     "& .MuiAccordionSummary-root": {
       height: "68px",
