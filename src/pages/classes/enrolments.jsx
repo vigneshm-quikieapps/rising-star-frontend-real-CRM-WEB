@@ -145,10 +145,10 @@ const ClassEnrolments = () => {
       waitcapacityfilled,
     } = Obj;
     let sessionsDataObject = {
-      "Start Date": term.startDate,
-      "End Date": term.endDate,
-      "Start Time": pattern[0].startTime,
-      "End Time": pattern[0].endTime,
+      "Start Date": term.startDate.split("T")[0],
+      "End Date": term.endDate.split("T")[0],
+      "Start Time": pattern[0].startTime.split("T")[0],
+      "End Time": pattern[0].endTime.split("T")[0],
       Pattern: pattern[0].day,
       Facility: "Gym Hall (static)",
       "Session Enrolment Status": status,
