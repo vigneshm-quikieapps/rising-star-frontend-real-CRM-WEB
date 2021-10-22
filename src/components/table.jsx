@@ -23,6 +23,7 @@ const ClassListContainer = styled(Box)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  cursor: "pointer",
   border: 0,
   height: 70,
   "&:nth-of-type(odd)": {

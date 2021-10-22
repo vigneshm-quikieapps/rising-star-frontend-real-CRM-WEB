@@ -21,7 +21,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response.status === 401) {
+    if (error.status === 401) {
       axiosInstance
         .post("/refresh-token")
         .then((response) => {
@@ -34,9 +34,11 @@ axiosInstance.interceptors.response.use(
           return new Promise((resolve) => resolve(axios(config)));
         })
         .catch((error) => {
-          throw error;
+          console.log(error);
+          return Promise.reject(error);
         });
     } else {
+      console.log(error);
       throw error;
     }
   }

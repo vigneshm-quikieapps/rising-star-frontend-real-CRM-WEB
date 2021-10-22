@@ -4,9 +4,6 @@ import { Box } from "@mui/material";
 
 import { classListHeaders } from "../../helper/constants";
 import CustomTable from "../../components/table";
-import CustomPagination from "../../components/pagination";
-// import Actions from "../../components/actions";
-// import Status from "../../components/status";
 import Heading from "./heading";
 
 // const rows = Array(10)
@@ -24,11 +21,7 @@ import Heading from "./heading";
 //     ],
 //   }));
 
-const pagination = (
-  <CustomPagination sx={{ my: "20px" }} count={3} page={2} variant="outlined" />
-);
-
-const ClassList = ({ list = [] }) => (
+const ClassList = ({ list = [], pagination, onAdd }) => (
   <Box
     sx={{
       justifyContent: "center",
@@ -38,7 +31,7 @@ const ClassList = ({ list = [] }) => (
     <CustomTable
       headers={classListHeaders}
       rows={list}
-      heading={<Heading title="Class List" />}
+      heading={<Heading title="Class List" action={onAdd} />}
       pagination={pagination}
     />
   </Box>
