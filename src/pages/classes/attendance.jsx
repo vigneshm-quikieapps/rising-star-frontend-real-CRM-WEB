@@ -1,27 +1,28 @@
+import { useParams } from "react-router";
 import { useState } from "react";
 import {
   Card,
   CardRow,
   HeadingText,
   SubHeadingText,
-} from "../components/common";
+} from "../../components/common";
 import { Box, MenuItem } from "@mui/material";
-import TextField from "../components/textfield";
-import CustomTable from "../components/table";
+import TextField from "../../components/textfield";
+import CustomTable from "../../components/table";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import DatePicker from "./../components/date-picker";
-import ImgIcon from "../components/img-icon";
-import IconButton from "../components/icon-button";
-import moreIcon from "../assets/icons/icon-more.png";
-import { objectToArray } from "../utils";
-import { Outputs, TitleDescription } from "../containers/outputs";
+import DatePicker from "./../../components/date-picker";
+import ImgIcon from "../../components/img-icon";
+import IconButton from "../../components/icon-button";
+import moreIcon from "../../assets/icons/icon-more.png";
+import { objectToArray } from "../../utils";
+import { Outputs, TitleDescription } from "../../containers/outputs";
 import {
   paymentRows,
   paymentHeaders,
   attendanceObject1,
   attendanceObject2,
-} from "../helper/constants";
-import Pagination from "./../components/pagination";
+} from "../../helper/constants";
+import Pagination from "./../../components/pagination";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -35,7 +36,9 @@ const UpIconButton = () => (
   </IconButton>
 );
 
-const Payment = () => {
+const ClassAttendance = () => {
+  const { id } = useParams();
+  console.log(id);
   const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
   const [page, setPage] = useState(1);
   const pagination = (
@@ -80,7 +83,6 @@ const Payment = () => {
         <CardRow>
           <TextField
             select
-            labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={10}
             label="Term"
@@ -146,4 +148,4 @@ const Payment = () => {
   );
 };
 
-export default Payment;
+export default ClassAttendance;

@@ -1,17 +1,60 @@
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import { Box, InputAdornment, Typography } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
 import TextField from "../components/textfield";
 import GradientButton from "../components/gradient-button";
 
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAllMembersList,
+  getMemberById,
+} from "../redux/action/memberAction";
 import { CardRow } from "../components/common";
 import { MenuItem } from "@mui/material";
 import AdvanceSearchList from "../containers/member-list"
+import { objectToArray } from "../utils";
 
 const AdvanceSearch = () => {
+  const dispatch=useDispatch()
+const allMembers = useSelector((state) => state.members.allMembers);
+const [tableRowData,setTableRowData]=useState([])
   // const [AdvanceSearchList, setAdvanceSearchList] = useState([]);
+
+  const setTableRows = () => {
+console.log("sdfghjk",allMembers)
+    let sessionMembersDetailsArray = allMembers.docs.map((item) => {
+
+      return {
+        name: item.name,
+        gender: item.gender,
+        pname: item.parent[0].name,
+        email: item.parent[0].email,
+        mobileNo: item.parent[0].mobileNo,
+
+      
+      };
+    });
+    let finalRowDataArray = sessionMembersDetailsArray.map((item, index) => {
+      let itemArray = objectToArray(item);
+      return {
+        id: index,
+        items: itemArray.map((i) => {
+        
+          return i[1];
+        }),
+      };
+    });
+    setTableRowData(finalRowDataArray);
+  };
+
+useEffect(()=>{
+  dispatch(getAllMembersList())
+},[dispatch])
+useEffect(() => {
+  allMembers && allMembers.docs && setTableRows();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [allMembers]);
 
   return (
     <Box>
@@ -48,7 +91,7 @@ const AdvanceSearch = () => {
           <CardRow>
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}
@@ -62,7 +105,7 @@ const AdvanceSearch = () => {
 
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}
@@ -76,7 +119,7 @@ const AdvanceSearch = () => {
 
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}
@@ -94,7 +137,7 @@ const AdvanceSearch = () => {
           <CardRow>
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}
@@ -108,7 +151,7 @@ const AdvanceSearch = () => {
 
             <TextField
               select
-              labelId="demo-simple-select-label"
+              // labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={10}
               onChange={() => {}}
@@ -145,7 +188,7 @@ const AdvanceSearch = () => {
       </Box>
 
       <Box>
-        <AdvanceSearchList />
+        <AdvanceSearchList row={tableRowData}/>
       </Box>
     </Box>
   );

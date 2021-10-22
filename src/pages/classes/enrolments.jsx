@@ -1,27 +1,27 @@
-import { useState } from "react";
+import { useParams } from "react-router";
 import {
   Card,
   CardRow,
   HeadingText,
   SubHeadingText,
-} from "../components/common";
+} from "../../components/common";
 import { Box, MenuItem } from "@mui/material";
-import TextField from "../components/textfield";
-import CustomTable from "../components/table";
+import TextField from "../../components/textfield";
+import CustomTable from "../../components/table";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import DatePicker from "./../components/date-picker";
-import ImgIcon from "../components/img-icon";
-import IconButton from "../components/icon-button";
-import moreIcon from "../assets/icons/icon-more.png";
-import { objectToArray } from "../utils";
-import { Outputs, TitleDescription } from "../containers/outputs";
+import ImgIcon from "../../components/img-icon";
+import IconButton from "../../components/icon-button";
+import moreIcon from "../../assets/icons/icon-more.png";
+import { objectToArray } from "../../utils";
 import {
-  paymentRows,
-  paymentHeaders,
   attendanceObject1,
-  attendanceObject2,
-} from "../helper/constants";
-import Pagination from "./../components/pagination";
+  enrollmentHeaders,
+  enrollmentObject2,
+  enrollmentRows,
+} from "../../helper/constants";
+import { Outputs, TitleDescription } from "../../containers/outputs";
+import Pagination from "./../../components/pagination";
+import { useState } from "react";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -35,8 +35,9 @@ const UpIconButton = () => (
   </IconButton>
 );
 
-const Payment = () => {
-  const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
+const ClassEnrolments = () => {
+  const { id } = useParams();
+  console.log(id);
   const [page, setPage] = useState(1);
   const pagination = (
     <Pagination
@@ -54,19 +55,19 @@ const Payment = () => {
       <HeadingText>Registered Members</HeadingText>
       <CardRow>
         <UpIconButton />
+        <MoreIconButton />
       </CardRow>
     </CardRow>
   );
 
   const arr1 = objectToArray(attendanceObject1);
-  const arr2 = objectToArray(attendanceObject2);
+  const arr2 = objectToArray(enrollmentObject2);
 
   return (
     <Box>
       <Card>
         <CardRow>
           <HeadingText>Pre-school gymnastics (Age: 1-3)</HeadingText>
-          <MoreIconButton />
         </CardRow>
 
         <SubHeadingText>Zippy Totz Pre-school Gymnastics</SubHeadingText>
@@ -76,17 +77,16 @@ const Payment = () => {
         </CardRow>
       </Card>
 
-      <Card sx={{ height: "194px" }}>
-        <CardRow>
+      <Card sx={{ height: "249px" }}>
+        <CardRow sx={{ justifyContent: "flex-start" }}>
           <TextField
             select
-            labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={10}
             label="Term"
             onChange={() => {}}
             variant="filled"
-            sx={{ width: "272px" }}
+            sx={{ width: "272px", marginRight: "15px" }}
           >
             <MenuItem value={10}>2022 Summer</MenuItem>
             <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
@@ -106,19 +106,11 @@ const Payment = () => {
             <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
             <MenuItem value={30}>Thirty</MenuItem>
           </TextField>
-
-          <DatePicker
-            label="Date"
-            date={date}
-            onChange={(newDate) => setDate(newDate)}
-            sx={{ width: "272px" }}
-          />
         </CardRow>
 
         <CardRow
           sx={{
             marginTop: "15px",
-            flexWrap: "wrap",
             justifyContent: "flex-start",
           }}
         >
@@ -138,12 +130,12 @@ const Payment = () => {
       </CardRow>
       <CustomTable
         heading={heading}
-        headers={paymentHeaders}
-        rows={paymentRows}
+        headers={enrollmentHeaders}
+        rows={enrollmentRows}
         pagination={pagination}
       />
     </Box>
   );
 };
 
-export default Payment;
+export default ClassEnrolments;

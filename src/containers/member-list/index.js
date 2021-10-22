@@ -7,23 +7,12 @@ import CustomTable from "../../components/table";
 import CustomPagination from "../../components/pagination";
 import Heading from "../class-list/heading";
 
-const rows = Array(10)
-  .fill(1)
-  .map((_, index) => ({
-    id: index,
-    items: [
-      "Jannifer Reid",
-      "Boy",
-      "Afonso Pinto",
-      "ni@gmail.com",
-      "075757532",
-    ],
-  }));
+
 
 const pagination = <CustomPagination count={3} page={2} variant="outlined" />;
 
-const AdvanceSearchList = ({ list = rows }) => (
-  
+const AdvanceSearchList = ({  row }) => (
+
   <Box
     sx={{
       justifyContent: "center",
@@ -33,7 +22,7 @@ const AdvanceSearchList = ({ list = rows }) => (
   >
     <CustomTable
       headers={memberListHeaders}
-      rows={list}
+      rows={row}
       heading={<Heading title="Class List" />}
       pagination={pagination}
     />
