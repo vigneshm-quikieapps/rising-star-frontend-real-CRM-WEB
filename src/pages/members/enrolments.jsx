@@ -16,6 +16,7 @@ import TextField from "../../components/textfield";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getMemberEnrolmentList } from "../../redux/action/memberAction";
+import { getBusinessList } from "../../redux/action/businesses-actions";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -38,17 +39,27 @@ const StyleBox = styled(Box)(({ theme }) => ({
 const MemberEnrollment = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
+
   const enrollmentList = useSelector((state) => state.members.enrolmentList);
+  const businessList = useSelector((state) => state.businesses.businessList);
+
   console.log(enrollmentList);
+  console.log(businessList);
 
   const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
 
-  const businessId = "614ae0f9c265630cd520ab36";
+  // useEffect(() => {
+  //   dispatch(getBusinessList());
+  // }, [dispatch]);
+
+  // const businessId = "614ae0f9c265630cd520ab36";
+  const businessId = businessList[0]?._id;
   const memberId = "614b270bc265630cd55a0520";
 
   useEffect(() => {
-    dispatch(getMemberEnrolmentList({ businessId, memberId }));
-  }, []);
+    dispatch(getBusinessList());
+    businessId && dispatch(getMemberEnrolmentList({ businessId, memberId }));
+  }, [dispatch, businessId]);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -67,18 +78,22 @@ const MemberEnrollment = () => {
               variant="filled"
               sx={{ width: "100%" }}
             >
-              {/* {names.map((name) => (
-                        <MenuItem key={name} value={name}>
-                            awesome
-                        </MenuItem>
-                        ))} */}
+              {businessList.map((li, index) => (
+                <MenuItem key={`B${index}`}>{li.name}</MenuItem>
+              ))}
             </TextField>
           </Grid>
           <Grid item xs={4}>
             <Output title="Member" description="KK000" />
           </Grid>
           <Grid item xs={4}>
-            <Output title="Club Membership Number" description="ZPGL0008" />
+            <Output
+              title="Club Membership Number"
+              description={
+                // ""
+                enrollmentList[0] && `${enrollmentList[0].clubMembershipId}`
+              }
+            />
           </Grid>
         </Grid>
       </StyleBox>
@@ -125,12 +140,16 @@ const MemberEnrollment = () => {
                 label="Class Name*"
                 variant="filled"
                 sx={{ width: "100%" }}
+                value={1}
               >
+                <MenuItem key={`c${1}`} value={1}>
+                  {enrollmentList[0] && `${enrollmentList[0].class.name}`}
+                </MenuItem>
                 {/* {names.map((name) => (
-                        <MenuItem key={name} value={name}>
-                            awesome
-                        </MenuItem>
-                        ))} */}
+                  <MenuItem key={name} value={name}>
+                      awesome
+                  </MenuItem>
+                ))} */}
               </TextField>
             </Grid>
             <Grid item xs={3}>

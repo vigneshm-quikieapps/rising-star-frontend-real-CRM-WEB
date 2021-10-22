@@ -14,3 +14,10 @@ export const getMemberEnrolmentList = (params) => {
     payload: params,
   };
 };
+
+export const getMemberProgressRecord = (params) => {
+  return {
+    type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD_SAGA,
+    payload: params,
+  };
+};

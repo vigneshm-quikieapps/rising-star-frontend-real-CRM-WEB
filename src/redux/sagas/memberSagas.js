@@ -3,6 +3,7 @@ import {
   axiosGetMember,
   axiosGetMemberList,
   fetchgetAllErolmentOfAMember,
+  // fetchgetProgresRecordOfAMember,
 } from "../../services/memberServices";
 import { memberActionTypes } from "../types";
 
@@ -37,5 +38,24 @@ export function* watchgetAllErolmentOfAMember() {
   yield takeEvery(
     memberActionTypes.GET_MEMBERS_ENROLLMENT_SAGA,
     getAllErolmentOfAMember
+  );
+}
+
+export function* getProgresRecordOfAMember(action) {
+  const progressRecord = yield call(
+    // fetchgetProgresRecordOfAMember,
+    action.payload
+  );
+  yield put({
+    type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD,
+    payload: progressRecord,
+  });
+}
+
+//watchingGeneratedFunction
+export function* watchgetProgresRecordOfAMember() {
+  yield takeEvery(
+    memberActionTypes.GET_MEMBER_PROGRESS_RECORD_SAGA,
+    getProgresRecordOfAMember
   );
 }
