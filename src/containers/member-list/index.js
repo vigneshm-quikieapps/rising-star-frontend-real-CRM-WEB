@@ -7,7 +7,6 @@ import CustomTable from "../../components/table";
 import CustomPagination from "../../components/pagination";
 import Heading from "../class-list/heading";
 
-
 const rows = Array(10)
   .fill(1)
   .map((_, index) => ({
@@ -34,7 +33,7 @@ const AdvanceSearchList = ({ list = rows }) => (
     <CustomTable
       headers={memberListHeaders}
       rows={list}
-      heading={<Heading title="Class List" />}
+      heading={<Heading title="Member List" />}
       pagination={pagination}
     />
   </Box>

@@ -1,2 +1,5 @@
-export const GET_CLASS_LIST_SAGA = 'GET_CLASS_LIST_SAGA';
-export const GET_CLASS_LIST = 'GET_CLASS_LIST';
+// Get all Members
+export const memberActionTypes = {
+  GET_ALL_MEMBERS: "GET_ALL_MEMBERS",
+  GET_ALL_MEMBERS_SAGA: "GET_ALL_MEMBERS_SAGA",
+};

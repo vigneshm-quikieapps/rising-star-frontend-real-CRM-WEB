@@ -164,3 +164,4 @@ export const personalInfoObject4 = {
   Relationship: "Friend",
   "Contact Number*": "0757576757",
 };
+

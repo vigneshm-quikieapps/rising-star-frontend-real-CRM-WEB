@@ -3,6 +3,7 @@ export const BASE_URL = BASE_DOMAIN + "api/";
 
 const API = {
   GetBusinessClassListAPI: BASE_URL + "business/",
+  MembersAPI: BASE_URL + "members/",
 };
 
 export default API;
