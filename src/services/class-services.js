@@ -19,3 +19,13 @@ export async function deleteClassByID(id) {
     throw error;
   }
 }
+
+export async function axiosGetClassById(id) {
+  try {
+    const api = `classes/${id}`;
+    const res = await axiosInstance.get(api);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+}

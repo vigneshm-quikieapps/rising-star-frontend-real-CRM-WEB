@@ -6,6 +6,7 @@ const initialState = {
   currentPage: 1,
   error: null,
   loading: false,
+  class: null,
 };
 
 export default function reducer(state = initialState, action) {
@@ -27,6 +28,9 @@ export default function reducer(state = initialState, action) {
     }
     case classActionTypes.DELETE_CLASS_FAILED: {
       return { ...state, error: action.payload, loading: false };
+    }
+    case classActionTypes.GET_CLASS_BY_ID: {
+      return { ...state, class: action.payload };
     }
     default:
       return state;

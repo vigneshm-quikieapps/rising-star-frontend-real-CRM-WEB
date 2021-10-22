@@ -1,24 +1,18 @@
 import { all, call } from "@redux-saga/core/effects";
-import {
-  watchGetMember,
-  watchGetMemberList,
-  watchgetAllErolmentOfAMember,
-  watchgetProgresRecordOfAMember,
-} from "./memberSagas";
-import { watchGetMemberEnrolledInSession } from "./sessionSagas";
+import memberSagas from "./memberSagas";
+import sessionSagas from "./sessionSagas";
 import classSagas from "./class-sagas";
 import businessesSagas from "./businesses-saga";
 import { authSagas } from "./authSagas";
+import termSagas from "./terms-sagas";
 
 export default function* rootSaga() {
   yield all([
-    watchgetAllErolmentOfAMember(),
-    watchgetProgresRecordOfAMember(),
-    watchGetMemberList(),
-    watchGetMember(),
-    watchGetMemberEnrolledInSession(),
+    memberSagas(),
+    sessionSagas(),
     call(authSagas),
     classSagas(),
     businessesSagas(),
+    termSagas(),
   ]);
 }
