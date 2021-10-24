@@ -8,12 +8,15 @@ import {
 import {
   CREATE_TERM,
   CREATE_TERM_SAGA,
+  DELETE_EDIT_TERM,
+  DELETE_EDIT_TERM_SAGA,
   DELETE_TERM,
   DELETE_TERM_SAGA,
   EDIT_TERM,
   EDIT_TERM_ITEM,
   EDIT_TERM_SAGA,
   GET_TERM,
+  GET_TERM_BUSINESSID,
   GET_TERM_SAGA,
   UPDATE_TERM,
   UPDATE_TERM_SAGA,
@@ -21,22 +24,33 @@ import {
 export function* GetTerm(action) {
   console.log("ggg");
   const Get_term = yield call(fetchGetTerm, action.payload);
+  console.log("Get_term.businessId", action.payload);
+  yield put({ type: GET_TERM_BUSINESSID, payload: action.payload });
   yield put({ type: GET_TERM, payload: Get_term });
 }
 export function* CreateTerm(action) {
   console.log("ggg");
   const Create_term = yield call(fetchCreateTerm, action.payload);
-  yield put({type:GET_TERM_SAGA, payload:action.payload.id})
+  yield put({ type: GET_TERM_SAGA, payload: action.payload.id });
   yield put({ type: CREATE_TERM, payload: Create_term });
 }
 export function* EditTerm(action) {
-  console.log("ggg",action.payload.value);
-  const key=action.payload.key
-  const a ={...action.payload.Termlist[action.payload.index],[key]:action.payload.value}
+  console.log("ggg", action.payload.value);
+  const key = action.payload.key;
+  const a = {
+    ...action.payload.Termlist[action.payload.index],
+    [key]: action.payload.value,
+  };
   yield put({ type: EDIT_TERM_ITEM, payload: a });
-  action.payload.Termlist[action.payload.index]=a;
-  console.log("action.payload.Termlist",action.payload.Termlist);
+  action.payload.Termlist[action.payload.index] = a;
+  console.log("action.payload.Termlist", action.payload.Termlist);
   yield put({ type: EDIT_TERM, payload: action.payload.Termlist });
+}
+export function* DeleteEditTerm(action) {
+  console.log("ggg", action.payload.termlist);
+  let a = action.payload.termlist.splice(action.payload.index, 1);
+  console.log(a, action.payload.termlist);
+  yield put({ type: DELETE_EDIT_TERM, payload: action.payload.termlist });
 }
 export function* UpdateTerm(action) {
   console.log("ggg");
@@ -46,9 +60,8 @@ export function* UpdateTerm(action) {
 export function* DeleteTerm(action) {
   console.log("ggfg");
   const deleted_term = yield call(fetchDeleteTerm, action.payload.id);
-  yield put({ type: GET_TERM_SAGA,payload:action.payload.businessId });
+  yield put({ type: GET_TERM_SAGA, payload: action.payload.businessId });
   yield put({ type: DELETE_TERM });
- 
 }
 export function* watchGetTerm() {
   yield takeEvery(GET_TERM_SAGA, GetTerm);
@@ -58,6 +71,9 @@ export function* watchCreateTerm() {
 }
 export function* watchEditTerm() {
   yield takeEvery(EDIT_TERM_SAGA, EditTerm);
+}
+export function* watchDeleteEditTerm() {
+  yield takeEvery(DELETE_EDIT_TERM_SAGA, DeleteEditTerm);
 }
 export function* watchUpdateTerm() {
   yield takeEvery(UPDATE_TERM_SAGA, UpdateTerm);

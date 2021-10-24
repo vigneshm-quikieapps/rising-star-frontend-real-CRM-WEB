@@ -1,6 +1,13 @@
 import { all } from "@redux-saga/core/effects";
 import { watchGetClassList } from "./classSagas";
-import { watchCreateTerm, watchDeleteTerm, watchEditTerm, watchGetTerm, watchUpdateTerm } from "./termSagas";
+import {
+  watchCreateTerm,
+  watchDeleteEditTerm,
+  watchDeleteTerm,
+  watchEditTerm,
+  watchGetTerm,
+  watchUpdateTerm,
+} from "./termSagas";
 
 export default function* rootSaga() {
   yield all([
@@ -8,6 +15,7 @@ export default function* rootSaga() {
     watchGetTerm(),
     watchCreateTerm(),
     watchEditTerm(),
+    watchDeleteEditTerm(),
     watchUpdateTerm(),
     watchDeleteTerm(),
   ]);

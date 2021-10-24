@@ -1,58 +1,218 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, MenuItem, Typography } from "@mui/material";
-import { Box } from "@mui/material";
-import GradientButton from "../../components/gradient-button";
-import StyledPagination from "../../components/pagination";
+import { Button, MenuItem, Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import CustomTable from "../../components/table";
+import Pagination from "../../components/pagination";
+import TextField from "../../components/textfield";
+import DatePicker from "../../components/date-picker";
 import ImgIcon from "../../components/img-icon";
-import IconButton from "../../components/icon-button";
 import deleteIcon from "../../assets/icons/icon-delete.png";
 import editIcon from "../../assets/icons/icon-edit.png";
-import DatePicker from "../../components/date-picker";
-import TextField from "../../components/textfield";
+import GradientButton from "../../components/gradient-button";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import IconButton from "../../components/icon-button";
 import addIcon from "../../assets/icons/icon-add.png";
 import { useSelector, useDispatch } from "react-redux";
 import { GetClassList } from "../../redux/action/classAction";
 import {
-  CreateTerm,
-  EditTerm,
   GetTerm,
   RemoveTerm,
   UpdateTerm,
+  EditTerm,
+  CreateTerm,
+  DeleteEditTerm,
 } from "../../redux/action/termAction";
+import saveIcon from "../../assets/icons/icon-tick.png";
 import moment from "moment";
+import Accordion from "../../components/accordion";
 
 const Term = () => {
+  const [date, setDate] = useState(new Date(""));
   const dispatch = useDispatch();
   const classlist = useSelector((state) => state.classes.classList);
+  const [classes, setClasses] = useState([]);
   const Termlist = useSelector((state) => state.Term.getTerm);
-  const EditTermlist = useSelector((state) => state.Term.editTermItem);
-  const [page, setPage] = useState(3);
-  const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
+  const [Terms, setTerms] = useState([]);
   const [editable, setEditable] = useState(-1);
-  const [newTermList, setNewTermList] = useState([]);
-  const [label, setLabel] = useState("");
-  const [startDate, setStartDate] = useState(new Date("2014-08-18T21:11:54"));
-  const [endDate, setEndDate] = useState(new Date("2014-08-18T21:11:54"));
-  const [dummy,setDummy] = useState(0);
-  const Edit = (index) => {
-    setEditable(index);
+  const EditTermlist = useSelector((state) => state.Term.editTermItem);
+  const currentBusinessId = useSelector(
+    (state) => state.Term.currentBusinessId
+  );
+  const [a, setA] = useState(editIcon);
+  const [ss, setSS] = useState(0);
+  const heading = (
+    <Box
+      sx={{
+        marginTop: "10px",
+        paddingLeft: "20px",
+        paddingBottom: "10px",
+        paddingRight: "20px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
+        Billing
+      </Typography>
+      <Box sx={{ display: "flex" }}>
+        <GradientButton
+          onClick={() => {
+            Termlist.push(addNewTerm);
+            console.log(Termlist);
+            setSS(ss + 1);
+          }}
+          sx={{ width: "52px", height: "48px" }}
+        >
+          <ImgIcon alt="more">{addIcon}</ImgIcon>
+        </GradientButton>
+
+        <Box sx={{ marginLeft: "10px" }}>
+          <IconButton onClick={() => {}} sx={{ width: "52px" }}>
+            <KeyboardArrowUpIcon />
+          </IconButton>
+        </Box>
+      </Box>
+    </Box>
+  );
+
+  const addNewTerm = {
+    label: "",
+    startdate: "",
+    enddate: "",
   };
-  const save = (index) => {
-    setEditable(-1);
-    dispatch(UpdateTerm(Termlist[index]._id, EditTermlist));
+
+  const popItem = (index) => {
+    console.log("popItem", index);
+    dispatch(DeleteEditTerm(index, Termlist));
+    console.log("cccccc", Termlist);
+    setSS(ss + 1);
   };
-  const inc =()=>{
-    setDummy(dummy+1);
-  }
+
+  const headers = ["Term Label", "Start Date", "End Date", "Action", "Edit"];
+  const pagination = <Pagination count={5} page={2} />;
+  const renderTermList = () => {
+    let term_list = Termlist.map((item, index) => {
+      console.log("fromMap", editable, index, item.label);
+      return {
+        id: index + 1,
+        items: [
+          <TextField
+            inputProps={{
+              readOnly: index != editable && item.hasOwnProperty("_id"),
+            }}
+            variant="filled"
+            sx={{ width: "233px" }}
+            defaultValue={item.label}
+            onChange={(text) => {
+              dispatch(EditTerm(text.target.value, index, Termlist, "label"));
+            }}
+          />,
+          <DatePicker
+            label={null}
+            date={item.startdate}
+            inputProps={{
+              disabled: true,
+            }}
+            readOnly={index != editable && item.hasOwnProperty("_id")}
+            onChange={(newDate) => {
+              let dateFormat = !item.hasOwnProperty("_id")
+                ? moment(newDate).utc().format("MM/DD/YYYY")
+                : moment(newDate).utc().format();
+              dispatch(EditTerm(dateFormat, index, Termlist, "startdate"));
+              setSS(ss + 1);
+            }}
+          />,
+          <DatePicker
+            label={null}
+            date={item.enddate}
+            inputProps={{
+              disabled: true,
+            }}
+            readOnly={index != editable && item.hasOwnProperty("_id")}
+            onChange={(newDate) => {
+              let dateFormat = !item.hasOwnProperty("_id")
+                ? moment(newDate).utc().format("MM/DD/YYYY")
+                : moment(newDate).utc().format();
+              dispatch(EditTerm(dateFormat, index, Termlist, "enddate"));
+              setSS(ss + 1);
+            }}
+          />,
+          <Button
+            onClick={() =>
+              item.hasOwnProperty("_id")
+                ? dispatch(RemoveTerm(item._id, item.businessId))
+                : popItem(index)
+            }
+          >
+            <ImgIcon alt="more">{deleteIcon}</ImgIcon>
+          </Button>,
+
+          <Button
+            onClick={() => {
+              console.log("fromOnCliCK", editable, index, item);
+              console.log("aa", currentBusinessId);
+
+              if (!item.hasOwnProperty("_id")) {
+                dispatch(
+                  EditTerm(currentBusinessId, index, Termlist, "businessId")
+                );
+                console.log("ccssaa", Termlist);
+                dispatch(
+                  CreateTerm(
+                    item.label,
+                    item.startdate,
+                    item.enddate,
+                    currentBusinessId
+                  )
+                );
+                Termlist.splice(index, 1);
+                setSS(ss + 1);
+              } else {
+                if (editable != index) {
+                  setEditable(index);
+                } else {
+                  setEditable(-1);
+                  dispatch(UpdateTerm(Termlist[index]._id, EditTermlist));
+                }
+              }
+            }}
+          >
+            <ImgIcon>
+              {!item.hasOwnProperty("_id")
+                ? saveIcon
+                : editable == index
+                ? saveIcon
+                : editIcon}
+            </ImgIcon>
+          </Button>,
+        ],
+      };
+    });
+    setTerms(term_list);
+  };
   useEffect(() => {
     dispatch(GetClassList());
-   
-  }, []);
+  }, [dispatch]);
+  useEffect(() => {
+    let class_List =
+      classlist &&
+      classlist.map((item) => {
+        return {
+          id: item.businessId,
+          name: item.name,
+        };
+      });
+    setClasses(class_List);
+    Termlist && renderTermList();
+  }, [Termlist]);
+  useEffect(() => {
+    renderTermList();
+  }, [editable, ss]);
 
-  
   return (
-    <Box>
+    <div>
       <Typography sx={{ fontSize: "28px", fontWeight: "bold" }}>
         Terms
       </Typography>
@@ -68,10 +228,13 @@ const Term = () => {
           select
           sx={{ width: "410px" }}
         >
-          {classlist.map(function (item, index) {
+          {classes.map(function (item, index) {
             return (
               <MenuItem
-                onClick={() => dispatch(GetTerm(item.businessId))}
+                onClick={() => {
+                  dispatch(GetTerm(currentBusinessId));
+                  setSS(0);
+                }}
                 value={10}
               >
                 {item.name}
@@ -80,358 +243,15 @@ const Term = () => {
           })}
         </TextField>
       </Box>
-      <Card sx={{ marginTop: "20px", width: "100%" }}>
-        <Box
-          sx={{
-            marginTop: "10px",
-            paddingLeft: "20px",
-            paddingBottom: "10px",
-            paddingRight: "20px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
-            Billing
-          </Typography>
-          <Box sx={{ display: "flex" }}>
-            <Button
-              onClick={() => {
-                newTermList.push("cccc");
-              }}
-            >
-              <GradientButton sx={{ width: "52px" }}>
-                <ImgIcon alt="more">{addIcon}</ImgIcon>
-              </GradientButton>
-            </Button>
-            <Box sx={{ marginLeft: "10px" }}>
-              <IconButton sx={{ width: "52px" }}>
-                <KeyboardArrowUpIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            paddingTop: "15px",
-            paddingBottom: "15px",
-            paddingLeft: "20px",
-            paddingRight: "20px",
-            display: "flex",
-            borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          {Termlist.hasOwnProperty("termCode") && (
-            <Box>
-              <Typography
-                sx={{ width: "109px", fontSize: 14, fontWeight: "bold" }}
-              >
-                Term Code
-              </Typography>
-            </Box>
-          )}
-          <Box sx={{ marginLeft: "10px" }}>
-            <Typography
-              sx={{ width: "233px", fontSize: 14, fontWeight: "bold" }}
-            >
-              Term Label
-            </Typography>
-          </Box>
-          <Box sx={{ marginLeft: "10px" }}>
-            <Typography
-              sx={{ width: "138px", fontSize: 14, fontWeight: "bold" }}
-            >
-              Start Date
-            </Typography>
-          </Box>
-          <Box sx={{ marginLeft: "10px" }}>
-            <Typography
-              sx={{ width: "138px", fontSize: 14, fontWeight: "bold" }}
-            >
-              End Date
-            </Typography>
-          </Box>
-          {Termlist.hasOwnProperty("sessionSequence") && (
-            <Box sx={{ marginLeft: "10px" }}>
-              <Typography
-                sx={{ width: "127px", fontSize: 14, fontWeight: "bold" }}
-              >
-                Session Sequence
-              </Typography>
-            </Box>
-          )}
-          <Box sx={{ marginLeft: "10px" }}>
-            <Typography sx={{ fontSize: 14, fontWeight: "bold" }}>
-              Action
-            </Typography>
-          </Box>
-          <Box sx={{ marginLeft: "10px" }}>
-            <Typography sx={{ fontSize: 14, fontWeight: "bold" }}>
-              Edit
-            </Typography>
-          </Box>
-        </Box>
-
-        {Termlist !==""
-          ? Termlist.map(function (item, index) {
-              return (
-                <Box
-                  sx={{
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
-                    paddingLeft: "20px",
-                    paddingRight: "20px",
-                    display: "flex",
-                    borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-                    alignItems: "center",
-                  }}
-                >
-                  {item.hasOwnProperty("termCode") && (
-                    <Box>
-                      <TextField
-                        variant="filled"
-                        inputProps={{
-                          readOnly: index === editable ? false : true,
-                        }}
-                        sx={{ width: "109px" }}
-                        value={"2230"}
-                      />
-                    </Box>
-                  )}
-                  <Box sx={{ marginLeft: "10px" }}>
-                    <TextField
-                      variant="filled"
-                      inputProps={{
-                        readOnly: index == editable ? false : true,
-                      }}
-                      sx={{ width: "233px" }}
-                      defaultValue={item.label}
-                      onChange={(text) => {
-                        dispatch(
-                          EditTerm(text.target.value, index, Termlist, "label")
-                        );
-                      }}
-                    />
-                  </Box>
-                  <Box sx={{ marginLeft: "10px" }}>
-                    <DatePicker
-                      inputProps={{
-                        readOnly: index == editable ? false : true,
-                      }}
-                      label={null}
-                      date={item.startDate}
-                      defaultValue={item.startDate}
-                      onChange={(newDate) => {
-                        let dateFormat = moment(newDate).utc().format();
-                        dispatch(
-                          EditTerm(dateFormat, index, Termlist, "startDate")
-                        );
-                      }}
-                      sx={{ width: "138px" }}
-                    />
-                  </Box>
-                  <Box sx={{ marginLeft: "10px" }}>
-                    <DatePicker
-                      label={null}
-                      date={item.endDate}
-                      defaultValue={item.endDate}
-                      onChange={(newDate) => {
-                        let dateFormat = moment(newDate).utc().format();
-                        dispatch(
-                          EditTerm(dateFormat, index, Termlist, "endDate")
-                        );
-                      }}
-                      sx={{ width: "138px" }}
-                    />
-                  </Box>
-                  {item.hasOwnProperty("sessionSequence") && (
-                    <Box sx={{ marginLeft: "10px" }}>
-                      <TextField
-                        variant="filled"
-                        inputProps={{
-                          readOnly: index == editable ? false : true,
-                        }}
-                        sx={{ width: "127px" }}
-                        value={"1001"}
-                      />
-                    </Box>
-                  )}
-                  <Button onClick={() => dispatch(RemoveTerm(item._id,item.businessId))}>
-                    <Box
-                      sx={{
-                        marginLeft: "10px",
-                      }}
-                    >
-                      <ImgIcon>{deleteIcon}</ImgIcon>
-                    </Box>
-                  </Button>
-                  {editable !== index && (
-                    <Button
-                      onClick={() => {
-                        Edit(index);
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          marginLeft: "10px",
-                        }}
-                      >
-                        <ImgIcon>{editIcon}</ImgIcon>
-                      </Box>
-                    </Button>
-                  )}
-                  {editable === index && (
-                    <Button
-                      onClick={() => {
-                        save(index, item);
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          marginLeft: "10px",
-                        }}
-                      >
-                        <Typography sx={{ fontSize: 14, fontWeight: "bold" }}>
-                          Save
-                        </Typography>
-                      </Box>
-                    </Button>
-                  )}
-                </Box>
-              );
-            })
-          : ""}
-        {newTermList != ""
-          ? newTermList.map(function (item, index) {
-              return (
-                <Box
-                  sx={{
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
-                    paddingLeft: "20px",
-                    paddingRight: "20px",
-                    display: "flex",
-                    borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-                    alignItems: "center",
-                  }}
-                >
-                  {item.hasOwnProperty("termCode") && (
-                    <Box>
-                      <TextField
-                        variant="filled"
-                        // inputProps={{ readOnly: index==editable?false:true }}
-                        sx={{ width: "109px" }}
-                        value={""}
-                      />
-                    </Box>
-                  )}
-                  <Box sx={{ marginLeft: "10px" }}>
-                    <TextField
-                      variant="filled"
-                      // inputProps={{ readOnly: index==editable?false:true }}
-                      sx={{ width: "233px" }}
-                      defaultValue={""}
-                      onChange={(text) => {
-                        setLabel(text.target.value);
-                      }}
-                    />
-                  </Box>
-                  <Box sx={{ marginLeft: "10px" }}>
-                    <DatePicker
-                      // inputProps={{ readOnly: index==editable?false:true }}
-                      label={null}
-                      date={startDate}
-                      defaultValue={startDate}
-                      onChange={(newDate) => {
-                        let dateFormat = moment(newDate).utc().format('MM/DD/YYYY');
-                        console.log(dateFormat)
-                        setStartDate(dateFormat);
-                      }}
-                      sx={{ width: "138px" }}
-                    />
-                  </Box>
-                  <Box sx={{ marginLeft: "10px" }}>
-                    <DatePicker
-                      label={null}
-                      date={endDate}
-                      defaultValue={endDate}
-                      onChange={(newDate) => {
-                        let dateFormat = moment(newDate).utc().format('MM/DD/YYYY');
-                        console.log(dateFormat)
-                        setEndDate(dateFormat);
-                      }}
-                      sx={{ width: "138px" }}
-                    />
-                  </Box>
-                  {item.hasOwnProperty("sessionSequence") && (
-                    <Box sx={{ marginLeft: "10px" }}>
-                      <TextField
-                        variant="filled"
-                        inputProps={{
-                          readOnly: index == editable ? false : true,
-                        }}
-                        sx={{ width: "127px" }}
-                        value={"1001"}
-                      />
-                    </Box>
-                  )}
-                  <Button onClick={() => {newTermList.pop();dispatch(GetClassList());} }>
-                    <Box
-                      sx={{
-                        marginLeft: "10px",
-                      }}
-                    >
-                      <ImgIcon>{deleteIcon}</ImgIcon>
-                    </Box>
-                  </Button>
-
-                  <Button
-                    onClick={() => {
-                      dispatch(
-                        CreateTerm(
-                          label,
-                          startDate,
-                          endDate,
-                          classlist[0].businessId
-                        )
-                      );
-                      newTermList.pop();
-                     
- 
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        marginLeft: "10px",
-                      }}
-                    >
-                      <Typography sx={{ fontSize: 14, fontWeight: "bold" }}>
-                        Create
-                      </Typography>
-                    </Box>
-                  </Button>
-                </Box>
-              );
-            })
-          : ""}
-      </Card>
-      <Box
-        sx={{
-          marginTop: "20px",
-          marginBottom: "53px",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <StyledPagination
-          count={3}
-          page={page}
-          onChange={(event, value) => setPage(value)}
+      <Box sx={{ marginTop: "20px" }}>
+        <CustomTable
+          heading={heading}
+          headers={headers}
+          rows={Terms}
+          pagination={pagination}
         />
       </Box>
-    </Box>
+    </div>
   );
 };
 export default Term;
