@@ -42,8 +42,8 @@ export async function fetchUpdateTerm(payload) {
     console.log("__",payload.value)
     let value={
         label:payload.value.label,
-        startDate:payload.value.startDate,
-        endDate:payload.value.endDate
+        startdate:payload.value.startDate,
+        enddate:payload.value.endDate
     }
     try {
         const response = await axios({
