@@ -12,3 +12,10 @@ export const getSessionsByTermId = (id) => {
     payload: id,
   };
 };
+
+export const getTermsOfBusiness = (businessId) => {
+  return {
+    type: termsActionTypes.GET_TERMS_OF_A_BUSINESS,
+    payload: businessId,
+  };
+};
