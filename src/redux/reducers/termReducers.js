@@ -4,11 +4,13 @@ import {
   EDIT_TERM_ITEM,
   GET_TERM,
   GET_TERM_BUSINESSID,
+  GET_TERM_RESPONSE,
   UPDATE_TERM,
 } from "../types";
 
 const INITIAL_STATE = {
   getTerm: [],
+  getTermResponse: [],
   editTermItem: [],
   updatedTerm: [],
   currentBusinessId: "",
@@ -20,6 +22,8 @@ export default function TermReducer(state = INITIAL_STATE, action) {
     case EDIT_TERM:
     case DELETE_EDIT_TERM:
       return { ...state, getTerm: action.payload };
+    case GET_TERM_RESPONSE:
+      return { ...state, getTermResponse: action.payload };
     case GET_TERM_BUSINESSID:
       return { ...state, currentBusinessId: action.payload };
     case EDIT_TERM_ITEM:

@@ -32,6 +32,9 @@ const Term = () => {
   const classlist = useSelector((state) => state.classes.classList);
   const [classes, setClasses] = useState([]);
   const Termlist = useSelector((state) => state.Term.getTerm);
+  const TermlistResponse = useSelector((state) => state.Term.getTermResponse);
+  const [page, setPage] = useState(TermlistResponse.page);
+  const [pages] = useState(TermlistResponse.totalPages);
   const [Terms, setTerms] = useState([]);
   const [editable, setEditable] = useState(-1);
   const EditTermlist = useSelector((state) => state.Term.editTermItem);
@@ -89,9 +92,14 @@ const Term = () => {
     console.log("cccccc", Termlist);
     setSS(ss + 1);
   };
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   const headers = ["Term Label", "Start Date", "End Date", "Action", "Edit"];
-  const pagination = <Pagination count={5} page={2} />;
+  const pagination = (
+    <Pagination count={pages} page={page} onChange={handleChange} />
+  );
   const renderTermList = () => {
     let term_list = Termlist.map((item, index) => {
       console.log("fromMap", editable, index, item.label);

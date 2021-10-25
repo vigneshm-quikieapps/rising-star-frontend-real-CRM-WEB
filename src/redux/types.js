@@ -3,6 +3,7 @@ export const GET_CLASS_LIST = "GET_CLASS_LIST";
 
 export const GET_TERM = "GET_TERM";
 export const GET_TERM_SAGA = "GET_TERM_SAGA";
+export const GET_TERM_RESPONSE = "GET_TERM_RESPONSE";
 
 export const GET_TERM_BUSINESSID = "GET_TERM_BUSINESSID";
 

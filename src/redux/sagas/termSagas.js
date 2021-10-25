@@ -17,6 +17,7 @@ import {
   EDIT_TERM_SAGA,
   GET_TERM,
   GET_TERM_BUSINESSID,
+  GET_TERM_RESPONSE,
   GET_TERM_SAGA,
   UPDATE_TERM,
   UPDATE_TERM_SAGA,
@@ -26,7 +27,8 @@ export function* GetTerm(action) {
   const Get_term = yield call(fetchGetTerm, action.payload);
   console.log("Get_term.businessId", action.payload);
   yield put({ type: GET_TERM_BUSINESSID, payload: action.payload });
-  yield put({ type: GET_TERM, payload: Get_term });
+  yield put({ type: GET_TERM, payload: Get_term.docs });
+  yield put({ type: GET_TERM_RESPONSE, payload: Get_term });
 }
 export function* CreateTerm(action) {
   console.log("ggg");
