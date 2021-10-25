@@ -18,6 +18,10 @@ import Status from "../../components/status";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getMemberProgressRecord } from "../../redux/action/memberAction";
+
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
   marginBottom: "15px",
@@ -71,6 +75,12 @@ const dummyJsonEvaluationData = [
 
 const MemberEvaluations = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const progressRecord = useSelector((state) => state.members.progressRecord);
+
+  // useEffect(() => {
+  //   dispatch(getMemberProgressRecord());
+  // }, []);
   return (
     <Box sx={{ width: "100%", paddingBottom: "20px" }}>
       <StyleBox>

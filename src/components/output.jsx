@@ -7,9 +7,9 @@ const StyledBox = styled(Box)({
   flexDirection: "column",
 });
 
-const Output = ({ title, description, variant = "default" }) => {
+const Output = ({ title, description, variant = "default", sx }) => {
   return (
-    <StyledBox>
+    <StyledBox sx={sx}>
       <Typography
         sx={{
           fontSize: "12px",
