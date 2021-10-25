@@ -15,6 +15,8 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, error: action.payload };
     case termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM_SUCCEEDED:
       return { ...state, termSessions: action.payload };
+    case termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM_FAILED:
+      return { ...state, termSessions: action.payload };
     case termsActionTypes.GET_TERMS_OF_A_BUSINESS_SUCCEEDED: {
       return { ...state, allTerms: action.payload, loading: false };
     }
