@@ -6,28 +6,42 @@ import {
 import { termsActionTypes } from "../types";
 
 export function* getAllTerms() {
-  const allTerms = yield call(axiosGetAllTerms);
-  yield put({
-    type: termsActionTypes.GET_ALL_TERMS,
-    payload: allTerms,
-  });
+  try {
+    const allTerms = yield call(axiosGetAllTerms);
+    yield put({
+      type: termsActionTypes.GET_ALL_TERMS_SUCCEEDED,
+      payload: allTerms,
+    });
+  } catch (error) {
+    yield put({
+      type: termsActionTypes.GET_ALL_TERMS_FAILED,
+      payload: error.message,
+    });
+  }
 }
 
 export function* watchGetAllTerms() {
-  yield takeEvery(termsActionTypes.GET_ALL_TERMS_SAGA, getAllTerms);
+  yield takeEvery(termsActionTypes.GET_ALL_TERMS, getAllTerms);
 }
 
 export function* getSessionsByTermId(action) {
-  const allTerms = yield call(axiosGetSessionsByTermId, action.payload);
-  yield put({
-    type: termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM,
-    payload: allTerms,
-  });
+  try {
+    const allTerms = yield call(axiosGetSessionsByTermId, action.payload);
+    yield put({
+      type: termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM_SUCCEEDED,
+      payload: allTerms,
+    });
+  } catch (error) {
+    yield put({
+      type: termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM_FAILED,
+      payload: error.message,
+    });
+  }
 }
 
 export function* watchGetSessionsByTermId() {
   yield takeEvery(
-    termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM_SAGA,
+    termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM,
     getSessionsByTermId
   );
 }
