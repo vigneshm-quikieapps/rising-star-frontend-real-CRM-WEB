@@ -19,3 +19,13 @@ export const axiosGetSessionsByTermId = async (id) => {
     throw error;
   }
 };
+
+export const getTermsOfBusiness = async (businessId) => {
+  try {
+    const response = await axiosInstance.get(`businesses/${businessId}/terms`);
+    const termsOfBusiness = response.data.docs;
+    return termsOfBusiness;
+  } catch (error) {
+    throw error;
+  }
+};
