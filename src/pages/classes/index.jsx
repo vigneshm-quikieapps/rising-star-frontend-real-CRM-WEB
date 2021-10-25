@@ -170,7 +170,7 @@ const Classes = () => {
 
   const handleRowClick = useCallback(
     (id) => {
-      history.push(`/classes/definitions/${id}`);
+      history.push(`/classes/definition/${id}`);
     },
     [history]
   );

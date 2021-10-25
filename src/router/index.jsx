@@ -38,7 +38,7 @@ const MainRouter = () => (
           <Classes />
         </MainLayout>
       </Route>
-      <Route path="/classes/definitions/:id" exact>
+      <Route path="/classes/definition/:id" exact>
         <MainLayout>
           <ClassDefinitions />
         </MainLayout>
