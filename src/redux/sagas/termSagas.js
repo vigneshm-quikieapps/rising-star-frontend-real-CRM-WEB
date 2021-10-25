@@ -61,7 +61,7 @@ export function* UpdateTerm(action) {
 }
 export function* DeleteTerm(action) {
   console.log("ggfg");
-  const deleted_term = yield call(fetchDeleteTerm, action.payload.id);
+  yield call(fetchDeleteTerm, action.payload.id);
   yield put({ type: GET_TERM_SAGA, payload: action.payload.businessId });
   yield put({ type: DELETE_TERM });
 }

@@ -44,11 +44,3 @@ export const RemoveTerm = (id, businessId) => {
     payload: { id: id, businessId: businessId },
   };
 };
-export default {
-  GetTerm,
-  CreateTerm,
-  EditTerm,
-  DeleteEditTerm,
-  UpdateTerm,
-  RemoveTerm,
-};

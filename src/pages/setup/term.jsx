@@ -24,10 +24,8 @@ import {
 } from "../../redux/action/termAction";
 import saveIcon from "../../assets/icons/icon-tick.png";
 import moment from "moment";
-import Accordion from "../../components/accordion";
 
 const Term = () => {
-  const [date, setDate] = useState(new Date(""));
   const dispatch = useDispatch();
   const classlist = useSelector((state) => state.classes.classList);
   const [classes, setClasses] = useState([]);
@@ -41,7 +39,7 @@ const Term = () => {
   const currentBusinessId = useSelector(
     (state) => state.Term.currentBusinessId
   );
-  const [a, setA] = useState(editIcon);
+
   const [ss, setSS] = useState(0);
   const heading = (
     <Box
@@ -100,7 +98,7 @@ const Term = () => {
   const pagination = (
     <Pagination count={pages} page={page} onChange={handleChange} />
   );
-  const renderTermList = () => {
+  const newLocal = () => {
     let term_list = Termlist.map((item, index) => {
       console.log("fromMap", editable, index, item.label);
       return {
@@ -108,7 +106,7 @@ const Term = () => {
         items: [
           <TextField
             inputProps={{
-              readOnly: index != editable && item.hasOwnProperty("_id"),
+              readOnly: index !== editable && item.hasOwnProperty("_id"),
             }}
             variant="filled"
             sx={{ width: "233px" }}
@@ -123,7 +121,7 @@ const Term = () => {
             inputProps={{
               disabled: true,
             }}
-            readOnly={index != editable && item.hasOwnProperty("_id")}
+            readOnly={index !== editable && item.hasOwnProperty("_id")}
             onChange={(newDate) => {
               let dateFormat = !item.hasOwnProperty("_id")
                 ? moment(newDate).utc().format("MM/DD/YYYY")
@@ -138,7 +136,7 @@ const Term = () => {
             inputProps={{
               disabled: true,
             }}
-            readOnly={index != editable && item.hasOwnProperty("_id")}
+            readOnly={index !== editable && item.hasOwnProperty("_id")}
             onChange={(newDate) => {
               let dateFormat = !item.hasOwnProperty("_id")
                 ? moment(newDate).utc().format("MM/DD/YYYY")
@@ -178,7 +176,7 @@ const Term = () => {
                 Termlist.splice(index, 1);
                 setSS(ss + 1);
               } else {
-                if (editable != index) {
+                if (editable !== index) {
                   setEditable(index);
                 } else {
                   setEditable(-1);
@@ -190,7 +188,7 @@ const Term = () => {
             <ImgIcon>
               {!item.hasOwnProperty("_id")
                 ? saveIcon
-                : editable == index
+                : editable === index
                 ? saveIcon
                 : editIcon}
             </ImgIcon>
@@ -200,6 +198,7 @@ const Term = () => {
     });
     setTerms(term_list);
   };
+  const renderTermList = newLocal;
   useEffect(() => {
     dispatch(GetClassList());
   }, [dispatch]);
@@ -213,11 +212,8 @@ const Term = () => {
         };
       });
     setClasses(class_List);
-    Termlist && renderTermList();
-  }, [Termlist]);
-  useEffect(() => {
-    renderTermList();
-  }, [editable, ss]);
+    TermlistResponse && renderTermList();
+  }, [editable, TermlistResponse, ss, classlist, renderTermList]);
 
   return (
     <div>

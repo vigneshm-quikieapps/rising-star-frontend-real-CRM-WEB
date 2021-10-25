@@ -1,19 +1,6 @@
-import {
-  put,
-  takeEvery,
-  TakeLatest,
-  all,
-  take,
-  call,
-} from "redux-saga/effects";
+import { put, takeEvery, call } from "redux-saga/effects";
 import { fetchGetClass } from "../../services/classServices";
-import { fetchGetTerm } from "../../services/termServices";
-import {
-  GET_CLASS_LIST,
-  GET_CLASS_LIST_SAGA,
-  GET_TERM,
-  GET_TERM_SAGA,
-} from "../types";
+import { GET_CLASS_LIST, GET_CLASS_LIST_SAGA, GET_TERM_SAGA } from "../types";
 
 export function* getClassList(action) {
   const class_list = yield call(fetchGetClass, action.payload);
