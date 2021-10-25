@@ -6,14 +6,11 @@ export const fetchgetAllErolmentOfAMember = async (params) => {
   return response.data.docs;
 };
 
-/**
- * API is not Ready yet.
- */
-// export const fetchgetProgresRecordOfAMember = async (params) => {
-//   const api = `${API.EnrolmentsAPI}of-a-member-in-a-business`;
-//   const response = await axios.post(api, params);
-//   return response;
-// };
+export const fetchgetProgresRecordOfAMember = async (params) => {
+  const api = `progress`;
+  const response = await axiosInstance.get(api, params);
+  return response;
+};
 
 export const axiosGetMemberList = async () => {
   try {
@@ -30,6 +27,36 @@ export const axiosGetMember = async (id) => {
     const api = `members/${id}`;
     const member = await axiosInstance.get(api);
     return member.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosmemberDropped = async (id) => {
+  try {
+    const api = `enrolments/${id}/withdraw`;
+    const Response = await axiosInstance.get(api);
+    return Response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosmemberSuspend = async (id) => {
+  try {
+    const api = `enrolments/${id}/suspend`;
+    const Response = await axiosInstance.get(api);
+    return Response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosmemberReturnFromSuspend = async (id) => {
+  try {
+    const api = `enrolments/${id}/return-from-suspension`;
+    const Response = await axiosInstance.get(api);
+    return Response;
   } catch (error) {
     throw error;
   }

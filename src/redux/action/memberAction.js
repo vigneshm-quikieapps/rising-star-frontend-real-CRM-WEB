@@ -21,3 +21,24 @@ export const getMemberProgressRecord = (params) => {
     payload: params,
   };
 };
+
+export const memberEnrolmentDropped = (id) => {
+  return {
+    type: memberActionTypes.MEMBER_ENROLMENT_DROPPED_SAGA,
+    payload: id,
+  };
+};
+
+export const memberEnrolmentSuspend = (id) => {
+  return {
+    type: memberActionTypes.MEMBER_ENROLMENT_SUSPEND,
+    payload: id,
+  };
+};
+
+export const memberEnrolmentReturnFromSuspend = (id) => {
+  return {
+    type: memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND_SAGA,
+    payload: id,
+  };
+};

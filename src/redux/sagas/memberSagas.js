@@ -3,7 +3,10 @@ import {
   axiosGetMember,
   axiosGetMemberList,
   fetchgetAllErolmentOfAMember,
-  // fetchgetProgresRecordOfAMember,
+  axiosmemberDropped,
+  axiosmemberSuspend,
+  axiosmemberReturnFromSuspend,
+  fetchgetProgresRecordOfAMember,
 } from "../../services/memberServices";
 import { memberActionTypes } from "../types";
 
@@ -43,7 +46,7 @@ export function* watchgetAllErolmentOfAMember() {
 
 export function* getProgresRecordOfAMember(action) {
   const progressRecord = yield call(
-    // fetchgetProgresRecordOfAMember,
+    fetchgetProgresRecordOfAMember,
     action.payload
   );
   yield put({
@@ -60,10 +63,59 @@ export function* watchgetProgresRecordOfAMember() {
   );
 }
 
+export function* dropMemberFromEnrolment(action) {
+  yield call(axiosmemberDropped, action.payload);
+  yield put({
+    type: memberActionTypes.MEMBER_ENROLMENT_DROPPED,
+    // payload: progressRecord,
+  });
+}
+
+export function* watchdropMemberFromEnrolment() {
+  yield takeEvery(
+    memberActionTypes.MEMBER_ENROLMENT_DROPPED_SAGA,
+    dropMemberFromEnrolment
+  );
+}
+
+export function* suspendMemberFromEnrolment(action) {
+  yield call(axiosmemberSuspend, action.payload);
+  yield put({
+    type: memberActionTypes.MEMBER_ENROLMENT_SUSPEND,
+    // payload: progressRecord,
+  });
+}
+
+export function* watchsuspendMemberFromEnrolment() {
+  yield takeEvery(
+    memberActionTypes.MEMBER_ENROLMENT_SUSPEND_SAGA,
+    suspendMemberFromEnrolment
+  );
+}
+
+export function* returnFromSuspendMemberFromEnrolment(action) {
+  yield call(axiosmemberReturnFromSuspend, action.payload);
+  yield put({
+    type: memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND,
+    // payload: progressRecord,
+  });
+}
+
+export function* watchreturnFromSuspendMemberFromEnrolment() {
+  yield takeEvery(
+    memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND_SAGA,
+    returnFromSuspendMemberFromEnrolment
+  );
+}
+
 export default function* memberSagas() {
   yield all([
     watchGetMember(),
     watchGetMemberList(),
     watchgetAllErolmentOfAMember(),
+    watchgetProgresRecordOfAMember(),
+    watchdropMemberFromEnrolment(),
+    watchsuspendMemberFromEnrolment(),
+    watchreturnFromSuspendMemberFromEnrolment(),
   ]);
 }
