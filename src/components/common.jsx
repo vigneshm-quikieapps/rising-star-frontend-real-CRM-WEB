@@ -87,3 +87,13 @@ export const AccordionContainer = styled(Box)({
   padding: "10px 0px",
   margin: "0",
 });
+
+export const ModalContainer = styled(Box)({
+  width: "80%",
+  height: "90%",
+  margin: "2.5% 10%",
+  borderRadius: "20px",
+  border: "solid 1px #f2f1f6",
+  backgroundColor: "#fff",
+  padding: "5px 15px",
+});
