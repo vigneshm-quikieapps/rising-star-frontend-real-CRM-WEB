@@ -24,7 +24,7 @@ export const getTermsOfBusiness = async (businessId) => {
   try {
     const response = await axiosInstance.get(`businesses/${businessId}/terms`);
     const data = response.data;
-    return data;
+    return { ...data, businessId };
   } catch (error) {
     throw error;
   }
@@ -38,17 +38,33 @@ export const addTerm = async ({ businessId, label, startDate, endDate }) => {
       startDate,
       endDate,
     });
-    const newTerm = response.data;
+    const { _id } = response.data.doc || { _id: new Date().getTime() };
+    const newTerm = { _id, label, startDate, endDate, businessId };
     return newTerm;
   } catch (error) {
     throw error;
   }
 };
 
-export const editTerm = async ({ id, label, startDate, endDate }) => {
+export const editTerm = async ({
+  _id,
+  businessId,
+  label,
+  startDate,
+  endDate,
+}) => {
   try {
-    await axiosInstance.put(`terms/${id}`, { label, startDate, endDate });
-    return { id, label, startDate, endDate };
+    await axiosInstance.put(`terms/${_id}`, { label, startDate, endDate });
+    return { _id, businessId, label, startDate, endDate };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteTerm = async (termId) => {
+  try {
+    await axiosInstance.delete(`terms/${termId}`);
+    return termId;
   } catch (error) {
     throw error;
   }

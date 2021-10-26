@@ -15,10 +15,16 @@ import {
 import {
   ExpandMore as ExpandMoreIcon,
   Done as DoneIcon,
+  Add as AddIcon,
 } from "@mui/icons-material";
 
 import { getBusinessList } from "../../redux/action/businesses-actions";
-import { getTermsOfBusiness, addTerm } from "../../redux/action/terms-actions";
+import {
+  getTermsOfBusiness,
+  addTerm as addTermAction,
+  deleteTerm as deleteTermAction,
+  editTerm as editTermAction,
+} from "../../redux/action/terms-actions";
 import {
   TextField,
   Accordion,
@@ -32,21 +38,20 @@ import {
 const tableHeaders = ["Term Label", "Start Date", "End Date", "Actions"];
 
 const Term = ({
-  id,
+  _id,
   businessId,
   label: initialLabel,
   startDate: initialStartDate,
   endDate: initialEndDate,
   onEdit,
   onDelete,
+  add = false,
 }) => {
   const [label, setLabel] = useState(initialLabel || "");
-  const [startDate, setStartDate] = useState(initialStartDate);
-  const [endDate, setEndDate] = useState(initialEndDate);
-  console.log(startDate, endDate);
+  const [startDate, setStartDate] = useState(new Date(initialStartDate));
+  const [endDate, setEndDate] = useState(new Date(initialEndDate));
   const changeHandler = (e, field) => {
-    const value =
-      field === "label" ? e.target.value : e.toISOString().split("T")[0];
+    const value = field === "label" ? e.target.value : e;
     switch (field) {
       case "label": {
         return setLabel(value);
@@ -100,11 +105,19 @@ const Term = ({
       </TableCell>
       <TableCell>
         <Actions
-          editIcon={<DoneIcon color="success" />}
+          editIcon={
+            add ? <AddIcon color="success" /> : <DoneIcon color="success" />
+          }
           onEdit={() => {
-            onEdit({ id, businessId, label, startDate, endDate });
+            onEdit({
+              _id,
+              businessId,
+              label,
+              startDate: startDate.toISOString().split("T")[0],
+              endDate: endDate.toISOString().split("T")[0],
+            });
           }}
-          onDelete={() => onDelete({ id })}
+          onDelete={() => onDelete(_id)}
         />
       </TableCell>
     </TableRow>
@@ -135,8 +148,23 @@ const Terms = () => {
   const businessChangeHandler = (e) => setSelectedBusiness(e.target.value);
 
   const addTermHandler = useCallback(
-    (data) => {
-      dispatch(addTerm(data));
+    (termData) => {
+      dispatch(addTermAction(termData));
+      setShowAddTerm(false);
+    },
+    [dispatch]
+  );
+
+  const deleteTermHandler = useCallback(
+    (id) => {
+      dispatch(deleteTermAction(id));
+    },
+    [dispatch]
+  );
+
+  const editTermHandler = useCallback(
+    (termData) => {
+      dispatch(editTermAction(termData));
     },
     [dispatch]
   );
@@ -156,11 +184,9 @@ const Terms = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {termsOfBusiness.map(({ _id: id, label, startDate, endDate }) => (
-                <Term key={id} {...{ id, label, startDate, endDate }} />
-              ))}
               {showAddTerm && (
                 <Term
+                  add
                   businessId={selectedBusiness}
                   onEdit={addTermHandler}
                   onDelete={() => setShowAddTerm(false)}
@@ -168,6 +194,14 @@ const Terms = () => {
                   endDate={new Date().toISOString()}
                 />
               )}
+              {termsOfBusiness.map(({ _id, label, startDate, endDate }) => (
+                <Term
+                  key={_id}
+                  {...{ _id, label, startDate, endDate }}
+                  onEdit={editTermHandler}
+                  onDelete={deleteTermHandler}
+                />
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -181,11 +215,13 @@ const Terms = () => {
     ),
     [
       selectedBusiness,
-      currentPage,
-      totalPages,
+      // currentPage,
+      // totalPages,
       showAddTerm,
       termsOfBusiness,
       addTermHandler,
+      deleteTermHandler,
+      editTermHandler,
     ]
   );
 

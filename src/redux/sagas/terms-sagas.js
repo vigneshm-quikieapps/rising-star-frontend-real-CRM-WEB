@@ -4,6 +4,7 @@ import {
   axiosGetSessionsByTermId,
   getTermsOfBusiness,
   addTerm,
+  deleteTerm,
   editTerm,
 } from "../../services/term-services";
 import { termsActionTypes } from "../types";
@@ -70,8 +71,9 @@ export function* addNewTerm(action) {
     yield put({
       type: termsActionTypes.ADD_NEW_TERM_FAILED,
       payload:
-        error.message || "Something went wrong while adding the new term",
+      error.message || "Something went wrong while adding the new term",
     });
+    throw error;
   }
 }
 
@@ -79,12 +81,31 @@ export function* watchAddNewTerm() {
   yield takeEvery(termsActionTypes.ADD_NEW_TERM, addNewTerm);
 }
 
+export function* deleteTermSaga(action) {
+  try {
+    const deletedTermId = yield call(deleteTerm, action.payload);
+    yield put({
+      type: termsActionTypes.DELETE_TERM_SUCCEEDED,
+      payload: deletedTermId,
+    });
+  } catch (error) {
+    yield put({
+      type: termsActionTypes.DELETE_TERM_FAILED,
+      payload: error.message || "Something went wrong while deleting the term",
+    });
+  }
+}
+
+export function* watchDeleteTerm() {
+  yield takeEvery(termsActionTypes.DELETE_TERM, deleteTermSaga);
+}
+
 export function* editTermSaga(action) {
   try {
-    yield call(editTerm, action.payload);
+    const editedTerm = yield call(editTerm, action.payload);
     yield put({
       type: termsActionTypes.EDIT_TERM_SUCCEEDED,
-      payload: action.payload,
+      payload: editedTerm,
     });
   } catch (error) {
     yield put({
@@ -106,6 +127,7 @@ export default function* termSagas() {
     watchGetSessionsByTermId(),
     watchGetTermListOfBusiness(),
     watchAddNewTerm(),
+    watchDeleteTerm(),
     watchEditTerm(),
   ]);
 }
