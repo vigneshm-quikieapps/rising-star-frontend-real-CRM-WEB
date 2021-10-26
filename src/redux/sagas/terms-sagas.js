@@ -3,6 +3,8 @@ import {
   axiosGetAllTerms,
   axiosGetSessionsByTermId,
   getTermsOfBusiness,
+  addTerm,
+  editTerm,
 } from "../../services/term-services";
 import { termsActionTypes } from "../types";
 
@@ -33,7 +35,7 @@ export function* watchGetSessionsByTermId() {
   );
 }
 
-function* getTermListOfBusiness(action) {
+export function* getTermListOfBusiness(action) {
   try {
     const terms = yield call(getTermsOfBusiness, action.payload);
     yield put({
@@ -50,11 +52,52 @@ function* getTermListOfBusiness(action) {
   }
 }
 
-function* watchGetTermListOfBusiness() {
+export function* watchGetTermListOfBusiness() {
   yield takeLatest(
     termsActionTypes.GET_TERMS_OF_A_BUSINESS,
     getTermListOfBusiness
   );
+}
+
+export function* addNewTerm(action) {
+  try {
+    const newTerm = yield call(addTerm, action.payload);
+    yield put({
+      type: termsActionTypes.ADD_NEW_TERM_SUCCEEDED,
+      payload: newTerm,
+    });
+  } catch (error) {
+    yield put({
+      type: termsActionTypes.ADD_NEW_TERM_FAILED,
+      payload:
+        error.message || "Something went wrong while adding the new term",
+    });
+  }
+}
+
+export function* watchAddNewTerm() {
+  yield takeEvery(termsActionTypes.ADD_NEW_TERM, addNewTerm);
+}
+
+export function* editTermSaga(action) {
+  try {
+    yield call(editTerm, action.payload);
+    yield put({
+      type: termsActionTypes.EDIT_TERM_SUCCEEDED,
+      payload: action.payload,
+    });
+  } catch (error) {
+    yield put({
+      type: termsActionTypes.EDIT_TERM_FAILED,
+      payload:
+        error.message ||
+        "something went wrong while editing the specified term",
+    });
+  }
+}
+
+export function* watchEditTerm() {
+  yield takeEvery(termsActionTypes.EDIT_TERM, editTermSaga);
 }
 
 export default function* termSagas() {
@@ -62,5 +105,7 @@ export default function* termSagas() {
     watchGetAllTerms(),
     watchGetSessionsByTermId(),
     watchGetTermListOfBusiness(),
+    watchAddNewTerm(),
+    watchEditTerm(),
   ]);
 }

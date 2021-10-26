@@ -19,3 +19,15 @@ export const getTermsOfBusiness = (businessId) => {
     payload: businessId,
   };
 };
+
+export const addTerm = (termData) => {
+  return { type: termsActionTypes.ADD_NEW_TERM, payload: termData };
+};
+
+export const editTerm = (termData) => {
+  return { type: termsActionTypes.EDIT_TERM, payload: termData };
+};
+
+export const deleteTerm = (termId) => {
+  return { type: termsActionTypes.DELETE_TERM, payload: termId };
+};

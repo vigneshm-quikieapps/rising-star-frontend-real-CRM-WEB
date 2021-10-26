@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
@@ -6,17 +6,118 @@ import {
   MenuItem,
   AccordionSummary,
   AccordionDetails,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
-import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
+import {
+  ExpandMore as ExpandMoreIcon,
+  Done as DoneIcon,
+} from "@mui/icons-material";
 
 import { getBusinessList } from "../../redux/action/businesses-actions";
-import { getTermsOfBusiness } from "../../redux/action/terms-actions";
-import { TextField, Accordion, Table, GradientButton } from "../../components";
+import { getTermsOfBusiness, addTerm } from "../../redux/action/terms-actions";
+import {
+  TextField,
+  Accordion,
+  TableMui as Table,
+  GradientButton,
+  DatePicker,
+  Actions,
+  Pagination,
+} from "../../components";
 
-const Term = () => {
+const tableHeaders = ["Term Label", "Start Date", "End Date", "Actions"];
+
+const Term = ({
+  id,
+  businessId,
+  label: initialLabel,
+  startDate: initialStartDate,
+  endDate: initialEndDate,
+  onEdit,
+  onDelete,
+}) => {
+  const [label, setLabel] = useState(initialLabel || "");
+  const [startDate, setStartDate] = useState(initialStartDate);
+  const [endDate, setEndDate] = useState(initialEndDate);
+  console.log(startDate, endDate);
+  const changeHandler = (e, field) => {
+    const value =
+      field === "label" ? e.target.value : e.toISOString().split("T")[0];
+    switch (field) {
+      case "label": {
+        return setLabel(value);
+      }
+      case "startDate": {
+        return setStartDate(value);
+      }
+      case "endDate": {
+        return setEndDate(value);
+      }
+      default: {
+        return;
+      }
+    }
+  };
+  return (
+    <TableRow>
+      <TableCell>
+        <TextField
+          value={label}
+          onChange={(e) => changeHandler(e, "label")}
+          variant="filled"
+          sx={{ height: "44px", "& .MuiFilledInput-input": { py: 0 } }}
+        />
+      </TableCell>
+      <TableCell>
+        <DatePicker
+          date={startDate}
+          onChange={(newDate) => changeHandler(newDate, "startDate")}
+          label={null}
+          inputProps={{
+            sx: {
+              height: "44px",
+              "& .MuiFilledInput-input": { py: 0 },
+            },
+          }}
+        />
+      </TableCell>
+      <TableCell>
+        <DatePicker
+          date={endDate}
+          onChange={(newDate) => changeHandler(newDate, "endDate")}
+          label={null}
+          inputProps={{
+            sx: {
+              height: "44px",
+              "& .MuiFilledInput-input": { py: 0 },
+            },
+          }}
+        />
+      </TableCell>
+      <TableCell>
+        <Actions
+          editIcon={<DoneIcon color="success" />}
+          onEdit={() => {
+            onEdit({ id, businessId, label, startDate, endDate });
+          }}
+          onDelete={() => onDelete({ id })}
+        />
+      </TableCell>
+    </TableRow>
+  );
+};
+
+const Terms = () => {
+  const [showAddTerm, setShowAddTerm] = useState(false);
   const dispatch = useDispatch();
   const businessList = useSelector((state) => state.businesses.businessList);
-  const terms = useSelector((state) => state.terms.allTerms);
+  const { termsOfBusiness, currentPage, totalPages } = useSelector(
+    (state) => state.terms
+  );
   const [selectedBusiness, setSelectedBusiness] = useState("");
 
   useEffect(() => {
@@ -32,6 +133,61 @@ const Term = () => {
   }, [dispatch, selectedBusiness]);
 
   const businessChangeHandler = (e) => setSelectedBusiness(e.target.value);
+
+  const addTermHandler = useCallback(
+    (data) => {
+      dispatch(addTerm(data));
+    },
+    [dispatch]
+  );
+
+  const termList = useMemo(
+    () => (
+      <>
+        <TableContainer component={"div"}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {tableHeaders.map((header, index) => (
+                  <TableCell key={index} component="th">
+                    {header}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {termsOfBusiness.map(({ _id: id, label, startDate, endDate }) => (
+                <Term key={id} {...{ id, label, startDate, endDate }} />
+              ))}
+              {showAddTerm && (
+                <Term
+                  businessId={selectedBusiness}
+                  onEdit={addTermHandler}
+                  onDelete={() => setShowAddTerm(false)}
+                  startDate={new Date().toISOString()}
+                  endDate={new Date().toISOString()}
+                />
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {/* <Pagination
+          page={currentPage}
+          count={totalPages}
+          sx={{ my: 2 }}
+          onChange={() => {}}
+        /> */}
+      </>
+    ),
+    [
+      selectedBusiness,
+      currentPage,
+      totalPages,
+      showAddTerm,
+      termsOfBusiness,
+      addTermHandler,
+    ]
+  );
 
   return (
     <Box>
@@ -78,20 +234,19 @@ const Term = () => {
                 mr: "10px",
                 borderRadius: (theme) => theme.shape.borderRadiuses.primary,
               }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAddTerm(true);
+              }}
             >
               +
             </GradientButton>
           </Box>
         </AccordionSummary>
-        <AccordionDetails sx={{ padding: 0 }}>
-          <Table
-            headers={[1, 2, 3, 4]}
-            rows={[{ id: 1, items: [1, 2, 3, 4] }]}
-          />
-        </AccordionDetails>
+        <AccordionDetails sx={{ padding: 0 }}>{termList}</AccordionDetails>
       </Accordion>
     </Box>
   );
 };
 
-export default Term;
+export default Terms;

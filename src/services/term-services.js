@@ -23,8 +23,32 @@ export const axiosGetSessionsByTermId = async (id) => {
 export const getTermsOfBusiness = async (businessId) => {
   try {
     const response = await axiosInstance.get(`businesses/${businessId}/terms`);
-    const termsOfBusiness = response.data.docs;
-    return termsOfBusiness;
+    const data = response.data;
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addTerm = async ({ businessId, label, startDate, endDate }) => {
+  try {
+    const response = await axiosInstance.post("terms", {
+      businessId,
+      label,
+      startDate,
+      endDate,
+    });
+    const newTerm = response.data;
+    return newTerm;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const editTerm = async ({ id, label, startDate, endDate }) => {
+  try {
+    await axiosInstance.put(`terms/${id}`, { label, startDate, endDate });
+    return { id, label, startDate, endDate };
   } catch (error) {
     throw error;
   }
