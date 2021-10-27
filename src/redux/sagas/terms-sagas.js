@@ -47,7 +47,6 @@ export function* getTermListOfBusiness(action) {
     yield put({
       type: termsActionTypes.GET_TERMS_OF_A_BUSINESS_FAILED,
       payload:
-        error.message ||
         "Something went wrong while getting list of terms of the business",
     });
   }
@@ -70,10 +69,8 @@ export function* addNewTerm(action) {
   } catch (error) {
     yield put({
       type: termsActionTypes.ADD_NEW_TERM_FAILED,
-      payload:
-      error.message || "Something went wrong while adding the new term",
+      payload: "Something went wrong while adding the new term",
     });
-    throw error;
   }
 }
 
@@ -91,7 +88,7 @@ export function* deleteTermSaga(action) {
   } catch (error) {
     yield put({
       type: termsActionTypes.DELETE_TERM_FAILED,
-      payload: error.message || "Something went wrong while deleting the term",
+      payload: "Something went wrong while deleting the term",
     });
   }
 }
@@ -110,9 +107,7 @@ export function* editTermSaga(action) {
   } catch (error) {
     yield put({
       type: termsActionTypes.EDIT_TERM_FAILED,
-      payload:
-        error.message ||
-        "something went wrong while editing the specified term",
+      payload: "something went wrong while editing the specified term",
     });
   }
 }
