@@ -9,3 +9,13 @@ export async function getBusinesses() {
     throw error;
   }
 }
+export async function getBusinessListOfBusiness() {
+  try {
+    const response = await axiosInstance.get("/businesses/of-logged-in-user");
+    const businessList = response.data;
+    return businessList;
+  } catch (error) {
+    throw error;
+  }
+}
+

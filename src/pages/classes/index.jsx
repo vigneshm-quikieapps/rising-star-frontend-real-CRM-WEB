@@ -12,7 +12,7 @@ import {
   getClassList as getClassListAction,
   deleteClass,
 } from "../../redux/action/class-actions";
-import { getBusinessList } from "../../redux/action/businesses-actions";
+import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 import TextField from "../../components/textfield";
 import Button from "../../components/simple-button";
 import GradientButton from "../../components/gradient-button";
@@ -40,7 +40,7 @@ const AdvancedSearch = ({ open, setOpen, businessList = [] }) => {
       getClassListAction({
         filters: [
           { field: "name", type: nameOperator, value: name },
-          { field: "businessId", type: "EQUALS", value: business },
+          { field: "businessId", type: "BY_ID", value: business },
           { field: "status", type: statusOperator, value: status },
         ],
       })
@@ -130,7 +130,7 @@ const AdvancedSearch = ({ open, setOpen, businessList = [] }) => {
           onChange={statusOperatorChangeHandler}
         >
           <MenuItem value="EQUALS">Equals to</MenuItem>
-          <MenuItem value="NO_EQUALS">Not equals to</MenuItem>
+          <MenuItem value="NOT_EQUALS">Not equals to</MenuItem>
         </TextField>
         <GradientButton
           sx={{ width: "200px !important" }}
@@ -149,7 +149,9 @@ const Classes = () => {
   const [searchValue, setSearchValue] = useState("");
   const classesState = useSelector((state) => state.classes);
   const { classList, totalPages, currentPage } = classesState;
-  const businesses = useSelector((state) => state.businesses.businessList);
+  const businesses = useSelector(
+    (state) => state.businesses.businessListOfBusiness
+  );
   const history = useHistory();
 
   const handleEdit = useCallback(
@@ -229,7 +231,7 @@ const Classes = () => {
 
   useEffect(() => {
     dispatch(getClassListAction({ page: 1 }));
-    dispatch(getBusinessList());
+    dispatch(getBusinessListOfBusiness());
   }, [dispatch]);
 
   useEffect(() => {

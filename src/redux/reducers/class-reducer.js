@@ -5,14 +5,14 @@ const initialState = {
   totalPages: 1,
   currentPage: 1,
   error: "",
-  loading: false,
+  classesLoading: false,
   class: null,
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case classActionTypes.SET_LOADING: {
-      return { ...state, loading: action.payload };
+      return { ...state, classesLoading: action.payload };
     }
     case classActionTypes.GET_CLASS_LIST_SUCCEEDED: {
       const { classList, totalPages, currentPage } = action.payload;
@@ -22,11 +22,11 @@ export default function reducer(state = initialState, action) {
         totalPages,
         currentPage,
         error: "",
-        loading: false,
+        classesLoading: false,
       };
     }
     case classActionTypes.GET_CLASS_LIST_FAILED:
-      return { ...state, error: action.payload, loading: false };
+      return { ...state, error: action.payload, classesLoading: false };
     case classActionTypes.DELETE_CLASS_SUCCEEDED: {
       const updatedClassList = state.classList.filter(
         (singleClass) => singleClass._id !== action.payload
@@ -35,11 +35,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         classList: updatedClassList,
         error: "",
-        loading: false,
+        classesLoading: false,
       };
     }
     case classActionTypes.DELETE_CLASS_FAILED: {
-      return { ...state, error: action.payload, loading: false };
+      return { ...state, error: action.payload, classesLoading: false };
     }
     case classActionTypes.GET_CLASS_BY_ID: {
       return { ...state, class: action.payload };

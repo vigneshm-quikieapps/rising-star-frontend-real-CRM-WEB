@@ -18,7 +18,7 @@ import {
   Add as AddIcon,
 } from "@mui/icons-material";
 
-import { getBusinessList } from "../../redux/action/businesses-actions";
+import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 import {
   getTermsOfBusiness,
   addTerm as addTermAction,
@@ -127,14 +127,14 @@ const Term = ({
 const Terms = () => {
   const [showAddTerm, setShowAddTerm] = useState(false);
   const dispatch = useDispatch();
-  const businessList = useSelector((state) => state.businesses.businessList);
+  const businessList = useSelector((state) => state.businesses.businessListOfBusiness);
   const { termsOfBusiness, currentPage, totalPages } = useSelector(
     (state) => state.terms
   );
   const [selectedBusiness, setSelectedBusiness] = useState("");
 
   useEffect(() => {
-    dispatch(getBusinessList());
+    dispatch(getBusinessListOfBusiness());
   }, [dispatch]);
 
   useEffect(() => {
