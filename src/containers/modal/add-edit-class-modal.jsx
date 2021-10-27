@@ -182,6 +182,9 @@ const AddEditClassModal = (props) => {
             borderRadius: "20px",
             border: "solid 1px #f2f1f6",
             backgroundColor: "#fff",
+            "&:focus-visible": {
+              outline: "none",
+            },
           }}
         >
           <CardRow
