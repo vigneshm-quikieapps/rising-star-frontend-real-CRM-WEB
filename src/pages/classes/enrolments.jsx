@@ -81,8 +81,8 @@ const ClassEnrolments = () => {
     let sessionMembersDetailsArray = allMembers.docs.map((item) => {
       return {
         name: item.member.name,
-        allergies: item.memberConsent.consent.allergies,
-        conditions: item.memberConsent.consent.condition,
+        allergies: item.memberConsent && item.memberConsent.consent.allergies,
+        conditions: item.memberConsent && item.memberConsent.consent.condition,
         startDate: item.startDate ? item.startDate : "N/A",
         enrolledDate: item.registeredDate ? item.registeredDate : "N/A",
         enrolledStatus: item.enrolledStatus,
