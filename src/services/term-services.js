@@ -38,8 +38,7 @@ export const addTerm = async ({ businessId, label, startDate, endDate }) => {
       startDate,
       endDate,
     });
-    const { _id } = response.data.doc || { _id: new Date().getTime() };
-    const newTerm = { _id, label, startDate, endDate, businessId };
+    const newTerm = response.data.term;
     return newTerm;
   } catch (error) {
     throw error;
