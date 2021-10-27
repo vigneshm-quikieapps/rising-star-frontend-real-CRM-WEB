@@ -17,7 +17,7 @@ export const CardRow = styled(Box)({
   alignItems: "center",
   justifyContent: "space-between",
   flexWrap: "wrap",
-  margin: "15px 0",
+  // margin: "15px 0",
   gap: "15px 0",
 });
 

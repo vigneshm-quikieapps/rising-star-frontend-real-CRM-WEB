@@ -4,7 +4,7 @@ export const axiosGetAllTerms = async () => {
   try {
     const api = `terms/`;
     const allTerms = await axiosInstance.get(api);
-    return allTerms.data;
+    return allTerms.data.docs;
   } catch (error) {
     throw error;
   }
