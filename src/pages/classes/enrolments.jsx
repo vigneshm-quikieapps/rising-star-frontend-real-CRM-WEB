@@ -18,14 +18,13 @@ import { Outputs } from "../../containers/outputs";
 import Pagination from "./../../components/pagination";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllMembersEnrolledInASession } from "../../redux/action/sessionAction";
-import verfiedIcon from "../../assets/icons/icon-allergy.png";
-import BasicModal from "../../containers/modal/modal";
-import { getClassById } from "../../redux/action/class-actions";
 import {
-  getAllTerms,
+  getAllMembersEnrolledInASession,
   getSessionsByTermId,
-} from "../../redux/action/terms-actions";
+} from "../../redux/action/sessionAction";
+import verfiedIcon from "../../assets/icons/icon-allergy.png";
+import { getClassById } from "../../redux/action/class-actions";
+import { getAllTerms } from "../../redux/action/terms-actions";
 const MoreIconButton = () => (
   <IconButton>
     <ImgIcon alt="more">{moreIcon}</ImgIcon>
@@ -42,7 +41,7 @@ const ClassEnrolments = () => {
   const allMembers = useSelector((state) => state.sessions.allMembersEnrolled);
   const classObj = useSelector((state) => state.classes.class);
   const allTerms = useSelector((state) => state.terms.allTerms);
-  const allSessions = useSelector((state) => state.terms.termSessions);
+  const allSessions = useSelector((state) => state.sessions.sessionsOfTerm);
   const { id } = useParams();
   const [page, setPage] = useState(allMembers.page);
   const [pages] = useState(allMembers.totalPages);
@@ -203,7 +202,6 @@ const ClassEnrolments = () => {
 
   return (
     <Box>
-      <BasicModal />
       <Card>
         <CardRow>
           <HeadingText>{classObj && classObj.name}</HeadingText>

@@ -1,6 +1,7 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
 import { axiosGetMembersEnrolledInASession } from "../../services/sessionServices";
-import { memberActionTypes } from "../types";
+import { axiosGetSessionsByTermId } from "../../services/term-services";
+import { sessionActionTypes } from "../types";
 
 export function* getMembersEnrolledInSession(action) {
   const member_list = yield call(
@@ -8,18 +9,40 @@ export function* getMembersEnrolledInSession(action) {
     action.payload
   );
   yield put({
-    type: memberActionTypes.GET_ALL_MEMBERS_ENROLLED_IN_A_SESSION,
+    type: sessionActionTypes.GET_ALL_MEMBERS_ENROLLED_IN_A_SESSION,
     payload: member_list,
   });
 }
 
 export function* watchGetMemberEnrolledInSession() {
   yield takeEvery(
-    memberActionTypes.GET_ALL_MEMBERS_ENROLLED_IN_A_SESSION_SAGA,
+    sessionActionTypes.GET_ALL_MEMBERS_ENROLLED_IN_A_SESSION_SAGA,
     getMembersEnrolledInSession
   );
 }
 
+export function* getSessionsByTermId(action) {
+  try {
+    const allTerms = yield call(axiosGetSessionsByTermId, action.payload);
+    yield put({
+      type: sessionActionTypes.GET_ALL_SESSIONS_OF_A_TERM_SUCCEEDED,
+      payload: allTerms,
+    });
+  } catch (error) {
+    yield put({
+      type: sessionActionTypes.GET_ALL_SESSIONS_OF_A_TERM_FAILED,
+      payload: error.message,
+    });
+  }
+}
+
+export function* watchGetSessionsByTermId() {
+  yield takeEvery(
+    sessionActionTypes.GET_ALL_SESSIONS_OF_A_TERM,
+    getSessionsByTermId
+  );
+}
+
 export default function* sessionSagas() {
-  yield all([watchGetMemberEnrolledInSession()]);
+  yield all([watchGetMemberEnrolledInSession(), watchGetSessionsByTermId()]);
 }
