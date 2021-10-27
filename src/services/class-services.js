@@ -7,7 +7,6 @@ export async function getClasses(params) {
     const { totalPages, page: currentPage } = response.data;
     return { classList, totalPages, currentPage };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -17,7 +16,6 @@ export async function deleteClassByID(id) {
     await axiosInstance.delete("/classes/" + id);
     return id;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -28,7 +26,6 @@ export async function axiosGetClassById(id) {
     const res = await axiosInstance.get(api);
     return res.data;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
