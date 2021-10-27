@@ -18,6 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import {
   getMemberEnrolmentList,
+  getMemberById,
   memberEnrolmentDropped,
   memberEnrolmentSuspend,
   memberEnrolmentReturnFromSuspend,
@@ -101,6 +102,7 @@ const MemberEnrollment = () => {
 
   const enrollmentList = useSelector((state) => state.members.enrolmentList);
   const businessList = useSelector((state) => state.businesses.businessList);
+  const currentMember = useSelector((state) => state.members.currentMember);
 
   const businessId = businessList[0]?._id;
 
@@ -125,6 +127,10 @@ const MemberEnrollment = () => {
   useEffect(() => {
     dispatch(getBusinessList());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getMemberById(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
     businessId && setselectedBusiness(businessId);
@@ -254,7 +260,7 @@ const MemberEnrollment = () => {
       <TopNav />
       <StyleBox>
         <Typography variant="h4" component="div">
-          Ayman Mogal
+          {currentMember ? currentMember.member.name : "- - -"}
         </Typography>
         <Typography variant="subtitle2" component="div">
           Student/Member

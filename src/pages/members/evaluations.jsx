@@ -45,6 +45,61 @@ const StyleBox = styled(Box)(({ theme }) => ({
   },
 }));
 
+const checkStatusConverter = (data) => {
+  if (data === "NOT_STARTED") {
+    return false;
+  } else if (data === "AWARDED") {
+    return true;
+  } else if (data === "IN_PROGRESS") {
+    return true;
+  }
+};
+
+const LevelsComponent = ({ skillData, skillIndex }) => {
+  const [checkbox, setCheckboxes] = useState({
+    attainedCheckBox: false,
+    inprogressCheckbox: false,
+  });
+
+  useEffect(() => {
+    setCheckboxes((previous) => ({
+      ...previous,
+      attainedCheckBox: checkStatusConverter(skillData.status),
+      inprogressCheckbox: skillData.s,
+    }));
+  }, []);
+
+  return (
+    <Box
+      key={skillIndex}
+      sx={{
+        padding: " 5px 17px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <Textfield value={skillData.name} sx={{ width: "80%" }} />
+      <Box>
+        <Checkbox
+          sx={{
+            margin: "0 1.3rem",
+          }}
+          checked={checkbox}
+          // onChange={() => levelsOnChange(li._id, "attained")}
+        />
+        <Checkbox
+          sx={{
+            margin: "0 1.3rem",
+          }}
+          checked={checkbox}
+          // onChange={() => levelsOnChange(li._id, "inprogress")}
+        />
+      </Box>
+    </Box>
+  );
+};
+
 const MemberEvaluations = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -57,7 +112,11 @@ const MemberEvaluations = () => {
   const [businessId, setBusinessId] = useState("");
   const [evaluationSchemeId, setEvaluationSchemeId] = useState("");
   const [levels, setLevels] = useState([]);
-  const [updateLevels, setUpdateLevels] = useState([]);
+  const [updateLevels, setUpdateLevels] = useState({
+    progressId: "",
+    levels: [],
+  });
+  const [checkbox, setCheckbox] = useState();
 
   const params = useCallback(
     (id, currentMember, businessList, evalautionSchemeList) => {
@@ -66,9 +125,7 @@ const MemberEvaluations = () => {
           memberId: id,
           clubMembershipId:
             currentMember?.member.membership[0].clubMembershipId,
-          // businessId: businessList[0]?._id,
           businessId: businessList,
-          // evaluationSchemeId: evalautionSchemeList[0]?._id,
           evaluationSchemeId: evalautionSchemeList,
         };
         resolve(data);
@@ -90,6 +147,14 @@ const MemberEvaluations = () => {
     setBusinessId(businessList[0]?._id);
     setEvaluationSchemeId(evalautionSchemeList[0]?._id);
     setLevels(progressRecord.levels);
+    // checkboxStatePopulate(progressRecord.levels);
+    setUpdateLevels((previous) => ({
+      ...previous,
+      progressId: `${progressRecord._id}`,
+      // levels: [
+
+      // ]
+    }));
   }, [businessList, evalautionSchemeList, progressRecord]);
 
   useEffect(() => {
@@ -105,16 +170,35 @@ const MemberEvaluations = () => {
     });
   }, [currentMember, dispatch, businessId, evaluationSchemeId, id, params]);
 
-  console.log(levels);
+  // console.log(levels);
   // console.log(businessId);
 
   const businessChangeHandler = (e) => {
     setBusinessId(e.target.value);
   };
 
-  // const levelsOnChange = () => {
-  //   setUpdateLevels(previous => )
-  // }
+  // const levelsOnChange = (id, progressName, checked) => {
+  //   // console.log(id, progressName);
+  //   setCheckbox(!checkbox);
+  //   console.log(id, progressName, !checkbox);
+  //   const perviousId = id;
+  //   // const existId = updateLevels.levels.some(li => li._id === id)
+
+  //   if (id === perviousId) {
+  //     updateLevels.levels.find(li => li._id === id).status = !checkbox;
+  //   }else{
+  //     setUpdateLevels((previous) => ({
+  //       ...previous,
+  //       levels: [
+  //         ...levels,
+  //         {
+  //           _id: id,
+  //           // status: "",
+  //         },
+  //       ],
+  //     }));
+  //   }
+  // };
 
   return (
     <Box sx={{ width: "100%", paddingBottom: "20px" }}>
@@ -213,30 +297,11 @@ const MemberEvaluations = () => {
                   </Typography>
                 </Box>
               </Box>
-              {data.skills.map((li, liindex) => (
-                <Box
-                  key={liindex}
-                  sx={{
-                    padding: " 5px 17px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Textfield value={li.name} sx={{ width: "80%" }} />
-                  <Box>
-                    <Checkbox
-                      sx={{
-                        margin: "0 1.3rem",
-                      }}
-                    />
-                    <Checkbox
-                      sx={{
-                        margin: "0 1.3rem",
-                      }}
-                    />
-                  </Box>
-                </Box>
+              {data.skills.map((skillData, skillIndex) => (
+                <LevelsComponent
+                  skillData={skillData}
+                  skillIndex={skillIndex}
+                />
               ))}
             </AccordionDetails>
           </Accordion>
