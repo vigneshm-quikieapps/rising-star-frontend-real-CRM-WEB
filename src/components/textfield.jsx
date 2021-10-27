@@ -33,6 +33,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiFilledInput-root": {
     backgroundColor: "#f4f4f4",
     "&::after ,::before": { display: "none" },
+    "& .MuiFilledInput-input": {
+      "&:focus": { backgroundColor: "transparent" },
+    },
   },
   // applied to InputBase (FormControl) of outlined variant
   "& .MuiOutlinedInput-root": {
