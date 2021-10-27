@@ -5,6 +5,7 @@ import businessesReducer from "./businesses-reducer";
 import memberReducers from "./memberReducers";
 import sessionReducers from "./sessionReducers";
 import termsReducers from "./terms-reducers";
+import evaluationReducers from "./evaluationReducers";
 
 const rootReducer = combineReducers({
   //By defining a field inside the reducers parameter
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   members: memberReducers,
   sessions: sessionReducers,
   terms: termsReducers,
+  evaluation: evaluationReducers,
 });
 
 export default rootReducer;

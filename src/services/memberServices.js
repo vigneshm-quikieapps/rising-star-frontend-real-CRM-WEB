@@ -8,8 +8,8 @@ export const fetchgetAllErolmentOfAMember = async (params) => {
 
 export const fetchgetProgresRecordOfAMember = async (params) => {
   const api = `progress`;
-  const response = await axiosInstance.get(api, params);
-  return response;
+  const response = await axiosInstance.post(api, params);
+  return response.data.progress;
 };
 
 export const axiosGetMemberList = async () => {

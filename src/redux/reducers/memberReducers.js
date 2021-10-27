@@ -3,7 +3,7 @@ import { memberActionTypes } from "../types";
 const INITIAL_STATE = {
   allMembers: [],
   enrolmentList: [],
-  progressRecord: [],
+  progressRecord: {},
   currentMember: null,
 };
 
