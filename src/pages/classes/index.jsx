@@ -1,7 +1,3 @@
-/// fix filters (set searchFilters as state and use it in pagination change handler)
-/// NOT_EQUALS operator is not implemented in the back-end
-/// businessId doesn't work in advanced search (back-end issue)
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -21,7 +17,7 @@ import ClassList from "../../containers/class-list";
 import Status from "../../components/status";
 import Pagination from "../../components/pagination";
 
-const AdvancedSearch = ({ open, setOpen, businessList = [] }) => {
+const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [status, setStatus] = useState("ACTIVE");
@@ -35,16 +31,21 @@ const AdvancedSearch = ({ open, setOpen, businessList = [] }) => {
   const nameOperatorChangeHandler = (e) => setNameOperator(e.target.value);
   const statusOperatorChangeHandler = (e) => setStatusOperator(e.target.value);
 
+  const filters = useMemo(
+    () => [
+      { field: "name", type: nameOperator, value: name },
+      { field: "businessId", type: "BY_ID", value: business },
+      { field: "status", type: statusOperator, value: status },
+    ],
+    [name, nameOperator, status, statusOperator, business]
+  );
+
+  useEffect(() => {
+    setFilters(filters);
+  }, [filters, setFilters]);
+
   const searchHandler = () => {
-    dispatch(
-      getClassListAction({
-        filters: [
-          { field: "name", type: nameOperator, value: name },
-          { field: "businessId", type: "BY_ID", value: business },
-          { field: "status", type: statusOperator, value: status },
-        ],
-      })
-    );
+    dispatch(getClassListAction({ filters }));
   };
 
   return (
@@ -97,7 +98,6 @@ const AdvancedSearch = ({ open, setOpen, businessList = [] }) => {
         >
           <MenuItem value="ACTIVE">Active</MenuItem>
           <MenuItem value="INACTIVE">In-Active</MenuItem>
-          <MenuItem value="DRAFT">In Draft</MenuItem>
         </TextField>
         <TextField
           select
@@ -146,6 +146,7 @@ const AdvancedSearch = ({ open, setOpen, businessList = [] }) => {
 const Classes = () => {
   const dispatch = useDispatch();
   const [advancedSearch, setAdvancedSearch] = useState(false);
+  const [filters, setFilters] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const classesState = useSelector((state) => state.classes);
   const { classList, totalPages, currentPage } = classesState;
@@ -187,16 +188,19 @@ const Classes = () => {
 
   const handlePageChange = (_, value) => {
     if (value <= totalPages && value !== currentPage)
-      /// add searchFilters state here
-      dispatch(getClassListAction({ page: value }));
+      dispatch(
+        getClassListAction({
+          page: value,
+          filters: filters,
+        })
+      );
   };
 
   const items = useMemo(() => {
-    const statusColors = { ACTIVE: "green", DRAFT: "yellow", INACTIVE: "red" };
+    const statusColors = { ACTIVE: "green", INACTIVE: "red" };
     const statusText = {
       ACTIVE: "Active",
-      DRAFT: "In draft",
-      INACTIVE: "In-Active",
+      INACTIVE: "Inactive",
     };
     return classList.map((singleClass) => {
       const businessName = businesses.filter(
@@ -233,6 +237,10 @@ const Classes = () => {
     dispatch(getClassListAction({ page: 1 }));
     dispatch(getBusinessListOfBusiness());
   }, [dispatch]);
+
+  useEffect(() => {
+    setFilters([{ field: "name", type: "STARTS_WITH", value: searchValue }]);
+  }, [searchValue]);
 
   useEffect(() => {
     // if (basicSearchResults.length === 1) return;
@@ -311,6 +319,7 @@ const Classes = () => {
         open={advancedSearch}
         setOpen={setAdvancedSearch}
         businessList={businesses}
+        setFilters={setFilters}
       />
       <ClassList list={items} pagination={pagination} onAdd={addClassHandler} />
     </Box>
