@@ -1,15 +1,23 @@
 import axiosInstance from "../utils/axios-instance";
 
 export const fetchgetAllErolmentOfAMember = async (params) => {
-  const api = `enrolments/of-a-member-in-a-business`;
-  const response = await axiosInstance.post(api, params);
-  return response.data.docs;
+  try {
+    const api = `enrolments/of-a-member-in-a-business`;
+    const response = await axiosInstance.post(api, params);
+    return response.data.docs;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const fetchgetProgresRecordOfAMember = async (params) => {
-  const api = `progress`;
-  const response = await axiosInstance.post(api, params);
-  return response.data.progress;
+  try {
+    const api = `progress`;
+    const response = await axiosInstance.post(api, params);
+    return response.data.progress;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const axiosGetMemberList = async () => {

@@ -29,11 +29,18 @@ export function* watchGetMember() {
 }
 
 export function* getAllErolmentOfAMember(action) {
-  const enrol_list = yield call(fetchgetAllErolmentOfAMember, action.payload);
-  yield put({
-    type: memberActionTypes.GET_MEMBERS_ENROLLMENT,
-    payload: enrol_list,
-  });
+  try {
+    const enrol_list = yield call(fetchgetAllErolmentOfAMember, action.payload);
+    yield put({
+      type: memberActionTypes.GET_MEMBERS_ENROLLMENT,
+      payload: enrol_list,
+    });
+  } catch (error) {
+    yield put({
+      type: memberActionTypes.GET_MEMBERS_ENROLLMENT_FAILED,
+      payload: "Something went wrong while getting the data",
+    });
+  }
 }
 
 //watchingGeneratedFunction
@@ -45,14 +52,21 @@ export function* watchgetAllErolmentOfAMember() {
 }
 
 export function* getProgresRecordOfAMember(action) {
-  const progressRecord = yield call(
-    fetchgetProgresRecordOfAMember,
-    action.payload
-  );
-  yield put({
-    type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD,
-    payload: progressRecord,
-  });
+  try {
+    const progressRecord = yield call(
+      fetchgetProgresRecordOfAMember,
+      action.payload
+    );
+    yield put({
+      type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD,
+      payload: progressRecord,
+    });
+  } catch (error) {
+    yield put({
+      type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD_FAILED,
+      payload: "something went wrong while getting progress record",
+    });
+  }
 }
 
 //watchingGeneratedFunction

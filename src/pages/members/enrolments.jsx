@@ -120,6 +120,8 @@ const MemberEnrollment = () => {
     dropDateTime: "",
   });
 
+  const [expanded, setExpanded] = React.useState("panel1");
+
   useEffect(() => {
     dispatch(getBusinessList());
   }, [dispatch]);
@@ -243,6 +245,10 @@ const MemberEnrollment = () => {
     }
   };
 
+  const handleChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <TopNav />
@@ -291,7 +297,10 @@ const MemberEnrollment = () => {
           </Grid>
         </Grid>
       </StyleBox>
-      <Accordion expanded={true}>
+      <Accordion
+        expanded={expanded === "panel1"}
+        onChange={handleChange("panel1")}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           sx={{
@@ -374,6 +383,8 @@ const MemberEnrollment = () => {
                 )} */}
               </TextField>
             </Grid>
+          </Grid>
+          <Grid container spacing={3} sx={{ marginTop: "4px" }}>
             <Grid item xs={3}>
               <TextField
                 select
