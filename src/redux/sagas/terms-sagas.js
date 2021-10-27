@@ -1,7 +1,6 @@
 import { put, takeEvery, takeLatest, call, all } from "redux-saga/effects";
 import {
   axiosGetAllTerms,
-  axiosGetSessionsByTermId,
   getTermsOfBusiness,
   addTerm,
   deleteTerm,
@@ -28,28 +27,6 @@ export function* watchGetAllTerms() {
   yield takeEvery(termsActionTypes.GET_ALL_TERMS, getAllTerms);
 }
 
-export function* getSessionsByTermId(action) {
-  try {
-    const allTerms = yield call(axiosGetSessionsByTermId, action.payload);
-    yield put({
-      type: termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM_SUCCEEDED,
-      payload: allTerms,
-    });
-  } catch (error) {
-    yield put({
-      type: termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM_FAILED,
-      payload: error.message,
-    });
-  }
-}
-
-export function* watchGetSessionsByTermId() {
-  yield takeEvery(
-    termsActionTypes.GET_ALL_SESSIONS_OF_A_TERM,
-    getSessionsByTermId
-  );
-}
-
 export function* getTermListOfBusiness(action) {
   try {
     const terms = yield call(getTermsOfBusiness, action.payload);
@@ -61,6 +38,7 @@ export function* getTermListOfBusiness(action) {
     yield put({
       type: termsActionTypes.GET_TERMS_OF_A_BUSINESS_FAILED,
       payload:
+        error.response.data.message ||
         "Something went wrong while getting list of terms of the business",
     });
   }
@@ -83,7 +61,9 @@ export function* addNewTerm(action) {
   } catch (error) {
     yield put({
       type: termsActionTypes.ADD_NEW_TERM_FAILED,
-      payload: "Something went wrong while adding the new term",
+      payload:
+        error.response.data.message ||
+        "Something went wrong while adding the new term",
     });
   }
 }
@@ -102,7 +82,9 @@ export function* deleteTermSaga(action) {
   } catch (error) {
     yield put({
       type: termsActionTypes.DELETE_TERM_FAILED,
-      payload: "Something went wrong while deleting the term",
+      payload:
+        error.response.data.message ||
+        "Something went wrong while deleting the term",
     });
   }
 }
@@ -121,7 +103,9 @@ export function* editTermSaga(action) {
   } catch (error) {
     yield put({
       type: termsActionTypes.EDIT_TERM_FAILED,
-      payload: "something went wrong while editing the specified term",
+      payload:
+        error.response.data.message ||
+        "Something went wrong while editing the specified term",
     });
   }
 }
@@ -133,7 +117,6 @@ export function* watchEditTerm() {
 export default function* termSagas() {
   yield all([
     watchGetAllTerms(),
-    watchGetSessionsByTermId(),
     watchGetTermListOfBusiness(),
     watchAddNewTerm(),
     watchDeleteTerm(),

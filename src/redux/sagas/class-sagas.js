@@ -17,7 +17,9 @@ export function* getClassList(action) {
   } catch (error) {
     yield put({
       type: classActionTypes.GET_CLASS_LIST_FAILED,
-      payload: "Something went wrong while getting the class list",
+      payload:
+        error.response.data.message ||
+        "Something went wrong while getting the class list",
     });
   }
 }
@@ -38,7 +40,9 @@ export function* deleteClass(action) {
   } catch (error) {
     yield put({
       type: classActionTypes.DELETE_CLASS_FAILED,
-      payload: "Something went wrong while deleting the class",
+      payload:
+        error.response.data.message ||
+        "Something went wrong while deleting the class",
     });
   }
 }

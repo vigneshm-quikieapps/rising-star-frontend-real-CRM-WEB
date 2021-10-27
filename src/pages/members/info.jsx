@@ -113,7 +113,7 @@ const MemberInfo = () => {
         </CardRow>
       </Card>
       <AccordionContainer>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
@@ -130,7 +130,7 @@ const MemberInfo = () => {
       </AccordionContainer>
 
       <AccordionContainer>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
@@ -147,7 +147,7 @@ const MemberInfo = () => {
       </AccordionContainer>
 
       <AccordionContainer>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
