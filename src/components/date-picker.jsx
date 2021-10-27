@@ -8,6 +8,8 @@ export default function BasicDatePicker({
   label = "Select a date",
   date,
   onChange,
+  inputProps = {},
+  ...otherProps
 }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -17,7 +19,10 @@ export default function BasicDatePicker({
         onChange={(newValue) => {
           onChange && onChange(newValue);
         }}
-        renderInput={(params) => <TextField variant="filled" {...params} />}
+        renderInput={(params) => (
+          <TextField variant="filled" {...params} {...inputProps} />
+        )}
+        {...otherProps}
       />
     </LocalizationProvider>
   );

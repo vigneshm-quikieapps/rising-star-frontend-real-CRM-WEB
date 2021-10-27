@@ -17,7 +17,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.root}`]: { border: 0 },
 }));
 
-const ClassListContainer = styled(Box)(({ theme }) => ({
+const CustomContainer = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.highlight.main}`,
   borderRadius: theme.shape.borderRadiuses.secondary,
 }));
@@ -37,7 +37,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const CustomTable = ({ heading, headers, rows, pagination }) => {
   return (
-    <ClassListContainer>
+    <CustomContainer>
       {heading}
       <TableContainer component={"div"}>
         <Table>
@@ -62,7 +62,7 @@ const CustomTable = ({ heading, headers, rows, pagination }) => {
         </Table>
       </TableContainer>
       {pagination}
-    </ClassListContainer>
+    </CustomContainer>
   );
 };
 export default CustomTable;
