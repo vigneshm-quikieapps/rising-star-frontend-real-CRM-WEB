@@ -17,6 +17,7 @@ export const CardRow = styled(Box)({
   alignItems: "center",
   justifyContent: "space-between",
   flexWrap: "wrap",
+  margin: "15px 0",
   gap: "15px 0",
 });
 
@@ -95,5 +96,21 @@ export const ModalContainer = styled(Box)({
   borderRadius: "20px",
   border: "solid 1px #f2f1f6",
   backgroundColor: "#fff",
-  padding: "5px 15px",
+  padding: "0 15px 5px",
+  overflow: "scroll",
+});
+
+export const DayText = styled(Typography)({
+  width: "29px",
+  height: "20px",
+  fontFamily: "Manrope",
+  fontSize: "14px",
+  fontWeight: "normal",
+  fontStretch: "normal",
+  fontStyle: "normal",
+  lineHeight: 1.43,
+  letterSpacing: "normal",
+  color: "black",
+  textAlign: "center",
+  marginBottom: "10px",
 });

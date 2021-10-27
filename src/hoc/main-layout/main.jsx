@@ -22,8 +22,8 @@ const MainRoot = ({ children, drawerWidth, open }) => (
   <Main drawerWidth={drawerWidth} open={open}>
     <Box
       sx={{
-        maxWidth: { xs: "100%", lg: "1040px" },
-        mx: { xs: "16px", md: "32px", lg: "auto" },
+        maxWidth: "100%",
+        mx: "100px",
       }}
     >
       {children}

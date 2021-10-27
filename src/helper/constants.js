@@ -269,3 +269,5 @@ export const icons = {
   user,
   loginPageImage,
 };
+
+export const ShortWeekNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
