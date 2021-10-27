@@ -123,7 +123,7 @@ const MemberEnrollment = () => {
   });
 
   useEffect(() => {
-    !businessList && dispatch(getBusinessList());
+    dispatch(getBusinessList());
   }, [dispatch, businessList]);
 
   useEffect(() => {
