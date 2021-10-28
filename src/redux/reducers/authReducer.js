@@ -2,7 +2,6 @@ import { LoginActionTypes } from "../types";
 
 const INITIAL_STATE = {
   currentUser: null,
-  error: null,
 };
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -12,12 +11,6 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentUser: action.payload,
-        error: null,
-      };
-    case LoginActionTypes.LOG_IN_FAILURE:
-      return {
-        ...state,
-        error: action.payload,
       };
     case LoginActionTypes.LOG_OUT:
       return INITIAL_STATE;

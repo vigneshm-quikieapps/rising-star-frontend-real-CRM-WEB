@@ -7,8 +7,8 @@ import Header from "./header";
 import Footer from "./footer";
 import SideNav from "./side-nav";
 import Main from "./main";
-
 import { navItems } from "../../helper/constants";
+import ErrorDialog from "./error-dialog";
 
 const drawerWidth = 192;
 
@@ -56,9 +56,11 @@ const MainLayout = ({ children }) => {
         items={navItems}
         width={drawerWidth}
       />
-      <Main drawerWidth={drawerWidth} open={navOpen}>
-        {children}
-      </Main>
+      <ErrorDialog>
+        <Main drawerWidth={drawerWidth} open={navOpen}>
+          {children}
+        </Main>
+      </ErrorDialog>
       <Footer />
     </>
   );

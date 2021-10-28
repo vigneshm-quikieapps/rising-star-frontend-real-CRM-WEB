@@ -5,8 +5,7 @@ const INITIAL_STATE = {
   enrolmentList: [],
   progressRecord: {},
   currentMember: null,
-  error: "",
-  loading: true,
+  loading: false,
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -17,12 +16,8 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, currentMember: action.payload };
     case memberActionTypes.GET_MEMBERS_ENROLLMENT:
       return { ...state, enrolmentList: action.payload, loading: false };
-    case memberActionTypes.GET_MEMBERS_ENROLLMENT_FAILED:
-      return { ...state, error: action.payload, loading: false };
     case memberActionTypes.GET_MEMBER_PROGRESS_RECORD:
       return { ...state, progressRecord: action.payload, loading: false };
-    case memberActionTypes.GET_MEMBER_PROGRESS_RECORD_FAILED:
-      return { ...state, error: action.payload, loading: false };
     default:
       return state;
   }

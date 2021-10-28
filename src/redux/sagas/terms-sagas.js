@@ -6,7 +6,7 @@ import {
   deleteTerm,
   editTerm,
 } from "../../services/term-services";
-import { termsActionTypes } from "../types";
+import { sharedActionTypes, termsActionTypes } from "../types";
 
 export function* getAllTerms() {
   try {
@@ -17,7 +17,7 @@ export function* getAllTerms() {
     });
   } catch (error) {
     yield put({
-      type: termsActionTypes.GET_ALL_TERMS_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload: error.message,
     });
   }
@@ -36,7 +36,7 @@ export function* getTermListOfBusiness(action) {
     });
   } catch (error) {
     yield put({
-      type: termsActionTypes.GET_TERMS_OF_A_BUSINESS_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
         error.response.data.message ||
         "Something went wrong while getting list of terms of the business",
@@ -60,7 +60,7 @@ export function* addNewTerm(action) {
     });
   } catch (error) {
     yield put({
-      type: termsActionTypes.ADD_NEW_TERM_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
         error.response.data.message ||
         "Something went wrong while adding the new term",
@@ -81,7 +81,7 @@ export function* deleteTermSaga(action) {
     });
   } catch (error) {
     yield put({
-      type: termsActionTypes.DELETE_TERM_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
         error.response.data.message ||
         "Something went wrong while deleting the term",
@@ -102,7 +102,7 @@ export function* editTermSaga(action) {
     });
   } catch (error) {
     yield put({
-      type: termsActionTypes.EDIT_TERM_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
         error.response.data.message ||
         "Something went wrong while editing the specified term",

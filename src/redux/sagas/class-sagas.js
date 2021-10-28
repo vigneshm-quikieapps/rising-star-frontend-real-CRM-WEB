@@ -4,7 +4,7 @@ import {
   deleteClassByID,
   axiosGetClassById,
 } from "../../services/class-services";
-import { classActionTypes } from "../types";
+import { classActionTypes, sharedActionTypes } from "../types";
 
 export function* getClassList(action) {
   try {
@@ -16,7 +16,7 @@ export function* getClassList(action) {
     });
   } catch (error) {
     yield put({
-      type: classActionTypes.GET_CLASS_LIST_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
         error.response.data.message ||
         "Something went wrong while getting the class list",
@@ -39,7 +39,7 @@ export function* deleteClass(action) {
     });
   } catch (error) {
     yield put({
-      type: classActionTypes.DELETE_CLASS_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
         error.response.data.message ||
         "Something went wrong while deleting the class",

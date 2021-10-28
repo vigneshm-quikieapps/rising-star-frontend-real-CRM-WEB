@@ -3,9 +3,9 @@ import {
   getBusinesses,
   getBusinessListOfBusiness,
 } from "../../services/businesses-service";
-import { businessesActionTypes } from "../types";
+import { businessesActionTypes, sharedActionTypes } from "../types";
 
-export function* getBusinessList(action) {
+export function* getBusinessList() {
   try {
     yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
     const businesses = yield call(getBusinesses);
@@ -15,7 +15,7 @@ export function* getBusinessList(action) {
     });
   } catch (error) {
     yield put({
-      type: businessesActionTypes.GET_BUSINESSES_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
         error.response.data.message ||
         "Something went wrong while getting the list of businesses",
@@ -37,7 +37,7 @@ export function* getBusinessesOfBusiness() {
     });
   } catch (error) {
     yield put({
-      type: businessesActionTypes.GET_BUSINESSES_OF_BUSINESS_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
         error.response.data.message ||
         "Something went wrong while getting the list of businesses of the user",

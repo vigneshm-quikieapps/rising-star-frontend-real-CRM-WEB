@@ -6,6 +6,7 @@ import memberReducers from "./memberReducers";
 import sessionReducers from "./sessionReducers";
 import termsReducers from "./terms-reducers";
 import evaluationReducers from "./evaluationReducers";
+import sharedReducer from "./shared-reducer";
 
 const rootReducer = combineReducers({
   //By defining a field inside the reducers parameter
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   sessions: sessionReducers,
   terms: termsReducers,
   evaluation: evaluationReducers,
+  shared: sharedReducer,
 });
 
 export default rootReducer;
