@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   termsOfBusiness: [],
   currentBusinessId: undefined,
   error: "",
-  termsLoading: false,
+  loading: false,
   currentPage: 0,
   totalPages: 0,
 };
@@ -14,7 +14,7 @@ const INITIAL_STATE = {
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case termsActionTypes.SET_LOADING: {
-      return { ...state, termsLoading: action.payload };
+      return { ...state, loading: action.payload };
     }
     case termsActionTypes.GET_ALL_TERMS_SUCCEEDED:
       return { ...state, allTerms: action.payload };
@@ -35,11 +35,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         currentPage,
         totalPages,
         error: "",
-        termsLoading: false,
+        loading: false,
       };
     }
     case termsActionTypes.GET_TERMS_OF_A_BUSINESS_FAILED: {
-      return { ...state, error: action.payload, termsLoading: false };
+      return { ...state, error: action.payload, loading: false };
     }
     case termsActionTypes.ADD_NEW_TERM_SUCCEEDED: {
       const updatedTerm = action.payload;
@@ -54,11 +54,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         allTerms: updatedTermList,
         termsOfBusiness: updatedTermsOfBusiness,
         error: "",
-        termsLoading: false,
+        loading: false,
       };
     }
     case termsActionTypes.ADD_NEW_TERM_FAILED: {
-      return { ...state, error: action.payload, termsLoading: false };
+      return { ...state, error: action.payload, loading: false };
     }
     case termsActionTypes.EDIT_TERM_SUCCEEDED: {
       const updatedTerm = action.payload;
@@ -75,11 +75,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         allTerms: updatedTermList,
         termsOfBusiness: updatedTermsOfBusiness,
         error: "",
-        termsLoading: false,
+        loading: false,
       };
     }
     case termsActionTypes.EDIT_TERM_FAILED: {
-      return { ...state, error: action.payload, termsLoading: false };
+      return { ...state, error: action.payload, loading: false };
     }
     case termsActionTypes.DELETE_TERM_SUCCEEDED: {
       const deletedTermId = action.payload;
@@ -94,11 +94,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         allTerms: updatedTermList,
         termsOfBusiness: updatedTermsOfBusiness,
         error: "",
-        termsLoading: false,
+        loading: false,
       };
     }
     case termsActionTypes.DELETE_TERM_FAILED: {
-      return { ...state, error: action.payload, termsLoading: false };
+      return { ...state, error: action.payload, loading: false };
     }
     default:
       return state;

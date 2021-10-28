@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Output from "../../components/output";
 
 import { MenuItem, styled, Box, Grid, Typography } from "@mui/material";
@@ -12,17 +12,18 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton from "../../components/icon-button";
 import { icons } from "../../helper/constants";
 import TextField from "../../components/textfield";
+import TopNav from "./components/top-nav";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import {
   getMemberEnrolmentList,
+  getMemberById,
   memberEnrolmentDropped,
   memberEnrolmentSuspend,
   memberEnrolmentReturnFromSuspend,
 } from "../../redux/action/memberAction";
 import { getBusinessList } from "../../redux/action/businesses-actions";
-import { getClassById } from "../../redux/action/class-actions";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -67,22 +68,32 @@ const timeConverter = (day, startTiming, endTiming) => {
     timeZone: "UTC",
   });
 
-  return `${day}, ${startTime} to ${endTime}`;
+  if (
+    day === undefined ||
+    startTiming === "Invalid Date" ||
+    endTiming === "Invalid Date"
+  ) {
+    return "- - -";
+  } else {
+    return `${day}, ${startTime} to ${endTime}`;
+  }
 };
 
-const enrolledStatusConverter = (data) => {
-  return `${data?.enrolledStatus.slice(0, 1)}${data?.enrolledStatus
-    .slice(1, data?.enrolledStatus.length)
-    .toLowerCase()}`;
+const dateConverter = (ISOdate) => {
+  const dateTime = `${new Date(ISOdate).toLocaleString()}`;
+  if (dateTime === "Invalid Date") {
+    return "- - -";
+  } else {
+    return dateTime;
+  }
 };
 
-const droppedStatusConverter = (data) => {
-  return `${data?.discontinuationReason.slice(
-    0,
-    1
-  )}${data?.discontinuationReason
-    .slice(1, data?.discontinuationReason.length)
-    .toLowerCase()}`;
+const StatusConverter = (data) => {
+  if (data !== "") {
+    return `${data?.slice(0, 1)}${data?.slice(1, data?.length).toLowerCase()}`;
+  } else {
+    return "";
+  }
 };
 
 const MemberEnrollment = () => {
@@ -91,19 +102,13 @@ const MemberEnrollment = () => {
 
   const enrollmentList = useSelector((state) => state.members.enrolmentList);
   const businessList = useSelector((state) => state.businesses.businessList);
-  const sessionList = useSelector((state) => state.classes.class);
+  const currentMember = useSelector((state) => state.members.currentMember);
 
   const businessId = businessList[0]?._id;
-  const memberId = "614b270bc265630cd55a0520";
 
-  // const Sessiontimming = `${
-  //   enrollmentList[0]?.session.pattern[0].day
-  // }, ${timeConverter(
-  //   enrollmentList[0]?.session.pattern[0].startTime
-  // )} to ${timeConverter(enrollmentList[0]?.session.pattern[0].endTime)}`;
+  const [selectedBusiness, setselectedBusiness] = useState("");
 
-  const [BusinessName, setBusinessName] = useState("");
-  const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
+  const [date, setDate] = useState("");
 
   const [enrolmentDetailsInput, setEnrolmentDetailsInput] = useState({
     enrolmentId: "",
@@ -113,42 +118,66 @@ const MemberEnrollment = () => {
     enrolStatus: "",
     dropReason: "",
     timming: "",
-    startDate: "",
     enrolDateTime: "",
     dropDateTime: "",
   });
 
-  console.log(enrolmentDetailsInput.enrolStatus);
-  useEffect(() => {
-    dispatch(getBusinessList());
-    setBusinessName(`${businessId}`);
-    businessId && dispatch(getMemberEnrolmentList({ businessId, memberId }));
-  }, [businessId, dispatch]);
+  const [expanded, setExpanded] = React.useState("panel1");
 
   useEffect(() => {
-    setEnrolmentDetailsInput({
-      ...enrolmentDetailsInput,
+    dispatch(getBusinessList());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getMemberById(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    businessId && setselectedBusiness(businessId);
+  }, [businessId]);
+
+  const params = useCallback((id, businessId) => {
+    return new Promise((resolve, reject) => {
+      const data = {
+        memberId: id,
+        businessId: businessId,
+      };
+      resolve(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    params(id, selectedBusiness).then((res) => {
+      if (res.memberId && res.businessId) {
+        dispatch(getMemberEnrolmentList(res));
+      }
+    });
+  }, [dispatch, id, params, selectedBusiness]);
+
+  useEffect(() => {
+    setEnrolmentDetailsInput((previous) => ({
+      ...previous,
       enrolmentId: `${enrollmentList[0]?._id}`,
       className: `${enrollmentList[0]?.classId}`,
       term: `${enrollmentList[0]?._id}`,
-      session: `${enrollmentList[0]?.session.name}`,
-      enrolStatus: `${enrolledStatusConverter(enrollmentList[0])}`,
-      dropReason: `${
-        droppedStatusConverter(enrollmentList[0]) === undefined && ""
-      }`,
+      session: `${enrollmentList[0] ? enrollmentList[0].session.name : ""}`,
+      enrolStatus: `${StatusConverter(enrollmentList[0]?.enrolledStatus)}`,
+      dropReason: `${StatusConverter(
+        enrollmentList[0]?.discontinuationReason
+      )}`,
       timming: `${timeConverter(
         enrollmentList[0]?.session.pattern[0].day,
         enrollmentList[0]?.session.pattern[0].startTime,
         enrollmentList[0]?.session.pattern[0].endTime
       )}`,
-      startDate: `${enrollmentList[0]?.startDate}`,
-      enrolDateTime: `${enrollmentList[0]?.registeredDate}`,
-      dropDateTime: `${enrollmentList[0]?.droppedDate}`,
-    });
+      enrolDateTime: `${dateConverter(enrollmentList[0]?.registeredDate)}`,
+      dropDateTime: `${dateConverter(enrollmentList[0]?.droppedDate)}`,
+    }));
+    setDate(new Date(`${enrollmentList[0]?.startDate}`));
   }, [enrollmentList]);
 
   const businessChangeHandler = (e) => {
-    setBusinessName(e.target.value);
+    setselectedBusiness(e.target.value);
     console.log(e.target.value);
   };
 
@@ -164,25 +193,25 @@ const MemberEnrollment = () => {
     console.log(e.target);
     const tragetId = e.target.value;
     const newClassDetails = enrollmentList.filter(
-      (li) => enrollmentList.class.name === tragetId
+      (li) => li.class.name === tragetId
     );
     setEnrolmentDetailsInput({
       ...enrolmentDetailsInput,
       // term: `${enrollmentList[0]._id}`,
       session: `${newClassDetails.session.name}`,
-      enrolStatus: `${enrolledStatusConverter(newClassDetails)}`,
-      dropReason: `${
-        droppedStatusConverter(newClassDetails) === undefined && ""
-      }`,
+      enrolStatus: `${StatusConverter(newClassDetails.enrolledStatus)}`,
+      dropReason: `${`${StatusConverter(
+        newClassDetails.discontinuationReason
+      )}`}`,
       timming: `${timeConverter(
         newClassDetails.session.pattern[0].day,
         newClassDetails.session.pattern[0].startTime,
         newClassDetails.session.pattern[0].endTime
       )}`,
-      startDate: `${newClassDetails.startDate}`,
-      enrolDateTime: `${newClassDetails.registeredDate}`,
-      dropDateTime: `${newClassDetails.droppedDate}`,
+      enrolDateTime: `${dateConverter(newClassDetails.registeredDate)}`,
+      dropDateTime: `${dateConverter(newClassDetails.droppedDate)}`,
     });
+    setDate(new Date(`${newClassDetails.startDate}`));
   };
 
   const sessionChangeHandler = () => {
@@ -198,35 +227,40 @@ const MemberEnrollment = () => {
   // Suspend, sent request to suspend api
   // Return from suspend, sent request to return from suspend api
 
-  const saveClickHandler = () => {
+  const saveClickHandler = (enrolID) => {
     if (
       enrolmentDetailsInput.enrolStatus === "Dropped" &&
       enrolmentDetailsInput.dropReason === "Dropped"
     ) {
-      dispatch(memberEnrolmentDropped());
+      dispatch(memberEnrolmentDropped(enrolID));
     } else if (
       enrolmentDetailsInput.enrolStatus === "Dropped" &&
       enrolmentDetailsInput.dropReason === "Class transfer"
     ) {
-      dispatch(memberEnrolmentDropped());
+      dispatch(memberEnrolmentDropped(enrolID));
     } else if (
       enrolmentDetailsInput.enrolStatus === "Suspend" &&
       enrolmentDetailsInput.dropReason === ""
     ) {
-      dispatch(memberEnrolmentSuspend());
+      dispatch(memberEnrolmentSuspend(enrolID));
     } else if (
       enrolmentDetailsInput.enrolStatus === "Return from suspend" &&
       enrolmentDetailsInput.dropReason === ""
     ) {
-      dispatch(memberEnrolmentReturnFromSuspend());
+      dispatch(memberEnrolmentReturnFromSuspend(enrolID));
     }
+  };
+
+  const handleChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
   };
 
   return (
     <Box sx={{ width: "100%" }}>
+      <TopNav />
       <StyleBox>
         <Typography variant="h4" component="div">
-          Ayman Mogal
+          {currentMember ? currentMember.member.name : "- - -"}
         </Typography>
         <Typography variant="subtitle2" component="div">
           Student/Member
@@ -238,7 +272,7 @@ const MemberEnrollment = () => {
               label="Business Name"
               variant="filled"
               sx={{ width: "100%" }}
-              value={BusinessName}
+              value={selectedBusiness}
               onChange={businessChangeHandler}
             >
               {businessList.map((li, index) => (
@@ -248,25 +282,31 @@ const MemberEnrollment = () => {
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
             <Output
               title="Member"
               description="KK000"
               sx={{ marginLeft: "20px" }}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={4}>
             <Output
               title="Club Membership Number"
               description={
                 // ""
-                enrollmentList[0] && `${enrollmentList[0].clubMembershipId}`
+                enrollmentList[0]
+                  ? `${enrollmentList[0].clubMembershipId}`
+                  : "- - -"
               }
+              sx={{ marginLeft: "20px" }}
             />
           </Grid>
         </Grid>
       </StyleBox>
-      <Accordion>
+      <Accordion
+        expanded={expanded === "panel1"}
+        onChange={handleChange("panel1")}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           sx={{
@@ -280,7 +320,7 @@ const MemberEnrollment = () => {
           <Typography>Enrolment Details</Typography>
           <div>
             <GradientButton
-              sx={{ textTransform: "none", fontSize: "1rem" }}
+              sx={{ textTransform: "none" }}
               onClick={(e) => {
                 e.stopPropagation();
                 console.log("i got clicked");
@@ -300,12 +340,12 @@ const MemberEnrollment = () => {
 
         <AccordionDetails>
           <Grid container spacing={3}>
-            <Grid item xs={3}>
+            {/* <Grid item xs={3}>
               <Output
                 title="Enrolment Id"
                 description={enrolmentDetailsInput.enrolmentId}
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={3}>
               <TextField
                 select
@@ -349,6 +389,8 @@ const MemberEnrollment = () => {
                 )} */}
               </TextField>
             </Grid>
+          </Grid>
+          <Grid container spacing={3} sx={{ marginTop: "4px" }}>
             <Grid item xs={3}>
               <TextField
                 select
@@ -403,22 +445,23 @@ const MemberEnrollment = () => {
               />
             </Grid>
             <Grid item xs={3}>
-              <Output title="Drop Datetime" description="- - -" />
+              <Output
+                title="Drop Datetime"
+                description={enrolmentDetailsInput.dropDateTime}
+              />
             </Grid>
           </Grid>
         </AccordionDetails>
       </Accordion>
       <Box sx={{ marginTop: "15px" }}>
         <GradientButton
-          sx={{ textTransform: "none", fontSize: "1rem", marginRight: "10px" }}
-          onClick={saveClickHandler}
+          sx={{ textTransform: "none", marginRight: "10px" }}
+          onClick={() => saveClickHandler(enrolmentDetailsInput.enrolmentId)}
+          size="large"
         >
           Save
         </GradientButton>
-        <GradientButton
-          sx={{ textTransform: "none", fontSize: "1rem" }}
-          discard
-        >
+        <GradientButton sx={{ textTransform: "none" }} discard size="large">
           Cancel
         </GradientButton>
       </Box>
