@@ -8,6 +8,7 @@ const INITIAL_STATE = {
 const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case LoginActionTypes.LOG_IN_SUCCESS:
+      window.location.href = "/";
       return {
         ...state,
         currentUser: action.payload,
