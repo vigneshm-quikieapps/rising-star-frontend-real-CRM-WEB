@@ -6,10 +6,10 @@ export const getAllTerms = () => {
   };
 };
 
-export const getTermsOfBusiness = (businessId) => {
+export const getTermsOfBusiness = (businessId, params) => {
   return {
     type: termsActionTypes.GET_TERMS_OF_A_BUSINESS,
-    payload: businessId,
+    payload: { businessId, params },
   };
 };
 

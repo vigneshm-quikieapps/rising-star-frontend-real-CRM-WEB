@@ -127,7 +127,9 @@ const Term = ({
 const Terms = () => {
   const [showAddTerm, setShowAddTerm] = useState(false);
   const dispatch = useDispatch();
-  const businessList = useSelector((state) => state.businesses.businessListOfBusiness);
+  const businessList = useSelector(
+    (state) => state.businesses.businessListOfBusiness
+  );
   const { termsOfBusiness, currentPage, totalPages } = useSelector(
     (state) => state.terms
   );
@@ -169,6 +171,14 @@ const Terms = () => {
     [dispatch]
   );
 
+  const handlePageChange = useCallback(
+    (_, value) => {
+      if (value <= totalPages && value !== currentPage)
+        dispatch(getTermsOfBusiness(selectedBusiness, { page: value }));
+    },
+    [dispatch, currentPage, totalPages, selectedBusiness]
+  );
+
   const termList = useMemo(
     () => (
       <>
@@ -205,23 +215,24 @@ const Terms = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <Pagination
+        <Pagination
           page={currentPage}
           count={totalPages}
           sx={{ my: 2 }}
-          onChange={() => {}}
-        /> */}
+          onChange={handlePageChange}
+        />
       </>
     ),
     [
       selectedBusiness,
-      // currentPage,
-      // totalPages,
+      currentPage,
+      totalPages,
       showAddTerm,
       termsOfBusiness,
       addTermHandler,
       deleteTermHandler,
       editTermHandler,
+      handlePageChange,
     ]
   );
 
