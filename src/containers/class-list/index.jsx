@@ -6,21 +6,6 @@ import { classListHeaders } from "../../helper/constants";
 import CustomTable from "../../components/table";
 import Heading from "./heading";
 
-// const rows = Array(10)
-//   .fill(1)
-//   .map((_, index) => ({
-//     id: index,
-//     onClick: () => console.log("row clicked"),
-//     items: [
-//       "Pre-school gymnastics",
-//       "Zippy Totz Pre-school Gymnastics",
-//       "Glasgow",
-//       "G46 7TL",
-//       <Status status="green" title="Active" />,
-//       <Actions />,
-//     ],
-//   }));
-
 const ClassList = ({ list = [], pagination, onAdd }) => (
   <Box
     sx={{
