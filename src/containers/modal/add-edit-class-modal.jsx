@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -221,21 +221,29 @@ const AddEditClassModal = (props) => {
     setClassSessions(newSessions);
   };
 
-  const populateClassData = () => {
-    setClassName(classObj.name);
-    setSelectedBussinessId(classObj.businessId);
-    setSelectedStatus(classObj.selectedStatus);
-    setSelectedConsentForm(classObj.registrationform);
-    setSelectedCategory(classObj.categoryId);
-    setSelectedEvaluationScheme(classObj.evaluationSchemeId);
-  };
+  const populateClassData = useCallback(() => {
+    const {
+      name,
+      businessId,
+      selectedStatus,
+      registrationform,
+      categoryId,
+      evaluationSchemeId,
+    } = classObj;
+    setClassName(name);
+    setSelectedBussinessId(businessId);
+    setSelectedStatus(selectedStatus);
+    setSelectedConsentForm(registrationform);
+    setSelectedCategory(categoryId);
+    setSelectedEvaluationScheme(evaluationSchemeId);
+  }, [classObj]);
 
   useEffect(() => {
     console.log("isedit", isEditMode, classObj);
     if (isEditMode) {
       populateClassData();
     }
-  });
+  }, [isEditMode, classObj, populateClassData]);
 
   useEffect(() => {
     dispatch(getEvaluationSchemeList());

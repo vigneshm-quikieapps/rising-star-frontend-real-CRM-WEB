@@ -31,14 +31,12 @@ const MoreIconButton = () => (
 
 const MemberInfo = () => {
   const { id } = useParams();
-  const [currentMemberId, setCurrentMemberId] = useState();
   const [basicInfoArr, setBasicInfoArr] = useState([]);
   const [parentInfoArr, setParentInfoArr] = useState([]);
   const [primaryContactInfoArr, setPrimaryContactInfoArr] = useState([]);
   const [secondaryContactInfoArr, setSecondaryContactInfoArr] = useState([]);
 
   const dispatch = useDispatch();
-  const allMembers = useSelector((state) => state.members.memberList);
   const currentMember = useSelector(
     (state) => state.members.currentMember && state.members.currentMember.member
   );
@@ -87,13 +85,11 @@ const MemberInfo = () => {
       setPrimaryContactInfoArr([]);
       setSecondaryContactInfoArr([]);
     };
-  }, [id, currentMemberId, dispatch]);
+  }, [id, dispatch]);
 
   useEffect(() => {
-    let tempId = allMembers.docs && allMembers.docs[0]._id;
-    setCurrentMemberId(tempId);
-    tempId && dispatch(getMemberById(tempId));
-  }, [allMembers, dispatch]);
+    dispatch(getMemberById(id));
+  }, [id, dispatch]);
 
   useEffect(() => {
     currentMember && getMemberInfo();
