@@ -17,35 +17,35 @@ export const getMemberEnrolmentList = (params) => {
 
 export const getMemberProgressRecord = (params) => {
   return {
-    type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD_SAGA,
+    type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD,
     payload: params,
   };
 };
 
 export const updateMultipleStatusOnMemberProgressRecord = (params) => {
   return {
-    type: memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD_SAGA,
+    type: memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD,
     payload: params,
   };
 };
 
 export const memberEnrolmentDropped = (id) => {
   return {
-    type: memberActionTypes.MEMBER_ENROLMENT_DROPPED_SAGA,
+    type: memberActionTypes.MEMBER_ENROLMENT_DROPPED,
     payload: id,
   };
 };
 
 export const memberEnrolmentSuspend = (id) => {
   return {
-    type: memberActionTypes.MEMBER_ENROLMENT_SUSPEND,
+    type: memberActionTypes.MEMBER_ENROLMENT_SUSPEND_SUCCEEDED,
     payload: id,
   };
 };
 
 export const memberEnrolmentReturnFromSuspend = (id) => {
   return {
-    type: memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND_SAGA,
+    type: memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND,
     payload: id,
   };
 };
