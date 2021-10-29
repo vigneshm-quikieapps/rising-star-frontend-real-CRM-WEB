@@ -29,3 +29,14 @@ export async function getCategoryListOfBusiness(id) {
     throw error;
   }
 }
+
+export async function getCoachListOfBusiness(id) {
+  try {
+    const api = `/businesses/${id}/coaches`;
+    const response = await axiosInstance.get(api);
+    const categoryList = response.data;
+    return categoryList;
+  } catch (error) {
+    throw error;
+  }
+}

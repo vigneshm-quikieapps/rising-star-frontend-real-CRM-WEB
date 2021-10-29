@@ -3,6 +3,7 @@ import {
   getBusinesses,
   getBusinessListOfBusiness,
   getCategoryListOfBusiness,
+  getCoachListOfBusiness,
 } from "../../services/businesses-service";
 import { startLoading, stopLoading } from "../action/shared-actions";
 import { businessesActionTypes, sharedActionTypes } from "../types";
@@ -81,10 +82,36 @@ export function* watchGetCategoriesOfBusiness() {
   );
 }
 
+export function* getCoachesOfBusiness(action) {
+  try {
+    yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
+    const coachList = yield call(getCoachListOfBusiness, action.payload);
+    yield put({
+      type: businessesActionTypes.GET_COACHES_OF_BUSINESS_SUCCEEDED,
+      payload: coachList,
+    });
+  } catch (error) {
+    yield put({
+      type: businessesActionTypes.GET_COACHES_OF_BUSINESS_FAILED,
+      payload:
+        error.response.data.message ||
+        "Something went wrong while getting the list of Coaches  of the business",
+    });
+  }
+}
+
+export function* watchGetCoachesOfBusiness() {
+  yield takeLatest(
+    businessesActionTypes.GET_COACHES_OF_BUSINESS,
+    getCoachesOfBusiness
+  );
+}
+
 export default function* businessesSagas() {
   yield all([
     watchGetBusinesses(),
     watchGetBusinessesOfBusiness(),
     watchGetCategoriesOfBusiness(),
+    watchGetCoachesOfBusiness(),
   ]);
 }

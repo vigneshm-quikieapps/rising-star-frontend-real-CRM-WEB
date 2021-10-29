@@ -7,18 +7,75 @@ import ImgIcon from "../../components/img-icon";
 import { ShortWeekNames } from "../../helper/constants";
 import StyledCheckbox from "../../components/styled-checkbox";
 import { MenuItem } from "@mui/material";
-import { useState } from "react";
 
-const DeleteButton = () => (
-  <IconButton sx={{ borderRadius: "50%" }}>
+const DeleteButton = (props) => (
+  <IconButton {...props} sx={{ borderRadius: "50%" }}>
     <ImgIcon alt="delete">{deleteIcon}</ImgIcon>
   </IconButton>
 );
 
 const Session = (props) => {
-  const { data: session, index } = props;
-  const [sessionName, setSessionName] = useState("");
-  const [sessionDayIndex, setSessionDayIndex] = useState(-1);
+  const { data, index, sessions, setSessionData } = props;
+
+  const handleNameChange = (e) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      name: e.target.value,
+    };
+    setSessionData(newSession);
+  };
+
+  const handleDayIndexChange = (i) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      dayIndex: i,
+    };
+    setSessionData(newSession);
+  };
+
+  const handleFacilityChange = (e) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      facility: e.target.value,
+    };
+    setSessionData(newSession);
+  };
+
+  const handleFullCapacityChange = (e) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      fullCapacity: e.target.value,
+    };
+    setSessionData(newSession);
+  };
+
+  const handleWaitlistCapacityChange = (e) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      waitlistCapacity: e.target.value,
+    };
+    setSessionData(newSession);
+  };
+
+  const handleCoachChange = (e) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      coachId: e.target.value,
+    };
+    setSessionData(newSession);
+  };
+
+  const handleDelete = () => {
+    let newSession = sessions.filter((i) => i.index !== index);
+    setSessionData(newSession);
+  };
+
   return (
     <Box
       key={index}
@@ -33,22 +90,21 @@ const Session = (props) => {
           variant="filled"
           label="Session Name"
           sx={{ width: "100%" }}
-          value={sessionName}
-          onChange={(e) => {
-            setSessionName(e.target.value);
-          }}
-        ></StyledTextField>
+          value={data.name}
+          onChange={handleNameChange}
+        />
       </CardRow>
+
       <CardRow
         sx={{
           width: "330px",
           margin: "15px auto",
         }}
       >
-        {ShortWeekNames.map((day, index) => {
+        {ShortWeekNames.map((day, i) => {
           return (
             <Box
-              key={index}
+              key={i}
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -58,9 +114,9 @@ const Session = (props) => {
             >
               <DayText> {day}</DayText>
               <StyledCheckbox
-                checked={index === sessionDayIndex}
+                checked={data.dayIndex === i}
                 onClick={() => {
-                  setSessionDayIndex(index);
+                  handleDayIndexChange(i);
                 }}
               />
             </Box>
@@ -71,34 +127,34 @@ const Session = (props) => {
         <StyledTextField
           variant="filled"
           label="Facility"
-          // value={session.item.facility}
+          value={data.facility}
           sx={{ width: "23%", margin: 0 }}
-          onChange={() => {}}
-        ></StyledTextField>
+          onChange={handleFacilityChange}
+        />
 
         <StyledTextField
           variant="filled"
-          // value={session.item.fullCapacity}
+          value={data.fullCapacity}
           label="Full class capacity"
           sx={{ width: "23%", margin: 0 }}
-          onChange={() => {}}
-        ></StyledTextField>
+          onChange={handleFullCapacityChange}
+        />
 
         <StyledTextField
-          // value={session.item.waitlistCapacity}
+          value={data.waitlistCapacity}
           variant="filled"
           label="Waitlist capacity"
           sx={{ width: "23%", margin: 0 }}
-          onChange={() => {}}
-        ></StyledTextField>
+          onChange={handleWaitlistCapacityChange}
+        />
 
         <StyledTextField
           select
-          // value={session.item.coachName}
+          value={data.coachId}
           sx={{ width: "23%", margin: 0 }}
           label="Coach Name"
           variant="filled"
-          onChange={() => {}}
+          onChange={handleCoachChange}
         >
           <MenuItem value="EQUALS">option 1</MenuItem>
           <MenuItem value="NO_EQUALS">option 2</MenuItem>
@@ -110,7 +166,7 @@ const Session = (props) => {
           justifyContent: "center",
         }}
       >
-        <DeleteButton />
+        <DeleteButton onClick={handleDelete} />
       </CardRow>
     </Box>
   );

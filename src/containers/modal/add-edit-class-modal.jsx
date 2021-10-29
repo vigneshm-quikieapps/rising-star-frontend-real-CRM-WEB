@@ -31,13 +31,13 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import plusIcon from "../../assets/icons/icon-add.png";
 import { styled } from "@mui/material/styles";
-import { ShortWeekNames } from "../../helper/constants";
 import Session from "../class-list/session";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
   getBusinessListOfBusiness,
   getCategoriesOfBusiness,
+  getCoachesOfBusiness,
 } from "../../redux/action/businesses-actions";
 import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
 import Charge from "../class-list/charge";
@@ -81,26 +81,10 @@ const ageArray = Array(15)
   .map((_, index) => {
     return index + 1;
   });
-const sessions = Array(1)
-  .fill(1)
-  .map((_, index) => {
-    return {
-      id: index,
-      item: {
-        sessionName: `session ${index}`,
-        day: ShortWeekNames[index % 6],
-        facility: "Gym hall",
-        fullCapacity: 20,
-        waitlistCapacity: 10,
-        coachName: `coach ${index * 2}`,
-      },
-    };
-  });
 
 const AddEditClassModal = (props) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(true);
-  const [sessionsBuffer, setSessionsBuffer] = useState(sessions);
   const [page, setPage] = useState(1);
   const [className, setClassName] = useState("");
   const [selectedBussinessId, setSelectedBussinessId] = useState("");
@@ -114,8 +98,42 @@ const AddEditClassModal = (props) => {
   const [selectedTerm, setSelectedTerm] = useState("");
   const [classStartDate, setClassStartDate] = useState("");
   const [classEndDate, setClassEndDate] = useState("");
-  const [classCharges, setClassCharges] = useState([]);
-  const [classSessions, setClassSessions] = useState([]);
+  const [classCharges, setClassCharges] = useState([
+    {
+      index: 0,
+      name: "",
+      amount: "",
+      isMandatory: false,
+      payFrequency: "",
+    },
+    {
+      index: 1,
+      name: "",
+      amount: "",
+      isMandatory: false,
+      payFrequency: "",
+    },
+  ]);
+  const [classSessions, setClassSessions] = useState([
+    {
+      index: 0,
+      name: "",
+      dayIndex: -1,
+      facility: "",
+      fullCapacity: "",
+      waitlistCapacity: "",
+      coachId: "",
+    },
+    {
+      index: 1,
+      name: "",
+      dayIndex: -1,
+      facility: "",
+      fullCapacity: "",
+      waitlistCapacity: "",
+      coachId: "",
+    },
+  ]);
 
   const currentUserBussinesses = useSelector(
     (state) => state.businesses.businessListOfBusiness
@@ -138,13 +156,11 @@ const AddEditClassModal = (props) => {
   useEffect(() => {
     dispatch(getEvaluationSchemeList());
     dispatch(getBusinessListOfBusiness());
-    setSessionsBuffer(sessions);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {}, [currentUserBussinesses, evaluationSchemeList]);
-
   return (
     <Box>
       <Button onClick={handleOpen}>Open modal</Button>
@@ -223,7 +239,7 @@ const AddEditClassModal = (props) => {
                   onChange={(e) => {
                     setClassName(e.target.value);
                   }}
-                ></StyledTextField>
+                />
 
                 <StyledTextField
                   select
@@ -235,6 +251,7 @@ const AddEditClassModal = (props) => {
                     setSelectedBussinessId(businessId);
                     dispatch(getCategoriesOfBusiness(businessId));
                     dispatch(getTermsOfBusiness(businessId));
+                    dispatch(getCoachesOfBusiness(businessId));
                   }}
                 >
                   {currentUserBussinesses.length ? (
@@ -435,7 +452,16 @@ const AddEditClassModal = (props) => {
                             <TableCell>Action</TableCell>
                           </TableRow>
                         </TableHead>
-                        <Charge data />
+                        {classCharges.map((item, index) => {
+                          return (
+                            <Charge
+                              data={item}
+                              index={index}
+                              setChargeData={setClassCharges}
+                              charges={classCharges}
+                            />
+                          );
+                        })}
                       </TableMui>
                       <CardRow
                         sx={{
@@ -549,10 +575,16 @@ const AddEditClassModal = (props) => {
                           </Description>
                         </CardRow>
                       </Box>
-                      {sessionsBuffer.length &&
-                        sessionsBuffer.map((session, index) => {
+                      {classSessions.length &&
+                        classSessions.map((session, index) => {
                           return (
-                            <Session data={session} index={index} key={index} />
+                            <Session
+                              key={index}
+                              data={session}
+                              index={index}
+                              sessions={classSessions}
+                              setSessionData={setClassSessions}
+                            />
                           );
                         })}
                     </AccordionDetails>
