@@ -182,10 +182,15 @@ const Members = () => {
   const items = useMemo(() => {
     return memberList.map((singleMember) => {
       const id = singleMember._id;
-      const { name, gender } = singleMember;
+      const {
+        name,
+        gender,
+        // parent: { name: parentName, email: parentEmail, contact: parentPhone },
+      } = singleMember;
       return {
         id: singleMember.id,
         onClick: () => handleRowClick(id),
+        // items: [name, gender, parentName, parentEmail, parentPhone],
         items: [name, gender, "static", "static", "static"],
       };
     });
