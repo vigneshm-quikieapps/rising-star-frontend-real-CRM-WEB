@@ -24,8 +24,9 @@ const TabNav = ({ items }) => {
       sx={{
         display: "flex",
         justifyContent: "stretch",
-        "&>*": { mr: "10px", flex: 1 },
-        "&>*:last-child": { mr: 0 },
+        mb: "25px",
+        "&>*": { mr: "10px !important", flex: 1 },
+        "&>*:last-child": { mr: "0 !important" },
       }}
     >
       {items.map(({ id, to = "#", exact = true, title }, index) => (
