@@ -1,7 +1,7 @@
 import { memberActionTypes } from "../types";
 
 export const getAllMembersList = () => {
-  return { type: memberActionTypes.GET_ALL_MEMBERS_SAGA };
+  return { type: memberActionTypes.GET_ALL_MEMBERS };
 };
 
 export const getMemberById = (id) => {

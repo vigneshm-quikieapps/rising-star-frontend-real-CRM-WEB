@@ -40,6 +40,14 @@ export const classListHeaders = [
   "Action",
 ];
 
+export const memberListHeaders = [
+  "Member Name",
+  "Gender",
+  "Parent/Carer Name",
+  "Parent/Carer Email",
+  "Phone",
+];
+
 export const navItems = [
   {
     id: "1",

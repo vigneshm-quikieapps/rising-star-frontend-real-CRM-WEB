@@ -30,11 +30,13 @@ export const updateMulitpleStatusOnProgresRecordOfAMember = async (params) => {
   }
 };
 
-export const axiosGetMemberList = async () => {
+export const getMembers = async (params) => {
   try {
-    const api = "members/";
-    const allMembers = await axiosInstance.get(api);
-    return allMembers.data;
+    const response = await axiosInstance.get("members/of-a-logged-in-user", {
+      params,
+    });
+    const { docs: memberList, totalPages, page: currentPage } = response.data;
+    return { memberList, totalPages, currentPage };
   } catch (error) {
     throw error;
   }
