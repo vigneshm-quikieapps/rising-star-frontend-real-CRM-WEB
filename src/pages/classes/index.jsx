@@ -7,17 +7,19 @@ import { Box, InputAdornment, MenuItem, Typography } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
 import {
+  TextField,
+  Button,
+  GradientButton,
+  Actions as ActionButtons,
+  Status,
+  Pagination,
+} from "../../components";
+import ClassList from "./components/classes-table";
+import {
   getClassList as getClassListAction,
   deleteClass,
 } from "../../redux/action/class-actions";
 import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
-import TextField from "../../components/textfield";
-import Button from "../../components/simple-button";
-import GradientButton from "../../components/gradient-button";
-import ActionButtons from "../../components/actions";
-import ClassList from "../../containers/class-list";
-import Status from "../../components/status";
-import Pagination from "../../components/pagination";
 
 const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
   const dispatch = useDispatch();
@@ -272,33 +274,6 @@ const Classes = () => {
         </Typography>
       </Box>
       <Box sx={{ display: advancedSearch ? "none" : "flex", mb: 1 }}>
-        {/* <Autocomplete
-          freeSolo
-          disableClearable
-          options={[...basicSearchResults, "11", "22"]}
-          sx={{ flex: 1, mr: "20px" }}
-          onInputChange={searchValueChangeHandler}
-          onClose={(e, reason) => console.log(searchValue, reason)}
-          renderInput={(params) => {
-            const { className, ...inputProps } = params.InputProps;
-            return (
-              <TextField
-                {...params}
-                variant="outlined"
-                placeholder="search class by name"
-                InputProps={{
-                  ...inputProps,
-                  type: "search",
-                  startAdornment: (
-                    <InputAdornment position="start" sx={{ mr: "-10px" }}>
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            );
-          }}
-        /> */}
         <TextField
           onChange={searchValueChangeHandler}
           value={searchValue}
