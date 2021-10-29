@@ -1,7 +1,7 @@
-import { put, takeEvery, call, all } from "redux-saga/effects";
+import { put, takeEvery, takeLatest, call, all } from "redux-saga/effects";
 import {
+  getMembers,
   axiosGetMember,
-  axiosGetMemberList,
   fetchgetAllErolmentOfAMember,
   axiosmemberDropped,
   axiosmemberSuspend,
@@ -9,17 +9,30 @@ import {
   fetchgetProgresRecordOfAMember,
   updateMulitpleStatusOnProgresRecordOfAMember,
 } from "../../services/memberServices";
+import { startLoading, stopLoading } from "../action/shared-actions";
 import { memberActionTypes, sharedActionTypes } from "../types";
 
-import { startLoading, stopLoading } from "../action/shared-actions";
-
-export function* getMemberList() {
-  const member_list = yield call(axiosGetMemberList);
-  yield put({ type: memberActionTypes.GET_ALL_MEMBERS, payload: member_list });
+export function* getMemberList(action) {
+  try {
+    yield put(startLoading());
+    const state = yield call(getMembers, action.payload);
+    yield put({
+      type: memberActionTypes.GET_ALL_MEMBERS_SUCCEEDED,
+      payload: state,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the member list",
+    });
+  }
 }
 
 export function* watchGetMemberList() {
-  yield takeEvery(memberActionTypes.GET_ALL_MEMBERS_SAGA, getMemberList);
+  yield takeLatest(memberActionTypes.GET_ALL_MEMBERS, getMemberList);
 }
 
 export function* getMember(action) {

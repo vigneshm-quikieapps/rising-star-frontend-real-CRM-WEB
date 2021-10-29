@@ -1,4 +1,5 @@
 import { cloneElement } from "react";
+import { useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -6,6 +7,7 @@ import {
   Toolbar,
   useScrollTrigger,
   Typography,
+  LinearProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -56,80 +58,89 @@ const Header = ({
   userRole,
   userName,
   ...otherProps
-}) => (
-  <>
-    <ElevationScroll {...otherProps}>
-      <AppBar
-        position="fixed"
-        open={open}
-        drawerWidth={drawerWidth}
-        color="background"
-      >
-        <Toolbar>
-          <Box
-            sx={{
-              position: "absolute",
-              left: 0,
-              width: "100%",
-            }}
-          >
+}) => {
+  const loading = useSelector((state) => state.shared.loading);
+  return (
+    <>
+      <ElevationScroll {...otherProps}>
+        <AppBar
+          position="fixed"
+          open={open}
+          drawerWidth={drawerWidth}
+          color="background"
+        >
+          <Toolbar>
+            {loading && (
+              <LinearProgress
+                sx={{ position: "absolute", width: "100%", left: 0, bottom: 0 }}
+                color="primary"
+              />
+            )}
             <Box
               sx={{
-                maxWidth: "100%",
-                mx: "100px",
+                position: "absolute",
+                left: 0,
+                width: "100%",
               }}
             >
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
+              <Box
+                sx={{
+                  maxWidth: "100%",
+                  mx: "100px",
+                }}
               >
-                <ImgIcon>{menuIcon}</ImgIcon>
-              </IconButton>
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={handleDrawerOpen}
+                >
+                  <ImgIcon>{menuIcon}</ImgIcon>
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
-          <Box sx={{ flex: 1 }} />
-          <IconButton sx={{ mr: "20px" }} LinkComponent={Link} to="/">
-            <ImgIcon>{homeIcon}</ImgIcon>
-          </IconButton>
-          <Notifications
-            show={true}
-            items={[
-              "notification 1",
-              "notification 2",
-              "notification 3",
-              "notification 4",
-              "notification 5",
-              "notification 6",
-            ]}
-          />
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-              ml: "20px",
-              mr: "10px",
-            }}
-          >
-            <Typography
+            <Box sx={{ flex: 1 }} />
+            <IconButton sx={{ mr: "20px" }} LinkComponent={Link} to="/">
+              <ImgIcon>{homeIcon}</ImgIcon>
+            </IconButton>
+            <Notifications
+              show={true}
+              items={[
+                "notification 1",
+                "notification 2",
+                "notification 3",
+                "notification 4",
+                "notification 5",
+                "notification 6",
+              ]}
+            />
+            <Box
               sx={{
-                fontSize: 12,
-                color: (theme) => theme.palette.text.secondary,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                ml: "20px",
+                mr: "10px",
               }}
             >
-              {userRole}
-            </Typography>
-            <Typography>{userName}</Typography>
-          </Box>
-          <IconButton>
-            <ImgIcon>{userIcon}</ImgIcon>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-    </ElevationScroll>
-    <Toolbar />
-  </>
-);
+              <Typography
+                sx={{
+                  fontSize: 12,
+                  color: (theme) => theme.palette.text.secondary,
+                }}
+              >
+                {userRole}
+              </Typography>
+              <Typography>{userName}</Typography>
+            </Box>
+            <IconButton>
+              <ImgIcon>{userIcon}</ImgIcon>
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      </ElevationScroll>
+      <Toolbar />
+    </>
+  );
+};
 
 export default Header;
