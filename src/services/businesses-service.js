@@ -33,10 +33,20 @@ export async function getCategoryListOfBusiness(id) {
 export async function getCoachListOfBusiness(id) {
   try {
     const api = `/businesses/${id}/coaches`;
-    console.log("get coaches", api);
     const response = await axiosInstance.get(api);
     const categoryList = response.data;
     return categoryList;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function addClass(data) {
+  try {
+    const api = `classes`;
+    const response = await axiosInstance.post(api, data);
+    const res = response.data;
+    return res;
   } catch (error) {
     throw error;
   }

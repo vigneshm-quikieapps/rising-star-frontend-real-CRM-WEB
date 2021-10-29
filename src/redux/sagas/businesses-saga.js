@@ -59,7 +59,6 @@ export function* watchGetBusinessesOfBusiness() {
 
 export function* getCategoriesOfBusiness(action) {
   try {
-    yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
     const categoryList = yield call(getCategoryListOfBusiness, action.payload);
     yield put({
       type: businessesActionTypes.GET_CATEGORIES_OF_BUSINESS_SUCCEEDED,
@@ -83,11 +82,8 @@ export function* watchGetCategoriesOfBusiness() {
 }
 
 export function* getCoachesOfBusiness(action) {
-  console.log("get coaches 1");
   try {
-    // yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
     const coachList = yield call(getCoachListOfBusiness, action.payload);
-    console.log("get coaches 1", coachList);
     yield put({
       type: businessesActionTypes.GET_COACHES_OF_BUSINESS_SUCCEEDED,
       payload: coachList,
@@ -98,7 +94,6 @@ export function* getCoachesOfBusiness(action) {
 }
 
 export function* watchGetCoachesOfBusiness() {
-  console.log("get coaches 2");
   yield takeLatest(
     businessesActionTypes.GET_COACHES_OF_BUSINESS,
     getCoachesOfBusiness

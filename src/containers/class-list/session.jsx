@@ -7,15 +7,18 @@ import ImgIcon from "../../components/img-icon";
 import { ShortWeekNames } from "../../helper/constants";
 import StyledCheckbox from "../../components/styled-checkbox";
 import { MenuItem } from "@mui/material";
+import { useSelector } from "react-redux";
+import { removeItemByIndex } from "../../utils";
 
 const DeleteButton = (props) => (
-  <IconButton {...props} sx={{ borderRadius: "50%" }}>
+  <IconButton {...props} sx={{ borderRadius: "50%", margin: "15px 0 5px" }}>
     <ImgIcon alt="delete">{deleteIcon}</ImgIcon>
   </IconButton>
 );
 
 const Session = (props) => {
   const { data, index, sessions, setSessionData } = props;
+  const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
 
   const handleNameChange = (e) => {
     let newSession = [...sessions];
@@ -72,7 +75,7 @@ const Session = (props) => {
   };
 
   const handleDelete = () => {
-    let newSession = sessions.filter((i) => i.index !== index);
+    let newSession = removeItemByIndex(sessions, index);
     setSessionData(newSession);
   };
 
@@ -156,8 +159,13 @@ const Session = (props) => {
           variant="filled"
           onChange={handleCoachChange}
         >
-          <MenuItem value="EQUALS">option 1</MenuItem>
-          <MenuItem value="NO_EQUALS">option 2</MenuItem>
+          {allCoaches.length ? (
+            allCoaches.map((item, i) => {
+              return <MenuItem value={item._id}>{item.name}</MenuItem>;
+            })
+          ) : (
+            <MenuItem value="">No coaches</MenuItem>
+          )}
         </StyledTextField>
       </CardRow>
 

@@ -7,6 +7,7 @@ import {
 } from "../../components";
 import { styled } from "@mui/material/styles";
 import deleteIcon from "./../../assets/icons/icon-delete.png";
+import { removeItemByIndex } from "../../utils";
 
 const PayFrequncyOptions = [
   {
@@ -75,8 +76,8 @@ const Charge = (props) => {
   };
 
   const handleDelete = () => {
-    let newCharge = charges.filter((i) => i.index !== index);
-    setChargeData(newCharge);
+    let newCharges = removeItemByIndex(charges, index);
+    setChargeData(newCharges);
   };
 
   return (
