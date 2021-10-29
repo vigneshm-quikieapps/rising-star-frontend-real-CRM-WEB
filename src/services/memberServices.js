@@ -19,14 +19,11 @@ export const fetchgetProgresRecordOfAMember = async (params) => {
     throw error;
   }
 };
-/**
- *
- * api not yet avaliable
- */
-export const updateProgresRecordOfAMember = async (params) => {
+
+export const updateMulitpleStatusOnProgresRecordOfAMember = async (params) => {
   try {
-    const api = `progress/update-status`;
-    const response = await axiosInstance.post(api, params);
+    const api = `progress/update-multiple-status`;
+    const response = await axiosInstance.put(api, params);
     return response;
   } catch (error) {
     throw error;

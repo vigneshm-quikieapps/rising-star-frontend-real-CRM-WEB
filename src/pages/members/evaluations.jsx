@@ -24,7 +24,7 @@ import { useEffect } from "react";
 import {
   getMemberProgressRecord,
   getMemberById,
-  updateMemberProgressRecord,
+  updateMultipleStatusOnMemberProgressRecord,
 } from "../../redux/action/memberAction";
 import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
@@ -49,14 +49,18 @@ const StyleBox = styled(Box)(({ theme }) => ({
 
 const convertStatusToArray = (statusObject) => {
   const statusArray = Object.keys(statusObject).map((id) => ({
-    _id: id,
-    status: statusObject[id],
+    // _id: id,
+    // status: statusObject[id],
+    skillId: id,
+    levelId: statusObject[id].levelId,
+    status: statusObject[id].status,
   }));
   return statusArray;
 };
 
 const SkillsComponent = ({
   skillId,
+  levelId,
   name,
   status,
   skillIndex,
@@ -71,12 +75,19 @@ const SkillsComponent = ({
   useEffect(() => {
     setNewSkills((previous) => ({
       ...previous,
-      [skillId]: statusConverter(
-        checkbox.attainedCheckBox,
-        checkbox.inprogressCheckbox
-      ),
+      // [skillId]: statusConverter(
+      //   checkbox.attainedCheckBox,
+      //   checkbox.inprogressCheckbox
+      // ),
+      [skillId]: {
+        levelId: levelId,
+        status: statusConverter(
+          checkbox.attainedCheckBox,
+          checkbox.inprogressCheckbox
+        ),
+      },
     }));
-  }, [checkbox, setNewSkills, skillId]);
+  }, [checkbox, setNewSkills, skillId, levelId]);
 
   const checkStatusConverter = useCallback((data) => {
     if (data === "NOT_STARTED") {
@@ -114,15 +125,22 @@ const SkillsComponent = ({
   }, [checkStatusConverter, status, skillId]);
 
   useEffect(() => {
-    const { attained, progress } = checkStatusConverter(status);
+    // const { attained, progress } = checkStatusConverter(status);
     if (checkbox.attainedCheckBox && checkbox.inprogressCheckbox) {
       setCheckboxes((previous) => ({
         ...previous,
-        attainedCheckBox: attained,
-        inprogressCheckbox: progress,
+        attainedCheckBox: !checkbox.attainedCheckBox,
+        inprogressCheckbox: checkbox.inprogressCheckbox,
       }));
     }
-  }, [checkStatusConverter, status, checkbox]);
+    // else {
+    //   setCheckboxes((previous) => ({
+    //     ...previous,
+    //     inprogressCheckbox: !checkbox.inprogressCheckbox,
+    //     attainedCheckBox: checkbox.attainedCheckBox,
+    //   }));
+    // }
+  }, [checkStatusConverter, checkbox]);
 
   const checkboxHandler = (name, skillId) => {
     if (name !== "attained") {
@@ -188,7 +206,7 @@ const MemberEvaluations = () => {
   const [expanded, setExpanded] = useState("panel1");
 
   const handleChange = (panel) => (event, newExpanded) => {
-    console.log(newExpanded);
+    // console.log(newExpanded);
     setExpanded(newExpanded ? panel : true);
   };
 
@@ -249,7 +267,28 @@ const MemberEvaluations = () => {
       progressId: progressRecord._id,
       skills: convertStatusToArray(newSkills),
     };
-    dispatch(updateMemberProgressRecord(data));
+
+    console.log(data);
+    dispatch(updateMultipleStatusOnMemberProgressRecord(data));
+  };
+
+  const levelStatusIndicator = (status) => {
+    if (status === "AWARDED") {
+      return {
+        color: "green",
+        status: "Awarded",
+      };
+    } else if (status === "IN_PROGRESS") {
+      return {
+        color: "yellow",
+        status: "In Progress",
+      };
+    } else if (status === "NOT_STARTED") {
+      return {
+        color: "red",
+        status: "Not Started",
+      };
+    }
   };
 
   return (
@@ -319,66 +358,70 @@ const MemberEvaluations = () => {
         </Grid>
       </StyleBox>
       {levels &&
-        levels.map((data, index) => (
-          <Accordion
-            key={`LS${index}`}
-            expanded={expanded === `panel${index + 1}`}
-            onChange={handleChange(`panel${index + 1}`)}
-            sx={{ marginBottom: "16px" }}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Level {index + 1}</Typography>
-            </AccordionSummary>
-            <AccordionDetails sx={{ padding: 0, paddingBottom: "10px" }}>
-              <Box sx={{ padding: " 5px 17px" }}>
-                <Output title="Status" />
-                <Status status="green" title="Awarded" />
-              </Box>
-              <Box
-                sx={{
-                  padding: " 10px 17px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  borderTop: `1px solid #e9e7f1`,
-                  borderBottom: `1px solid #e9e7f1`,
-                }}
-              >
-                <Typography variant="subtitle2" component="div">
-                  Skills
-                </Typography>
+        levels.map((data, index) => {
+          const status = levelStatusIndicator(data.status);
+          return (
+            <Accordion
+              key={`LS${index}`}
+              expanded={expanded === `panel${index + 1}`}
+              onChange={handleChange(`panel${index + 1}`)}
+              sx={{ marginBottom: "16px" }}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Level {index + 1}</Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ padding: 0, paddingBottom: "10px" }}>
+                <Box sx={{ padding: " 5px 17px" }}>
+                  <Output title="Status" />
+                  <Status status={status.color} title={status.status} />
+                </Box>
                 <Box
                   sx={{
+                    padding: " 10px 17px",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
+                    borderTop: `1px solid #e9e7f1`,
+                    borderBottom: `1px solid #e9e7f1`,
                   }}
                 >
                   <Typography variant="subtitle2" component="div">
-                    Attained
+                    Skills
                   </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    component="div"
-                    sx={{ marginLeft: "10px" }}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    In Progress
-                  </Typography>
+                    <Typography variant="subtitle2" component="div">
+                      Attained
+                    </Typography>
+                    <Typography
+                      variant="subtitle2"
+                      component="div"
+                      sx={{ marginLeft: "10px" }}
+                    >
+                      In Progress
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-              {data.skills.map((skillData, skillIndex) => (
-                <SkillsComponent
-                  key={`SR${skillIndex}`}
-                  skillId={skillData._id}
-                  name={skillData.name}
-                  status={skillData.status}
-                  skillIndex={skillIndex}
-                  setNewSkills={setNewSkills}
-                />
-              ))}
-            </AccordionDetails>
-          </Accordion>
-        ))}
+                {data.skills.map((skillData, skillIndex) => (
+                  <SkillsComponent
+                    key={`SR${skillIndex}`}
+                    skillId={skillData._id}
+                    levelId={data._id}
+                    name={skillData.name}
+                    status={skillData.status}
+                    skillIndex={skillIndex}
+                    setNewSkills={setNewSkills}
+                  />
+                ))}
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
 
       <Box
         sx={{
