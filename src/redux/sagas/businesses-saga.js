@@ -3,16 +3,18 @@ import {
   getBusinesses,
   getBusinessListOfBusiness,
 } from "../../services/businesses-service";
+import { startLoading, stopLoading } from "../action/shared-actions";
 import { businessesActionTypes, sharedActionTypes } from "../types";
 
 export function* getBusinessList() {
   try {
-    yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
+    yield put(startLoading());
     const businesses = yield call(getBusinesses);
     yield put({
       type: businessesActionTypes.GET_BUSINESSES_SUCCEEDED,
       payload: businesses,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
@@ -29,12 +31,13 @@ export function* watchGetBusinesses() {
 
 export function* getBusinessesOfBusiness() {
   try {
-    yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
+    yield put(startLoading());
     const businessList = yield call(getBusinessListOfBusiness);
     yield put({
       type: businessesActionTypes.GET_BUSINESSES_OF_BUSINESS_SUCCEEDED,
       payload: businessList,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
       type: sharedActionTypes.SET_ERROR,

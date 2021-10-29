@@ -5,16 +5,12 @@ const INITIAL_STATE = {
   termSessions: [],
   termsOfBusiness: [],
   currentBusinessId: undefined,
-  loading: false,
   currentPage: 0,
   totalPages: 0,
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case termsActionTypes.SET_LOADING: {
-      return { ...state, loading: action.payload };
-    }
     case termsActionTypes.GET_ALL_TERMS_SUCCEEDED:
       return { ...state, allTerms: action.payload };
     case termsActionTypes.GET_TERMS_OF_A_BUSINESS_SUCCEEDED: {
@@ -30,7 +26,6 @@ export default function reducer(state = INITIAL_STATE, action) {
         currentBusinessId: businessId,
         currentPage,
         totalPages,
-        loading: false,
       };
     }
     case termsActionTypes.ADD_NEW_TERM_SUCCEEDED: {
@@ -45,7 +40,6 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         allTerms: updatedTermList,
         termsOfBusiness: updatedTermsOfBusiness,
-        loading: false,
       };
     }
     case termsActionTypes.EDIT_TERM_SUCCEEDED: {
@@ -62,7 +56,6 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         allTerms: updatedTermList,
         termsOfBusiness: updatedTermsOfBusiness,
-        loading: false,
       };
     }
     case termsActionTypes.DELETE_TERM_SUCCEEDED: {
@@ -77,7 +70,6 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         allTerms: updatedTermList,
         termsOfBusiness: updatedTermsOfBusiness,
-        loading: false,
       };
     }
 

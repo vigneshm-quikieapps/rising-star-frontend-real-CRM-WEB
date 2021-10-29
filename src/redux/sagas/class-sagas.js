@@ -4,16 +4,18 @@ import {
   deleteClassByID,
   axiosGetClassById,
 } from "../../services/class-services";
+import { startLoading, stopLoading } from "../action/shared-actions";
 import { classActionTypes, sharedActionTypes } from "../types";
 
 export function* getClassList(action) {
   try {
-    yield put({ type: classActionTypes.SET_LOADING, payload: true });
+    yield put(startLoading());
     const state = yield call(getClasses, action.payload);
     yield put({
       type: classActionTypes.GET_CLASS_LIST_SUCCEEDED,
       payload: state,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
@@ -31,12 +33,13 @@ export function* classListSaga() {
 
 export function* deleteClass(action) {
   try {
-    yield put({ type: classActionTypes.SET_LOADING, payload: true });
+    yield put(startLoading());
     yield call(deleteClassByID, action.payload);
     yield put({
       type: classActionTypes.DELETE_CLASS_SUCCEEDED,
       payload: action.payload,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
       type: sharedActionTypes.SET_ERROR,

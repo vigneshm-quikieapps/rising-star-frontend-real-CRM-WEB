@@ -6,15 +6,18 @@ import {
   deleteTerm,
   editTerm,
 } from "../../services/term-services";
+import { startLoading, stopLoading } from "../action/shared-actions";
 import { sharedActionTypes, termsActionTypes } from "../types";
 
 export function* getAllTerms() {
   try {
+    yield put(startLoading());
     const allTerms = yield call(axiosGetAllTerms);
     yield put({
       type: termsActionTypes.GET_ALL_TERMS_SUCCEEDED,
       payload: allTerms,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
@@ -29,11 +32,13 @@ export function* watchGetAllTerms() {
 
 export function* getTermListOfBusiness(action) {
   try {
+    yield put(startLoading());
     const terms = yield call(getTermsOfBusiness, action.payload);
     yield put({
       type: termsActionTypes.GET_TERMS_OF_A_BUSINESS_SUCCEEDED,
       payload: terms,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
@@ -53,11 +58,13 @@ export function* watchGetTermListOfBusiness() {
 
 export function* addNewTerm(action) {
   try {
+    yield put(startLoading());
     const newTerm = yield call(addTerm, action.payload);
     yield put({
       type: termsActionTypes.ADD_NEW_TERM_SUCCEEDED,
       payload: newTerm,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
@@ -74,11 +81,13 @@ export function* watchAddNewTerm() {
 
 export function* deleteTermSaga(action) {
   try {
+    yield put(startLoading());
     const deletedTermId = yield call(deleteTerm, action.payload);
     yield put({
       type: termsActionTypes.DELETE_TERM_SUCCEEDED,
       payload: deletedTermId,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
@@ -95,11 +104,13 @@ export function* watchDeleteTerm() {
 
 export function* editTermSaga(action) {
   try {
+    yield put(startLoading());
     const editedTerm = yield call(editTerm, action.payload);
     yield put({
       type: termsActionTypes.EDIT_TERM_SUCCEEDED,
       payload: editedTerm,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
