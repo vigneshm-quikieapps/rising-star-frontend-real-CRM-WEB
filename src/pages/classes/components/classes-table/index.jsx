@@ -2,8 +2,8 @@
 // Do not use it in production
 import { Box } from "@mui/material";
 
-import { classListHeaders } from "../../helper/constants";
-import CustomTable from "../../components/table";
+import { classListHeaders } from "../../../../helper/constants";
+import { Table } from "../../../../components";
 import Heading from "./heading";
 
 const ClassList = ({ list = [], pagination, onAdd }) => (
@@ -13,7 +13,7 @@ const ClassList = ({ list = [], pagination, onAdd }) => (
       margin: "auto",
     }}
   >
-    <CustomTable
+    <Table
       headers={classListHeaders}
       rows={list}
       heading={<Heading title="Class List" action={onAdd} />}

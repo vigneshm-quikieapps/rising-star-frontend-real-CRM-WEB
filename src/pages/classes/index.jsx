@@ -7,17 +7,19 @@ import { Box, InputAdornment, MenuItem, Typography } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
 import {
+  TextField,
+  Button,
+  GradientButton,
+  Actions as ActionButtons,
+  Status,
+  Pagination,
+} from "../../components";
+import ClassList from "./components/classes-table";
+import {
   getClassList as getClassListAction,
   deleteClass,
 } from "../../redux/action/class-actions";
 import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
-import TextField from "../../components/textfield";
-import Button from "../../components/simple-button";
-import GradientButton from "../../components/gradient-button";
-import ActionButtons from "../../components/actions";
-import ClassList from "./components/classes-table";
-import Status from "../../components/status";
-import Pagination from "../../components/pagination";
 
 const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
   const dispatch = useDispatch();
