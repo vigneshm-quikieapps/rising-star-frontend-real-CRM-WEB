@@ -12,7 +12,7 @@ export async function getBusinesses() {
 export async function getBusinessListOfBusiness() {
   try {
     const response = await axiosInstance.get("/businesses/of-logged-in-user");
-    const businessList = response.data;
+    const businessList = response.data.docs;
     return businessList;
   } catch (error) {
     throw error;
