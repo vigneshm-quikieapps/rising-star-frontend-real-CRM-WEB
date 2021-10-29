@@ -121,7 +121,7 @@ const AddEditClassModal = (props) => {
     },
   ]);
 
-  const currentUserBussinesses = useSelector(
+  const currentUserBusinesses = useSelector(
     (state) => state.businesses.businessListOfBusiness
   );
   const categories = useSelector(
@@ -163,14 +163,16 @@ const AddEditClassModal = (props) => {
         },
       ],
 
-      charges: classCharges.map((item) => {
-        return {
-          name: item.name,
-          amount: item.amount,
-          mandatory: item.isMandatory,
-          payFrequency: item.payFrequency,
-        };
-      }),
+      charges: classCharges.map(
+        ({ name, amount, isMandatory, payFrequency }) => {
+          return {
+            name,
+            amount,
+            mandatory: isMandatory,
+            payFrequency,
+          };
+        }
+      ),
 
       sessions: classSessions.map((item) => {
         return {
@@ -344,9 +346,13 @@ const AddEditClassModal = (props) => {
                     dispatch(getCoachesOfBusiness(businessId));
                   }}
                 >
-                  {currentUserBussinesses.length ? (
-                    currentUserBussinesses.map((item, index) => {
-                      return <MenuItem value={item._id}>{item.name}</MenuItem>;
+                  {currentUserBusinesses.length ? (
+                    currentUserBusinesses.map(({ _id, name }) => {
+                      return (
+                        <MenuItem value={_id} key={_id}>
+                          {name}
+                        </MenuItem>
+                      );
                     })
                   ) : (
                     <MenuItem value="No options">No options</MenuItem>
@@ -390,10 +396,10 @@ const AddEditClassModal = (props) => {
                   }}
                 >
                   {categories.length ? (
-                    categories.map((item, index) => {
+                    categories.map(({ _id, name }) => {
                       return (
-                        <MenuItem key={index} value={item._id}>
-                          {item.name}
+                        <MenuItem key={_id} value={_id}>
+                          {name}
                         </MenuItem>
                       );
                     })
@@ -412,10 +418,10 @@ const AddEditClassModal = (props) => {
                   }}
                 >
                   {evaluationSchemeList.length ? (
-                    evaluationSchemeList.map((item, index) => {
+                    evaluationSchemeList.map(({ _id, name }) => {
                       return (
-                        <MenuItem key={index} value={item._id}>
-                          {item.name}
+                        <MenuItem key={_id} value={_id}>
+                          {name}
                         </MenuItem>
                       );
                     })
@@ -465,9 +471,9 @@ const AddEditClassModal = (props) => {
                           }}
                         >
                           {ageArray.length ? (
-                            ageArray.map((item, index) => {
+                            ageArray.map((item) => {
                               return (
-                                <MenuItem key={index} value={item}>
+                                <MenuItem key={item} value={item}>
                                   {item}
                                 </MenuItem>
                               );
@@ -487,9 +493,9 @@ const AddEditClassModal = (props) => {
                           }}
                         >
                           {genderArray.length ? (
-                            genderArray.map((item, index) => {
+                            genderArray.map((item) => {
                               return (
-                                <MenuItem key={index} value={item}>
+                                <MenuItem key={item} value={item}>
                                   {item}
                                 </MenuItem>
                               );
@@ -551,8 +557,8 @@ const AddEditClassModal = (props) => {
                           {classCharges.map((item, index) => {
                             return (
                               <Charge
-                                data={item}
                                 key={index}
+                                data={item}
                                 index={index}
                                 setChargeData={setClassCharges}
                                 charges={classCharges}
@@ -642,12 +648,8 @@ const AddEditClassModal = (props) => {
                             sx={{ width: "55%" }}
                           >
                             {termsOfBusiness.length ? (
-                              termsOfBusiness.map((item, index) => {
-                                return (
-                                  <MenuItem value={item._id}>
-                                    {item.label}
-                                  </MenuItem>
-                                );
+                              termsOfBusiness.map(({ _id, label }) => {
+                                return <MenuItem value={_id}>{label}</MenuItem>;
                               })
                             ) : (
                               <MenuItem value="">No terms</MenuItem>

@@ -25,7 +25,7 @@ export async function axiosGetClassById(id) {
   try {
     const api = `classes/${id}`;
     const res = await axiosInstance.get(api);
-    return res.data;
+    return res.data.businessClass;
   } catch (error) {
     throw error;
   }

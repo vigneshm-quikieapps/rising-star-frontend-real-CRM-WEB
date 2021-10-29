@@ -1,31 +1,31 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import AddEditClassModal from "../../containers/modal/add-edit-class-modal";
 import useQuery from "../../hooks/useQuery";
+import { getClassById } from "../../redux/action/class-actions";
 
 const ClassAddEdit = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const query = useQuery();
   const classList = useSelector((state) => state.classes.classList);
-
-  const [classObj, setClassObj] = useState({});
+  const classObj = useSelector((state) => state.classes.class);
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
-    let isEdit = query.get("edit") === "true" ? true : false;
-    if (isEdit) {
-      let classObj = classList.find((item) => item._id === id);
-      setClassObj(classObj);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [classList]);
+    dispatch(getClassById(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    const isEdit = query.get("edit") === "true" ? true : false;
+    setIsEdit(isEdit);
+  }, [classList, query]);
+
   return (
     <>
-      <AddEditClassModal
-        isEditMode={query.get("edit") === "true" ? true : false}
-        classObj={classObj}
-      />
+      <AddEditClassModal isEditMode={isEdit} classObj={classObj} />
     </>
   );
 };
