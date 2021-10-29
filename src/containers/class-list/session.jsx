@@ -60,7 +60,7 @@ const Session = (props) => {
               <StyledCheckbox
                 checked={index === sessionDayIndex}
                 onClick={() => {
-                  console.log("clicked", index);
+                  setSessionDayIndex(index);
                 }}
               />
             </Box>

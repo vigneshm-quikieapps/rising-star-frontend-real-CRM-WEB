@@ -114,6 +114,8 @@ const AddEditClassModal = (props) => {
   const [selectedTerm, setSelectedTerm] = useState("");
   const [classStartDate, setClassStartDate] = useState("");
   const [classEndDate, setClassEndDate] = useState("");
+  const [classCharges, setClassCharges] = useState([]);
+  const [classSessions, setClassSessions] = useState([]);
 
   const currentUserBussinesses = useSelector(
     (state) => state.businesses.businessListOfBusiness
@@ -399,8 +401,8 @@ const AddEditClassModal = (props) => {
                 <AccordionContainer>
                   <Accordion defaultExpanded>
                     <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
+                      expandIcon={<ExpandMoreIcon id="collapse-button" />}
+                      aria-controls="collapse-button"
                       id="panel1a-header"
                     >
                       <CardRow
@@ -409,6 +411,7 @@ const AddEditClassModal = (props) => {
                           width: "100%",
                           padding: "0 10px 0 0",
                         }}
+                        onClick={() => {}}
                       >
                         <Typography>Charges</Typography>
                         <GradientButton>
@@ -432,7 +435,7 @@ const AddEditClassModal = (props) => {
                             <TableCell>Action</TableCell>
                           </TableRow>
                         </TableHead>
-                        <Charge />
+                        <Charge data />
                       </TableMui>
                       <CardRow
                         sx={{
