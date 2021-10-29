@@ -20,7 +20,7 @@ export function* getClassList(action) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while getting the class list",
     });
   }
@@ -44,7 +44,7 @@ export function* deleteClass(action) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while deleting the class",
     });
   }

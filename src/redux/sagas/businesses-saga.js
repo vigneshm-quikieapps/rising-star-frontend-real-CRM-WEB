@@ -19,7 +19,7 @@ export function* getBusinessList() {
     yield put({
       type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while getting the list of businesses",
     });
   }
@@ -42,7 +42,7 @@ export function* getBusinessesOfBusiness() {
     yield put({
       type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while getting the list of businesses of the user",
     });
   }

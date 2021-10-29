@@ -43,7 +43,7 @@ export function* getTermListOfBusiness(action) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while getting list of terms of the business",
     });
   }
@@ -69,7 +69,7 @@ export function* addNewTerm(action) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while adding the new term",
     });
   }
@@ -92,7 +92,7 @@ export function* deleteTermSaga(action) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while deleting the term",
     });
   }
@@ -115,7 +115,7 @@ export function* editTermSaga(action) {
     yield put({
       type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while editing the specified term",
     });
   }
