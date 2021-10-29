@@ -33,6 +33,7 @@ export async function getCategoryListOfBusiness(id) {
 export async function getCoachListOfBusiness(id) {
   try {
     const api = `/businesses/${id}/coaches`;
+    console.log("get coaches", api);
     const response = await axiosInstance.get(api);
     const categoryList = response.data;
     return categoryList;

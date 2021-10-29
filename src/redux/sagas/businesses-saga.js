@@ -83,24 +83,22 @@ export function* watchGetCategoriesOfBusiness() {
 }
 
 export function* getCoachesOfBusiness(action) {
+  console.log("get coaches 1");
   try {
-    yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
+    // yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
     const coachList = yield call(getCoachListOfBusiness, action.payload);
+    console.log("get coaches 1", coachList);
     yield put({
       type: businessesActionTypes.GET_COACHES_OF_BUSINESS_SUCCEEDED,
       payload: coachList,
     });
   } catch (error) {
-    yield put({
-      type: businessesActionTypes.GET_COACHES_OF_BUSINESS_FAILED,
-      payload:
-        error.response.data.message ||
-        "Something went wrong while getting the list of Coaches  of the business",
-    });
+    throw error;
   }
 }
 
 export function* watchGetCoachesOfBusiness() {
+  console.log("get coaches 2");
   yield takeLatest(
     businessesActionTypes.GET_COACHES_OF_BUSINESS,
     getCoachesOfBusiness
