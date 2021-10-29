@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useState } from "react";
+import { useEffect, useMemo, useCallback, useState, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
@@ -116,6 +116,7 @@ const Term = ({
               startDate: startDate.toISOString().split("T")[0],
               endDate: endDate.toISOString().split("T")[0],
             });
+            add && setLabel("");
           }}
           onDelete={() => onDelete(_id)}
         />
@@ -152,7 +153,6 @@ const Terms = () => {
   const addTermHandler = useCallback(
     (termData) => {
       dispatch(addTermAction(termData));
-      setShowAddTerm(false);
     },
     [dispatch]
   );
@@ -283,7 +283,7 @@ const Terms = () => {
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                setShowAddTerm(true);
+                setShowAddTerm((prevShow) => !prevShow);
               }}
             >
               +
@@ -296,4 +296,4 @@ const Terms = () => {
   );
 };
 
-export default Terms;
+export default memo(Terms);
