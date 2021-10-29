@@ -15,7 +15,7 @@ import TextField from "../../components/textfield";
 import Button from "../../components/simple-button";
 import GradientButton from "../../components/gradient-button";
 import ActionButtons from "../../components/actions";
-import ClassList from "../../containers/class-list";
+import ClassList from "./components/classes-table";
 import Status from "../../components/status";
 import Pagination from "../../components/pagination";
 
