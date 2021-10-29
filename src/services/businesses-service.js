@@ -19,3 +19,13 @@ export async function getBusinessListOfBusiness() {
   }
 }
 
+export async function getCategoryListOfBusiness(id) {
+  try {
+    const api = `/businesses/${id}/categories`;
+    const response = await axiosInstance.get(api);
+    const categoryList = response.data;
+    return categoryList;
+  } catch (error) {
+    throw error;
+  }
+}

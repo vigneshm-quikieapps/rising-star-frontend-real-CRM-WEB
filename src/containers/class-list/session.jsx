@@ -1,12 +1,13 @@
 import { Box } from "@mui/system";
-import { CardRow, DayText } from "./common";
-import StyledTextField from "./textfield";
-import deleteIcon from "../assets/icons/icon-delete.png";
-import IconButton from "./icon-button";
-import ImgIcon from "./img-icon";
-import { ShortWeekNames } from "../helper/constants";
-import StyledCheckbox from "./styled-checkbox";
+import { CardRow, DayText } from "../../components/common";
+import StyledTextField from "../../components/textfield";
+import deleteIcon from "../../assets/icons/icon-delete.png";
+import IconButton from "../../components/icon-button";
+import ImgIcon from "../../components/img-icon";
+import { ShortWeekNames } from "../../helper/constants";
+import StyledCheckbox from "../../components/styled-checkbox";
 import { MenuItem } from "@mui/material";
+import { useState } from "react";
 
 const DeleteButton = () => (
   <IconButton sx={{ borderRadius: "50%" }}>
@@ -16,6 +17,8 @@ const DeleteButton = () => (
 
 const Session = (props) => {
   const { data: session, index } = props;
+  const [sessionName, setSessionName] = useState("");
+  const [sessionDayIndex, setSessionDayIndex] = useState(-1);
   return (
     <Box
       key={index}
@@ -30,26 +33,36 @@ const Session = (props) => {
           variant="filled"
           label="Session Name"
           sx={{ width: "100%" }}
-          value={session.item.sessionName}
-          onChange={() => {}}
+          value={sessionName}
+          onChange={(e) => {
+            setSessionName(e.target.value);
+          }}
         ></StyledTextField>
       </CardRow>
       <CardRow
         sx={{
-          width: "30%",
+          width: "330px",
           margin: "15px auto",
         }}
       >
         {ShortWeekNames.map((day, index) => {
           return (
             <Box
+              key={index}
               sx={{
-                width: "3.5%",
+                display: "flex",
+                flexDirection: "column",
                 margin: "auto",
+                flexWrap: "nowrap",
               }}
             >
               <DayText> {day}</DayText>
-              <StyledCheckbox />
+              <StyledCheckbox
+                checked={index === sessionDayIndex}
+                onClick={() => {
+                  console.log("clicked", index);
+                }}
+              />
             </Box>
           );
         })}

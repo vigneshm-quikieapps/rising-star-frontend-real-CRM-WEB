@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -10,24 +10,38 @@ import {
   HeadingText,
 } from "../../components/common";
 import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "../../components/icon-button";
-import { Outputs } from "../outputs";
-import { objectToArray } from "../../utils";
-import TextField from "../../components/textfield";
-import { AccordionDetails, AccordionSummary, MenuItem } from "@mui/material";
-import Accordion from "../../components/accordion";
+import {
+  IconButton,
+  TextField,
+  Accordion,
+  GradientButton,
+  ImgIcon,
+  Pagination as StyledPagination,
+  DatePicker,
+  TableMui,
+} from "../../components";
+import {
+  AccordionDetails,
+  AccordionSummary,
+  MenuItem,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import GradientButton from "../../components/gradient-button";
-import ImgIcon from "../../components/img-icon";
 import plusIcon from "../../assets/icons/icon-add.png";
-import deleteIcon from "../../assets/icons/icon-delete.png";
-import CustomTable from "../../components/table";
-import StyledPagination from "../../components/pagination";
-import StyledCheckbox from "../../components/styled-checkbox";
-import DatePicker from "../../components/date-picker";
 import { styled } from "@mui/material/styles";
 import { ShortWeekNames } from "../../helper/constants";
-import Session from "../../components/session";
+import Session from "../class-list/session";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {
+  getBusinessListOfBusiness,
+  getCategoriesOfBusiness,
+} from "../../redux/action/businesses-actions";
+import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
+import Charge from "../class-list/charge";
+import { getTermsOfBusiness } from "../../redux/action/terms-actions";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   // applied to label of all variants
@@ -47,21 +61,27 @@ const CrossIconButton = ({ onClick }) => (
   </IconButton>
 );
 
-const DeleteButton = () => (
-  <IconButton sx={{ borderRadius: "50%" }}>
-    <ImgIcon alt="delete">{deleteIcon}</ImgIcon>
-  </IconButton>
-);
+// const DeleteButton = () => (
+//   <IconButton sx={{ borderRadius: "50%" }}>
+//     <ImgIcon alt="delete">{deleteIcon}</ImgIcon>
+//   </IconButton>
+// );
 
 // const classId = {
 //   "Class ID": "DL39020458",
 // };
 
-const sessionId = {
-  "Session ID": "00394827321",
-};
+// const sessionId = {
+//   "Session ID": "00394827321",
+// };
 
-const sessions = Array(3)
+const genderArray = ["MALE", "FEMALE"];
+const ageArray = Array(15)
+  .fill(1)
+  .map((_, index) => {
+    return index + 1;
+  });
+const sessions = Array(1)
   .fill(1)
   .map((_, index) => {
     return {
@@ -77,87 +97,51 @@ const sessions = Array(3)
     };
   });
 
-const headers = [
-  "Charge Name",
-  "Amount",
-  "Mandatory",
-  "Pay Frequency",
-  "Action",
-];
-
 const AddEditClassModal = (props) => {
-  const [open, setOpen] = React.useState(true);
-  const [date, setDate] = React.useState(new Date("2014-08-18T21:11:54"));
-  const [sessionsBuffer, setSessionsBuffer] = React.useState(sessions);
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(true);
+  const [sessionsBuffer, setSessionsBuffer] = useState(sessions);
+  const [page, setPage] = useState(1);
+  const [className, setClassName] = useState("");
+  const [selectedBussinessId, setSelectedBussinessId] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedConsentForm, setSelectedConsentForm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedEvaluationScheme, setSelectedEvaluationScheme] = useState("");
+  const [aboutClass, setAboutClass] = useState("");
+  const [genders, setGenders] = useState([]);
+  const [ages, setAges] = useState([]);
+  const [selectedTerm, setSelectedTerm] = useState("");
+  const [classStartDate, setClassStartDate] = useState("");
+  const [classEndDate, setClassEndDate] = useState("");
+
+  const currentUserBussinesses = useSelector(
+    (state) => state.businesses.businessListOfBusiness
+  );
+  const categories = useSelector(
+    (state) => state.businesses.categoriesOfBusiness
+  );
+  const evaluationSchemeList = useSelector(
+    (state) => state.evaluation.evaluationList
+  );
+
+  const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [page, setPage] = React.useState(1);
   const handleChange = (event, value) => {
     setPage(value);
   };
 
-  const rows = Array(3)
-    .fill(1)
-    .map((_, index) => {
-      return {
-        id: index,
-        onClick: () => {
-          console.log("row ", index);
-        },
-        items: [
-          <StyledTextField
-            sx={{ width: "100%" }}
-            placeholder={"Charge Name"}
-            onChange={() => {}}
-          ></StyledTextField>,
-          <StyledTextField
-            sx={{ width: "45%" }}
-            placeholder={"Amount"}
-            onChange={() => {}}
-          ></StyledTextField>,
-          <StyledCheckbox />,
-          <StyledTextField
-            select
-            sx={{ width: "100%" }}
-            value={"select "}
-            onChange={() => {}}
-          >
-            <MenuItem value="EQUALS">option 1</MenuItem>
-            <MenuItem value="NO_EQUALS">option 2</MenuItem>
-          </StyledTextField>,
-          <DeleteButton />,
-        ],
-      };
-    });
-
-  const pagination = (
-    <StyledPagination
-      sx={{
-        "& ul": {
-          justifyContent: "center",
-          margin: "15px",
-          "& .MuiButtonBase-root": {
-            width: 30,
-            height: 30,
-            backgroundColor: "#fff",
-            borderRadius: (theme) => theme.shape.borderRadiuses.primary,
-          },
-          "& .Mui-selected": {
-            backgroundColor: (theme) => theme.palette.darkIndigo.main,
-            color: "#fff",
-          },
-        },
-      }}
-      count={5}
-      page={page}
-      onChange={handleChange}
-    />
-  );
-
-  React.useEffect(() => {
+  useEffect(() => {
+    dispatch(getEvaluationSchemeList());
+    dispatch(getBusinessListOfBusiness());
     setSessionsBuffer(sessions);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {}, [currentUserBussinesses, evaluationSchemeList]);
 
   return (
     <Box>
@@ -233,24 +217,44 @@ const AddEditClassModal = (props) => {
                 <StyledTextField
                   sx={{ width: "30%" }}
                   label="Class Name*"
-                  onChange={() => {}}
-                ></StyledTextField>
-
-                <StyledTextField
-                  sx={{ width: "30%" }}
-                  label="Bussiness Name*"
-                  onChange={() => {}}
+                  value={className}
+                  onChange={(e) => {
+                    setClassName(e.target.value);
+                  }}
                 ></StyledTextField>
 
                 <StyledTextField
                   select
                   sx={{ width: "30%" }}
-                  label="Class Status"
-                  value={"select "}
-                  onChange={() => {}}
+                  label="Bussiness Name*"
+                  value={selectedBussinessId}
+                  onChange={(e) => {
+                    let businessId = e.target.value;
+                    setSelectedBussinessId(businessId);
+                    dispatch(getCategoriesOfBusiness(businessId));
+                    dispatch(getTermsOfBusiness(businessId));
+                  }}
                 >
-                  <MenuItem value="EQUALS">Equals to</MenuItem>
-                  <MenuItem value="NO_EQUALS">Not equals to</MenuItem>
+                  {currentUserBussinesses.length ? (
+                    currentUserBussinesses.map((item, index) => {
+                      return <MenuItem value={item._id}>{item.name}</MenuItem>;
+                    })
+                  ) : (
+                    <MenuItem value="No options">No options</MenuItem>
+                  )}
+                </StyledTextField>
+
+                <StyledTextField
+                  select
+                  sx={{ width: "30%" }}
+                  label="Class Status"
+                  value={selectedStatus}
+                  onChange={(e) => {
+                    setSelectedStatus(e.target.value);
+                  }}
+                >
+                  <MenuItem value="ACTIVE">ACTIVE</MenuItem>
+                  <MenuItem value="INACTIVE">INACTIVE</MenuItem>
                 </StyledTextField>
               </CardRow>
 
@@ -259,33 +263,56 @@ const AddEditClassModal = (props) => {
                   select
                   sx={{ width: "30%" }}
                   label="Registration Consent Form"
-                  value={"select "}
-                  onChange={() => {}}
+                  value={selectedConsentForm}
+                  onChange={(e) => {
+                    setSelectedConsentForm(e.target.value);
+                  }}
                 >
-                  <MenuItem value="EQUALS">option 1</MenuItem>
-                  <MenuItem value="NO_EQUALS">option 2</MenuItem>
+                  <MenuItem value="STANDARD">STANDARD</MenuItem>
                 </StyledTextField>
 
                 <StyledTextField
                   select
                   sx={{ width: "30%" }}
                   label="Class Category*"
-                  value={"select "}
-                  onChange={() => {}}
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                  }}
                 >
-                  <MenuItem value="EQUALS">Equals to</MenuItem>
-                  <MenuItem value="NO_EQUALS">Not equals to</MenuItem>
+                  {categories.length ? (
+                    categories.map((item, index) => {
+                      return (
+                        <MenuItem key={index} value={item._id}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })
+                  ) : (
+                    <MenuItem value="">No categories</MenuItem>
+                  )}
                 </StyledTextField>
 
                 <StyledTextField
                   select
                   sx={{ width: "30%" }}
                   label="Evaluation Scheme*"
-                  value={"select "}
-                  onChange={() => {}}
+                  value={selectedEvaluationScheme}
+                  onChange={(e) => {
+                    setSelectedEvaluationScheme(e.target.value);
+                  }}
                 >
-                  <MenuItem value="EQUALS">Equals to</MenuItem>
-                  <MenuItem value="NO_EQUALS">Not equals to</MenuItem>
+                  {evaluationSchemeList.length ? (
+                    evaluationSchemeList.map((item, index) => {
+                      return (
+                        <MenuItem key={index} value={item._id}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })
+                  ) : (
+                    <MenuItem value="">No evaluations</MenuItem>
+                  )}
                 </StyledTextField>
               </CardRow>
 
@@ -300,7 +327,10 @@ const AddEditClassModal = (props) => {
                   multiline
                   rows={4}
                   placeholder={"About this class"}
-                  onChange={(e) => {}}
+                  value={aboutClass}
+                  onChange={(e) => {
+                    setAboutClass(e.target.value);
+                  }}
                 ></StyledTextField>
               </CardRow>
 
@@ -320,21 +350,44 @@ const AddEditClassModal = (props) => {
                           select
                           sx={{ width: "40%" }}
                           label="Age"
-                          value={"select "}
-                          onChange={() => {}}
+                          value={ages[0]}
+                          onChange={(e) => {
+                            setAges([e.target.value]);
+                          }}
                         >
-                          <MenuItem value="EQUALS">option 1</MenuItem>
-                          <MenuItem value="NO_EQUALS">option 2</MenuItem>
+                          {ageArray.length ? (
+                            ageArray.map((item, index) => {
+                              return (
+                                <MenuItem key={index} value={item}>
+                                  {item}
+                                </MenuItem>
+                              );
+                            })
+                          ) : (
+                            <MenuItem value="">No options</MenuItem>
+                          )}
                         </StyledTextField>
                         <StyledTextField
                           select
+                          multiple
                           sx={{ width: "40%" }}
                           label="Gender"
-                          value={"select "}
-                          onChange={() => {}}
+                          value={genders[0]}
+                          onChange={(e) => {
+                            setGenders([e.target.value]);
+                          }}
                         >
-                          <MenuItem value="EQUALS">option 1</MenuItem>
-                          <MenuItem value="NO_EQUALS">option 2</MenuItem>
+                          {genderArray.length ? (
+                            genderArray.map((item, index) => {
+                              return (
+                                <MenuItem key={index} value={item}>
+                                  {item}
+                                </MenuItem>
+                              );
+                            })
+                          ) : (
+                            <MenuItem value="">No options</MenuItem>
+                          )}
                         </StyledTextField>
                       </CardRow>
                     </AccordionDetails>
@@ -369,11 +422,47 @@ const AddEditClassModal = (props) => {
                         backgroundColor: "rgba(219, 216, 227, 0.5)",
                       }}
                     >
-                      <CustomTable
-                        headers={headers}
-                        rows={rows}
-                        pagination={pagination}
-                      />
+                      <TableMui>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Charge Name</TableCell>
+                            <TableCell>Amount</TableCell>
+                            <TableCell>Mandatory</TableCell>
+                            <TableCell>Pay Frequency</TableCell>
+                            <TableCell>Action</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <Charge />
+                      </TableMui>
+                      <CardRow
+                        sx={{
+                          justifyContent: "center",
+                        }}
+                      >
+                        <StyledPagination
+                          sx={{
+                            "& ul": {
+                              justifyContent: "center",
+                              margin: "15px",
+                              "& .MuiButtonBase-root": {
+                                width: 30,
+                                height: 30,
+                                backgroundColor: "#fff",
+                                borderRadius: (theme) =>
+                                  theme.shape.borderRadiuses.primary,
+                              },
+                              "& .Mui-selected": {
+                                backgroundColor: (theme) =>
+                                  theme.palette.darkIndigo.main,
+                                color: "#fff",
+                              },
+                            },
+                          }}
+                          count={5}
+                          page={page}
+                          onChange={handleChange}
+                        />
+                      </CardRow>
                     </AccordionDetails>
                   </Accordion>
                 </AccordionContainer>
@@ -401,9 +490,9 @@ const AddEditClassModal = (props) => {
                       }}
                     >
                       <Box sx={{ padding: "15px 15px 0" }}>
-                        <CardRow>
+                        {/* <CardRow>
                           <Outputs arr={objectToArray(sessionId)} />
-                        </CardRow>
+                        </CardRow> */}
                         <CardRow
                           sx={{
                             marginTop: "1%",
@@ -413,25 +502,36 @@ const AddEditClassModal = (props) => {
                           <StyledTextField
                             select
                             label="term"
-                            value={"select "}
+                            value={selectedTerm}
                             variant={"filled"}
-                            onChange={() => {}}
+                            onChange={(e) => {
+                              setSelectedTerm(e.target.value);
+                            }}
                             sx={{ width: "55%" }}
                           >
-                            <MenuItem value="EQUALS">option 1</MenuItem>
-                            <MenuItem value="NO_EQUALS">option 2</MenuItem>
+                            {termsOfBusiness.length ? (
+                              termsOfBusiness.map((item, index) => {
+                                return (
+                                  <MenuItem value={item._id}>
+                                    {item.label}
+                                  </MenuItem>
+                                );
+                              })
+                            ) : (
+                              <MenuItem value="">No terms</MenuItem>
+                            )}
                           </StyledTextField>
 
                           <DatePicker
-                            label="Date"
-                            date={date}
-                            onChange={(newDate) => setDate(newDate)}
+                            label="Start Date"
+                            date={classStartDate}
+                            onChange={(date) => setClassStartDate(date)}
                           />
 
                           <DatePicker
-                            label="Date"
-                            date={date}
-                            onChange={(newDate) => setDate(newDate)}
+                            label="End Date"
+                            date={classEndDate}
+                            onChange={(date) => setClassEndDate(date)}
                           />
                         </CardRow>
                         <CardRow>
@@ -448,12 +548,15 @@ const AddEditClassModal = (props) => {
                       </Box>
                       {sessionsBuffer.length &&
                         sessionsBuffer.map((session, index) => {
-                          return <Session data={session} index={index} />;
+                          return (
+                            <Session data={session} index={index} key={index} />
+                          );
                         })}
                     </AccordionDetails>
                   </Accordion>
                 </AccordionContainer>
               </CardRow>
+
               <CardRow sx={{ justifyContent: "flex-start" }}>
                 <GradientButton size="large" sx={{ marginRight: "1%" }}>
                   Save

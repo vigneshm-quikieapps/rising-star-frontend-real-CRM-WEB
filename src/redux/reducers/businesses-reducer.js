@@ -1,8 +1,11 @@
 import { businessesActionTypes } from "../types";
 
 const initialState = {
+  totalPages: 1,
+  currentPage: 1,
   businessList: [],
   businessListOfBusiness: [],
+  categoriesOfBusiness: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -13,6 +16,15 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         businessListOfBusiness: action.payload,
+      };
+    }
+    case businessesActionTypes.GET_CATEGORIES_OF_BUSINESS_SUCCEEDED: {
+      const { docs, totalPages, currentPage } = action.payload;
+      return {
+        ...state,
+        categoriesOfBusiness: docs,
+        totalPages,
+        currentPage,
       };
     }
     default:
