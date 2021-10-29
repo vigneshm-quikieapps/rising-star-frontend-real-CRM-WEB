@@ -10,7 +10,7 @@ export const getMemberById = (id) => {
 
 export const getMemberEnrolmentList = (params) => {
   return {
-    type: memberActionTypes.GET_MEMBERS_ENROLLMENT_SAGA,
+    type: memberActionTypes.GET_MEMBERS_ENROLLMENT,
     payload: params,
   };
 };

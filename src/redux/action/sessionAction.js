@@ -13,3 +13,10 @@ export const getSessionsByTermId = (id) => {
     payload: id,
   };
 };
+
+export const getSessionInAclassByTermId = (params) => {
+  return {
+    type: sessionActionTypes.GET_ALL_SESSION_OF_A_CLASS_BY_TERM,
+    payload: params,
+  };
+};

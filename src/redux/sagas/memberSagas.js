@@ -36,7 +36,7 @@ export function* getAllErolmentOfAMember(action) {
     yield put(startLoading());
     const enrol_list = yield call(fetchgetAllErolmentOfAMember, action.payload);
     yield put({
-      type: memberActionTypes.GET_MEMBERS_ENROLLMENT,
+      type: memberActionTypes.GET_MEMBERS_ENROLLMENT_SUCCEEDED,
       payload: enrol_list,
     });
     yield put(stopLoading());
@@ -53,7 +53,7 @@ export function* getAllErolmentOfAMember(action) {
 //watchingGeneratedFunction
 export function* watchgetAllErolmentOfAMember() {
   yield takeEvery(
-    memberActionTypes.GET_MEMBERS_ENROLLMENT_SAGA,
+    memberActionTypes.GET_MEMBERS_ENROLLMENT,
     getAllErolmentOfAMember
   );
 }

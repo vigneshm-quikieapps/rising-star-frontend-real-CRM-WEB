@@ -13,7 +13,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, allMembers: action.payload };
     case memberActionTypes.GET_MEMBER_BY_ID:
       return { ...state, currentMember: action.payload };
-    case memberActionTypes.GET_MEMBERS_ENROLLMENT:
+    case memberActionTypes.GET_MEMBERS_ENROLLMENT_SUCCEEDED:
       return { ...state, enrolmentList: action.payload };
     case memberActionTypes.GET_MEMBER_PROGRESS_RECORD_SUCCEEDED:
       return { ...state, progressRecord: action.payload };
