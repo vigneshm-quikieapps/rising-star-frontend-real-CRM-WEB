@@ -22,6 +22,13 @@ export const getMemberProgressRecord = (params) => {
   };
 };
 
+export const updateMultipleStatusOnMemberProgressRecord = (params) => {
+  return {
+    type: memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD_SAGA,
+    payload: params,
+  };
+};
+
 export const memberEnrolmentDropped = (id) => {
   return {
     type: memberActionTypes.MEMBER_ENROLMENT_DROPPED_SAGA,

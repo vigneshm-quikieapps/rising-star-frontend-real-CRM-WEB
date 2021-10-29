@@ -4,21 +4,23 @@ import {
   getBusinessListOfBusiness,
   getCategoryListOfBusiness,
 } from "../../services/businesses-service";
-import { businessesActionTypes } from "../types";
+import { startLoading, stopLoading } from "../action/shared-actions";
+import { businessesActionTypes, sharedActionTypes } from "../types";
 
-export function* getBusinessList(action) {
+export function* getBusinessList() {
   try {
-    yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
+    yield put(startLoading());
     const businesses = yield call(getBusinesses);
     yield put({
       type: businessesActionTypes.GET_BUSINESSES_SUCCEEDED,
       payload: businesses,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
-      type: businessesActionTypes.GET_BUSINESSES_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while getting the list of businesses",
     });
   }
@@ -30,17 +32,18 @@ export function* watchGetBusinesses() {
 
 export function* getBusinessesOfBusiness() {
   try {
-    yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
+    yield put(startLoading());
     const businessList = yield call(getBusinessListOfBusiness);
     yield put({
       type: businessesActionTypes.GET_BUSINESSES_OF_BUSINESS_SUCCEEDED,
       payload: businessList,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
-      type: businessesActionTypes.GET_BUSINESSES_OF_BUSINESS_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while getting the list of businesses of the user",
     });
   }

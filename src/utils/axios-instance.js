@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   function (error) {
-    console.log(error);
+    console.error(error);
     // Do something with request error
     return Promise.reject(error);
   }
@@ -28,11 +28,12 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(error);
-    if (error.status === 401) {
+    console.error(error);
+    if (error.response.status === 401) {
       if (error.config.url === "refresh-token") {
         localStorage.clear();
-        return (window.location.href = "/login");
+        window.location.href = "/login";
+        return Promise.reject(error);
       }
       axiosInstance
         .post("refresh-token")
@@ -46,7 +47,7 @@ axiosInstance.interceptors.response.use(
           return new Promise((resolve) => resolve(axios(config)));
         })
         .catch((error) => {
-          console.log(error);
+          console.error("[refresh-token]", error);
           return Promise.reject(error);
         });
     } else {

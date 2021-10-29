@@ -20,6 +20,16 @@ export const fetchgetProgresRecordOfAMember = async (params) => {
   }
 };
 
+export const updateMulitpleStatusOnProgresRecordOfAMember = async (params) => {
+  try {
+    const api = `progress/update-multiple-status`;
+    const response = await axiosInstance.put(api, params);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const axiosGetMemberList = async () => {
   try {
     const api = "members/";

@@ -8,6 +8,7 @@ const Main = styled("main", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  marginTop: theme.spacing(2),
   marginLeft: 0,
   ...(open && {
     transition: theme.transitions.create("margin", {

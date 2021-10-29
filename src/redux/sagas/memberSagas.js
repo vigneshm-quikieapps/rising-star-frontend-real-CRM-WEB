@@ -7,6 +7,7 @@ import {
   axiosmemberSuspend,
   axiosmemberReturnFromSuspend,
   fetchgetProgresRecordOfAMember,
+  updateMulitpleStatusOnProgresRecordOfAMember,
 } from "../../services/memberServices";
 import { memberActionTypes } from "../types";
 
@@ -122,12 +123,28 @@ export function* watchreturnFromSuspendMemberFromEnrolment() {
   );
 }
 
+export function* updateMulitpleStatusOnProgressRecordOfMember(action) {
+  yield call(updateMulitpleStatusOnProgresRecordOfAMember, action.payload);
+  yield put({
+    type: memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD,
+    // payload: progressRecord,
+  });
+}
+
+export function* watchupdateMulitpleStatusOnProgressRecordOfMember() {
+  yield takeEvery(
+    memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD_SAGA,
+    updateMulitpleStatusOnProgressRecordOfMember
+  );
+}
+
 export default function* memberSagas() {
   yield all([
     watchGetMember(),
     watchGetMemberList(),
     watchgetAllErolmentOfAMember(),
     watchgetProgresRecordOfAMember(),
+    watchupdateMulitpleStatusOnProgressRecordOfMember(),
     watchdropMemberFromEnrolment(),
     watchsuspendMemberFromEnrolment(),
     watchreturnFromSuspendMemberFromEnrolment(),

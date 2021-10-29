@@ -20,9 +20,11 @@ export const axiosGetSessionsByTermId = async (id) => {
   }
 };
 
-export const getTermsOfBusiness = async (businessId) => {
+export const getTermsOfBusiness = async ({ businessId, params }) => {
   try {
-    const response = await axiosInstance.get(`businesses/${businessId}/terms`);
+    const response = await axiosInstance.get(`businesses/${businessId}/terms`, {
+      params,
+    });
     const data = response.data;
     return { ...data, businessId };
   } catch (error) {

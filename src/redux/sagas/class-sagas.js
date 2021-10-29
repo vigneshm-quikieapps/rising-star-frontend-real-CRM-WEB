@@ -4,21 +4,23 @@ import {
   deleteClassByID,
   axiosGetClassById,
 } from "../../services/class-services";
-import { classActionTypes } from "../types";
+import { startLoading, stopLoading } from "../action/shared-actions";
+import { classActionTypes, sharedActionTypes } from "../types";
 
 export function* getClassList(action) {
   try {
-    yield put({ type: classActionTypes.SET_LOADING, payload: true });
+    yield put(startLoading());
     const state = yield call(getClasses, action.payload);
     yield put({
       type: classActionTypes.GET_CLASS_LIST_SUCCEEDED,
       payload: state,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
-      type: classActionTypes.GET_CLASS_LIST_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while getting the class list",
     });
   }
@@ -31,17 +33,18 @@ export function* classListSaga() {
 
 export function* deleteClass(action) {
   try {
-    yield put({ type: classActionTypes.SET_LOADING, payload: true });
+    yield put(startLoading());
     yield call(deleteClassByID, action.payload);
     yield put({
       type: classActionTypes.DELETE_CLASS_SUCCEEDED,
       payload: action.payload,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
-      type: classActionTypes.DELETE_CLASS_FAILED,
+      type: sharedActionTypes.SET_ERROR,
       payload:
-        error.response.data.message ||
+        error?.response?.data?.message ||
         "Something went wrong while deleting the class",
     });
   }

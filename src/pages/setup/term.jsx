@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useState } from "react";
+import { useEffect, useMemo, useCallback, useState, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
@@ -116,6 +116,7 @@ const Term = ({
               startDate: startDate.toISOString().split("T")[0],
               endDate: endDate.toISOString().split("T")[0],
             });
+            add && setLabel("");
           }}
           onDelete={() => onDelete(_id)}
         />
@@ -127,7 +128,9 @@ const Term = ({
 const Terms = () => {
   const [showAddTerm, setShowAddTerm] = useState(false);
   const dispatch = useDispatch();
-  const businessList = useSelector((state) => state.businesses.businessListOfBusiness);
+  const businessList = useSelector(
+    (state) => state.businesses.businessListOfBusiness
+  );
   const { termsOfBusiness, currentPage, totalPages } = useSelector(
     (state) => state.terms
   );
@@ -150,7 +153,6 @@ const Terms = () => {
   const addTermHandler = useCallback(
     (termData) => {
       dispatch(addTermAction(termData));
-      setShowAddTerm(false);
     },
     [dispatch]
   );
@@ -167,6 +169,14 @@ const Terms = () => {
       dispatch(editTermAction(termData));
     },
     [dispatch]
+  );
+
+  const handlePageChange = useCallback(
+    (_, value) => {
+      if (value <= totalPages && value !== currentPage)
+        dispatch(getTermsOfBusiness(selectedBusiness, { page: value }));
+    },
+    [dispatch, currentPage, totalPages, selectedBusiness]
   );
 
   const termList = useMemo(
@@ -205,23 +215,24 @@ const Terms = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <Pagination
+        <Pagination
           page={currentPage}
           count={totalPages}
           sx={{ my: 2 }}
-          onChange={() => {}}
-        /> */}
+          onChange={handlePageChange}
+        />
       </>
     ),
     [
       selectedBusiness,
-      // currentPage,
-      // totalPages,
+      currentPage,
+      totalPages,
       showAddTerm,
       termsOfBusiness,
       addTermHandler,
       deleteTermHandler,
       editTermHandler,
+      handlePageChange,
     ]
   );
 
@@ -272,7 +283,7 @@ const Terms = () => {
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                setShowAddTerm(true);
+                setShowAddTerm((prevShow) => !prevShow);
               }}
             >
               +
@@ -285,4 +296,4 @@ const Terms = () => {
   );
 };
 
-export default Terms;
+export default memo(Terms);
