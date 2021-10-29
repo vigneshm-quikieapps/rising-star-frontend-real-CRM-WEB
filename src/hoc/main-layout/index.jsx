@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
-import { Divider, Typography, LinearProgress } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import Header from "./header";
@@ -9,7 +9,6 @@ import SideNav from "./side-nav";
 import Main from "./main";
 import { navItems } from "../../helper/constants";
 import ErrorDialog from "./error-dialog";
-import { useSelector } from "react-redux";
 
 const drawerWidth = 192;
 
@@ -38,7 +37,6 @@ const NavHeader = (
 );
 
 const MainLayout = ({ children }) => {
-  const loading = useSelector((state) => state.shared.loading);
   const [navOpen, setNavOpen] = useState(true);
   const toggleNav = () => setNavOpen((open) => !open);
 
@@ -51,7 +49,6 @@ const MainLayout = ({ children }) => {
         userName="Carole Chimako"
         handleDrawerOpen={toggleNav}
       />
-      {loading && <LinearProgress color="primary" />}
       <SideNav
         header={NavHeader}
         open={navOpen}
