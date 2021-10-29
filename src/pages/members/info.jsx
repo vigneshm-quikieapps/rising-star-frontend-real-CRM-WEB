@@ -38,7 +38,7 @@ const MemberInfo = () => {
   const [secondaryContactInfoArr, setSecondaryContactInfoArr] = useState([]);
 
   const dispatch = useDispatch();
-  const allMembers = useSelector((state) => state.members.allMembers);
+  const allMembers = useSelector((state) => state.members.memberList);
   const currentMember = useSelector(
     (state) => state.members.currentMember && state.members.currentMember.member
   );

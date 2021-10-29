@@ -224,20 +224,25 @@ const AddEditClassModal = (props) => {
   const populateClassData = () => {
     setClassName(classObj.name);
     setSelectedBussinessId(classObj.businessId);
+    setSelectedStatus(classObj.selectedStatus);
+    setSelectedConsentForm(classObj.registrationform);
+    setSelectedCategory(classObj.categoryId);
+    setSelectedEvaluationScheme(classObj.evaluationSchemeId);
   };
+
   useEffect(() => {
-    console.log("isedit", isEditMode);
+    console.log("isedit", isEditMode, classObj);
     if (isEditMode) {
       populateClassData();
     }
+  });
 
+  useEffect(() => {
     dispatch(getEvaluationSchemeList());
     dispatch(getBusinessListOfBusiness());
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {}, [currentUserBussinesses, evaluationSchemeList]);
   return (
     <Box>
       <Button onClick={handleOpen}>Open modal</Button>

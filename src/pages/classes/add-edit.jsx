@@ -9,25 +9,23 @@ const ClassAddEdit = () => {
   const { id } = useParams();
   const query = useQuery();
   const classList = useSelector((state) => state.classes.classList);
-  const [isEditMode, setIsEditMode] = useState(false);
+
   const [classObj, setClassObj] = useState({});
 
   useEffect(() => {
     let isEdit = query.get("edit") === "true" ? true : false;
-    setIsEditMode(isEdit);
     if (isEdit) {
       let classObj = classList.find((item) => item._id === id);
       setClassObj(classObj);
     }
-    return () => {
-      setIsEditMode(false);
-    };
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [classList]);
   return (
     <>
-      <AddEditClassModal isEditMode={isEditMode} classObj={classObj} />
+      <AddEditClassModal
+        isEditMode={query.get("edit") === "true" ? true : false}
+        classObj={classObj}
+      />
     </>
   );
 };
