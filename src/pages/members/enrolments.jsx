@@ -225,6 +225,25 @@ const MemberEnrollment = () => {
     });
   };
 
+  const enrolStatusChangeHandler = (e) => {
+    if (
+      e.target.value === "Enrolled" ||
+      e.target.value === "Suspend" ||
+      e.target.value === "Return from suspend"
+    ) {
+      setEnrolmentDetailsInput({
+        ...enrolmentDetailsInput,
+        enrolStatus: e.target.value,
+        dropReason: "",
+      });
+    } else {
+      setEnrolmentDetailsInput({
+        ...enrolmentDetailsInput,
+        enrolStatus: e.target.value,
+      });
+    }
+  };
+
   // Dropped, dropped , sent request to dropped api
   // Dropped, class_transfer, sent request to dropped api,
   // Suspend, sent request to suspend api
@@ -401,7 +420,7 @@ const MemberEnrollment = () => {
                 variant="filled"
                 name="enrolStatus"
                 value={enrolmentDetailsInput.enrolStatus}
-                onChange={inputOnChangeHandler}
+                onChange={enrolStatusChangeHandler}
                 sx={{ width: "100%" }}
               >
                 {enrolStatus.map((li) => (
