@@ -6,6 +6,7 @@ const initialState = {
   businessList: [],
   businessListOfBusiness: [],
   categoriesOfBusiness: [],
+  coachesOfBusiness: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -25,6 +26,13 @@ export default function reducer(state = initialState, action) {
         categoriesOfBusiness: docs,
         totalPages,
         currentPage,
+      };
+    }
+
+    case businessesActionTypes.GET_COACHES_OF_BUSINESS_SUCCEEDED: {
+      return {
+        ...state,
+        coachesOfBusiness: action.payload,
       };
     }
     default:

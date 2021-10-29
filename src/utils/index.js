@@ -2,3 +2,11 @@ export const objectToArray = (Obj) => {
   let convertedToArray = Object.entries(Obj);
   return convertedToArray;
 };
+
+export const removeItemByIndex = (array, index) => {
+  let arr = [...array];
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+};

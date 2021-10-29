@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -31,17 +31,20 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import plusIcon from "../../assets/icons/icon-add.png";
 import { styled } from "@mui/material/styles";
-import { ShortWeekNames } from "../../helper/constants";
 import Session from "../class-list/session";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
   getBusinessListOfBusiness,
   getCategoriesOfBusiness,
+  getCoachesOfBusiness,
 } from "../../redux/action/businesses-actions";
 import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
 import Charge from "../class-list/charge";
 import { getTermsOfBusiness } from "../../redux/action/terms-actions";
+import { ShortWeekNames } from "../../helper/constants";
+import { addClass } from "../../services/businesses-service";
+import { Redirect } from "react-router";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   // applied to label of all variants
@@ -81,26 +84,11 @@ const ageArray = Array(15)
   .map((_, index) => {
     return index + 1;
   });
-const sessions = Array(1)
-  .fill(1)
-  .map((_, index) => {
-    return {
-      id: index,
-      item: {
-        sessionName: `session ${index}`,
-        day: ShortWeekNames[index % 6],
-        facility: "Gym hall",
-        fullCapacity: 20,
-        waitlistCapacity: 10,
-        coachName: `coach ${index * 2}`,
-      },
-    };
-  });
 
 const AddEditClassModal = (props) => {
+  const { classObj, isEditMode } = props;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(true);
-  const [sessionsBuffer, setSessionsBuffer] = useState(sessions);
   const [page, setPage] = useState(1);
   const [className, setClassName] = useState("");
   const [selectedBussinessId, setSelectedBussinessId] = useState("");
@@ -114,8 +102,26 @@ const AddEditClassModal = (props) => {
   const [selectedTerm, setSelectedTerm] = useState("");
   const [classStartDate, setClassStartDate] = useState("");
   const [classEndDate, setClassEndDate] = useState("");
+  const [classCharges, setClassCharges] = useState([
+    {
+      name: "",
+      amount: "",
+      isMandatory: false,
+      payFrequency: "",
+    },
+  ]);
+  const [classSessions, setClassSessions] = useState([
+    {
+      name: "",
+      dayIndex: -1,
+      facility: "",
+      fullCapacity: "",
+      waitlistCapacity: "",
+      coachId: "",
+    },
+  ]);
 
-  const currentUserBussinesses = useSelector(
+  const currentUserBusinesses = useSelector(
     (state) => state.businesses.businessListOfBusiness
   );
   const categories = useSelector(
@@ -127,21 +133,125 @@ const AddEditClassModal = (props) => {
 
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleChange = (event, value) => {
     setPage(value);
   };
 
+  const handleAddClass = () => {
+    let newClassObject = {
+      name: className,
+      status: selectedStatus,
+      registrationform: selectedConsentForm,
+      businessId: selectedBussinessId,
+      evaluationSchemeId: selectedEvaluationScheme,
+      categoryId: selectedCategory,
+      about: aboutClass,
+      enrolmentControls: [
+        {
+          type: "SELECT",
+          values: ages,
+          name: "AGE",
+        },
+        {
+          type: "SELECT",
+          values: genders,
+          name: "GENDER",
+        },
+      ],
+
+      charges: classCharges.map(
+        ({ name, amount, isMandatory, payFrequency }) => {
+          return {
+            name,
+            amount,
+            mandatory: isMandatory,
+            payFrequency,
+          };
+        }
+      ),
+
+      sessions: classSessions.map((item) => {
+        return {
+          name: item.name,
+          term: {
+            _id: selectedTerm,
+            startDate: classStartDate,
+            endDate: classEndDate,
+          },
+          pattern: {
+            day: ShortWeekNames[item.dayIndex],
+            startTime: "",
+            endTime: "",
+          },
+          coachId: item.coachId,
+          fullcapacity: item.fullCapacity,
+          waitcapacity: item.waitlistCapacity,
+          facility: item.facility,
+        };
+      }),
+    };
+    addClass(newClassObject);
+  };
+
+  const addChargeRow = () => {
+    let newCharges = [...classCharges];
+    newCharges.push({
+      name: "",
+      amount: "",
+      isMandatory: false,
+      payFrequency: "",
+    });
+
+    setClassCharges(newCharges);
+  };
+
+  const addSessionRow = () => {
+    let newSessions = [...classSessions];
+    newSessions.push({
+      name: "",
+      dayIndex: -1,
+      facility: "",
+      fullCapacity: "",
+      waitlistCapacity: "",
+      coachId: "",
+    });
+
+    setClassSessions(newSessions);
+  };
+
+  const populateClassData = useCallback(() => {
+    const {
+      name,
+      businessId,
+      selectedStatus,
+      registrationform,
+      categoryId,
+      evaluationSchemeId,
+    } = classObj;
+    setClassName(name);
+    setSelectedBussinessId(businessId);
+    setSelectedStatus(selectedStatus);
+    setSelectedConsentForm(registrationform);
+    setSelectedCategory(categoryId);
+    setSelectedEvaluationScheme(evaluationSchemeId);
+  }, [classObj]);
+
+  useEffect(() => {
+    console.log("isedit", isEditMode, classObj);
+    if (isEditMode) {
+      populateClassData();
+    }
+  }, [isEditMode, classObj, populateClassData]);
+
   useEffect(() => {
     dispatch(getEvaluationSchemeList());
     dispatch(getBusinessListOfBusiness());
-    setSessionsBuffer(sessions);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {}, [currentUserBussinesses, evaluationSchemeList]);
 
   return (
     <Box>
@@ -185,7 +295,7 @@ const AddEditClassModal = (props) => {
             </HeadingText>
             <CrossIconButton
               onClick={() => {
-                setOpen(false);
+                <Redirect to="/classes" />;
               }}
             />
           </CardRow>
@@ -221,7 +331,7 @@ const AddEditClassModal = (props) => {
                   onChange={(e) => {
                     setClassName(e.target.value);
                   }}
-                ></StyledTextField>
+                />
 
                 <StyledTextField
                   select
@@ -233,11 +343,16 @@ const AddEditClassModal = (props) => {
                     setSelectedBussinessId(businessId);
                     dispatch(getCategoriesOfBusiness(businessId));
                     dispatch(getTermsOfBusiness(businessId));
+                    dispatch(getCoachesOfBusiness(businessId));
                   }}
                 >
-                  {currentUserBussinesses.length ? (
-                    currentUserBussinesses.map((item, index) => {
-                      return <MenuItem value={item._id}>{item.name}</MenuItem>;
+                  {currentUserBusinesses.length ? (
+                    currentUserBusinesses.map(({ _id, name }) => {
+                      return (
+                        <MenuItem value={_id} key={_id}>
+                          {name}
+                        </MenuItem>
+                      );
                     })
                   ) : (
                     <MenuItem value="No options">No options</MenuItem>
@@ -281,10 +396,10 @@ const AddEditClassModal = (props) => {
                   }}
                 >
                   {categories.length ? (
-                    categories.map((item, index) => {
+                    categories.map(({ _id, name }) => {
                       return (
-                        <MenuItem key={index} value={item._id}>
-                          {item.name}
+                        <MenuItem key={_id} value={_id}>
+                          {name}
                         </MenuItem>
                       );
                     })
@@ -303,10 +418,10 @@ const AddEditClassModal = (props) => {
                   }}
                 >
                   {evaluationSchemeList.length ? (
-                    evaluationSchemeList.map((item, index) => {
+                    evaluationSchemeList.map(({ _id, name }) => {
                       return (
-                        <MenuItem key={index} value={item._id}>
-                          {item.name}
+                        <MenuItem key={_id} value={_id}>
+                          {name}
                         </MenuItem>
                       );
                     })
@@ -356,9 +471,9 @@ const AddEditClassModal = (props) => {
                           }}
                         >
                           {ageArray.length ? (
-                            ageArray.map((item, index) => {
+                            ageArray.map((item) => {
                               return (
-                                <MenuItem key={index} value={item}>
+                                <MenuItem key={item} value={item}>
                                   {item}
                                 </MenuItem>
                               );
@@ -378,9 +493,9 @@ const AddEditClassModal = (props) => {
                           }}
                         >
                           {genderArray.length ? (
-                            genderArray.map((item, index) => {
+                            genderArray.map((item) => {
                               return (
-                                <MenuItem key={index} value={item}>
+                                <MenuItem key={item} value={item}>
                                   {item}
                                 </MenuItem>
                               );
@@ -399,8 +514,8 @@ const AddEditClassModal = (props) => {
                 <AccordionContainer>
                   <Accordion defaultExpanded>
                     <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
+                      expandIcon={<ExpandMoreIcon id="collapse-button" />}
+                      aria-controls="collapse-button"
                       id="panel1a-header"
                     >
                       <CardRow
@@ -409,61 +524,79 @@ const AddEditClassModal = (props) => {
                           width: "100%",
                           padding: "0 10px 0 0",
                         }}
+                        onClick={() => {}}
                       >
                         <Typography>Charges</Typography>
-                        <GradientButton>
+                        <GradientButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            addChargeRow();
+                          }}
+                        >
                           <ImgIcon alt="plus">{plusIcon}</ImgIcon>Add Charge
                         </GradientButton>
                       </CardRow>
                     </AccordionSummary>
-                    <AccordionDetails
-                      sx={{
-                        padding: 0,
-                        backgroundColor: "rgba(219, 216, 227, 0.5)",
-                      }}
-                    >
-                      <TableMui>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Charge Name</TableCell>
-                            <TableCell>Amount</TableCell>
-                            <TableCell>Mandatory</TableCell>
-                            <TableCell>Pay Frequency</TableCell>
-                            <TableCell>Action</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <Charge />
-                      </TableMui>
-                      <CardRow
+                    {classCharges.length ? (
+                      <AccordionDetails
                         sx={{
-                          justifyContent: "center",
+                          padding: 0,
+                          backgroundColor: "rgba(219, 216, 227, 0.5)",
                         }}
                       >
-                        <StyledPagination
+                        <TableMui>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Charge Name</TableCell>
+                              <TableCell>Amount</TableCell>
+                              <TableCell>Mandatory</TableCell>
+                              <TableCell>Pay Frequency</TableCell>
+                              <TableCell>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          {classCharges.map((item, index) => {
+                            return (
+                              <Charge
+                                key={index}
+                                data={item}
+                                index={index}
+                                setChargeData={setClassCharges}
+                                charges={classCharges}
+                              />
+                            );
+                          })}
+                        </TableMui>
+                        <CardRow
                           sx={{
-                            "& ul": {
-                              justifyContent: "center",
-                              margin: "15px",
-                              "& .MuiButtonBase-root": {
-                                width: 30,
-                                height: 30,
-                                backgroundColor: "#fff",
-                                borderRadius: (theme) =>
-                                  theme.shape.borderRadiuses.primary,
-                              },
-                              "& .Mui-selected": {
-                                backgroundColor: (theme) =>
-                                  theme.palette.darkIndigo.main,
-                                color: "#fff",
-                              },
-                            },
+                            justifyContent: "center",
                           }}
-                          count={5}
-                          page={page}
-                          onChange={handleChange}
-                        />
-                      </CardRow>
-                    </AccordionDetails>
+                        >
+                          <StyledPagination
+                            sx={{
+                              "& ul": {
+                                justifyContent: "center",
+                                margin: "15px",
+                                "& .MuiButtonBase-root": {
+                                  width: 30,
+                                  height: 30,
+                                  backgroundColor: "#fff",
+                                  borderRadius: (theme) =>
+                                    theme.shape.borderRadiuses.primary,
+                                },
+                                "& .Mui-selected": {
+                                  backgroundColor: (theme) =>
+                                    theme.palette.darkIndigo.main,
+                                  color: "#fff",
+                                },
+                              },
+                            }}
+                            count={5}
+                            page={page}
+                            onChange={handleChange}
+                          />
+                        </CardRow>
+                      </AccordionDetails>
+                    ) : null}
                   </Accordion>
                 </AccordionContainer>
               </CardRow>
@@ -478,7 +611,12 @@ const AddEditClassModal = (props) => {
                     >
                       <CardRow sx={{ width: "100%", padding: "0 10px 0 0" }}>
                         <Typography>Class Schedule</Typography>
-                        <GradientButton>
+                        <GradientButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            addSessionRow();
+                          }}
+                        >
                           <ImgIcon alt="plus">{plusIcon}</ImgIcon>Add Session
                         </GradientButton>
                       </CardRow>
@@ -489,7 +627,7 @@ const AddEditClassModal = (props) => {
                         backgroundColor: "rgba(219, 216, 227, 0.5)",
                       }}
                     >
-                      <Box sx={{ padding: "15px 15px 0" }}>
+                      <Box sx={{ padding: "15px" }}>
                         {/* <CardRow>
                           <Outputs arr={objectToArray(sessionId)} />
                         </CardRow> */}
@@ -510,12 +648,8 @@ const AddEditClassModal = (props) => {
                             sx={{ width: "55%" }}
                           >
                             {termsOfBusiness.length ? (
-                              termsOfBusiness.map((item, index) => {
-                                return (
-                                  <MenuItem value={item._id}>
-                                    {item.label}
-                                  </MenuItem>
-                                );
+                              termsOfBusiness.map(({ _id, label }) => {
+                                return <MenuItem value={_id}>{label}</MenuItem>;
                               })
                             ) : (
                               <MenuItem value="">No terms</MenuItem>
@@ -534,31 +668,44 @@ const AddEditClassModal = (props) => {
                             onChange={(date) => setClassEndDate(date)}
                           />
                         </CardRow>
-                        <CardRow>
-                          <Description
-                            sx={{
-                              fontSize: "16px",
-                              fontWeight: "bold",
-                              margin: "17px 0px 5px 0px",
-                            }}
-                          >
-                            Sessions
-                          </Description>
-                        </CardRow>
                       </Box>
-                      {sessionsBuffer.length &&
-                        sessionsBuffer.map((session, index) => {
-                          return (
-                            <Session data={session} index={index} key={index} />
-                          );
-                        })}
+                      {classSessions.length ? (
+                        <>
+                          <CardRow>
+                            <Description
+                              sx={{
+                                fontSize: "16px",
+                                fontWeight: "bold",
+                                margin: "17px 0px 5px 15px",
+                              }}
+                            >
+                              Sessions
+                            </Description>
+                          </CardRow>
+                          {classSessions.map((session, index) => {
+                            return (
+                              <Session
+                                key={index}
+                                data={session}
+                                index={index}
+                                sessions={classSessions}
+                                setSessionData={setClassSessions}
+                              />
+                            );
+                          })}
+                        </>
+                      ) : null}
                     </AccordionDetails>
                   </Accordion>
                 </AccordionContainer>
               </CardRow>
 
               <CardRow sx={{ justifyContent: "flex-start" }}>
-                <GradientButton size="large" sx={{ marginRight: "1%" }}>
+                <GradientButton
+                  size="large"
+                  sx={{ marginRight: "1%" }}
+                  onClick={handleAddClass}
+                >
                   Save
                 </GradientButton>
                 <GradientButton size="large" discard>
