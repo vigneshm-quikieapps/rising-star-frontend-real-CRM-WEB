@@ -23,7 +23,7 @@ import {
   memberEnrolmentSuspend,
   memberEnrolmentReturnFromSuspend,
 } from "../../redux/action/memberAction";
-import { getBusinessList } from "../../redux/action/businesses-actions";
+import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -101,10 +101,11 @@ const MemberEnrollment = () => {
   const { id } = useParams();
 
   const enrollmentList = useSelector((state) => state.members.enrolmentList);
-  const businessList = useSelector((state) => state.businesses.businessList);
   const currentMember = useSelector((state) => state.members.currentMember);
-
-  const businessId = businessList[0]?._id;
+  const businessListofLoggedInUser = useSelector(
+    (state) => state.businesses.businessListOfBusiness
+  );
+  const businessId = businessListofLoggedInUser[0]?._id;
 
   const [selectedBusiness, setselectedBusiness] = useState("");
 
@@ -125,8 +126,10 @@ const MemberEnrollment = () => {
   const [expanded, setExpanded] = React.useState("panel1");
 
   useEffect(() => {
-    dispatch(getBusinessList());
+    dispatch(getBusinessListOfBusiness());
   }, [dispatch]);
+
+  console.log(businessListofLoggedInUser);
 
   useEffect(() => {
     dispatch(getMemberById(id));
@@ -275,7 +278,7 @@ const MemberEnrollment = () => {
               value={selectedBusiness}
               onChange={businessChangeHandler}
             >
-              {businessList.map((li, index) => (
+              {businessListofLoggedInUser.map((li, index) => (
                 <MenuItem key={`B${index}`} value={`${li._id}`}>
                   {li.name}
                 </MenuItem>

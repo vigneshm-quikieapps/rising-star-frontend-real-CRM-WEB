@@ -15,6 +15,7 @@ import Accordion from "../../components/accordion";
 import Checkbox from "../../components/styled-checkbox";
 import Button from "../../components/gradient-button";
 import Status from "../../components/status";
+import TopNav from "./components/top-nav";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -23,8 +24,9 @@ import { useEffect } from "react";
 import {
   getMemberProgressRecord,
   getMemberById,
+  updateMultipleStatusOnMemberProgressRecord,
 } from "../../redux/action/memberAction";
-import { getBusinessList } from "../../redux/action/businesses-actions";
+import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
 
 const StyleBox = styled(Box)(({ theme }) => ({
@@ -45,30 +47,116 @@ const StyleBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const checkStatusConverter = (data) => {
-  if (data === "NOT_STARTED") {
-    return false;
-  } else if (data === "AWARDED") {
-    return true;
-  } else if (data === "IN_PROGRESS") {
-    return true;
-  }
+const convertStatusToArray = (statusObject) => {
+  const statusArray = Object.keys(statusObject).map((id) => ({
+    // _id: id,
+    // status: statusObject[id],
+    skillId: id,
+    levelId: statusObject[id].levelId,
+    status: statusObject[id].status,
+  }));
+  return statusArray;
 };
 
-const LevelsComponent = ({ skillData, skillIndex }) => {
+const SkillsComponent = ({
+  skillId,
+  levelId,
+  name,
+  status,
+  skillIndex,
+  setNewSkills,
+}) => {
   const [checkbox, setCheckboxes] = useState({
     attainedCheckBox: false,
     inprogressCheckbox: false,
+    checkboxId: "",
   });
 
   useEffect(() => {
-    setCheckboxes((previous) => ({
+    setNewSkills((previous) => ({
       ...previous,
-      attainedCheckBox: checkStatusConverter(skillData.status),
-      inprogressCheckbox: skillData.s,
+      // [skillId]: statusConverter(
+      //   checkbox.attainedCheckBox,
+      //   checkbox.inprogressCheckbox
+      // ),
+      [skillId]: {
+        levelId: levelId,
+        status: statusConverter(
+          checkbox.attainedCheckBox,
+          checkbox.inprogressCheckbox
+        ),
+      },
     }));
+  }, [checkbox, setNewSkills, skillId, levelId]);
+
+  const checkStatusConverter = useCallback((data) => {
+    if (data === "NOT_STARTED") {
+      return {
+        attained: false,
+        progress: false,
+      };
+    } else if (data === "AWARDED") {
+      return {
+        attained: true,
+        progress: false,
+      };
+    } else if (data === "IN_PROGRESS") {
+      return {
+        attained: false,
+        progress: true,
+      };
+    }
   }, []);
 
+  const statusConverter = (attained, progress) => {
+    if (attained && !progress) return "AWARDED";
+    if (!attained && progress) return "IN_PROGRESS";
+    if (!attained && !progress) return "NOT_STARTED";
+  };
+
+  useEffect(() => {
+    const { attained, progress } = checkStatusConverter(status);
+    setCheckboxes((previous) => ({
+      ...previous,
+      attainedCheckBox: attained,
+      inprogressCheckbox: progress,
+      checkboxId: skillId,
+    }));
+  }, [checkStatusConverter, status, skillId]);
+
+  useEffect(() => {
+    // const { attained, progress } = checkStatusConverter(status);
+    if (checkbox.attainedCheckBox && checkbox.inprogressCheckbox) {
+      setCheckboxes((previous) => ({
+        ...previous,
+        attainedCheckBox: !checkbox.attainedCheckBox,
+        inprogressCheckbox: checkbox.inprogressCheckbox,
+      }));
+    }
+    // else {
+    //   setCheckboxes((previous) => ({
+    //     ...previous,
+    //     inprogressCheckbox: !checkbox.inprogressCheckbox,
+    //     attainedCheckBox: checkbox.attainedCheckBox,
+    //   }));
+    // }
+  }, [checkStatusConverter, checkbox]);
+
+  const checkboxHandler = (name, skillId) => {
+    if (name !== "attained") {
+      setCheckboxes({
+        ...checkbox,
+        attainedCheckBox: !checkbox.attainedCheckBox,
+      });
+    } else {
+      setCheckboxes({
+        ...checkbox,
+        inprogressCheckbox: !checkbox.inprogressCheckbox,
+      });
+    }
+  };
+
+  // console.log(checkbox);
   return (
     <Box
       key={skillIndex}
@@ -79,21 +167,21 @@ const LevelsComponent = ({ skillData, skillIndex }) => {
         justifyContent: "space-between",
       }}
     >
-      <Textfield value={skillData.name} sx={{ width: "80%" }} />
+      <Textfield value={name} sx={{ width: "80%" }} />
       <Box>
         <Checkbox
           sx={{
             margin: "0 1.3rem",
           }}
-          checked={checkbox}
-          // onChange={() => levelsOnChange(li._id, "attained")}
+          checked={checkbox.attainedCheckBox}
+          onChange={(e) => checkboxHandler("progress", skillId, e)}
         />
         <Checkbox
           sx={{
             margin: "0 1.3rem",
           }}
-          checked={checkbox}
-          // onChange={() => levelsOnChange(li._id, "inprogress")}
+          checked={checkbox.inprogressCheckbox}
+          onChange={() => checkboxHandler("attained", skillId)}
         />
       </Box>
     </Box>
@@ -104,19 +192,23 @@ const MemberEvaluations = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const progressRecord = useSelector((state) => state.members.progressRecord);
-  const businessList = useSelector((state) => state.businesses.businessList);
   const currentMember = useSelector((state) => state.members.currentMember);
   const evalautionSchemeList = useSelector(
     (state) => state.evaluation.evaluationList
   );
+  const businessListofLoggedInUser = useSelector(
+    (state) => state.businesses.businessListOfBusiness
+  );
   const [businessId, setBusinessId] = useState("");
   const [evaluationSchemeId, setEvaluationSchemeId] = useState("");
   const [levels, setLevels] = useState([]);
-  const [updateLevels, setUpdateLevels] = useState({
-    progressId: "",
-    levels: [],
-  });
-  const [checkbox, setCheckbox] = useState();
+  const [newSkills, setNewSkills] = useState({});
+  const [expanded, setExpanded] = useState("panel1");
+
+  const handleChange = (panel) => (event, newExpanded) => {
+    // console.log(newExpanded);
+    setExpanded(newExpanded ? panel : true);
+  };
 
   const params = useCallback(
     (id, currentMember, businessList, evalautionSchemeList) => {
@@ -135,7 +227,7 @@ const MemberEvaluations = () => {
   );
 
   useEffect(() => {
-    dispatch(getBusinessList());
+    dispatch(getBusinessListOfBusiness());
     dispatch(getEvaluationSchemeList());
   }, [dispatch]);
 
@@ -144,18 +236,10 @@ const MemberEvaluations = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    setBusinessId(businessList[0]?._id);
+    setBusinessId(businessListofLoggedInUser[0]?._id);
     setEvaluationSchemeId(evalautionSchemeList[0]?._id);
     setLevels(progressRecord.levels);
-    // checkboxStatePopulate(progressRecord.levels);
-    setUpdateLevels((previous) => ({
-      ...previous,
-      progressId: `${progressRecord._id}`,
-      // levels: [
-
-      // ]
-    }));
-  }, [businessList, evalautionSchemeList, progressRecord]);
+  }, [businessListofLoggedInUser, evalautionSchemeList, progressRecord]);
 
   useEffect(() => {
     params(id, currentMember, businessId, evaluationSchemeId).then((res) => {
@@ -170,54 +254,72 @@ const MemberEvaluations = () => {
     });
   }, [currentMember, dispatch, businessId, evaluationSchemeId, id, params]);
 
-  // console.log(levels);
-  // console.log(businessId);
-
   const businessChangeHandler = (e) => {
     setBusinessId(e.target.value);
   };
 
-  // const levelsOnChange = (id, progressName, checked) => {
-  //   // console.log(id, progressName);
-  //   setCheckbox(!checkbox);
-  //   console.log(id, progressName, !checkbox);
-  //   const perviousId = id;
-  //   // const existId = updateLevels.levels.some(li => li._id === id)
+  const evaluationChangeHandler = (e) => {
+    setBusinessId(e.target.value);
+  };
 
-  //   if (id === perviousId) {
-  //     updateLevels.levels.find(li => li._id === id).status = !checkbox;
-  //   }else{
-  //     setUpdateLevels((previous) => ({
-  //       ...previous,
-  //       levels: [
-  //         ...levels,
-  //         {
-  //           _id: id,
-  //           // status: "",
-  //         },
-  //       ],
-  //     }));
-  //   }
-  // };
+  const saveHandler = () => {
+    const data = {
+      progressId: progressRecord._id,
+      skills: convertStatusToArray(newSkills),
+    };
+
+    console.log(data);
+    dispatch(updateMultipleStatusOnMemberProgressRecord(data));
+  };
+
+  const levelStatusIndicator = (status) => {
+    if (status === "AWARDED") {
+      return {
+        color: "green",
+        status: "Awarded",
+      };
+    } else if (status === "IN_PROGRESS") {
+      return {
+        color: "yellow",
+        status: "In Progress",
+      };
+    } else if (status === "NOT_STARTED") {
+      return {
+        color: "red",
+        status: "Not Started",
+      };
+    }
+  };
 
   return (
     <Box sx={{ width: "100%", paddingBottom: "20px" }}>
+      <TopNav />
       <StyleBox>
         <Typography variant="h4" component="div">
-          Ayman Mogal
+          {currentMember ? currentMember.member.name : "- - -"}
         </Typography>
         <Typography variant="subtitle2" component="div">
           Student/Member
         </Typography>
         <Grid container>
           <Grid item xs={3}>
-            <Output title="Full Name" description="Ayan Mogal" />
+            <Output
+              title="Full Name"
+              description={currentMember ? currentMember.member.name : "- - -"}
+            />
           </Grid>
-          <Grid item xs={3}>
+          {/* <Grid item xs={3}>
             <Output title="Member ID" description="000000" />
-          </Grid>
+          </Grid> */}
           <Grid item xs={3}>
-            <Output title="Club Membership Number" description="ZPGL0008" />
+            <Output
+              title="Club Membership Number"
+              description={
+                currentMember
+                  ? currentMember.member.membership[0].clubMembershipId
+                  : "- - -"
+              }
+            />
           </Grid>
         </Grid>
         <Grid container sx={{ marginTop: "10px" }} spacing={2}>
@@ -230,7 +332,7 @@ const MemberEvaluations = () => {
               sx={{ width: "100%" }}
               onChange={businessChangeHandler}
             >
-              {businessList.map((li, index) => (
+              {businessListofLoggedInUser.map((li, index) => (
                 <MenuItem key={`B${index}`} value={`${li._id}`}>
                   {li.name}
                 </MenuItem>
@@ -244,10 +346,11 @@ const MemberEvaluations = () => {
               label="Evaluation Scheme"
               sx={{ width: "100%" }}
               value={evaluationSchemeId}
+              onChange={evaluationChangeHandler}
             >
               {evalautionSchemeList.map((li, index) => (
                 <MenuItem key={`EVA${index}`} value={`${li._id}`}>
-                  {li._id}
+                  {li.name}
                 </MenuItem>
               ))}
             </Textfield>
@@ -255,57 +358,70 @@ const MemberEvaluations = () => {
         </Grid>
       </StyleBox>
       {levels &&
-        levels.map((data, index) => (
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Level {index + 1}</Typography>
-            </AccordionSummary>
-            <AccordionDetails sx={{ padding: 0, paddingBottom: "10px" }}>
-              <Box sx={{ padding: " 5px 17px" }}>
-                <Output title="Status" />
-                <Status status="green" title="Awarded" />
-              </Box>
-              <Box
-                sx={{
-                  padding: " 10px 17px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  borderTop: `1px solid #e9e7f1`,
-                  borderBottom: `1px solid #e9e7f1`,
-                }}
-              >
-                <Typography variant="subtitle2" component="div">
-                  Skills
-                </Typography>
+        levels.map((data, index) => {
+          const status = levelStatusIndicator(data.status);
+          return (
+            <Accordion
+              key={`LS${index}`}
+              expanded={expanded === `panel${index + 1}`}
+              onChange={handleChange(`panel${index + 1}`)}
+              sx={{ marginBottom: "16px" }}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Level {index + 1}</Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ padding: 0, paddingBottom: "10px" }}>
+                <Box sx={{ padding: " 5px 17px" }}>
+                  <Output title="Status" />
+                  <Status status={status.color} title={status.status} />
+                </Box>
                 <Box
                   sx={{
+                    padding: " 10px 17px",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
+                    borderTop: `1px solid #e9e7f1`,
+                    borderBottom: `1px solid #e9e7f1`,
                   }}
                 >
                   <Typography variant="subtitle2" component="div">
-                    Attained
+                    Skills
                   </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    component="div"
-                    sx={{ marginLeft: "10px" }}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    In Progress
-                  </Typography>
+                    <Typography variant="subtitle2" component="div">
+                      Attained
+                    </Typography>
+                    <Typography
+                      variant="subtitle2"
+                      component="div"
+                      sx={{ marginLeft: "10px" }}
+                    >
+                      In Progress
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-              {data.skills.map((skillData, skillIndex) => (
-                <LevelsComponent
-                  skillData={skillData}
-                  skillIndex={skillIndex}
-                />
-              ))}
-            </AccordionDetails>
-          </Accordion>
-        ))}
+                {data.skills.map((skillData, skillIndex) => (
+                  <SkillsComponent
+                    key={`SR${skillIndex}`}
+                    skillId={skillData._id}
+                    levelId={data._id}
+                    name={skillData.name}
+                    status={skillData.status}
+                    skillIndex={skillIndex}
+                    setNewSkills={setNewSkills}
+                  />
+                ))}
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
 
       <Box
         sx={{
@@ -316,7 +432,9 @@ const MemberEvaluations = () => {
           paddingLeft: 0,
         }}
       >
-        <Button sx={{ textTransform: "none" }}>Save</Button>
+        <Button sx={{ textTransform: "none" }} onClick={saveHandler}>
+          Save
+        </Button>
         <Button discard sx={{ marginLeft: "10px", textTransform: "none" }}>
           Cancel
         </Button>
