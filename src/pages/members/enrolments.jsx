@@ -19,10 +19,13 @@ import { useEffect } from "react";
 import {
   getMemberEnrolmentList,
   getMemberById,
+} from "../../redux/action/memberAction";
+import {
   memberEnrolmentDropped,
   memberEnrolmentSuspend,
   memberEnrolmentReturnFromSuspend,
-} from "../../redux/action/memberAction";
+  transferEnrolment,
+} from "../../redux/action/enrolmentAction";
 import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 import { getSessionInAclassByTermId } from "../../redux/action/sessionAction";
 
@@ -97,6 +100,13 @@ const StatusConverter = (data) => {
   }
 };
 
+const removeDuplicateClass = (array, key) => {
+  return array.reduce((arr, item) => {
+    const removed = arr.filter((i) => i[key] !== item[key]);
+    return [...removed, item];
+  }, []);
+};
+
 const MemberEnrollment = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -115,11 +125,15 @@ const MemberEnrollment = () => {
 
   const [date, setDate] = useState("");
 
+  const [selectedSession, setSelectedSession] = useState("");
+
+  const [textfieldDisabled, setTextfieldDisabled] = useState(false);
+
   const [enrolmentDetailsInput, setEnrolmentDetailsInput] = useState({
     enrolmentId: "",
     className: "",
     term: "",
-    session: "",
+    // session: "",
     enrolStatus: "",
     dropReason: "",
     timming: "",
@@ -154,8 +168,8 @@ const MemberEnrollment = () => {
   const classfetchPrarams = useCallback((classId, termId) => {
     return new Promise((resolve, reject) => {
       const data = {
-        termId: classId,
-        classId: termId,
+        termId: termId,
+        classId: classId,
       };
       resolve(data);
     });
@@ -171,41 +185,62 @@ const MemberEnrollment = () => {
 
   useEffect(() => {
     classfetchPrarams(
-      enrolmentDetailsInput.className,
-      enrolmentDetailsInput.term
+      enrollmentList[0]?.classId,
+      enrollmentList[0]?.session.term._id
     ).then((res) => {
-      console.log(res);
-      // if (res.classId && res.termId) {
-      //   dispatch(getSessionInAclassByTermId(res));
-      // }
+      if (res.classId && res.termId) {
+        dispatch(getSessionInAclassByTermId(res));
+      }
     });
-  }, [dispatch, classfetchPrarams, enrolmentDetailsInput]);
+  }, [dispatch, classfetchPrarams, enrollmentList]);
+
+  useEffect(() => {
+    sessionList && setSelectedSession(sessionList[0]?._id);
+  }, [sessionList]);
+
+  useEffect(() => {
+    const filterEnrolmentList = enrollmentList.filter(
+      (enrolment) => enrolment.session._id === sessionList[0]?._id
+    );
+
+    if (filterEnrolmentList.length > 0) {
+      setEnrolmentDetailsInput((previous) => ({
+        ...previous,
+        enrolStatus: `${StatusConverter(
+          filterEnrolmentList[0]?.enrolledStatus
+        )}`,
+        dropReason: `${StatusConverter(
+          filterEnrolmentList[0]?.discontinuationReason
+        )}`,
+        timming: `${timeConverter(
+          filterEnrolmentList[0]?.session.pattern[0].day,
+          filterEnrolmentList[0]?.session.pattern[0].startTime,
+          filterEnrolmentList[0]?.session.pattern[0].endTime
+        )}`,
+        enrolDateTime: `${dateConverter(
+          filterEnrolmentList[0]?.registeredDate
+        )}`,
+        dropDateTime: `${dateConverter(filterEnrolmentList[0]?.droppedDate)}`,
+      }));
+      setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
+      setTextfieldDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
+          ? true
+          : false
+      );
+    }
+  }, [enrollmentList, sessionList]);
 
   useEffect(() => {
     setEnrolmentDetailsInput((previous) => ({
       ...previous,
-      enrolmentId: `${enrollmentList[0]?._id}`,
       className: `${enrollmentList[0]?.classId}`,
       term: `${enrollmentList[0]?.session.term._id}`,
-      session: `${enrollmentList[0] ? enrollmentList[0].session.name : ""}`,
-      enrolStatus: `${StatusConverter(enrollmentList[0]?.enrolledStatus)}`,
-      dropReason: `${StatusConverter(
-        enrollmentList[0]?.discontinuationReason
-      )}`,
-      timming: `${timeConverter(
-        enrollmentList[0]?.session.pattern[0].day,
-        enrollmentList[0]?.session.pattern[0].startTime,
-        enrollmentList[0]?.session.pattern[0].endTime
-      )}`,
-      enrolDateTime: `${dateConverter(enrollmentList[0]?.registeredDate)}`,
-      dropDateTime: `${dateConverter(enrollmentList[0]?.droppedDate)}`,
     }));
-    setDate(new Date(`${enrollmentList[0]?.startDate}`));
   }, [enrollmentList]);
 
   const businessChangeHandler = (e) => {
     setselectedBusiness(e.target.value);
-    console.log(e.target.value);
   };
 
   const inputOnChangeHandler = (e) => {
@@ -217,36 +252,60 @@ const MemberEnrollment = () => {
   };
 
   const classChangehandler = (e) => {
-    console.log(e.target);
     const tragetId = e.target.value;
-    const newClassDetails = enrollmentList.filter(
-      (li) => li.class.name === tragetId
+
+    dispatch(
+      getSessionInAclassByTermId({
+        classId: tragetId,
+        termId: enrolmentDetailsInput.term,
+      })
     );
-    setEnrolmentDetailsInput({
-      ...enrolmentDetailsInput,
-      // term: `${enrollmentList[0]._id}`,
-      session: `${newClassDetails.session.name}`,
-      enrolStatus: `${StatusConverter(newClassDetails.enrolledStatus)}`,
-      dropReason: `${`${StatusConverter(
-        newClassDetails.discontinuationReason
-      )}`}`,
-      timming: `${timeConverter(
-        newClassDetails.session.pattern[0].day,
-        newClassDetails.session.pattern[0].startTime,
-        newClassDetails.session.pattern[0].endTime
-      )}`,
-      enrolDateTime: `${dateConverter(newClassDetails.registeredDate)}`,
-      dropDateTime: `${dateConverter(newClassDetails.droppedDate)}`,
-    });
-    setDate(new Date(`${newClassDetails.startDate}`));
   };
 
-  const sessionChangeHandler = () => {
-    setEnrolmentDetailsInput({
-      ...enrolmentDetailsInput,
-      enrolStatus: "Enroled",
-      dropReason: "",
-    });
+  const sessionChangeHandler = (e) => {
+    setSelectedSession(e.target.value);
+
+    const filterEnrolmentList = enrollmentList.filter(
+      (enrolment) => enrolment.session._id === e.target.value
+    );
+
+    if (filterEnrolmentList.length > 0) {
+      setEnrolmentDetailsInput((previous) => ({
+        ...previous,
+        enrolStatus: `${StatusConverter(
+          filterEnrolmentList[0]?.enrolledStatus
+        )}`,
+        dropReason: `${StatusConverter(
+          filterEnrolmentList[0]?.discontinuationReason
+        )}`,
+        timming: `${timeConverter(
+          filterEnrolmentList[0]?.session.pattern[0].day,
+          filterEnrolmentList[0]?.session.pattern[0].startTime,
+          filterEnrolmentList[0]?.session.pattern[0].endTime
+        )}`,
+        enrolDateTime: `${dateConverter(
+          filterEnrolmentList[0]?.registeredDate
+        )}`,
+        dropDateTime: `${dateConverter(filterEnrolmentList[0]?.droppedDate)}`,
+      }));
+      setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
+      setTextfieldDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
+          ? true
+          : false
+      );
+    } else {
+      setEnrolmentDetailsInput((previous) => ({
+        ...previous,
+        enrolStatus: "",
+        dropReason: "",
+        timming: "",
+        enrolDateTime: "",
+        dropDateTime: "",
+      }));
+      setDate(null);
+      setTextfieldDisabled(true);
+    }
   };
 
   const enrolStatusChangeHandler = (e) => {
@@ -274,6 +333,10 @@ const MemberEnrollment = () => {
   // Return from suspend, sent request to return from suspend api
 
   const saveClickHandler = (enrolID) => {
+    const transferData = {
+      enrolmentId: enrolmentDetailsInput.enrolmentId,
+      newSessionId: selectedSession,
+    };
     if (
       enrolmentDetailsInput.enrolStatus === "Dropped" &&
       enrolmentDetailsInput.dropReason === "Dropped"
@@ -294,6 +357,12 @@ const MemberEnrollment = () => {
       enrolmentDetailsInput.dropReason === ""
     ) {
       dispatch(memberEnrolmentReturnFromSuspend(enrolID));
+    } else if (
+      enrolmentDetailsInput.enrolStatus === "" &&
+      enrolmentDetailsInput.dropReason === ""
+    ) {
+      // dispatch(transferEnrolment(enrolID));
+      console.log(transferData);
     }
   };
 
@@ -301,7 +370,6 @@ const MemberEnrollment = () => {
     setExpanded(newExpanded ? panel : false);
   };
 
-  console.log(sessionList);
   return (
     <Box sx={{ width: "100%" }}>
       <TopNav />
@@ -370,7 +438,6 @@ const MemberEnrollment = () => {
               sx={{ textTransform: "none" }}
               onClick={(e) => {
                 e.stopPropagation();
-                console.log("i got clicked");
               }}
             >
               Add a new enrolment
@@ -402,7 +469,7 @@ const MemberEnrollment = () => {
                 value={enrolmentDetailsInput.className}
                 onChange={classChangehandler}
               >
-                {enrollmentList?.map((li) => (
+                {removeDuplicateClass(enrollmentList, "classId")?.map((li) => (
                   <MenuItem key={li.class.name} value={li.class._id}>
                     {li.class.name}
                   </MenuItem>
@@ -418,22 +485,20 @@ const MemberEnrollment = () => {
                 label="Session"
                 variant="filled"
                 sx={{ width: "100%" }}
-                value={enrolmentDetailsInput.session}
+                value={selectedSession}
                 onChange={sessionChangeHandler}
               >
-                <MenuItem
+                {/* <MenuItem
                   key={`BS${enrolmentDetailsInput.session}`}
                   value={`${enrolmentDetailsInput.session}`}
                 >
                   {enrolmentDetailsInput.session}
-                </MenuItem>
-                {/* {enrollmentList?.map((data) =>
-                  data.sessions.map((li, index) => (
-                    <MenuItem key={`BS${li.session.name}`} value={`${li.session._id}`}>
-                      {li.session.name}
-                    </MenuItem>
-                  ))
-                )} */}
+                </MenuItem> */}
+                {sessionList?.map((li) => (
+                  <MenuItem key={`BS${li.name}`} value={`${li._id}`}>
+                    {li.name}
+                  </MenuItem>
+                ))}
               </TextField>
             </Grid>
           </Grid>
@@ -447,6 +512,7 @@ const MemberEnrollment = () => {
                 value={enrolmentDetailsInput.enrolStatus}
                 onChange={enrolStatusChangeHandler}
                 sx={{ width: "100%" }}
+                disabled={textfieldDisabled}
               >
                 {enrolStatus.map((li) => (
                   <MenuItem key={`ES${li.name}`} value={li.value}>
@@ -464,6 +530,7 @@ const MemberEnrollment = () => {
                 value={enrolmentDetailsInput.dropReason}
                 onChange={inputOnChangeHandler}
                 sx={{ width: "100%" }}
+                disabled={textfieldDisabled}
               >
                 {dropReasonStatus.map((li) => (
                   <MenuItem key={`DR${li.name}`} value={li.value}>

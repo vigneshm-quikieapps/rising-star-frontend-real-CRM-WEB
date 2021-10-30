@@ -28,24 +28,3 @@ export const updateMultipleStatusOnMemberProgressRecord = (params) => {
     payload: params,
   };
 };
-
-export const memberEnrolmentDropped = (id) => {
-  return {
-    type: memberActionTypes.MEMBER_ENROLMENT_DROPPED,
-    payload: id,
-  };
-};
-
-export const memberEnrolmentSuspend = (id) => {
-  return {
-    type: memberActionTypes.MEMBER_ENROLMENT_SUSPEND_SUCCEEDED,
-    payload: id,
-  };
-};
-
-export const memberEnrolmentReturnFromSuspend = (id) => {
-  return {
-    type: memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND,
-    payload: id,
-  };
-};
