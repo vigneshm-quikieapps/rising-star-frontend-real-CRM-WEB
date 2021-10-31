@@ -16,32 +16,57 @@ import {
 } from "../../components";
 import MemberList from "./components/members-table";
 
+const operators = {
+  STARTS_WITH: "STARTS_WITH",
+  EQUALS_TO: "EQUALS_TO",
+  NOT_EQUALS: "NOT_EQUALS",
+};
+
+const initialValuesState = { name: "", parentName: "", email: "", phone: "" };
+const startsWith = operators.STARTS_WITH;
+const initialOperatorState = {
+  name: startsWith,
+  parent: startsWith,
+  email: startsWith,
+  phone: startsWith,
+};
+
+const OperatorField = ({ area, name, value, onChange }) => (
+  <TextField
+    select
+    sx={{ gridArea: area }}
+    label="Operator"
+    data-name={name}
+    value={value}
+    onChange={onChange}
+  >
+    <MenuItem value="EQUALS">Equals to</MenuItem>
+    <MenuItem value="STARTS_WITH">Starts with</MenuItem>
+  </TextField>
+);
+
 const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
-  const [status, setStatus] = useState("ACTIVE");
-  const [business, setBusiness] = useState("");
-  const [nameOperator, setNameOperator] = useState("STARTS_WITH");
-  const [statusOperator, setStatusOperator] = useState("EQUALS");
+  const [valuesState, setValuesState] = useState(initialValuesState);
+  const [operatorState, setOperatorState] = useState(initialOperatorState);
 
-  const nameChangeHandler = (e) => setName(e.target.value);
-  const statusChangeHandler = (e) => setStatus(e.target.value);
-  const businessChangeHandler = (e) => setBusiness(e.target.value);
-  const nameOperatorChangeHandler = (e) => setNameOperator(e.target.value);
-  const statusOperatorChangeHandler = (e) => setStatusOperator(e.target.value);
+  const valuesChangeHandler = (e) => ({
+    ...valuesState,
+    [e.target.name]: e.target.value,
+  });
 
-  const filters = useMemo(
-    () => [
-      { field: "name", type: nameOperator, value: name },
-      { field: "businessId", type: "BY_ID", value: business },
-      { field: "status", type: statusOperator, value: status },
-    ],
-    [name, nameOperator, status, statusOperator, business]
-  );
+  const operatorsChangeHandler = (e) => ({
+    ...operatorState,
+    [e.target["data-name"]]: e.target.value,
+  });
 
-  useEffect(() => {
-    setFilters(filters);
-  }, [filters, setFilters]);
+  const filters = useMemo(() => {
+    Object.keys(valuesState).map((field) => ({
+      field,
+      type: operatorState[field],
+      value: valuesState[field],
+    }));
+  }, [valuesState, operatorState]);
 
   const searchHandler = () => {
     dispatch(getMemberListAction({ filters }));
@@ -51,17 +76,19 @@ const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
     open && (
       <Box
         sx={{
-          display: open ? "flex" : "none",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          "&>*": { width: "30%", marginBottom: "16px !important" },
+          display: open ? "grid" : "none",
+          gridTemplateAreas: `"basicInput basicInput  basicSearch"
+                              "name       nameOp      phone"
+                              "parent     parentOp    phoneOp"
+                              "email      emailOp     advanced"`,
+          gridTemplateColumns: "1fr 1fr 1fr",
+          gap: "10px",
         }}
       >
         <TextField
-          placeholder="search class by name"
+          placeholder="search member by name"
           sx={{
-            width: "calc(100% - 220px)",
-            mr: "20px",
+            gridArea: "basicInput",
             bgcolor: (theme) => theme.palette.highlight.main,
           }}
           InputProps={{
@@ -75,66 +102,60 @@ const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
           disabled
         />
         <Button
+          sx={{ gridArea: "basicSearch" }}
           active
-          sx={{ width: "200px !important", justifySelf: "flex-end" }}
           onClick={() => setOpen(false)}
         >
           Basic Search
         </Button>
         <TextField
-          label="Class Name"
-          onChange={nameChangeHandler}
-          value={name}
-          sx={{ width: "calc(50% - 120px)" }}
+          sx={{ gridArea: "name" }}
+          label="Member Name"
+          name="name"
+          onChange={valuesChangeHandler}
+          value={valuesState.name}
         />
         <TextField
-          select
-          onChange={statusChangeHandler}
-          value={status}
-          label="Status"
-          sx={{ width: "calc(50% - 120px)" }}
-          variant="outlined"
-        >
-          <MenuItem value="ACTIVE">Active</MenuItem>
-          <MenuItem value="INACTIVE">In-Active</MenuItem>
-        </TextField>
+          sx={{ gridArea: "parent" }}
+          label="Parent / Carer Name"
+          name="parentName"
+          onChange={valuesChangeHandler}
+          value={valuesState.parentName}
+        />
+        <TextField
+          sx={{ gridArea: "email" }}
+          label="Parent / Carer Email"
+          name="email"
+          onChange={valuesChangeHandler}
+          value={valuesState.email}
+        />
+        <TextField
+          sx={{ gridArea: "phone" }}
+          label="Parent / Carer Phone"
+          name="phone"
+          onChange={valuesChangeHandler}
+          value={valuesState.phone}
+        />
+        {Object.keys(operatorState).map((name) => (
+          <OperatorField
+            name={name}
+            area={name + "Op"}
+            value={operatorState[name]}
+            onChange={operatorsChangeHandler}
+          />
+        ))}
         <TextField
           select
-          sx={{ width: "200px" }}
-          label="Business Name"
-          value={business}
-          onChange={businessChangeHandler}
-        >
-          {businessList.map((business) => (
-            <MenuItem key={business._id} value={business._id}>
-              {business.name}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          select
-          sx={{ width: "calc(50% - 120px)" }}
-          label="Operator"
-          value={nameOperator}
-          onChange={nameOperatorChangeHandler}
+          sx={{ gridArea: "nameOp" }}
+          label="Name Operator"
+          data-name="name"
+          value={operatorState.name}
+          onChange={operatorsChangeHandler}
         >
           <MenuItem value="EQUALS">Equals to</MenuItem>
           <MenuItem value="STARTS_WITH">Starts with</MenuItem>
         </TextField>
-        <TextField
-          select
-          sx={{ width: "calc(50% - 120px)" }}
-          label="Operator"
-          value={statusOperator}
-          onChange={statusOperatorChangeHandler}
-        >
-          <MenuItem value="EQUALS">Equals to</MenuItem>
-          <MenuItem value="NOT_EQUALS">Not equals to</MenuItem>
-        </TextField>
-        <GradientButton
-          sx={{ width: "200px !important" }}
-          onClick={searchHandler}
-        >
+        <GradientButton sx={{ gridArea: "advanced" }} onClick={searchHandler}>
           Search
         </GradientButton>
       </Box>
