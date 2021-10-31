@@ -1,4 +1,5 @@
 /// classes v1.0.0
+/// Add logic to avoid requesting class list twice on mount
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -242,12 +243,13 @@ const Classes = () => {
     dispatch(getBusinessListOfBusiness());
   }, [dispatch]);
 
+  // Do not remove
+  // used for pagination in basic and advanced search
   useEffect(() => {
     setFilters([{ field: "name", type: "STARTS_WITH", value: searchValue }]);
   }, [searchValue]);
 
   useEffect(() => {
-    // if (basicSearchResults.length === 1) return;
     const searchTimer = setTimeout(() => {
       dispatch(
         getClassListAction({
