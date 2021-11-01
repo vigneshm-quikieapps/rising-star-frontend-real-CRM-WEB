@@ -44,6 +44,7 @@ const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
     [name, nameOperator, status, statusOperator, business]
   );
 
+  // Do not remove, used for pagination
   useEffect(() => {
     setFilters(filters);
   }, [filters, setFilters]);
