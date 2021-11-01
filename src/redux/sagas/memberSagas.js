@@ -5,6 +5,7 @@ import {
   fetchgetAllErolmentOfAMember,
   fetchgetProgresRecordOfAMember,
   updateMulitpleStatusOnProgresRecordOfAMember,
+  axiosGetConsentByClubmembership,
 } from "../../services/memberServices";
 
 import { startLoading, stopLoading } from "../action/shared-actions";
@@ -124,6 +125,36 @@ export function* watchupdateMulitpleStatusOnProgressRecordOfMember() {
   );
 }
 
+export function* getConsentRecordOfAMember(action) {
+  try {
+    yield put(startLoading());
+    const consentRecord = yield call(
+      axiosGetConsentByClubmembership,
+      action.payload
+    );
+    yield put({
+      type: memberActionTypes.CONSENT_RECORD_OF_MEMBER_SUCCEEDED,
+      payload: consentRecord,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the member consent record",
+    });
+  }
+}
+
+//watchingGeneratedFunction
+export function* watchgetConsentRecordOfAMember() {
+  yield takeEvery(
+    memberActionTypes.CONSENT_RECORD_OF_MEMBER,
+    getConsentRecordOfAMember
+  );
+}
+
 export default function* memberSagas() {
   yield all([
     watchGetMember(),
@@ -131,5 +162,6 @@ export default function* memberSagas() {
     watchgetAllErolmentOfAMember(),
     watchgetProgresRecordOfAMember(),
     watchupdateMulitpleStatusOnProgressRecordOfMember(),
+    watchgetConsentRecordOfAMember(),
   ]);
 }

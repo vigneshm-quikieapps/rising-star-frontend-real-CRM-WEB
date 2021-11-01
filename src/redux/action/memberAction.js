@@ -28,3 +28,10 @@ export const updateMultipleStatusOnMemberProgressRecord = (params) => {
     payload: params,
   };
 };
+
+export const getMemberConsentRecord = (id) => {
+  return {
+    type: memberActionTypes.CONSENT_RECORD_OF_MEMBER,
+    payload: id,
+  };
+};

@@ -141,7 +141,7 @@ const MemberEnrollment = () => {
     dropDateTime: "",
   });
 
-  const [expanded, setExpanded] = React.useState("panel1");
+  const [expanded, setExpanded] = useState("panel1");
 
   useEffect(() => {
     dispatch(getBusinessListOfBusiness());
@@ -199,13 +199,18 @@ const MemberEnrollment = () => {
   }, [sessionList]);
 
   useEffect(() => {
+    const filterSessionList = sessionList.filter(
+      (session) => session._id === enrollmentList[0]?.session._id
+    );
+
     const filterEnrolmentList = enrollmentList.filter(
-      (enrolment) => enrolment.session._id === sessionList[0]?._id
+      (enrolment) => enrolment.session._id === filterSessionList[0]?._id
     );
 
     if (filterEnrolmentList.length > 0) {
       setEnrolmentDetailsInput((previous) => ({
         ...previous,
+        enrolmentId: `${filterEnrolmentList[0]?._id}`,
         enrolStatus: `${StatusConverter(
           filterEnrolmentList[0]?.enrolledStatus
         )}`,
@@ -224,7 +229,8 @@ const MemberEnrollment = () => {
       }));
       setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
       setTextfieldDisabled(
-        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped" ||
+          "Suspend"
           ? true
           : false
       );
@@ -265,6 +271,10 @@ const MemberEnrollment = () => {
   const sessionChangeHandler = (e) => {
     setSelectedSession(e.target.value);
 
+    const filterSessionList = sessionList.filter(
+      (session) => session._id === e.target.value
+    );
+
     const filterEnrolmentList = enrollmentList.filter(
       (enrolment) => enrolment.session._id === e.target.value
     );
@@ -272,6 +282,7 @@ const MemberEnrollment = () => {
     if (filterEnrolmentList.length > 0) {
       setEnrolmentDetailsInput((previous) => ({
         ...previous,
+        enrolmentId: `${filterEnrolmentList[0]?._id}`,
         enrolStatus: `${StatusConverter(
           filterEnrolmentList[0]?.enrolledStatus
         )}`,
@@ -289,19 +300,23 @@ const MemberEnrollment = () => {
         dropDateTime: `${dateConverter(filterEnrolmentList[0]?.droppedDate)}`,
       }));
       setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
-      setTextfieldDisabled(
-        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
-          ? true
-          : false
-      );
+      // setTextfieldDisabled(
+      //   StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
+      //     ? true
+      //     : false
+      // );
     } else {
       setEnrolmentDetailsInput((previous) => ({
         ...previous,
         enrolStatus: "",
         dropReason: "",
-        timming: "",
-        enrolDateTime: "",
-        dropDateTime: "",
+        timming: `${timeConverter(
+          filterSessionList[0]?.pattern[0].day,
+          filterSessionList[0]?.pattern[0].startTime,
+          filterSessionList[0]?.pattern[0].endTime
+        )}`,
+        enrolDateTime: "- - -",
+        dropDateTime: "- - -",
       }));
       setDate(null);
       setTextfieldDisabled(true);
@@ -334,7 +349,7 @@ const MemberEnrollment = () => {
 
   const saveClickHandler = (enrolID) => {
     const transferData = {
-      enrolmentId: enrolmentDetailsInput.enrolmentId,
+      enrolmentId: enrolID,
       newSessionId: selectedSession,
     };
     if (
@@ -358,11 +373,11 @@ const MemberEnrollment = () => {
     ) {
       dispatch(memberEnrolmentReturnFromSuspend(enrolID));
     } else if (
-      enrolmentDetailsInput.enrolStatus === "" &&
+      enrolmentDetailsInput.enrolStatus === "Enrolled" &&
       enrolmentDetailsInput.dropReason === ""
     ) {
-      // dispatch(transferEnrolment(enrolID));
-      console.log(transferData);
+      dispatch(transferEnrolment(transferData));
+      // console.log(transferData);
     }
   };
 
@@ -487,6 +502,7 @@ const MemberEnrollment = () => {
                 sx={{ width: "100%" }}
                 value={selectedSession}
                 onChange={sessionChangeHandler}
+                disabled={textfieldDisabled}
               >
                 {/* <MenuItem
                   key={`BS${enrolmentDetailsInput.session}`}
@@ -511,7 +527,9 @@ const MemberEnrollment = () => {
                 name="enrolStatus"
                 value={enrolmentDetailsInput.enrolStatus}
                 onChange={enrolStatusChangeHandler}
-                sx={{ width: "100%" }}
+                sx={{
+                  width: "100%",
+                }}
                 disabled={textfieldDisabled}
               >
                 {enrolStatus.map((li) => (
@@ -550,6 +568,7 @@ const MemberEnrollment = () => {
                 label="Start Date"
                 date={date}
                 onChange={(newDate) => setDate(newDate)}
+                disabled={textfieldDisabled}
               />
             </Grid>
             <Grid item xs={3}>
