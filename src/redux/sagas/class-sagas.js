@@ -2,7 +2,7 @@ import { put, takeEvery, call, all } from "redux-saga/effects";
 import {
   getClasses,
   deleteClassByID,
-  axiosGetClassById,
+  getClassById,
 } from "../../services/class-services";
 import { startLoading, stopLoading } from "../action/shared-actions";
 import { classActionTypes, sharedActionTypes } from "../types";
@@ -54,13 +54,28 @@ export function* deleteClassSaga() {
   yield takeEvery(classActionTypes.DELETE_CLASS, deleteClass);
 }
 
-export function* watchGetClassById() {
-  yield takeEvery(classActionTypes.GET_CLASS_BY_ID_SAGA, getClassById);
+export function* getSingleClassById(action) {
+  try {
+    yield put(startLoading());
+    const classObj = yield call(getClassById, action.payload);
+    yield put({
+      type: classActionTypes.GET_CLASS_BY_ID_SUCCEEDED,
+      payload: classObj,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(stopLoading());
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the class by ID",
+    });
+  }
 }
 
-export function* getClassById(action) {
-  const classObj = yield call(axiosGetClassById, action.payload);
-  yield put({ type: classActionTypes.GET_CLASS_BY_ID, payload: classObj });
+export function* watchGetClassById() {
+  yield takeEvery(classActionTypes.GET_CLASS_BY_ID, getSingleClassById);
 }
 
 export default function* classSagas() {

@@ -9,5 +9,5 @@ export const deleteClass = (id) => {
 };
 
 export const getClassById = (id) => {
-  return { type: classActionTypes.GET_CLASS_BY_ID_SAGA, payload: id };
+  return { type: classActionTypes.GET_CLASS_BY_ID, payload: id };
 };

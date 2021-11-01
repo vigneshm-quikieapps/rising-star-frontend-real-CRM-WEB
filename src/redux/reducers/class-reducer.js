@@ -27,7 +27,7 @@ export default function reducer(state = initialState, action) {
         classList: updatedClassList,
       };
     }
-    case classActionTypes.GET_CLASS_BY_ID: {
+    case classActionTypes.GET_CLASS_BY_ID_SUCCEEDED: {
       return { ...state, class: action.payload };
     }
     default:

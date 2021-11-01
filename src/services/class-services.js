@@ -21,7 +21,7 @@ export async function deleteClassByID(id) {
   }
 }
 
-export async function axiosGetClassById(id) {
+export async function getClassById(id) {
   try {
     const api = `classes/${id}`;
     const res = await axiosInstance.get(api);
