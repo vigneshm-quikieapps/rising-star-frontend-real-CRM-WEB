@@ -6,6 +6,7 @@ export { default as IconButton } from "./icon-button";
 export { default as ImgIcon } from "./img-icon";
 export { default as Notifications } from "./notifications";
 export { default as Output } from "./output";
+export { default as Outputs } from "./outputs";
 export { default as Pagination } from "./pagination";
 export { default as Button } from "./simple-button";
 export { default as Status } from "./status";
