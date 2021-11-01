@@ -53,12 +53,13 @@ const OperatorField = ({ area, onChange, name, ...otherProps }) => {
   );
 };
 
-const AdvancedSearch = ({ open, setOpen, setFilters }) => {
+const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
   const dispatch = useDispatch();
   const [valuesState, setValuesState] = useState(initialValuesState);
   const [operatorsState, setOperatorsState] = useState(initialOperatorsState);
 
   const valuesChangeHandler = (e) => {
+    if (e.target.name === "name") setName(e.target.value);
     setValuesState((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -128,7 +129,7 @@ const AdvancedSearch = ({ open, setOpen, setFilters }) => {
           label="Member Name"
           name="name"
           onChange={valuesChangeHandler}
-          value={valuesState.name}
+          value={name}
         />
         <TextField
           sx={{ gridArea: "parent" }}
@@ -171,7 +172,7 @@ const AdvancedSearch = ({ open, setOpen, setFilters }) => {
 const Members = () => {
   const dispatch = useDispatch();
   const mounted = useRef(false);
-  const [advancedSearch, setAdvancedSearch] = useState(false);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [filters, setFilters] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const membersState = useSelector((state) => state.members);
@@ -237,6 +238,7 @@ const Members = () => {
 
   useEffect(() => {
     if (!mounted.current) return (mounted.current = true);
+    if (showAdvancedSearch) return;
     const searchTimer = setTimeout(() => {
       dispatch(
         getMemberListAction({
@@ -245,7 +247,7 @@ const Members = () => {
       );
     }, 500);
     return () => clearTimeout(searchTimer);
-  }, [searchValue, dispatch]);
+  }, [searchValue, showAdvancedSearch, dispatch]);
 
   return (
     <Box>
@@ -262,7 +264,7 @@ const Members = () => {
           Manage all members here
         </Typography>
       </Box>
-      <Box sx={{ display: advancedSearch ? "none" : "flex", mb: 1 }}>
+      <Box sx={{ display: showAdvancedSearch ? "none" : "flex", mb: 1 }}>
         <TextField
           onChange={searchValueChangeHandler}
           value={searchValue}
@@ -277,14 +279,16 @@ const Members = () => {
           }}
           variant="outlined"
         />
-        <Button onClick={() => setAdvancedSearch(true)} active>
+        <Button onClick={() => setShowAdvancedSearch(true)} active>
           Advanced Search
         </Button>
       </Box>
       <AdvancedSearch
-        open={advancedSearch}
-        setOpen={setAdvancedSearch}
+        open={showAdvancedSearch}
+        setOpen={setShowAdvancedSearch}
         setFilters={setFilters}
+        name={searchValue}
+        setName={setSearchValue}
       />
       <MemberList
         list={items}
