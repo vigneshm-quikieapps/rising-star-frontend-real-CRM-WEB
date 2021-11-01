@@ -1,7 +1,6 @@
-/// classes v1.0.0
-/// Add logic to avoid requesting class list twice on mount
+/// Classes v1.0.0
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Box, InputAdornment, MenuItem, Typography } from "@mui/material";
@@ -150,6 +149,7 @@ const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
 
 const Classes = () => {
   const dispatch = useDispatch();
+  const mounted = useRef(false);
   const [advancedSearch, setAdvancedSearch] = useState(false);
   const [filters, setFilters] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -250,6 +250,7 @@ const Classes = () => {
   }, [searchValue]);
 
   useEffect(() => {
+    if (!mounted.current) return (mounted.current = true);
     const searchTimer = setTimeout(() => {
       dispatch(
         getClassListAction({
