@@ -50,9 +50,9 @@ const ClassAttendance = () => {
     const { business } = classObj;
     const classInfoObject = {
       // "Class ID": "DL39020458",
-      "City / Town": business.city,
-      "Post Code": business.postcode,
-      Status: business.status,
+      "City / Town": business?.city,
+      "Post Code": business?.postcode,
+      Status: business?.status,
     };
     setClassInfoArray(objectToArray(classInfoObject));
   };
@@ -93,10 +93,10 @@ const ClassAttendance = () => {
     <Box>
       <Card>
         <CardRow>
-          <HeadingText>{classObj && classObj.name}</HeadingText>
+          <HeadingText>{classObj?.name}</HeadingText>
         </CardRow>
 
-        <SubHeadingText>{classObj && classObj.business.name}</SubHeadingText>
+        <SubHeadingText>{classObj?.business?.name}</SubHeadingText>
 
         <CardRow>
           <Outputs arr={classInfoArray} />

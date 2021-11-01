@@ -31,14 +31,3 @@ export async function getCoachListOfBusiness(id) {
     throw error;
   }
 }
-
-export async function addClass(data) {
-  try {
-    const api = `classes`;
-    const response = await axiosInstance.post(api, data);
-    const res = response.data;
-    return res;
-  } catch (error) {
-    throw error;
-  }
-}

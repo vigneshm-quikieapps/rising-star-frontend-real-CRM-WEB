@@ -24,6 +24,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   MenuItem,
+  TableBody,
   TableCell,
   TableHead,
   TableRow,
@@ -42,8 +43,8 @@ import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
 import Charge from "../class-list/charge";
 import { getTermsOfBusiness } from "../../redux/action/terms-actions";
 import { ShortWeekNames } from "../../helper/constants";
-import { addClass } from "../../services/businesses-service";
-import { Redirect } from "react-router";
+import { useHistory } from "react-router";
+import { addClass } from "../../redux/action/class-actions";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   // applied to label of all variants
@@ -87,20 +88,21 @@ const ageArray = Array(15)
 const AddEditClassModal = (props) => {
   const { classObj, isEditMode } = props;
   const dispatch = useDispatch();
+  const history = useHistory();
   const [open, setOpen] = useState(true);
   const [page, setPage] = useState(1);
   const [className, setClassName] = useState("");
-  const [selectedBussinessId, setSelectedBussinessId] = useState("");
+  const [selectedBusinessId, setSelectedBusinessId] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedConsentForm, setSelectedConsentForm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedEvaluationScheme, setSelectedEvaluationScheme] = useState("");
   const [aboutClass, setAboutClass] = useState("");
-  const [genders, setGenders] = useState([]);
-  const [ages, setAges] = useState([]);
+  const [genders, setGenders] = useState([""]);
+  const [ages, setAges] = useState([1]);
   const [selectedTerm, setSelectedTerm] = useState("");
-  const [classStartDate, setClassStartDate] = useState("");
-  const [classEndDate, setClassEndDate] = useState("");
+  const [classStartDate, setClassStartDate] = useState(new Date());
+  const [classEndDate, setClassEndDate] = useState(new Date());
   const [classCharges, setClassCharges] = useState([
     {
       name: "",
@@ -117,6 +119,8 @@ const AddEditClassModal = (props) => {
       fullCapacity: "",
       waitlistCapacity: "",
       coachId: "",
+      startTime: new Date(),
+      endTime: new Date(),
     },
   ]);
 
@@ -133,6 +137,7 @@ const AddEditClassModal = (props) => {
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
+    history.push("/classes");
     setOpen(false);
   };
 
@@ -145,7 +150,7 @@ const AddEditClassModal = (props) => {
       name: className,
       status: selectedStatus,
       registrationform: selectedConsentForm,
-      businessId: selectedBussinessId,
+      businessId: selectedBusinessId,
       evaluationSchemeId: selectedEvaluationScheme,
       categoryId: selectedCategory,
       about: aboutClass,
@@ -174,26 +179,36 @@ const AddEditClassModal = (props) => {
       ),
 
       sessions: classSessions.map((item) => {
+        const {
+          name,
+          coachId,
+          fullCapacity,
+          waitlistCapacity,
+          facility,
+          dayIndex,
+          startTime,
+          endTime,
+        } = item;
         return {
-          name: item.name,
+          name: name,
           term: {
             _id: selectedTerm,
-            startDate: classStartDate,
-            endDate: classEndDate,
+            startDate: classStartDate.toISOString().split("T")[0],
+            endDate: classEndDate.toISOString().split("T")[0],
           },
           pattern: {
-            day: ShortWeekNames[item.dayIndex],
-            startTime: "",
-            endTime: "",
+            day: ShortWeekNames[dayIndex],
+            startTime,
+            endTime,
           },
-          coachId: item.coachId,
-          fullcapacity: item.fullCapacity,
-          waitcapacity: item.waitlistCapacity,
-          facility: item.facility,
+          coachId: coachId,
+          fullcapacity: fullCapacity,
+          waitcapacity: waitlistCapacity,
+          facility: facility,
         };
       }),
     };
-    addClass(newClassObject);
+    dispatch(addClass(newClassObject));
   };
 
   const addChargeRow = () => {
@@ -232,7 +247,7 @@ const AddEditClassModal = (props) => {
       evaluationSchemeId,
     } = classObj;
     setClassName(name);
-    setSelectedBussinessId(businessId);
+    setSelectedBusinessId(businessId);
     setSelectedStatus(selectedStatus);
     setSelectedConsentForm(registrationform);
     setSelectedCategory(categoryId);
@@ -240,7 +255,6 @@ const AddEditClassModal = (props) => {
   }, [classObj]);
 
   useEffect(() => {
-    console.log("isedit", isEditMode, classObj);
     if (isEditMode) {
       populateClassData();
     }
@@ -290,11 +304,7 @@ const AddEditClassModal = (props) => {
             <HeadingText id="modal-modal-title" variant="h6" component="h2">
               Class Definition and Schedule
             </HeadingText>
-            <CrossIconButton
-              onClick={() => {
-                <Redirect to="/classes" />;
-              }}
-            />
+            <CrossIconButton onClick={handleClose} />
           </CardRow>
           <Box
             sx={{
@@ -333,11 +343,11 @@ const AddEditClassModal = (props) => {
                 <StyledTextField
                   select
                   sx={{ width: "30%" }}
-                  label="Bussiness Name*"
-                  value={selectedBussinessId}
+                  label="Business Name*"
+                  value={selectedBusinessId}
                   onChange={(e) => {
                     let businessId = e.target.value;
-                    setSelectedBussinessId(businessId);
+                    setSelectedBusinessId(businessId);
                     dispatch(getCategoriesOfBusiness(businessId));
                     dispatch(getTermsOfBusiness(businessId));
                     dispatch(getCoachesOfBusiness(businessId));
@@ -551,17 +561,19 @@ const AddEditClassModal = (props) => {
                               <TableCell>Action</TableCell>
                             </TableRow>
                           </TableHead>
-                          {classCharges.map((item, index) => {
-                            return (
-                              <Charge
-                                key={index}
-                                data={item}
-                                index={index}
-                                setChargeData={setClassCharges}
-                                charges={classCharges}
-                              />
-                            );
-                          })}
+                          <TableBody>
+                            {classCharges.map((item, index) => {
+                              return (
+                                <Charge
+                                  key={index}
+                                  data={item}
+                                  index={index}
+                                  setChargeData={setClassCharges}
+                                  charges={classCharges}
+                                />
+                              );
+                            })}
+                          </TableBody>
                         </TableMui>
                         <CardRow
                           sx={{
@@ -646,7 +658,11 @@ const AddEditClassModal = (props) => {
                           >
                             {termsOfBusiness.length ? (
                               termsOfBusiness.map(({ _id, label }) => {
-                                return <MenuItem value={_id}>{label}</MenuItem>;
+                                return (
+                                  <MenuItem key={label} value={_id}>
+                                    {label}
+                                  </MenuItem>
+                                );
                               })
                             ) : (
                               <MenuItem value="">No terms</MenuItem>
@@ -656,7 +672,9 @@ const AddEditClassModal = (props) => {
                           <DatePicker
                             label="Start Date"
                             date={classStartDate}
-                            onChange={(date) => setClassStartDate(date)}
+                            onChange={(date) => {
+                              setClassStartDate(date);
+                            }}
                           />
 
                           <DatePicker
@@ -705,7 +723,7 @@ const AddEditClassModal = (props) => {
                 >
                   Save
                 </GradientButton>
-                <GradientButton size="large" discard>
+                <GradientButton size="large" discard onClick={handleClose}>
                   Discard
                 </GradientButton>
               </CardRow>

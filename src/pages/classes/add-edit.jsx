@@ -15,7 +15,7 @@ const ClassAddEdit = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
-    dispatch(getClassById(id));
+    id && dispatch(getClassById(id));
   }, [dispatch, id]);
 
   useEffect(() => {

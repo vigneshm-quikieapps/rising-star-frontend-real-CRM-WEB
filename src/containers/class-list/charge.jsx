@@ -9,11 +9,13 @@ import { styled } from "@mui/material/styles";
 import deleteIcon from "./../../assets/icons/icon-delete.png";
 import { removeItemByIndex } from "../../utils";
 
-const PayFrequncyOptions = [
+const PayFrequencyOptions = [
   {
+    value: "MONTHLY",
     name: "Monthly",
   },
   {
+    value: "TRIAL",
     name: "trial",
   },
 ];
@@ -114,9 +116,9 @@ const Charge = (props) => {
           value={data.payFrequency}
           onChange={handleFrequencyChange}
         >
-          {PayFrequncyOptions.map((item, index) => {
+          {PayFrequencyOptions.map((item, index) => {
             return (
-              <MenuItem key={index} value={item.name}>
+              <MenuItem key={index} value={item.value}>
                 {item.name}
               </MenuItem>
             );
