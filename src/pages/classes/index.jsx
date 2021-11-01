@@ -21,9 +21,15 @@ import {
 } from "../../redux/action/class-actions";
 import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 
-const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
+const AdvancedSearch = ({
+  open,
+  setOpen,
+  businessList = [],
+  setFilters,
+  name,
+  setName,
+}) => {
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
   const [status, setStatus] = useState("ACTIVE");
   const [business, setBusiness] = useState("");
   const [nameOperator, setNameOperator] = useState("STARTS_WITH");
@@ -151,7 +157,7 @@ const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
 const Classes = () => {
   const dispatch = useDispatch();
   const mounted = useRef(false);
-  const [advancedSearch, setAdvancedSearch] = useState(false);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [filters, setFilters] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const classesState = useSelector((state) => state.classes);
@@ -248,6 +254,7 @@ const Classes = () => {
 
   useEffect(() => {
     if (!mounted.current) return (mounted.current = true);
+    if (showAdvancedSearch) return;
     const searchTimer = setTimeout(() => {
       dispatch(
         getClassListAction({
@@ -256,7 +263,7 @@ const Classes = () => {
       );
     }, 500);
     return () => clearTimeout(searchTimer);
-  }, [searchValue, dispatch]);
+  }, [searchValue, showAdvancedSearch, dispatch]);
 
   return (
     <Box>
@@ -273,7 +280,7 @@ const Classes = () => {
           Manage your business here
         </Typography>
       </Box>
-      <Box sx={{ display: advancedSearch ? "none" : "flex", mb: 1 }}>
+      <Box sx={{ display: showAdvancedSearch ? "none" : "flex", mb: 1 }}>
         <TextField
           onChange={searchValueChangeHandler}
           value={searchValue}
@@ -288,15 +295,17 @@ const Classes = () => {
           }}
           variant="outlined"
         />
-        <Button onClick={() => setAdvancedSearch(true)} active>
+        <Button onClick={() => setShowAdvancedSearch(true)} active>
           Advanced Search
         </Button>
       </Box>
       <AdvancedSearch
-        open={advancedSearch}
-        setOpen={setAdvancedSearch}
+        open={showAdvancedSearch}
+        setOpen={setShowAdvancedSearch}
         businessList={businesses}
         setFilters={setFilters}
+        name={searchValue}
+        setName={setSearchValue}
       />
       <ClassList list={items} pagination={pagination} onAdd={addClassHandler} />
     </Box>
