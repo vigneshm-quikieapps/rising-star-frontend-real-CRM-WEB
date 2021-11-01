@@ -64,8 +64,8 @@ export const navItems = [
     items: [
       {
         id: "2-1",
-        title: "Definitions",
-        urlPath: "/classes/definitions",
+        title: "Definition",
+        urlPath: "/classes/definition",
         disabled: true,
       },
       {

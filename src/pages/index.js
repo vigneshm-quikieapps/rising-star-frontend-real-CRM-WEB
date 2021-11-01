@@ -1,7 +1,7 @@
 export { default as Dashboard } from "./dashboard";
 export { default as Login } from "./login";
 export { default as Classes } from "./classes";
-export { default as ClassDefinitions } from "./classes/definitions";
+export { default as ClassDefinition } from "./classes/definition";
 export { default as ClassEnrolments } from "./classes/enrolments";
 export { default as ClassAttendance } from "./classes/attendance";
 export { default as ClassPayments } from "./classes/payments";

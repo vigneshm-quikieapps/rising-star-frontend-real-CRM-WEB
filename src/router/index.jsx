@@ -4,7 +4,7 @@ import {
   Dashboard,
   Login,
   Classes,
-  ClassDefinitions,
+  ClassDefinition,
   ClassEnrolments,
   ClassAttendance,
   ClassPayments,
@@ -40,7 +40,7 @@ const MainRouter = () => (
       </Route>
       <Route path="/classes/definition/:id" exact>
         <MainLayout>
-          <ClassDefinitions />
+          <ClassDefinition />
         </MainLayout>
       </Route>
       <Route path="/classes/enrolments/:id" exact>
