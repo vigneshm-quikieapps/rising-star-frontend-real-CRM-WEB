@@ -35,7 +35,6 @@ import Session from "../class-list/session";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
-  getBusinessListOfBusiness,
   getCategoriesOfBusiness,
   getCoachesOfBusiness,
 } from "../../redux/action/businesses-actions";
@@ -122,7 +121,7 @@ const AddEditClassModal = (props) => {
   ]);
 
   const currentUserBusinesses = useSelector(
-    (state) => state.businesses.businessListOfBusiness
+    (state) => state.businesses.businessList
   );
   const categories = useSelector(
     (state) => state.businesses.categoriesOfBusiness
@@ -249,9 +248,7 @@ const AddEditClassModal = (props) => {
 
   useEffect(() => {
     dispatch(getEvaluationSchemeList());
-    dispatch(getBusinessListOfBusiness());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   return (
     <Box>

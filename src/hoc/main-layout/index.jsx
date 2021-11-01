@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { Divider, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
+import { getBusinessList } from "../../redux/action/businesses-actions";
 import Header from "./header";
 import Footer from "./footer";
 import SideNav from "./side-nav";
@@ -37,8 +39,13 @@ const NavHeader = (
 );
 
 const MainLayout = ({ children }) => {
+  const dispatch = useDispatch();
   const [navOpen, setNavOpen] = useState(true);
   const toggleNav = () => setNavOpen((open) => !open);
+
+  useEffect(() => {
+    dispatch(getBusinessList());
+  }, [dispatch]);
 
   return (
     <>

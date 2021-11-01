@@ -28,85 +28,57 @@ const MainRouter = () => (
       <Route path="/login" exact>
         <Login />
       </Route>
-      <Route path="/" exact>
-        <MainLayout>
-          <Dashboard />
-        </MainLayout>
-      </Route>
-      <Route path="/classes" exact>
-        <MainLayout>
-          <Classes />
-        </MainLayout>
-      </Route>
-      <Route path="/classes/definition/:id" exact>
-        <MainLayout>
-          <ClassDefinition />
-        </MainLayout>
-      </Route>
-      <Route path="/classes/enrolments/:id" exact>
-        <MainLayout>
-          <ClassEnrolments />
-        </MainLayout>
-      </Route>
-      <Route path="/classes/attendance/:id" exact>
-        <MainLayout>
-          <ClassAttendance />
-        </MainLayout>
-      </Route>
-      <Route path="/classes/payments/:id" exact>
-        <MainLayout>
-          <ClassPayments />
-        </MainLayout>
-      </Route>
-      <Route path="/classes/add/:id" exact>
-        <MainLayout>
-          <ClassAddEdit />
-        </MainLayout>
-      </Route>
-      <Route path="/classes/add" exact>
-        <MainLayout>
-          <ClassAddEdit />
-        </MainLayout>
-      </Route>
-      <Route path="/members" exact>
-        <MainLayout>
-          <Members />
-        </MainLayout>
-      </Route>
-      <Route path="/members/info/:id" exact>
-        <MainLayout>
-          <MembersInfo />
-        </MainLayout>
-      </Route>
-      <Route path="/members/enrolments/:id" exact>
-        <MainLayout>
-          <MembersEnrollments />
-        </MainLayout>
-      </Route>
-      <Route path="/members/consent/:id" exact>
-        <MainLayout>
-          <MembersConsent />
-        </MainLayout>
-      </Route>
-      <Route path="/members/evaluations/:id" exact>
-        <MainLayout>
-          <MembersEvaluations />
-        </MainLayout>
-      </Route>
-      <Route path="/members/finance/:id" exact>
-        <MainLayout>
-          <MembersFinance />
-        </MainLayout>
-      </Route>
       <Redirect from="/setup" to="/setup/term" exact />
-      <Route path="/setup/term" exact>
+      <Route>
         <MainLayout>
-          <SetupTerm />
-        </MainLayout>
-      </Route>
-      <Route path="/setup/paymentUpload" exact>
-        <MainLayout>
-          <SetupPaymentUpload />
+          <Route path="/" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/classes" exact>
+            <Classes />
+          </Route>
+          <Route path="/classes/definition/:id" exact>
+            <ClassDefinition />
+          </Route>
+          <Route path="/classes/enrolments/:id" exact>
+            <ClassEnrolments />
+          </Route>
+          <Route path="/classes/attendance/:id" exact>
+            <ClassAttendance />
+          </Route>
+          <Route path="/classes/payments/:id" exact>
+            <ClassPayments />
+          </Route>
+          <Route path="/classes/add/:id" exact>
+            <ClassAddEdit />
+          </Route>
+          <Route path="/classes/add" exact>
+            <ClassAddEdit />
+          </Route>
+          <Route path="/members" exact>
+            <Members />
+          </Route>
+          <Route path="/members/info/:id" exact>
+            <MembersInfo />
+          </Route>
+          <Route path="/members/enrolments/:id" exact>
+            <MembersEnrollments />
+          </Route>
+          <Route path="/members/consent/:id" exact>
+            <MembersConsent />
+          </Route>
+          <Route path="/members/evaluations/:id" exact>
+            <MembersEvaluations />
+          </Route>
+          <Route path="/members/finance/:id" exact>
+            <MembersFinance />
+          </Route>
+          <Route path="/setup/term" exact>
+            <SetupTerm />
+          </Route>
+          <Route path="/setup/paymentUpload" exact>
+            <SetupPaymentUpload />
+          </Route>
         </MainLayout>
       </Route>
       <Route>

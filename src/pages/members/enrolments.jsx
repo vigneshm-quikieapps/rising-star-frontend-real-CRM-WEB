@@ -23,7 +23,6 @@ import {
   memberEnrolmentSuspend,
   memberEnrolmentReturnFromSuspend,
 } from "../../redux/action/memberAction";
-import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 import { getSessionInAclassByTermId } from "../../redux/action/sessionAction";
 
 const StyleBox = styled(Box)(({ theme }) => ({
@@ -104,7 +103,7 @@ const MemberEnrollment = () => {
   const enrollmentList = useSelector((state) => state.members.enrolmentList);
   const currentMember = useSelector((state) => state.members.currentMember);
   const businessListofLoggedInUser = useSelector(
-    (state) => state.businesses.businessListOfBusiness
+    (state) => state.businesses.businessList
   );
   const sessionList = useSelector(
     (state) => state.sessions.sessionListInAclassByterm
@@ -128,10 +127,6 @@ const MemberEnrollment = () => {
   });
 
   const [expanded, setExpanded] = React.useState("panel1");
-
-  useEffect(() => {
-    dispatch(getBusinessListOfBusiness());
-  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getMemberById(id));

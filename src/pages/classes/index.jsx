@@ -19,7 +19,6 @@ import {
   getClassList as getClassListAction,
   deleteClass,
 } from "../../redux/action/class-actions";
-import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 
 const AdvancedSearch = ({
   open,
@@ -163,7 +162,7 @@ const Classes = () => {
   const classesState = useSelector((state) => state.classes);
   const { classList, totalPages, currentPage } = classesState;
   const businesses = useSelector(
-    (state) => state.businesses.businessListOfBusiness
+    (state) => state.businesses.businessList
   );
   const history = useHistory();
 
@@ -249,7 +248,6 @@ const Classes = () => {
 
   useEffect(() => {
     dispatch(getClassListAction({ page: 1 }));
-    dispatch(getBusinessListOfBusiness());
   }, [dispatch]);
 
   useEffect(() => {

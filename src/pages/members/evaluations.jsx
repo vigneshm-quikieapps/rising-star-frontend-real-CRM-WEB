@@ -26,7 +26,6 @@ import {
   getMemberById,
   updateMultipleStatusOnMemberProgressRecord,
 } from "../../redux/action/memberAction";
-import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
 
 const StyleBox = styled(Box)(({ theme }) => ({
@@ -182,7 +181,7 @@ const MemberEvaluations = () => {
     (state) => state.evaluation.evaluationList
   );
   const businessListofLoggedInUser = useSelector(
-    (state) => state.businesses.businessListOfBusiness
+    (state) => state.businesses.businessList
   );
   const [businessId, setBusinessId] = useState("");
   const [evaluationSchemeId, setEvaluationSchemeId] = useState("");
@@ -212,7 +211,6 @@ const MemberEvaluations = () => {
   );
 
   useEffect(() => {
-    dispatch(getBusinessListOfBusiness());
     dispatch(getEvaluationSchemeList());
   }, [dispatch]);
 
