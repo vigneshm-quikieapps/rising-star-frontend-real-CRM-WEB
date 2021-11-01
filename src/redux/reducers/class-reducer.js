@@ -4,7 +4,7 @@ const initialState = {
   classList: [],
   totalPages: 1,
   currentPage: 1,
-  class: null,
+  class: {},
 };
 
 export default function reducer(state = initialState, action) {

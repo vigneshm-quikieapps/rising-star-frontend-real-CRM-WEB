@@ -7,7 +7,7 @@ import {
 } from "../../components";
 import { styled } from "@mui/material/styles";
 import deleteIcon from "./../../assets/icons/icon-delete.png";
-import { useState } from "react";
+import { removeItemByIndex } from "../../utils";
 
 const PayFrequncyOptions = [
   {
@@ -30,52 +30,89 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const DeleteButton = () => (
-  <IconButton sx={{ borderRadius: "50%" }}>
+const DeleteButton = (props) => (
+  <IconButton {...props} sx={{ borderRadius: "50%" }}>
     <ImgIcon alt="delete">{deleteIcon}</ImgIcon>
   </IconButton>
 );
 
 const Charge = (props) => {
-  const [chargeName, setChargeName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [checked, setChecked] = useState(false);
+  const { data, index, setChargeData, charges } = props;
+
+  const handleNameChange = (e) => {
+    let newCharge = [...charges];
+    newCharge[index] = {
+      ...data,
+      name: e.target.value,
+    };
+    setChargeData(newCharge);
+  };
+
+  const handleAmountChange = (e) => {
+    let newCharge = [...charges];
+    newCharge[index] = {
+      ...data,
+      amount: e.target.value,
+    };
+    setChargeData(newCharge);
+  };
+
+  const handleMandatoryChange = () => {
+    let newCharge = [...charges];
+    newCharge[index] = {
+      ...data,
+      isMandatory: !data.isMandatory,
+    };
+    setChargeData(newCharge);
+  };
+
+  const handleFrequencyChange = (e) => {
+    let newCharge = [...charges];
+    newCharge[index] = {
+      ...data,
+      payFrequency: e.target.value,
+    };
+    setChargeData(newCharge);
+  };
+
+  const handleDelete = () => {
+    let newCharges = removeItemByIndex(charges, index);
+    setChargeData(newCharges);
+  };
+
   return (
     <TableRow>
       <TableCell>
         <StyledTextField
-          value={chargeName}
+          value={data.name}
           sx={{ width: "100%" }}
           placeholder={"Charge Name"}
-          onChange={(e) => {
-            setChargeName(e.target.value);
-          }}
+          onChange={handleNameChange}
         ></StyledTextField>
       </TableCell>
+
       <TableCell>
         <StyledTextField
-          value={amount}
+          value={data.amount}
           sx={{ width: "45%" }}
           placeholder={"Amount"}
-          onChange={(e) => {
-            setAmount(e.target.value);
-          }}
+          onChange={handleAmountChange}
         ></StyledTextField>
       </TableCell>
+
       <TableCell>
         <StyledCheckbox
-          checked={checked}
-          onClick={() => {
-            setChecked(!checked);
-          }}
+          checked={data.isMandatory}
+          onClick={handleMandatoryChange}
         />
       </TableCell>
+
       <TableCell>
         <StyledTextField
           select
           sx={{ width: "100%" }}
-          value={"select "}
-          onChange={() => {}}
+          value={data.payFrequency}
+          onChange={handleFrequencyChange}
         >
           {PayFrequncyOptions.map((item, index) => {
             return (
@@ -87,11 +124,7 @@ const Charge = (props) => {
         </StyledTextField>
       </TableCell>
       <TableCell>
-        <DeleteButton
-          onClick={() => {
-            console.log("delete clicked");
-          }}
-        />
+        <DeleteButton onClick={handleDelete} />
       </TableCell>
     </TableRow>
   );

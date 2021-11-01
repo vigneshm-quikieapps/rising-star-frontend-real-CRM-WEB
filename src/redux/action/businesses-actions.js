@@ -14,3 +14,10 @@ export const getCategoriesOfBusiness = (id) => {
     payload: id,
   };
 };
+
+export const getCoachesOfBusiness = (id) => {
+  return {
+    type: businessesActionTypes.GET_COACHES_OF_BUSINESS,
+    payload: id,
+  };
+};

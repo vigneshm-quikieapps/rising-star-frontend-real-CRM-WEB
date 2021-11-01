@@ -46,15 +46,19 @@ export function* watchGetMember() {
 
 export function* getAllErolmentOfAMember(action) {
   try {
+    yield put(startLoading());
     const enrol_list = yield call(fetchgetAllErolmentOfAMember, action.payload);
     yield put({
-      type: memberActionTypes.GET_MEMBERS_ENROLLMENT,
+      type: memberActionTypes.GET_MEMBERS_ENROLLMENT_SUCCEEDED,
       payload: enrol_list,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
-      type: memberActionTypes.GET_MEMBERS_ENROLLMENT_FAILED,
-      payload: "Something went wrong while getting the data",
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the member enrolment list",
     });
   }
 }
@@ -62,25 +66,29 @@ export function* getAllErolmentOfAMember(action) {
 //watchingGeneratedFunction
 export function* watchgetAllErolmentOfAMember() {
   yield takeEvery(
-    memberActionTypes.GET_MEMBERS_ENROLLMENT_SAGA,
+    memberActionTypes.GET_MEMBERS_ENROLLMENT,
     getAllErolmentOfAMember
   );
 }
 
 export function* getProgresRecordOfAMember(action) {
   try {
+    yield put(startLoading());
     const progressRecord = yield call(
       fetchgetProgresRecordOfAMember,
       action.payload
     );
     yield put({
-      type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD,
+      type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD_SUCCEEDED,
       payload: progressRecord,
     });
+    yield put(stopLoading());
   } catch (error) {
     yield put({
-      type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD_FAILED,
-      payload: "something went wrong while getting progress record",
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the member progress record",
     });
   }
 }
@@ -88,67 +96,107 @@ export function* getProgresRecordOfAMember(action) {
 //watchingGeneratedFunction
 export function* watchgetProgresRecordOfAMember() {
   yield takeEvery(
-    memberActionTypes.GET_MEMBER_PROGRESS_RECORD_SAGA,
+    memberActionTypes.GET_MEMBER_PROGRESS_RECORD,
     getProgresRecordOfAMember
   );
 }
 
 export function* dropMemberFromEnrolment(action) {
-  yield call(axiosmemberDropped, action.payload);
-  yield put({
-    type: memberActionTypes.MEMBER_ENROLMENT_DROPPED,
-    // payload: progressRecord,
-  });
+  try {
+    yield put(startLoading());
+    yield call(axiosmemberDropped, action.payload);
+    yield put({
+      type: memberActionTypes.MEMBER_ENROLMENT_DROPPED_SUCCEEDED,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the member dropping a member",
+    });
+  }
 }
 
 export function* watchdropMemberFromEnrolment() {
   yield takeEvery(
-    memberActionTypes.MEMBER_ENROLMENT_DROPPED_SAGA,
+    memberActionTypes.MEMBER_ENROLMENT_DROPPED,
     dropMemberFromEnrolment
   );
 }
 
 export function* suspendMemberFromEnrolment(action) {
-  yield call(axiosmemberSuspend, action.payload);
-  yield put({
-    type: memberActionTypes.MEMBER_ENROLMENT_SUSPEND,
-    // payload: progressRecord,
-  });
+  try {
+    yield put(startLoading());
+    yield call(axiosmemberSuspend, action.payload);
+    yield put({
+      type: memberActionTypes.MEMBER_ENROLMENT_SUSPEND_SUCCEEDED,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the member suspending a member",
+    });
+  }
 }
 
 export function* watchsuspendMemberFromEnrolment() {
   yield takeEvery(
-    memberActionTypes.MEMBER_ENROLMENT_SUSPEND_SAGA,
+    memberActionTypes.MEMBER_ENROLMENT_SUSPEND,
     suspendMemberFromEnrolment
   );
 }
 
 export function* returnFromSuspendMemberFromEnrolment(action) {
-  yield call(axiosmemberReturnFromSuspend, action.payload);
-  yield put({
-    type: memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND,
-    // payload: progressRecord,
-  });
+  try {
+    yield put(startLoading());
+    yield call(axiosmemberReturnFromSuspend, action.payload);
+    yield put({
+      type: memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND_SUCCEEDED,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while marking return from suspend",
+    });
+  }
 }
 
 export function* watchreturnFromSuspendMemberFromEnrolment() {
   yield takeEvery(
-    memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND_SAGA,
+    memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND,
     returnFromSuspendMemberFromEnrolment
   );
 }
 
 export function* updateMulitpleStatusOnProgressRecordOfMember(action) {
-  yield call(updateMulitpleStatusOnProgresRecordOfAMember, action.payload);
-  yield put({
-    type: memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD,
-    // payload: progressRecord,
-  });
+  try {
+    yield put(startLoading());
+    yield call(updateMulitpleStatusOnProgresRecordOfAMember, action.payload);
+    yield put({
+      type: memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD_SUCCEEDED,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while updating the multiple status on progress record",
+    });
+  }
 }
 
 export function* watchupdateMulitpleStatusOnProgressRecordOfMember() {
   yield takeEvery(
-    memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD_SAGA,
+    memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD,
     updateMulitpleStatusOnProgressRecordOfMember
   );
 }

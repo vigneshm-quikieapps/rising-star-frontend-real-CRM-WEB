@@ -124,34 +124,19 @@ const SkillsComponent = ({
     }));
   }, [checkStatusConverter, status, skillId]);
 
-  useEffect(() => {
-    // const { attained, progress } = checkStatusConverter(status);
-    if (checkbox.attainedCheckBox && checkbox.inprogressCheckbox) {
-      setCheckboxes((previous) => ({
-        ...previous,
-        attainedCheckBox: !checkbox.attainedCheckBox,
-        inprogressCheckbox: checkbox.inprogressCheckbox,
-      }));
-    }
-    // else {
-    //   setCheckboxes((previous) => ({
-    //     ...previous,
-    //     inprogressCheckbox: !checkbox.inprogressCheckbox,
-    //     attainedCheckBox: checkbox.attainedCheckBox,
-    //   }));
-    // }
-  }, [checkStatusConverter, checkbox]);
-
-  const checkboxHandler = (name, skillId) => {
-    if (name !== "attained") {
+  const checkboxHandler = (name, skillId, e) => {
+    console.log(e.target.checked);
+    if (name === "attained") {
       setCheckboxes({
         ...checkbox,
-        attainedCheckBox: !checkbox.attainedCheckBox,
+        attainedCheckBox: e.target.checked, //true
+        inprogressCheckbox: false,
       });
     } else {
       setCheckboxes({
         ...checkbox,
-        inprogressCheckbox: !checkbox.inprogressCheckbox,
+        attainedCheckBox: false, //false
+        inprogressCheckbox: e.target.checked, //true
       });
     }
   };
@@ -174,14 +159,14 @@ const SkillsComponent = ({
             margin: "0 1.3rem",
           }}
           checked={checkbox.attainedCheckBox}
-          onChange={(e) => checkboxHandler("progress", skillId, e)}
+          onChange={(e) => checkboxHandler("attained", skillId, e)}
         />
         <Checkbox
           sx={{
             margin: "0 1.3rem",
           }}
           checked={checkbox.inprogressCheckbox}
-          onChange={() => checkboxHandler("attained", skillId)}
+          onChange={(e) => checkboxHandler("progress", skillId, e)}
         />
       </Box>
     </Box>

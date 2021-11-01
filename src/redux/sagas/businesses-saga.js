@@ -3,6 +3,7 @@ import {
   getBusinesses,
   getBusinessListOfBusiness,
   getCategoryListOfBusiness,
+  getCoachListOfBusiness,
 } from "../../services/businesses-service";
 import { startLoading, stopLoading } from "../action/shared-actions";
 import { businessesActionTypes, sharedActionTypes } from "../types";
@@ -58,7 +59,6 @@ export function* watchGetBusinessesOfBusiness() {
 
 export function* getCategoriesOfBusiness(action) {
   try {
-    yield put({ type: businessesActionTypes.SET_LOADING, payload: true });
     const categoryList = yield call(getCategoryListOfBusiness, action.payload);
     yield put({
       type: businessesActionTypes.GET_CATEGORIES_OF_BUSINESS_SUCCEEDED,
@@ -81,10 +81,30 @@ export function* watchGetCategoriesOfBusiness() {
   );
 }
 
+export function* getCoachesOfBusiness(action) {
+  try {
+    const coachList = yield call(getCoachListOfBusiness, action.payload);
+    yield put({
+      type: businessesActionTypes.GET_COACHES_OF_BUSINESS_SUCCEEDED,
+      payload: coachList,
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+export function* watchGetCoachesOfBusiness() {
+  yield takeLatest(
+    businessesActionTypes.GET_COACHES_OF_BUSINESS,
+    getCoachesOfBusiness
+  );
+}
+
 export default function* businessesSagas() {
   yield all([
     watchGetBusinesses(),
     watchGetBusinessesOfBusiness(),
     watchGetCategoriesOfBusiness(),
+    watchGetCoachesOfBusiness(),
   ]);
 }

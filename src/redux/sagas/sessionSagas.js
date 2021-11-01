@@ -1,7 +1,12 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
-import { axiosGetMembersEnrolledInASession } from "../../services/sessionServices";
+import {
+  axiosGetMembersEnrolledInASession,
+  axiosGetSessionInAclassByTermId,
+} from "../../services/sessionServices";
 import { axiosGetSessionsByTermId } from "../../services/term-services";
-import { sessionActionTypes } from "../types";
+import { sessionActionTypes, sharedActionTypes } from "../types";
+
+import { startLoading, stopLoading } from "../action/shared-actions";
 
 export function* getMembersEnrolledInSession(action) {
   const member_list = yield call(
@@ -43,6 +48,40 @@ export function* watchGetSessionsByTermId() {
   );
 }
 
+export function* getSessionInAclassByTermId(action) {
+  try {
+    yield put(startLoading());
+    const enrol_list = yield call(
+      axiosGetSessionInAclassByTermId,
+      action.payload
+    );
+    yield put({
+      type: sessionActionTypes.GET_ALL_SESSION_OF_A_CLASS_BY_TERM_SUCCEEDED,
+      payload: enrol_list,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the session list of a class by term id.",
+    });
+  }
+}
+
+//watchingGeneratedFunction
+export function* watchgetSessionInAclassByTermId() {
+  yield takeEvery(
+    sessionActionTypes.GET_ALL_SESSION_OF_A_CLASS_BY_TERM,
+    getSessionInAclassByTermId
+  );
+}
+
 export default function* sessionSagas() {
-  yield all([watchGetMemberEnrolledInSession(), watchGetSessionsByTermId()]);
+  yield all([
+    watchGetMemberEnrolledInSession(),
+    watchGetSessionsByTermId(),
+    watchgetSessionInAclassByTermId(),
+  ]);
 }

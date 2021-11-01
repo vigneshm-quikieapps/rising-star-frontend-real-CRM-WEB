@@ -24,6 +24,7 @@ import {
   memberEnrolmentReturnFromSuspend,
 } from "../../redux/action/memberAction";
 import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
+import { getSessionInAclassByTermId } from "../../redux/action/sessionAction";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -105,6 +106,9 @@ const MemberEnrollment = () => {
   const businessListofLoggedInUser = useSelector(
     (state) => state.businesses.businessListOfBusiness
   );
+  const sessionList = useSelector(
+    (state) => state.sessions.sessionListInAclassByterm
+  );
   const businessId = businessListofLoggedInUser[0]?._id;
 
   const [selectedBusiness, setselectedBusiness] = useState("");
@@ -129,8 +133,6 @@ const MemberEnrollment = () => {
     dispatch(getBusinessListOfBusiness());
   }, [dispatch]);
 
-  console.log(businessListofLoggedInUser);
-
   useEffect(() => {
     dispatch(getMemberById(id));
   }, [dispatch, id]);
@@ -149,6 +151,16 @@ const MemberEnrollment = () => {
     });
   }, []);
 
+  const classfetchPrarams = useCallback((classId, termId) => {
+    return new Promise((resolve, reject) => {
+      const data = {
+        termId: classId,
+        classId: termId,
+      };
+      resolve(data);
+    });
+  }, []);
+
   useEffect(() => {
     params(id, selectedBusiness).then((res) => {
       if (res.memberId && res.businessId) {
@@ -158,11 +170,23 @@ const MemberEnrollment = () => {
   }, [dispatch, id, params, selectedBusiness]);
 
   useEffect(() => {
+    classfetchPrarams(
+      enrolmentDetailsInput.className,
+      enrolmentDetailsInput.term
+    ).then((res) => {
+      console.log(res);
+      // if (res.classId && res.termId) {
+      //   dispatch(getSessionInAclassByTermId(res));
+      // }
+    });
+  }, [dispatch, classfetchPrarams, enrolmentDetailsInput]);
+
+  useEffect(() => {
     setEnrolmentDetailsInput((previous) => ({
       ...previous,
       enrolmentId: `${enrollmentList[0]?._id}`,
       className: `${enrollmentList[0]?.classId}`,
-      term: `${enrollmentList[0]?._id}`,
+      term: `${enrollmentList[0]?.session.term._id}`,
       session: `${enrollmentList[0] ? enrollmentList[0].session.name : ""}`,
       enrolStatus: `${StatusConverter(enrollmentList[0]?.enrolledStatus)}`,
       dropReason: `${StatusConverter(
@@ -225,6 +249,25 @@ const MemberEnrollment = () => {
     });
   };
 
+  const enrolStatusChangeHandler = (e) => {
+    if (
+      e.target.value === "Enrolled" ||
+      e.target.value === "Suspend" ||
+      e.target.value === "Return from suspend"
+    ) {
+      setEnrolmentDetailsInput({
+        ...enrolmentDetailsInput,
+        enrolStatus: e.target.value,
+        dropReason: "",
+      });
+    } else {
+      setEnrolmentDetailsInput({
+        ...enrolmentDetailsInput,
+        enrolStatus: e.target.value,
+      });
+    }
+  };
+
   // Dropped, dropped , sent request to dropped api
   // Dropped, class_transfer, sent request to dropped api,
   // Suspend, sent request to suspend api
@@ -258,6 +301,7 @@ const MemberEnrollment = () => {
     setExpanded(newExpanded ? panel : false);
   };
 
+  console.log(sessionList);
   return (
     <Box sx={{ width: "100%" }}>
       <TopNav />
@@ -401,7 +445,7 @@ const MemberEnrollment = () => {
                 variant="filled"
                 name="enrolStatus"
                 value={enrolmentDetailsInput.enrolStatus}
-                onChange={inputOnChangeHandler}
+                onChange={enrolStatusChangeHandler}
                 sx={{ width: "100%" }}
               >
                 {enrolStatus.map((li) => (
