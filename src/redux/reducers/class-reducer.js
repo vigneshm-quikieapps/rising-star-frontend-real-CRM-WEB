@@ -5,6 +5,7 @@ const initialState = {
   totalPages: 1,
   currentPage: 1,
   class: {},
+  termsOfClass: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -27,9 +28,29 @@ export default function reducer(state = initialState, action) {
         classList: updatedClassList,
       };
     }
+    case classActionTypes.ADD_CLASS_SUCCEEDED: {
+      let updatedClassList = [...state.classList];
+      updatedClassList.push(action.payload.businessClass);
+
+      return {
+        ...state,
+        classList: updatedClassList,
+      };
+    }
     case classActionTypes.GET_CLASS_BY_ID: {
       return { ...state, class: action.payload };
     }
+
+    case classActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED: {
+      const { classList, totalPages, currentPage } = action.payload;
+      return {
+        ...state,
+        classList,
+        totalPages,
+        currentPage,
+      };
+    }
+
     default:
       return state;
   }

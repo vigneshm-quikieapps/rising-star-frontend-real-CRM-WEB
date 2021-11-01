@@ -9,6 +9,7 @@ import StyledCheckbox from "../../components/styled-checkbox";
 import { MenuItem } from "@mui/material";
 import { useSelector } from "react-redux";
 import { removeItemByIndex } from "../../utils";
+import BasicTimePicker from "../../components/time-picker";
 
 const DeleteButton = (props) => (
   <IconButton {...props} sx={{ borderRadius: "50%", margin: "15px 0 5px" }}>
@@ -74,6 +75,24 @@ const Session = (props) => {
     setSessionData(newSession);
   };
 
+  const handleStartTimeChange = (time) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      startTime: time,
+    };
+    setSessionData(newSession);
+  };
+
+  const handleEndTimeChange = (time) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      endTime: time,
+    };
+    setSessionData(newSession);
+  };
+
   const handleDelete = () => {
     let newSession = removeItemByIndex(sessions, index);
     setSessionData(newSession);
@@ -100,32 +119,45 @@ const Session = (props) => {
 
       <CardRow
         sx={{
-          width: "330px",
           margin: "15px auto",
         }}
       >
-        {ShortWeekNames.map((day, i) => {
-          return (
-            <Box
-              key={i}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                margin: "auto",
-                flexWrap: "nowrap",
-              }}
-            >
-              <DayText> {day}</DayText>
-              <StyledCheckbox
-                checked={data.dayIndex === i}
-                onClick={() => {
-                  handleDayIndexChange(i);
+        <CardRow sx={{ width: "46%" }}>
+          {ShortWeekNames.map((day, i) => {
+            return (
+              <Box
+                key={i}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  margin: "auto",
+                  flexWrap: "nowrap",
                 }}
-              />
-            </Box>
-          );
-        })}
+              >
+                <DayText> {day}</DayText>
+                <StyledCheckbox
+                  checked={data.dayIndex === i}
+                  onClick={() => {
+                    handleDayIndexChange(i);
+                  }}
+                />
+              </Box>
+            );
+          })}
+        </CardRow>
+
+        <BasicTimePicker
+          label="Start time"
+          date={data.startTime}
+          onChange={handleStartTimeChange}
+        />
+        <BasicTimePicker
+          label="End time"
+          date={data.endTime}
+          onChange={handleEndTimeChange}
+        />
       </CardRow>
+
       <CardRow>
         <StyledTextField
           variant="filled"
@@ -161,7 +193,11 @@ const Session = (props) => {
         >
           {allCoaches.length ? (
             allCoaches.map((item, i) => {
-              return <MenuItem value={item._id}>{item.name}</MenuItem>;
+              return (
+                <MenuItem key={item._id} value={item._id}>
+                  {item.name}
+                </MenuItem>
+              );
             })
           ) : (
             <MenuItem value="">No coaches</MenuItem>

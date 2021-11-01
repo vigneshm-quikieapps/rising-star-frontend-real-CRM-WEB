@@ -30,3 +30,24 @@ export async function axiosGetClassById(id) {
     throw error;
   }
 }
+
+export async function addNewClass(data) {
+  try {
+    const api = `classes`;
+    const response = await axiosInstance.post(api, data);
+    const res = response.data;
+    return res;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getTermsListOfClass(id) {
+  try {
+    const api = `classes/${id}/terms`;
+    const res = await axiosInstance.get(api);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+}

@@ -3,6 +3,8 @@ import {
   getClasses,
   deleteClassByID,
   axiosGetClassById,
+  addNewClass,
+  getTermsListOfClass,
 } from "../../services/class-services";
 import { startLoading, stopLoading } from "../action/shared-actions";
 import { classActionTypes, sharedActionTypes } from "../types";
@@ -63,6 +65,32 @@ export function* getClassById(action) {
   yield put({ type: classActionTypes.GET_CLASS_BY_ID, payload: classObj });
 }
 
+export function* watchAddClass() {
+  yield takeEvery(classActionTypes.ADD_CLASS, addClass);
+}
+
+export function* addClass(action) {
+  const classObj = yield call(addNewClass, action.payload);
+  yield put({ type: classActionTypes.ADD_CLASS_SUCCEEDED, payload: classObj });
+}
+
+export function* watchGetTermsOfClass() {
+  yield takeEvery(classActionTypes.GET_TERMS_OF_CLASS, getTermsOfClass);
+}
+
+export function* getTermsOfClass(action) {
+  const termsList = yield call(getTermsListOfClass, action.payload);
+  yield put({
+    type: classActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED,
+    payload: termsList,
+  });
+}
+
 export default function* classSagas() {
-  yield all([classListSaga(), deleteClassSaga(), watchGetClassById()]);
+  yield all([
+    classListSaga(),
+    deleteClassSaga(),
+    watchGetClassById(),
+    watchAddClass(),
+  ]);
 }

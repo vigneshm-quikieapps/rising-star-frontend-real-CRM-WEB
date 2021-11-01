@@ -4,7 +4,7 @@ import dashboardIcon from "../assets/icons/icon-dashboard-dark.png";
 import classIcon from "../assets/icons/icon-class.png";
 import membersIcon from "../assets/icons/icon-member.png";
 import setupIcon from "../assets/icons/icon-setup and processes.png";
-import verfiedIcon from "../assets/icons/icon-allergy.png";
+import verifiedIcon from "../assets/icons/icon-allergy.png";
 import phoneIcon from "../assets/icons/icon-phone.png";
 import Status from "../components/status";
 
@@ -146,8 +146,8 @@ export const attendanceRows = Array(10)
       "Ayman Mogal",
       <ImgIcon alt="phone">{phoneIcon}</ImgIcon>,
       <ImgIcon alt="phone">{phoneIcon}</ImgIcon>,
-      <ImgIcon alt="phone">{verfiedIcon}</ImgIcon>,
-      <ImgIcon alt="phone">{verfiedIcon}</ImgIcon>,
+      <ImgIcon alt="phone">{verifiedIcon}</ImgIcon>,
+      <ImgIcon alt="phone">{verifiedIcon}</ImgIcon>,
       <Status status="green" title="Paid" />,
       "09/08/2021",
       "Yes",
@@ -207,8 +207,8 @@ export const enrollmentRows = Array(10)
     id: index,
     items: [
       "Ayman Mogal",
-      <ImgIcon alt="verify">{verfiedIcon}</ImgIcon>,
-      <ImgIcon alt="verify">{verfiedIcon}</ImgIcon>,
+      <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>,
+      <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>,
       "02/08/2021",
       "01/08/2021 9:00",
       "Dropped",
@@ -278,4 +278,4 @@ export const icons = {
   loginPageImage,
 };
 
-export const ShortWeekNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+export const ShortWeekNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
