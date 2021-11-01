@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Grid, styled, Typography, InputAdornment } from "@mui/material";
-import { VisibilityOff } from "@mui/icons-material";
+import {
+  Grid,
+  styled,
+  Typography,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import TextField from "../components/textfield";
 import Button from "../components/gradient-button";
@@ -19,6 +25,7 @@ const GridContainer = styled(Grid)({
 });
 
 const Login = () => {
+  const [visiblePass, setVisiblePass] = useState(false);
   const [credentials, setCredentials] = useState({
     mobileNo: "",
     password: "",
@@ -36,6 +43,9 @@ const Login = () => {
     e.preventDefault();
     dispatch(logInStart(credentials));
   };
+
+  const togglePassVisibility = () =>
+    setVisiblePass((visibility) => !visibility);
 
   return (
     <GridContainer
@@ -76,12 +86,15 @@ const Login = () => {
           label="Password"
           variant="outlined"
           name="password"
+          type={visiblePass ? "text" : "password"}
           onChange={handleChange}
           value={credentials.password}
           InputProps={{
             endAdornment: (
-              <InputAdornment position="start">
-                <VisibilityOff sx={{ opacity: 0.2 }} />
+              <InputAdornment onClick={togglePassVisibility}>
+                <IconButton>
+                  {visiblePass ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
               </InputAdornment>
             ),
           }}
