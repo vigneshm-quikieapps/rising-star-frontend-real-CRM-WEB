@@ -29,23 +29,9 @@ export const updateMultipleStatusOnMemberProgressRecord = (params) => {
   };
 };
 
-export const memberEnrolmentDropped = (id) => {
+export const getMemberConsentRecord = (id) => {
   return {
-    type: memberActionTypes.MEMBER_ENROLMENT_DROPPED,
-    payload: id,
-  };
-};
-
-export const memberEnrolmentSuspend = (id) => {
-  return {
-    type: memberActionTypes.MEMBER_ENROLMENT_SUSPEND_SUCCEEDED,
-    payload: id,
-  };
-};
-
-export const memberEnrolmentReturnFromSuspend = (id) => {
-  return {
-    type: memberActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND,
+    type: memberActionTypes.CONSENT_RECORD_OF_MEMBER,
     payload: id,
   };
 };

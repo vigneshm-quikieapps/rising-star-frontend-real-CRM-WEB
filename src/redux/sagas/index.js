@@ -6,6 +6,7 @@ import businessesSagas from "./businesses-saga";
 import { authSagas } from "./authSagas";
 import termSagas from "./terms-sagas";
 import evaluationSagas from "./evaluationSagas";
+import enrolmentSagas from "./enrolmentSagas";
 
 export default function* rootSaga() {
   yield all([
@@ -16,5 +17,6 @@ export default function* rootSaga() {
     businessesSagas(),
     termSagas(),
     evaluationSagas(),
+    enrolmentSagas(),
   ]);
 }

@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   memberList: [],
   enrolmentList: [],
   progressRecord: {},
+  consentRecord: {},
   currentMember: null,
   totalPages: 1,
   currentPage: 1,
@@ -21,6 +22,8 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, enrolmentList: action.payload };
     case memberActionTypes.GET_MEMBER_PROGRESS_RECORD_SUCCEEDED:
       return { ...state, progressRecord: action.payload };
+    case memberActionTypes.CONSENT_RECORD_OF_MEMBER_SUCCEEDED:
+      return { ...state, consentRecord: action.payload };
     default:
       return state;
   }

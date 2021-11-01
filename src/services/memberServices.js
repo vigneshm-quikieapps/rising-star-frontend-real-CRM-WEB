@@ -52,31 +52,11 @@ export const axiosGetMember = async (id) => {
   }
 };
 
-export const axiosmemberDropped = async (id) => {
+export const axiosGetConsentByClubmembership = async (clubmembershipId) => {
   try {
-    const api = `enrolments/${id}/withdraw`;
-    const Response = await axiosInstance.post(api);
-    return Response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const axiosmemberSuspend = async (id) => {
-  try {
-    const api = `enrolments/${id}/suspend`;
-    const Response = await axiosInstance.post(api);
-    return Response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const axiosmemberReturnFromSuspend = async (id) => {
-  try {
-    const api = `enrolments/${id}/return-from-suspension`;
-    const Response = await axiosInstance.post(api);
-    return Response;
+    const api = `member-consents/by-club-membership-id/${clubmembershipId}`;
+    const consent = await axiosInstance.get(api);
+    return consent.data;
   } catch (error) {
     throw error;
   }
