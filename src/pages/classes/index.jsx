@@ -185,6 +185,8 @@ const Classes = () => {
 
   const searchValueChangeHandler = (e) => {
     setSearchValue(e.target.value);
+    // Do not remove, used for pagination of basic and advanced search
+    setFilters([{ field: "name", type: "STARTS_WITH", value: e.target.value }]);
   };
 
   const addClassHandler = () => {
@@ -242,12 +244,6 @@ const Classes = () => {
     dispatch(getClassListAction({ page: 1 }));
     dispatch(getBusinessListOfBusiness());
   }, [dispatch]);
-
-  // Do not remove
-  // used for pagination in basic and advanced search
-  useEffect(() => {
-    setFilters([{ field: "name", type: "STARTS_WITH", value: searchValue }]);
-  }, [searchValue]);
 
   useEffect(() => {
     if (!mounted.current) return (mounted.current = true);
