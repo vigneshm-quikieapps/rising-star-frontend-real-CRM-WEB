@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getClassById } from "../../../redux/action/class-actions";
 
@@ -10,9 +11,11 @@ import {
 } from "../../../components/common";
 import { Outputs } from "../../../components";
 
-const ClassInfo = ({ id }) => {
+const ClassInfo = () => {
   const dispatch = useDispatch();
   const classObj = useSelector((state) => state.classes.class);
+  const { id } = useParams();
+
   const {
     name,
     status,
@@ -31,7 +34,7 @@ const ClassInfo = ({ id }) => {
       </CardRow>
       <SubHeadingText>{businessName}</SubHeadingText>
       <CardRow>
-        <Outputs items={items} />
+        <Outputs items={items} columnCount={3} />
       </CardRow>
     </Card>
   ) : null;

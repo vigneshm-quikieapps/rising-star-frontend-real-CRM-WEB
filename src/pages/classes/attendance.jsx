@@ -4,11 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, MenuItem } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
-import {
-  Card,
-  CardRow,
-  HeadingText,
-} from "../../components/common";
+import { Card, CardRow, HeadingText } from "../../components/common";
 import {
   TextField,
   Table as CustomTable,
@@ -17,8 +13,6 @@ import {
   IconButton,
   Pagination,
 } from "../../components";
-import TopNav from "./components/top-nav";
-import ClassInfo from "./components/class-info";
 import { Outputs, TitleDescription } from "../../containers/outputs";
 import moreIcon from "../../assets/icons/icon-more.png";
 import {
@@ -27,7 +21,6 @@ import {
   attendanceObject2,
 } from "../../helper/constants";
 import { objectToArray } from "../../utils";
-import { getClassById } from "../../redux/action/class-actions";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -84,18 +77,12 @@ const ClassAttendance = () => {
   const arr2 = objectToArray(attendanceObject2);
 
   useEffect(() => {
-    dispatch(getClassById(id));
-  }, [dispatch, id]);
-
-  useEffect(() => {
     classObj && setClassInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classObj]);
 
   return (
     <Box>
-      <TopNav />
-      <ClassInfo id={id} />
       <Card sx={{ height: "194px" }}>
         <CardRow>
           <TextField

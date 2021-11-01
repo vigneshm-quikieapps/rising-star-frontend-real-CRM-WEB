@@ -17,10 +17,7 @@ import { objectToArray } from "../../utils";
 import { Outputs } from "../../containers/outputs";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllMembersList,
-  getMemberById,
-} from "../../redux/action/memberAction";
+import { getAllMembersList } from "../../redux/action/memberAction";
 import Accordion from "../../components/accordion";
 
 const MoreIconButton = () => (
@@ -85,10 +82,6 @@ const MemberInfo = () => {
       setPrimaryContactInfoArr([]);
       setSecondaryContactInfoArr([]);
     };
-  }, [id, dispatch]);
-
-  useEffect(() => {
-    dispatch(getMemberById(id));
   }, [id, dispatch]);
 
   useEffect(() => {

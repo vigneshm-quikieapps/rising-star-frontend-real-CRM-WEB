@@ -23,7 +23,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import {
   getMemberProgressRecord,
-  getMemberById,
   updateMultipleStatusOnMemberProgressRecord,
 } from "../../redux/action/memberAction";
 import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
@@ -213,10 +212,6 @@ const MemberEvaluations = () => {
   useEffect(() => {
     dispatch(getEvaluationSchemeList());
   }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(getMemberById(id));
-  }, [dispatch, id]);
 
   useEffect(() => {
     setBusinessId(businessListofLoggedInUser[0]?._id);

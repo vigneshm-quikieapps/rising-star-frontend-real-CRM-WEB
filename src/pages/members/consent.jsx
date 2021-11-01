@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
 import { MenuItem, styled, Box, Grid, Typography } from "@mui/material";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -12,10 +11,7 @@ import TextField from "../../components/textfield";
 import Output from "../../components/output";
 import TopNav from "./components/top-nav";
 
-import {
-  getMemberById,
-  getMemberConsentRecord,
-} from "../../redux/action/memberAction";
+import { getMemberConsentRecord } from "../../redux/action/memberAction";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -37,13 +33,12 @@ const StyleBox = styled(Box)(({ theme }) => ({
 
 const MemberConsent = () => {
   const dispatch = useDispatch();
-  const { id } = useParams();
 
   const currentMember = useSelector((state) => state.members.currentMember);
   const consentRecord = useSelector((state) => state.members.consentRecord);
   const businessList = useSelector((state) => state.businesses.businessList);
 
-  const [selectedBusiness, setselectedBusiness] = useState("");
+  const [selectedBusiness, setSelectedBusiness] = useState("");
   const [expanded, setExpanded] = useState("panel1");
 
   // const consentParams = () => {
@@ -57,11 +52,7 @@ const MemberConsent = () => {
   // }
 
   useEffect(() => {
-    dispatch(getMemberById(id));
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    setselectedBusiness(businessList[0]?._id);
+    setSelectedBusiness(businessList[0]?._id);
   }, [businessList]);
 
   useEffect(() => {
@@ -77,7 +68,7 @@ const MemberConsent = () => {
   console.log(consentRecord);
 
   const businessChangeHandler = (e) => {
-    setselectedBusiness(e.target.value);
+    setSelectedBusiness(e.target.value);
   };
 
   const handleChange = (panel) => (event, newExpanded) => {

@@ -1,8 +1,12 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import TabNav from "../../../components/tabular-navigation";
+import { getMemberById } from "../../../redux/action/memberAction";
 
 const TopNav = () => {
+  const dispatch = useDispatch();
   const { id: memberId } = useParams();
   const pathTo = (path) => "/members/" + path + "/" + memberId;
 
@@ -38,6 +42,11 @@ const TopNav = () => {
       exact: false,
     },
   ];
+
+  useEffect(() => {
+    dispatch(getMemberById(memberId));
+  }, [dispatch, memberId]);
+
   return <TabNav items={items} />;
 };
 

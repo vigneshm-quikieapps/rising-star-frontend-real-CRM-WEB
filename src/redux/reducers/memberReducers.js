@@ -16,7 +16,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       const { memberList, totalPages, currentPage } = action.payload;
       return { ...state, memberList, totalPages, currentPage };
     }
-    case memberActionTypes.GET_MEMBER_BY_ID:
+    case memberActionTypes.GET_MEMBER_BY_ID_SUCCEEDED:
       return { ...state, currentMember: action.payload };
     case memberActionTypes.GET_MEMBERS_ENROLLMENT_SUCCEEDED:
       return { ...state, enrolmentList: action.payload };

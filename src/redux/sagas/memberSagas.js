@@ -1,7 +1,7 @@
 import { put, takeEvery, takeLatest, call, all } from "redux-saga/effects";
 import {
   getMembers,
-  axiosGetMember,
+  getMemberById,
   fetchgetAllErolmentOfAMember,
   fetchgetProgresRecordOfAMember,
   updateMulitpleStatusOnProgresRecordOfAMember,
@@ -35,12 +35,26 @@ export function* watchGetMemberList() {
 }
 
 export function* getMember(action) {
-  const member = yield call(axiosGetMember, action.payload);
-  yield put({ type: memberActionTypes.GET_MEMBER_BY_ID, payload: member });
+  try {
+    yield put(startLoading());
+    const member = yield call(getMemberById, action.payload);
+    yield put({
+      type: memberActionTypes.GET_MEMBER_BY_ID_SUCCEEDED,
+      payload: member,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the member",
+    });
+  }
 }
 
 export function* watchGetMember() {
-  yield takeEvery(memberActionTypes.GET_MEMBER_BY_ID_SAGA, getMember);
+  yield takeEvery(memberActionTypes.GET_MEMBER_BY_ID, getMember);
 }
 
 export function* getAllErolmentOfAMember(action) {

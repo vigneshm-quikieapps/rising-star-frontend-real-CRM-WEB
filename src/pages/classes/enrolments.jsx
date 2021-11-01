@@ -4,12 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, MenuItem } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
-import {
-  Card,
-  CardRow,
-  HeadingText,
-  SubHeadingText,
-} from "../../components/common";
+import { Card, CardRow, HeadingText } from "../../components/common";
 import {
   TextField,
   Table as CustomTable,
@@ -17,9 +12,7 @@ import {
   IconButton,
   Pagination,
 } from "../../components";
-import ClassInfo from "./components/class-info";
 import { Outputs } from "../../containers/outputs";
-import TopNav from "./components/top-nav";
 import moreIcon from "../../assets/icons/icon-more.png";
 import verifiedIcon from "../../assets/icons/icon-allergy.png";
 import { objectToArray } from "../../utils";
@@ -28,7 +21,6 @@ import {
   getAllMembersEnrolledInASession,
   getSessionsByTermId,
 } from "../../redux/action/sessionAction";
-import { getClassById } from "../../redux/action/class-actions";
 import { getAllTerms } from "../../redux/action/terms-actions";
 
 const MoreIconButton = () => (
@@ -44,11 +36,11 @@ const UpIconButton = () => (
 );
 
 const ClassEnrolments = () => {
+  const { id } = useParams();
   const allMembers = useSelector((state) => state.sessions.allMembersEnrolled);
   const classObj = useSelector((state) => state.classes.class);
   const allTerms = useSelector((state) => state.terms.allTerms);
   const allSessions = useSelector((state) => state.sessions.sessionsOfTerm);
-  const { id } = useParams();
   const [page, setPage] = useState(allMembers.page);
   const [pages] = useState(allMembers.totalPages);
   const [tableRowData, setTableRowData] = useState([]);
@@ -168,7 +160,6 @@ const ClassEnrolments = () => {
     setSessionDetailsArray(sessionsDataArray);
   };
   useEffect(() => {
-    dispatch(getClassById(id));
     dispatch(getAllTerms());
     dispatch(getAllMembersEnrolledInASession(id));
   }, [dispatch, id]);
@@ -208,20 +199,6 @@ const ClassEnrolments = () => {
 
   return (
     <Box>
-      <TopNav />
-      <ClassInfo id={id} />
-      <Card>
-        <CardRow>
-          <HeadingText>{classObj?.name}</HeadingText>
-        </CardRow>
-
-        <SubHeadingText>{classObj?.business?.name}</SubHeadingText>
-
-        <CardRow>
-          <Outputs arr={classInfoArray} />
-        </CardRow>
-      </Card>
-
       <Card sx={{ height: "249px" }}>
         <CardRow sx={{ justifyContent: "flex-start" }}>
           <TextField

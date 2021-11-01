@@ -16,10 +16,7 @@ import TopNav from "./components/top-nav";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import {
-  getMemberEnrolmentList,
-  getMemberById,
-} from "../../redux/action/memberAction";
+import { getMemberEnrolmentList } from "../../redux/action/memberAction";
 import {
   memberEnrolmentDropped,
   memberEnrolmentSuspend,
@@ -112,15 +109,13 @@ const MemberEnrollment = () => {
 
   const enrollmentList = useSelector((state) => state.members.enrolmentList);
   const currentMember = useSelector((state) => state.members.currentMember);
-  const businessListofLoggedInUser = useSelector(
-    (state) => state.businesses.businessList
-  );
+  const businessList = useSelector((state) => state.businesses.businessList);
   const sessionList = useSelector(
     (state) => state.sessions.sessionListInAclassByterm
   );
-  const businessId = businessListofLoggedInUser[0]?._id;
+  const businessId = businessList[0]?._id;
 
-  const [selectedBusiness, setselectedBusiness] = useState("");
+  const [selectedBusiness, setSelectedBusiness] = useState("");
 
   const [date, setDate] = useState("");
 
@@ -143,11 +138,7 @@ const MemberEnrollment = () => {
   const [expanded, setExpanded] = useState("panel1");
 
   useEffect(() => {
-    dispatch(getMemberById(id));
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    businessId && setselectedBusiness(businessId);
+    businessId && setSelectedBusiness(businessId);
   }, [businessId]);
 
   const params = useCallback((id, businessId) => {
@@ -241,7 +232,7 @@ const MemberEnrollment = () => {
   }, [enrollmentList]);
 
   const businessChangeHandler = (e) => {
-    setselectedBusiness(e.target.value);
+    setSelectedBusiness(e.target.value);
   };
 
   const inputOnChangeHandler = (e) => {
@@ -382,7 +373,6 @@ const MemberEnrollment = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <TopNav />
       <StyleBox>
         <Typography variant="h4" component="div">
           {currentMember ? currentMember.member.name : "- - -"}
@@ -400,7 +390,7 @@ const MemberEnrollment = () => {
               value={selectedBusiness}
               onChange={businessChangeHandler}
             >
-              {businessListofLoggedInUser.map((li, index) => (
+              {businessList.map((li, index) => (
                 <MenuItem key={`B${index}`} value={`${li._id}`}>
                   {li.name}
                 </MenuItem>

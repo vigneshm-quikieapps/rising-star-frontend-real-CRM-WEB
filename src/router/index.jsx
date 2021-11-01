@@ -4,17 +4,7 @@ import {
   Dashboard,
   Login,
   Classes,
-  ClassDefinition,
-  ClassEnrolments,
-  ClassAttendance,
-  ClassPayments,
-  ClassAddEdit,
   Members,
-  MembersInfo,
-  MembersEnrollments,
-  MembersConsent,
-  MembersEvaluations,
-  MembersFinance,
   SetupTerm,
   SetupPaymentUpload,
   NoMatch,
@@ -34,44 +24,11 @@ const MainRouter = () => (
           <Route path="/" exact>
             <Dashboard />
           </Route>
-          <Route path="/classes" exact>
+          <Route path="/classes">
             <Classes />
           </Route>
-          <Route path="/classes/definition/:id" exact>
-            <ClassDefinition />
-          </Route>
-          <Route path="/classes/enrolments/:id" exact>
-            <ClassEnrolments />
-          </Route>
-          <Route path="/classes/attendance/:id" exact>
-            <ClassAttendance />
-          </Route>
-          <Route path="/classes/payments/:id" exact>
-            <ClassPayments />
-          </Route>
-          <Route path="/classes/add/:id" exact>
-            <ClassAddEdit />
-          </Route>
-          <Route path="/classes/add" exact>
-            <ClassAddEdit />
-          </Route>
-          <Route path="/members" exact>
+          <Route path="/members">
             <Members />
-          </Route>
-          <Route path="/members/info/:id" exact>
-            <MembersInfo />
-          </Route>
-          <Route path="/members/enrolments/:id" exact>
-            <MembersEnrollments />
-          </Route>
-          <Route path="/members/consent/:id" exact>
-            <MembersConsent />
-          </Route>
-          <Route path="/members/evaluations/:id" exact>
-            <MembersEvaluations />
-          </Route>
-          <Route path="/members/finance/:id" exact>
-            <MembersFinance />
           </Route>
           <Route path="/setup/term" exact>
             <SetupTerm />

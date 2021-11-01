@@ -5,7 +5,7 @@ export const getAllMembersList = (params) => {
 };
 
 export const getMemberById = (id) => {
-  return { type: memberActionTypes.GET_MEMBER_BY_ID_SAGA, payload: id };
+  return { type: memberActionTypes.GET_MEMBER_BY_ID, payload: id };
 };
 
 export const getMemberEnrolmentList = (params) => {

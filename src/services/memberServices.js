@@ -42,7 +42,7 @@ export const getMembers = async (params) => {
   }
 };
 
-export const axiosGetMember = async (id) => {
+export const getMemberById = async (id) => {
   try {
     const api = `members/${id}`;
     const member = await axiosInstance.get(api);
