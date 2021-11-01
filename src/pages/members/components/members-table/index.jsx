@@ -1,12 +1,10 @@
-// It's just for demonstration purposes
-// Do not use it in production
 import { Box } from "@mui/material";
 
 import { memberListHeaders } from "../../../../helper/constants";
 import { Table } from "../../../../components";
 import Heading from "./heading";
 
-const ClassList = ({ list = [], pagination, onAdd }) => (
+const MemberList = ({ list = [], pagination, onAdd }) => (
   <Box
     sx={{
       justifyContent: "center",
@@ -22,4 +20,4 @@ const ClassList = ({ list = [], pagination, onAdd }) => (
   </Box>
 );
 
-export default ClassList;
+export default MemberList;

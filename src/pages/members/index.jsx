@@ -1,13 +1,12 @@
-/// classes v1.0.0
+/// Members v1.0.0
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Box, InputAdornment, MenuItem, Typography } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
 import { getAllMembersList as getMemberListAction } from "../../redux/action/memberAction";
-import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 import {
   TextField,
   Button,
@@ -24,49 +23,60 @@ const operators = {
 
 const initialValuesState = { name: "", parentName: "", email: "", phone: "" };
 const startsWith = operators.STARTS_WITH;
-const initialOperatorState = {
+const initialOperatorsState = {
   name: startsWith,
   parent: startsWith,
   email: startsWith,
   phone: startsWith,
 };
 
-const OperatorField = ({ area, name, value, onChange }) => (
-  <TextField
-    select
-    sx={{ gridArea: area }}
-    label="Operator"
-    data-name={name}
-    value={value}
-    onChange={onChange}
-  >
-    <MenuItem value="EQUALS">Equals to</MenuItem>
-    <MenuItem value="STARTS_WITH">Starts with</MenuItem>
-  </TextField>
-);
+const OperatorField = ({ area, onChange, name, ...otherProps }) => {
+  const changeHandler = (e) => {
+    onChange(e, name);
+  };
+  return (
+    <TextField
+      select
+      sx={{ gridArea: area }}
+      label="Operator"
+      onChange={changeHandler}
+      {...otherProps}
+    >
+      <MenuItem value="EQUALS">Equals to</MenuItem>
+      <MenuItem value="STARTS_WITH">Starts with</MenuItem>
+    </TextField>
+  );
+};
 
-const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
+const AdvancedSearch = ({ open, setOpen, setFilters }) => {
   const dispatch = useDispatch();
   const [valuesState, setValuesState] = useState(initialValuesState);
-  const [operatorState, setOperatorState] = useState(initialOperatorState);
+  const [operatorsState, setOperatorsState] = useState(initialOperatorsState);
 
-  const valuesChangeHandler = (e) => ({
-    ...valuesState,
-    [e.target.name]: e.target.value,
-  });
+  const valuesChangeHandler = (e) => {
+    setValuesState((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
-  const operatorsChangeHandler = (e) => ({
-    ...operatorState,
-    [e.target["data-name"]]: e.target.value,
-  });
+  const operatorsChangeHandler = (e, name) => {
+    setOperatorsState((prevState) => ({
+      ...prevState,
+      [name]: e.target.value,
+    }));
+  };
 
   const filters = useMemo(() => {
-    Object.keys(valuesState).map((field) => ({
+    return Object.keys(valuesState).map((field) => ({
       field,
-      type: operatorState[field],
+      type: operatorsState[field],
       value: valuesState[field],
     }));
-  }, [valuesState, operatorState]);
+  }, [valuesState, operatorsState]);
+
+  // Do not remove, used for pagination
+  useEffect(() => setFilters(filters), [filters, setFilters]);
 
   const searchHandler = () => {
     dispatch(getMemberListAction({ filters }));
@@ -136,25 +146,15 @@ const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
           onChange={valuesChangeHandler}
           value={valuesState.phone}
         />
-        {Object.keys(operatorState).map((name) => (
+        {Object.keys(operatorsState).map((name) => (
           <OperatorField
+            key={name}
             name={name}
             area={name + "Op"}
-            value={operatorState[name]}
+            value={operatorsState[name]}
             onChange={operatorsChangeHandler}
           />
         ))}
-        <TextField
-          select
-          sx={{ gridArea: "nameOp" }}
-          label="Name Operator"
-          data-name="name"
-          value={operatorState.name}
-          onChange={operatorsChangeHandler}
-        >
-          <MenuItem value="EQUALS">Equals to</MenuItem>
-          <MenuItem value="STARTS_WITH">Starts with</MenuItem>
-        </TextField>
         <GradientButton sx={{ gridArea: "advanced" }} onClick={searchHandler}>
           Search
         </GradientButton>
@@ -165,14 +165,12 @@ const AdvancedSearch = ({ open, setOpen, businessList = [], setFilters }) => {
 
 const Members = () => {
   const dispatch = useDispatch();
+  const mounted = useRef(false);
   const [advancedSearch, setAdvancedSearch] = useState(false);
   const [filters, setFilters] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const membersState = useSelector((state) => state.members);
   const { memberList, totalPages, currentPage } = membersState;
-  const businesses = useSelector(
-    (state) => state.businesses.businessListOfBusiness
-  );
   const history = useHistory();
 
   const handleRowClick = useCallback(
@@ -184,6 +182,8 @@ const Members = () => {
 
   const searchValueChangeHandler = (e) => {
     setSearchValue(e.target.value);
+    // Do not remove, used for pagination of basic and advanced search
+    setFilters([{ field: "name", type: "STARTS_WITH", value: e.target.value }]);
   };
 
   const addMemberHandler = () => {
@@ -228,15 +228,10 @@ const Members = () => {
 
   useEffect(() => {
     dispatch(getMemberListAction({ page: 1 }));
-    dispatch(getBusinessListOfBusiness());
   }, [dispatch]);
 
   useEffect(() => {
-    setFilters([{ field: "name", type: "STARTS_WITH", value: searchValue }]);
-  }, [searchValue]);
-
-  useEffect(() => {
-    // if (basicSearchResults.length === 1) return;
+    if (!mounted.current) return (mounted.current = true);
     const searchTimer = setTimeout(() => {
       dispatch(
         getMemberListAction({
@@ -284,7 +279,6 @@ const Members = () => {
       <AdvancedSearch
         open={advancedSearch}
         setOpen={setAdvancedSearch}
-        businessList={businesses}
         setFilters={setFilters}
       />
       <MemberList
