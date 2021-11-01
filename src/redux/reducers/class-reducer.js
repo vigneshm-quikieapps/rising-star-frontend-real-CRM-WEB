@@ -4,7 +4,7 @@ const initialState = {
   classList: [],
   totalPages: 1,
   currentPage: 1,
-  class: {},
+  class: { business: {} },
   termsOfClass: [],
 };
 

@@ -16,7 +16,6 @@ import {
   getMemberById,
   getMemberConsentRecord,
 } from "../../redux/action/memberAction";
-import { getBusinessListOfBusiness } from "../../redux/action/businesses-actions";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -42,9 +41,7 @@ const MemberConsent = () => {
 
   const currentMember = useSelector((state) => state.members.currentMember);
   const consentRecord = useSelector((state) => state.members.consentRecord);
-  const businessListofLoggedInUser = useSelector(
-    (state) => state.businesses.businessListOfBusiness
-  );
+  const businessList = useSelector((state) => state.businesses.businessList);
 
   const [selectedBusiness, setselectedBusiness] = useState("");
   const [expanded, setExpanded] = useState("panel1");
@@ -60,16 +57,12 @@ const MemberConsent = () => {
   // }
 
   useEffect(() => {
-    dispatch(getBusinessListOfBusiness());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getMemberById(id));
   }, [dispatch, id]);
 
   useEffect(() => {
-    setselectedBusiness(businessListofLoggedInUser[0]?._id);
-  }, [businessListofLoggedInUser]);
+    setselectedBusiness(businessList[0]?._id);
+  }, [businessList]);
 
   useEffect(() => {
     if (currentMember) {
@@ -111,7 +104,7 @@ const MemberConsent = () => {
               value={selectedBusiness}
               onChange={businessChangeHandler}
             >
-              {businessListofLoggedInUser.map((li, index) => (
+              {businessList.map((li, index) => (
                 <MenuItem key={`B${index}`} value={`${li._id}`}>
                   {li.name}
                 </MenuItem>

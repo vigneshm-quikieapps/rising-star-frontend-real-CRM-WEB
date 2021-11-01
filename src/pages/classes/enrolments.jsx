@@ -1,30 +1,36 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { Box, MenuItem } from "@mui/material";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+
 import {
   Card,
   CardRow,
   HeadingText,
   SubHeadingText,
 } from "../../components/common";
-import { Box, MenuItem } from "@mui/material";
-import TextField from "../../components/textfield";
-import CustomTable from "../../components/table";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import ImgIcon from "../../components/img-icon";
-import IconButton from "../../components/icon-button";
+import {
+  TextField,
+  Table as CustomTable,
+  ImgIcon,
+  IconButton,
+  Pagination,
+} from "../../components";
+import ClassInfo from "./components/class-info";
+import { Outputs } from "../../containers/outputs";
+import TopNav from "./components/top-nav";
 import moreIcon from "../../assets/icons/icon-more.png";
+import verifiedIcon from "../../assets/icons/icon-allergy.png";
 import { objectToArray } from "../../utils";
 import { enrollmentHeaders } from "../../helper/constants";
-import { Outputs } from "../../containers/outputs";
-import Pagination from "./../../components/pagination";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import {
   getAllMembersEnrolledInASession,
   getSessionsByTermId,
 } from "../../redux/action/sessionAction";
-import verfiedIcon from "../../assets/icons/icon-allergy.png";
 import { getClassById } from "../../redux/action/class-actions";
 import { getAllTerms } from "../../redux/action/terms-actions";
+
 const MoreIconButton = () => (
   <IconButton>
     <ImgIcon alt="more">{moreIcon}</ImgIcon>
@@ -95,7 +101,7 @@ const ClassEnrolments = () => {
         id: index,
         items: itemArray.map((i) => {
           if (i[0] === "allergies" || i[0] === "conditions") {
-            return <ImgIcon alt="verify">{verfiedIcon}</ImgIcon>;
+            return <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>;
           }
           return i[1];
         }),
@@ -202,6 +208,8 @@ const ClassEnrolments = () => {
 
   return (
     <Box>
+      <TopNav />
+      <ClassInfo id={id} />
       <Card>
         <CardRow>
           <HeadingText>{classObj?.name}</HeadingText>

@@ -1,30 +1,33 @@
+import { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Box, MenuItem } from "@mui/material";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+
 import {
   Card,
   CardRow,
   HeadingText,
-  SubHeadingText,
 } from "../../components/common";
-import { Box, MenuItem } from "@mui/material";
-import TextField from "../../components/textfield";
-import CustomTable from "../../components/table";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import DatePicker from "./../../components/date-picker";
-import ImgIcon from "../../components/img-icon";
-import IconButton from "../../components/icon-button";
-import moreIcon from "../../assets/icons/icon-more.png";
-import { objectToArray } from "../../utils";
+import {
+  TextField,
+  Table as CustomTable,
+  DatePicker,
+  ImgIcon,
+  IconButton,
+  Pagination,
+} from "../../components";
+import TopNav from "./components/top-nav";
+import ClassInfo from "./components/class-info";
 import { Outputs, TitleDescription } from "../../containers/outputs";
+import moreIcon from "../../assets/icons/icon-more.png";
 import {
   attendanceRows,
   attendanceHeaders,
   attendanceObject2,
 } from "../../helper/constants";
-import Pagination from "./../../components/pagination";
-import { useEffect } from "react";
+import { objectToArray } from "../../utils";
 import { getClassById } from "../../redux/action/class-actions";
-import { useDispatch, useSelector } from "react-redux";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -91,18 +94,8 @@ const ClassAttendance = () => {
 
   return (
     <Box>
-      <Card>
-        <CardRow>
-          <HeadingText>{classObj?.name}</HeadingText>
-        </CardRow>
-
-        <SubHeadingText>{classObj?.business?.name}</SubHeadingText>
-
-        <CardRow>
-          <Outputs arr={classInfoArray} />
-        </CardRow>
-      </Card>
-
+      <TopNav />
+      <ClassInfo id={id} />
       <Card sx={{ height: "194px" }}>
         <CardRow>
           <TextField

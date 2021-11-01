@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, Typography } from "@mui/material";
 
 import TopNav from "./components/top-nav";
+import ClassInfo from "./components/class-info";
 import { getClassById } from "../../redux/action/class-actions";
 
 const ClassDefinition = () => {
