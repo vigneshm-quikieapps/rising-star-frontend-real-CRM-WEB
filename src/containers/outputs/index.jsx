@@ -11,13 +11,12 @@ export const Outputs = ({ arr }) => {
             <Output
               title={item[0]}
               description={
-                item[0] === "Status" ? (
+                item[0].toLowerCase() === "status" ? (
                   <Status status="green" title={item[1]} />
                 ) : (
                   item[1]
                 )
               }
-              variant="title"
             />
           </CardCol4>
         );
