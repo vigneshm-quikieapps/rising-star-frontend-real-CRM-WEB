@@ -21,11 +21,16 @@ const operators = {
   NOT_EQUALS: "NOT_EQUALS",
 };
 
-const initialValuesState = { name: "", parentName: "", email: "", phone: "" };
+const initialValuesState = {
+  name: "",
+  "parent.name": "",
+  email: "",
+  phone: "",
+};
 const startsWith = operators.STARTS_WITH;
 const initialOperatorsState = {
   name: startsWith,
-  parent: startsWith,
+  "parent.name": startsWith,
   email: startsWith,
   phone: startsWith,
 };
@@ -128,9 +133,9 @@ const AdvancedSearch = ({ open, setOpen, setFilters }) => {
         <TextField
           sx={{ gridArea: "parent" }}
           label="Parent / Carer Name"
-          name="parentName"
+          name="parent.name"
           onChange={valuesChangeHandler}
-          value={valuesState.parentName}
+          value={valuesState["parent.name"]}
         />
         <TextField
           sx={{ gridArea: "email" }}
