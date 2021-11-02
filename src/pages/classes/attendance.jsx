@@ -22,7 +22,10 @@ import {
 } from "../../helper/constants";
 import { objectToArray } from "../../utils";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
-import { getSessionsByTermId } from "../../redux/action/sessionAction";
+import {
+  getSessionInAclassByTermId,
+  getSessionsByTermId,
+} from "../../redux/action/sessionAction";
 import { getMembersOfSession } from "../../redux/action/memberAction";
 
 const MoreIconButton = () => (
@@ -47,7 +50,9 @@ const ClassAttendance = () => {
   const allTerms = useSelector((state) => state.terms.termsOfClass);
   const [termsData, setTermsData] = useState([]);
   const members = useSelector((state) => state.members);
-  const allSessions = useSelector((state) => state.sessions.sessionsOfTerm);
+  const allSessions = useSelector(
+    (state) => state.sessions.sessionListInAclassByterm
+  );
   const [selectedSession, setSelectedSession] = useState("");
   const [selectedTermId, setSelectedTermId] = useState("");
   const [sessionDetailsArray, setSessionDetailsArray] = useState([]);
@@ -67,7 +72,16 @@ const ClassAttendance = () => {
   const handleTermChange = (e) => {
     let termId = e.target.value;
     setSelectedTermId(termId);
-    termId !== 0 ? dispatch(getSessionsByTermId(termId)) : setSessionsData([]);
+    if (termId !== 0) {
+      dispatch(
+        getSessionInAclassByTermId({
+          classId: id,
+          termId: termId,
+        })
+      );
+    } else {
+      setSessionsData([]);
+    }
     setSelectedSession(0);
     setSessionDetailsArray([]);
   };
