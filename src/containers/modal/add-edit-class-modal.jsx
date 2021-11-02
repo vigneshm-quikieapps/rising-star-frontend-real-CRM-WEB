@@ -44,7 +44,7 @@ import Charge from "../class-list/charge";
 import { getTermsOfBusiness } from "../../redux/action/terms-actions";
 import { ShortWeekNames } from "../../helper/constants";
 import { useHistory } from "react-router";
-import { addClass } from "../../redux/action/class-actions";
+import { addClass, getSessionsOfClass } from "../../redux/action/class-actions";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   // applied to label of all variants
@@ -271,9 +271,10 @@ const AddEditClassModal = (props) => {
   useEffect(() => {
     console.log("classObj", classObj);
     if (isEditMode) {
+      dispatch(getSessionsOfClass(classObj._id));
       populateClassData();
     }
-  }, [isEditMode, classObj, populateClassData]);
+  }, [dispatch, isEditMode, classObj, populateClassData]);
 
   useEffect(() => {
     dispatch(getEvaluationSchemeList());
