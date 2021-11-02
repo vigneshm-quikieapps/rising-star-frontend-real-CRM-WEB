@@ -20,3 +20,10 @@ export const getSessionInAclassByTermId = (params) => {
     payload: params,
   };
 };
+
+export const getAttendanceOfSessionByDate = (params) => {
+  return {
+    type: sessionActionTypes.GET_ATTENDANCE_OF_SESSION_BY_DATE,
+    payload: params,
+  };
+};

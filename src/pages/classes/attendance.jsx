@@ -102,18 +102,14 @@ const ClassAttendance = () => {
     dispatch(getMembersOfSession(_id));
 
     let sessionsDataObject = {
-      "Start Date": term.startDate.split("T")[0],
-      "End Date": term.endDate.split("T")[0],
       "Start Time": pattern[0].startTime.split("T")[0],
       "End Time": pattern[0].endTime.split("T")[0],
-      Pattern: pattern[0].day,
+
       Facility: "Gym Hall (static)",
-      "Session Enrolment Status": status,
       "Coach Name": coach.name,
+      Pattern: pattern[0].day,
       "Full class capacity": fullcapacity,
       Enrolled: fullcapacityfilled,
-      "Waitlist capacity": waitcapacity,
-      "Waitlist Enrolled": waitcapacityfilled,
     };
 
     let sessionsDataArray = objectToArray(sessionsDataObject);
