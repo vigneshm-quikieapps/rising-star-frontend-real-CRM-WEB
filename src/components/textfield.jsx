@@ -43,31 +43,33 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
+export const menuSX = {
+  mt: "10px",
+  "& .MuiMenu-paper": {
+    border: (theme) => `1px solid ${theme.palette.ternary.main}`,
+    borderRadius: "10px",
+    boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.08)",
+  },
+  "& ul": {
+    py: "10px",
+    "& .MuiMenuItem-root": {
+      p: "16px 20px",
+      bgcolor: (theme) => theme.palette.background.main,
+      "&:hover": {
+        color: (theme) => theme.palette.secondary.main,
+      },
+      "&.Mui-selected": {
+        bgcolor: (theme) => theme.palette.highlight.main,
+      },
+    },
+  },
+};
+
 StyledTextField.defaultProps = {
   // InputProps: { disableUnderline: true },
   SelectProps: {
     MenuProps: {
-      sx: {
-        mt: "10px",
-        "& .MuiMenu-paper": {
-          border: (theme) => `1px solid ${theme.palette.ternary.main}`,
-          borderRadius: "10px",
-          boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.08)",
-        },
-        "& ul": {
-          py: "10px",
-          "& .MuiMenuItem-root": {
-            p: "16px 20px",
-            bgcolor: (theme) => theme.palette.background.main,
-            "&:hover": {
-              color: (theme) => theme.palette.secondary.main,
-            },
-            "&.Mui-selected": {
-              bgcolor: (theme) => theme.palette.highlight.main,
-            },
-          },
-        },
-      },
+      sx: menuSX,
     },
   },
 };
