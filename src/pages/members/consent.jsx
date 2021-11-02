@@ -166,13 +166,13 @@ const MemberConsent = () => {
           />
         </AccordionDetails>
       </Accordion>
-      <GradientButton
+      {/* <GradientButton
         sx={{ textTransform: "none", marginTop: "15px" }}
         discard
         size="large"
       >
         Okay
-      </GradientButton>
+      </GradientButton> */}
     </Box>
   );
 };

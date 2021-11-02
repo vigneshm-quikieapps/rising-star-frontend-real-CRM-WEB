@@ -50,6 +50,7 @@ const enrolStatus = [
   { name: "Dropped", value: "Dropped" },
   { name: "Suspend", value: "Suspend" },
   { name: "Return from suspend", value: "Return from suspend" },
+  { name: "Waitlisted", value: "Waitlisted" },
 ];
 
 const dropReasonStatus = [
@@ -125,6 +126,7 @@ const MemberEnrollment = () => {
 
   const [textfieldDisabled, setTextfieldDisabled] = useState(false);
   const [sessionDisabled, setSessionDisabled] = useState(false);
+  const [dropReasonDisabled, setDropReasonDisabled] = useState("");
 
   const [enrolmentDetailsInput, setEnrolmentDetailsInput] = useState({
     enrolmentId: "",
@@ -216,7 +218,8 @@ const MemberEnrollment = () => {
         )}`,
         dropDateTime: `${dateConverter(filterEnrolmentList[0]?.droppedDate)}`,
       }));
-      setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
+      // setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
+      setDate(dateConverter(filterEnrolmentList[0]?.startDate));
       setTextfieldDisabled(
         StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped" ||
           StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Suspend"
@@ -229,6 +232,8 @@ const MemberEnrollment = () => {
           ? true
           : false
       );
+      setDropReasonDisabled(true);
+
       setSelectedSession(filterEnrolmentList[0]?.session._id);
     }
   }, [enrollmentList, sessionList]);
@@ -295,7 +300,8 @@ const MemberEnrollment = () => {
         )}`,
         dropDateTime: `${dateConverter(filterEnrolmentList[0]?.droppedDate)}`,
       }));
-      setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
+      // setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
+      setDate(dateConverter(filterEnrolmentList[0]?.startDate));
       setTextfieldDisabled(
         StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
           ? true
@@ -331,11 +337,13 @@ const MemberEnrollment = () => {
         enrolStatus: e.target.value,
         dropReason: "",
       });
+      setDropReasonDisabled(true);
     } else {
       setEnrolmentDetailsInput({
         ...enrolmentDetailsInput,
         enrolStatus: e.target.value,
       });
+      setDropReasonDisabled(false);
     }
   };
 
@@ -476,7 +484,7 @@ const MemberEnrollment = () => {
                 description={enrolmentDetailsInput.enrolmentId}
               />
             </Grid> */}
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <TextField
                 select
                 label="Class Name*"
@@ -492,10 +500,10 @@ const MemberEnrollment = () => {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Output title="Term" description="2022 Summer" />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <TextField
                 select
                 label="Session"
@@ -520,7 +528,7 @@ const MemberEnrollment = () => {
             </Grid>
           </Grid>
           <Grid container spacing={3} sx={{ marginTop: "4px" }}>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <TextField
                 select
                 label="Enrol status"
@@ -540,7 +548,7 @@ const MemberEnrollment = () => {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <TextField
                 select
                 label="Drop/Cancel Reason"
@@ -549,7 +557,7 @@ const MemberEnrollment = () => {
                 value={enrolmentDetailsInput.dropReason}
                 onChange={inputOnChangeHandler}
                 sx={{ width: "100%" }}
-                disabled={textfieldDisabled}
+                disabled={dropReasonDisabled}
               >
                 {dropReasonStatus.map((li) => (
                   <MenuItem key={`DR${li.name}`} value={li.value}>
@@ -561,27 +569,40 @@ const MemberEnrollment = () => {
             <Grid item xs={4}>
               <Output
                 title="Timmings"
-                description={enrolmentDetailsInput.timming}
+                description={
+                  enrolmentDetailsInput
+                    ? enrolmentDetailsInput.timming
+                    : "- - -"
+                }
               />
             </Grid>
-            <Grid item xs={3}>
-              <DatePicker
+            <Grid item xs={4}>
+              {/* <DatePicker
                 label="Start Date"
                 date={date}
                 onChange={(newDate) => setDate(newDate)}
                 disabled={textfieldDisabled}
-              />
+              /> */}
+              <Output title="Start Date" description={date ? date : "- - -"} />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Output
                 title="Enroled Datetime"
-                description={enrolmentDetailsInput.enrolDateTime}
+                description={
+                  enrolmentDetailsInput
+                    ? enrolmentDetailsInput.enrolDateTime
+                    : "- - -"
+                }
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Output
                 title="Drop Datetime"
-                description={enrolmentDetailsInput.dropDateTime}
+                description={
+                  enrolmentDetailsInput
+                    ? enrolmentDetailsInput.dropDateTime
+                    : "- - -"
+                }
               />
             </Grid>
           </Grid>
