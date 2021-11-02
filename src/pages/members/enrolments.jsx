@@ -12,7 +12,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton from "../../components/icon-button";
 import { icons } from "../../helper/constants";
 import TextField from "../../components/textfield";
-import TopNav from "./components/top-nav";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";

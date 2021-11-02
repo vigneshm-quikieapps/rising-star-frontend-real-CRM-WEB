@@ -15,8 +15,6 @@ import Accordion from "../../components/accordion";
 import Checkbox from "../../components/styled-checkbox";
 import Button from "../../components/gradient-button";
 import Status from "../../components/status";
-import TopNav from "./components/top-nav";
-
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -271,7 +269,6 @@ const MemberEvaluations = () => {
 
   return (
     <Box sx={{ width: "100%", paddingBottom: "20px" }}>
-      <TopNav />
       <StyleBox>
         <Typography variant="h4" component="div">
           {currentMember ? currentMember.member.name : "- - -"}

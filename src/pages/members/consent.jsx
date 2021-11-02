@@ -9,7 +9,6 @@ import GradientButton from "../../components/gradient-button";
 import Accordion from "../../components/accordion";
 import TextField from "../../components/textfield";
 import Output from "../../components/output";
-import TopNav from "./components/top-nav";
 
 import { getMemberConsentRecord } from "../../redux/action/memberAction";
 
@@ -77,7 +76,6 @@ const MemberConsent = () => {
 
   return (
     <Box>
-      <TopNav />
       <StyleBox>
         <Typography variant="h4" component="div">
           {currentMember ? currentMember.member.name : "- - -"}
