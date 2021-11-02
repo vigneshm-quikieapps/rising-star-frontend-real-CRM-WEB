@@ -192,15 +192,9 @@ const MemberEnrollment = () => {
       (session) => session._id === enrollmentList[0]?.session._id
     );
 
-    console.log(filterSessionList);
-
     const filterEnrolmentList = enrollmentList.filter(
       (enrolment) => enrolment.session._id === filterSessionList[0]?._id
     );
-
-    console.log(filterEnrolmentList);
-
-    console.log(enrollmentList);
 
     if (filterEnrolmentList.length > 0) {
       setEnrolmentDetailsInput((previous) => ({
