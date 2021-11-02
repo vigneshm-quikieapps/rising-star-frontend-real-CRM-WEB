@@ -245,7 +245,7 @@ const AddEditClassModal = (props) => {
     const {
       name,
       businessId,
-      selectedStatus,
+      status,
       registrationform,
       categoryId,
       evaluationSchemeId,
@@ -276,7 +276,7 @@ const AddEditClassModal = (props) => {
     );
     setClassName(name);
     setSelectedBusinessId(businessId);
-    setSelectedStatus(selectedStatus);
+    setSelectedStatus(status);
     setSelectedConsentForm(registrationform);
     setSelectedCategory(categoryId);
     setSelectedEvaluationScheme(evaluationSchemeId);
@@ -288,12 +288,12 @@ const AddEditClassModal = (props) => {
   }, [classObj, sessionsOfClass]);
 
   useEffect(() => {
-    console.log("classObj", classObj);
     if (isEditMode) {
-      dispatch(getSessionsOfClass(classObj._id));
+      if (sessionsOfClass.length === 0 && classObj._id)
+        dispatch(getSessionsOfClass(classObj._id));
       classObj._id && populateClassData();
     }
-  }, [dispatch, isEditMode, classObj, populateClassData]);
+  }, [dispatch, isEditMode, classObj, populateClassData, sessionsOfClass]);
 
   useEffect(() => {
     dispatch(getEvaluationSchemeList());
