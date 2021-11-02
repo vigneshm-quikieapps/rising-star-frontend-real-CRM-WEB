@@ -51,3 +51,13 @@ export async function getTermsListOfClass(id) {
     throw error;
   }
 }
+
+export const getClassSessions = async (classId) => {
+  try {
+    const path = `classes/${classId}/sessions`;
+    const response = await axiosInstance.get(path);
+    return response.data.docs;
+  } catch (error) {
+    throw error;
+  }
+};
