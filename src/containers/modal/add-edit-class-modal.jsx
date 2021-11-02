@@ -131,7 +131,7 @@ const AddEditClassModal = (props) => {
   const evaluationSchemeList = useSelector(
     (state) => state.evaluation.evaluationList
   );
-
+  const sessionsOfClass = useSelector((state) => state.classes.classSessions);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -143,8 +143,9 @@ const AddEditClassModal = (props) => {
     setPage(value);
   };
 
-  const handleAddClass = () => {
-    console.log("add handle called");
+  const handleAddClass = (isEdit) => {
+    console.log("add / edit handle called");
+
     let newClassObject = {
       name: className,
       status: selectedStatus,
@@ -207,7 +208,11 @@ const AddEditClassModal = (props) => {
         };
       }),
     };
-    dispatch(addClass(newClassObject));
+
+    if (!isEdit) {
+      dispatch(addClass(newClassObject));
+    } else {
+    }
   };
 
   const addChargeRow = () => {
@@ -256,6 +261,19 @@ const AddEditClassModal = (props) => {
         payFrequency,
       })
     );
+
+    let existingSessions = sessionsOfClass?.map(
+      ({ name, facility, fullcapacity, waitcapacity, coachId, pattern }) => ({
+        name,
+        dayIndex: ShortWeekNames.indexOf(pattern[0].day),
+        facility: facility,
+        fullCapacity: fullcapacity,
+        waitlistCapacity: waitcapacity,
+        coachId: coachId,
+        startTime: pattern[0].startTime,
+        endTime: pattern[0].endTime,
+      })
+    );
     setClassName(name);
     setSelectedBusinessId(businessId);
     setSelectedStatus(selectedStatus);
@@ -266,13 +284,14 @@ const AddEditClassModal = (props) => {
     setClassCharges(existingCharges);
     setAges(enrolmentControls[0].values);
     setGenders(enrolmentControls[1].values);
-  }, [classObj]);
+    setClassSessions(existingSessions);
+  }, [classObj, sessionsOfClass]);
 
   useEffect(() => {
     console.log("classObj", classObj);
     if (isEditMode) {
       dispatch(getSessionsOfClass(classObj._id));
-      populateClassData();
+      classObj._id && populateClassData();
     }
   }, [dispatch, isEditMode, classObj, populateClassData]);
 
