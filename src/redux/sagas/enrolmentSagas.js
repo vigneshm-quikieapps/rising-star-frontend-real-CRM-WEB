@@ -96,7 +96,7 @@ export function* returnTransferEnrolment(action) {
       type: sharedActionTypes.SET_ERROR,
       payload:
         error?.response?.data?.message ||
-        "Something went wrong while marking return from suspend",
+        "Something went wrong while session transfer",
     });
   }
 }

@@ -2,8 +2,9 @@ import axiosInstance from "../utils/axios-instance";
 
 export const transferEnrolment = async (data) => {
   try {
-    const response = await axiosInstance.post("enrolments/transfer", data);
-    return response.data;
+    const api = `enrolments/transfer`;
+    const response = await axiosInstance.post(api, data);
+    return response;
   } catch (error) {
     throw error;
   }

@@ -1,17 +1,20 @@
 import { useParams } from "react-router";
 import React, { useState, useCallback } from "react";
-import Output from "../../components/output";
 
 import { MenuItem, styled, Box, Grid, Typography } from "@mui/material";
-import Accordion from "../../components/accordion";
-import GradientButton from "../../components/gradient-button";
-import DatePicker from "../../components/date-picker";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import IconButton from "../../components/icon-button";
 import { icons } from "../../helper/constants";
-import TextField from "../../components/textfield";
+import {
+  Accordion,
+  GradientButton,
+  DatePicker,
+  TextField,
+  Output,
+} from "../../components/index";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
@@ -47,6 +50,7 @@ const enrolStatus = [
   { name: "Dropped", value: "Dropped" },
   { name: "Suspend", value: "Suspend" },
   { name: "Return from suspend", value: "Return from suspend" },
+  { name: "Waitlisted", value: "Waitlisted" },
 ];
 
 const dropReasonStatus = [
@@ -121,6 +125,8 @@ const MemberEnrollment = () => {
   const [selectedSession, setSelectedSession] = useState("");
 
   const [textfieldDisabled, setTextfieldDisabled] = useState(false);
+  const [sessionDisabled, setSessionDisabled] = useState(false);
+  const [dropReasonDisabled, setDropReasonDisabled] = useState("");
 
   const [enrolmentDetailsInput, setEnrolmentDetailsInput] = useState({
     enrolmentId: "",
@@ -212,13 +218,28 @@ const MemberEnrollment = () => {
         )}`,
         dropDateTime: `${dateConverter(filterEnrolmentList[0]?.droppedDate)}`,
       }));
-      setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
+      // setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
+      setDate(dateConverter(filterEnrolmentList[0]?.startDate));
       setTextfieldDisabled(
         StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped" ||
-          "Suspend"
+          StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Suspend"
           ? true
           : false
       );
+      setSessionDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped" ||
+          StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Suspend"
+          ? true
+          : false
+      );
+      setDropReasonDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) !== "Dropped" ||
+          StatusConverter(filterEnrolmentList[0]?.enrolledStatus) !== "Suspend"
+          ? true
+          : false
+      );
+
+      setSelectedSession(filterEnrolmentList[0]?.session._id);
     }
   }, [enrollmentList, sessionList]);
 
@@ -284,12 +305,19 @@ const MemberEnrollment = () => {
         )}`,
         dropDateTime: `${dateConverter(filterEnrolmentList[0]?.droppedDate)}`,
       }));
-      setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
-      // setTextfieldDisabled(
-      //   StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
-      //     ? true
-      //     : false
-      // );
+      // setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
+      setDate(dateConverter(filterEnrolmentList[0]?.startDate));
+      setTextfieldDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
+          ? true
+          : false
+      );
+      // setDropReasonDisabled(true);
+      setDropReasonDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) !== "Dropped"
+          ? true
+          : false
+      );
     } else {
       setEnrolmentDetailsInput((previous) => ({
         ...previous,
@@ -305,25 +333,25 @@ const MemberEnrollment = () => {
       }));
       setDate(null);
       setTextfieldDisabled(true);
+      setDropReasonDisabled(true);
+      // setSessionDisabled(true);
     }
   };
 
   const enrolStatusChangeHandler = (e) => {
-    if (
-      e.target.value === "Enrolled" ||
-      e.target.value === "Suspend" ||
-      e.target.value === "Return from suspend"
-    ) {
+    if (e.target.value !== "Dropped") {
       setEnrolmentDetailsInput({
         ...enrolmentDetailsInput,
         enrolStatus: e.target.value,
         dropReason: "",
       });
+      setDropReasonDisabled(true);
     } else {
       setEnrolmentDetailsInput({
         ...enrolmentDetailsInput,
         enrolStatus: e.target.value,
       });
+      setDropReasonDisabled(false);
     }
   };
 
@@ -337,6 +365,7 @@ const MemberEnrollment = () => {
       enrolmentId: enrolID,
       newSessionId: selectedSession,
     };
+    console.log(transferData);
     if (
       enrolmentDetailsInput.enrolStatus === "Dropped" &&
       enrolmentDetailsInput.dropReason === "Dropped"
@@ -358,7 +387,7 @@ const MemberEnrollment = () => {
     ) {
       dispatch(memberEnrolmentReturnFromSuspend(enrolID));
     } else if (
-      enrolmentDetailsInput.enrolStatus === "Enrolled" &&
+      enrolmentDetailsInput.enrolStatus === "" &&
       enrolmentDetailsInput.dropReason === ""
     ) {
       dispatch(transferEnrolment(transferData));
@@ -366,6 +395,10 @@ const MemberEnrollment = () => {
     }
   };
 
+  // console.log(
+  //   enrolmentDetailsInput.enrolStatus,
+  //   enrolmentDetailsInput.dropReason
+  // );
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
@@ -459,7 +492,7 @@ const MemberEnrollment = () => {
                 description={enrolmentDetailsInput.enrolmentId}
               />
             </Grid> */}
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <TextField
                 select
                 label="Class Name*"
@@ -475,10 +508,10 @@ const MemberEnrollment = () => {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Output title="Term" description="2022 Summer" />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <TextField
                 select
                 label="Session"
@@ -486,7 +519,7 @@ const MemberEnrollment = () => {
                 sx={{ width: "100%" }}
                 value={selectedSession}
                 onChange={sessionChangeHandler}
-                disabled={textfieldDisabled}
+                disabled={sessionDisabled}
               >
                 {/* <MenuItem
                   key={`BS${enrolmentDetailsInput.session}`}
@@ -503,7 +536,7 @@ const MemberEnrollment = () => {
             </Grid>
           </Grid>
           <Grid container spacing={3} sx={{ marginTop: "4px" }}>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <TextField
                 select
                 label="Enrol status"
@@ -523,7 +556,7 @@ const MemberEnrollment = () => {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <TextField
                 select
                 label="Drop/Cancel Reason"
@@ -532,7 +565,7 @@ const MemberEnrollment = () => {
                 value={enrolmentDetailsInput.dropReason}
                 onChange={inputOnChangeHandler}
                 sx={{ width: "100%" }}
-                disabled={textfieldDisabled}
+                disabled={dropReasonDisabled}
               >
                 {dropReasonStatus.map((li) => (
                   <MenuItem key={`DR${li.name}`} value={li.value}>
@@ -544,27 +577,40 @@ const MemberEnrollment = () => {
             <Grid item xs={4}>
               <Output
                 title="Timmings"
-                description={enrolmentDetailsInput.timming}
+                description={
+                  enrolmentDetailsInput
+                    ? enrolmentDetailsInput.timming
+                    : "- - -"
+                }
               />
             </Grid>
-            <Grid item xs={3}>
-              <DatePicker
+            <Grid item xs={4}>
+              {/* <DatePicker
                 label="Start Date"
                 date={date}
                 onChange={(newDate) => setDate(newDate)}
                 disabled={textfieldDisabled}
-              />
+              /> */}
+              <Output title="Start Date" description={date ? date : "- - -"} />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Output
                 title="Enroled Datetime"
-                description={enrolmentDetailsInput.enrolDateTime}
+                description={
+                  enrolmentDetailsInput
+                    ? enrolmentDetailsInput.enrolDateTime
+                    : "- - -"
+                }
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Output
                 title="Drop Datetime"
-                description={enrolmentDetailsInput.dropDateTime}
+                description={
+                  enrolmentDetailsInput
+                    ? enrolmentDetailsInput.dropDateTime
+                    : "- - -"
+                }
               />
             </Grid>
           </Grid>
