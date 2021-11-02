@@ -5,6 +5,7 @@ const initialState = {
   totalPages: 1,
   currentPage: 1,
   class: { business: {} },
+  classSessions: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -38,7 +39,9 @@ export default function reducer(state = initialState, action) {
         classList: updatedClassList,
       };
     }
-
+    case classActionTypes.GET_CLASS_SESSIONS_SUCCEEDED: {
+      return { ...state, classSessions: action.payload };
+    }
     default:
       return state;
   }

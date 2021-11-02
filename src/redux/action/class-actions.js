@@ -15,3 +15,8 @@ export const getClassById = (id) => {
 export const addClass = (data) => {
   return { type: classActionTypes.ADD_CLASS, payload: data };
 };
+
+export const getSessionsOfClass = (classId) => ({
+  type: classActionTypes.GET_CLASS_SESSIONS,
+  payload: classId,
+});

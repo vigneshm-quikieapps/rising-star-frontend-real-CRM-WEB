@@ -1,9 +1,10 @@
-import { put, takeEvery, call, all } from "redux-saga/effects";
+import { put, takeEvery, takeLatest, call, all } from "redux-saga/effects";
 import {
   getClasses,
   deleteClassByID,
   getClassById,
   addNewClass,
+  getClassSessions,
 } from "../../services/class-services";
 import { startLoading, stopLoading } from "../action/shared-actions";
 import { classActionTypes, sharedActionTypes } from "../types";
@@ -103,11 +104,36 @@ export function* addClass(action) {
   }
 }
 
+export function* getSessionsOfClass(action) {
+  try {
+    yield put(startLoading());
+    const sessions = yield call(getClassSessions, action.payload);
+    yield put({
+      type: classActionTypes.GET_CLASS_SESSIONS_SUCCEEDED,
+      payload: sessions,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(stopLoading());
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the class sessions",
+    });
+  }
+}
+
+export function* watchGetSessionsOfClass() {
+  yield takeLatest(classActionTypes.GET_CLASS_SESSIONS, getSessionsOfClass);
+}
+
 export default function* classSagas() {
   yield all([
     classListSaga(),
     deleteClassSaga(),
     watchGetClassById(),
     watchAddClass(),
+    watchGetSessionsOfClass(),
   ]);
 }
