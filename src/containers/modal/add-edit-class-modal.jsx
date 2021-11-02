@@ -248,7 +248,7 @@ const AddEditClassModal = (props) => {
       charges,
       enrolmentControls,
     } = classObj;
-    let existingCharges = charges.map(
+    let existingCharges = charges?.map(
       ({ name, amount, mandatory, payFrequency }) => ({
         name,
         amount,

@@ -17,7 +17,10 @@ import moreIcon from "../../assets/icons/icon-more.png";
 import verifiedIcon from "../../assets/icons/icon-allergy.png";
 import { objectToArray } from "../../utils";
 import { enrollmentHeaders } from "../../helper/constants";
-import { getSessionsByTermId } from "../../redux/action/sessionAction";
+import {
+  getSessionInAclassByTermId,
+  getSessionsByTermId,
+} from "../../redux/action/sessionAction";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getMembersOfSession } from "../../redux/action/memberAction";
 
@@ -37,7 +40,9 @@ const ClassEnrollments = () => {
   const { id } = useParams();
   const members = useSelector((state) => state.members);
   const allTerms = useSelector((state) => state.terms.termsOfClass);
-  const allSessions = useSelector((state) => state.sessions.sessionsOfTerm);
+  const allSessions = useSelector(
+    (state) => state.sessions.sessionListInAclassByterm
+  );
   const [page, setPage] = useState(members.page);
   const [pages] = useState(members.totalPages);
   const [tableRowData, setTableRowData] = useState([]);
@@ -113,7 +118,17 @@ const ClassEnrollments = () => {
   const handleTermChange = (e) => {
     let termId = e.target.value;
     setSelectedTermId(termId);
-    termId !== 0 ? dispatch(getSessionsByTermId(termId)) : setSessionsData([]);
+
+    if (termId !== 0) {
+      dispatch(
+        getSessionInAclassByTermId({
+          classId: id,
+          termId: termId,
+        })
+      );
+    } else {
+      setSessionsData([]);
+    }
     setSelectedSession(0);
     setSessionDetailsArray([]);
     setTableRowData([]);
@@ -152,7 +167,7 @@ const ClassEnrollments = () => {
       Pattern: pattern[0].day,
       Facility: "Gym Hall (static)",
       "Session Enrolment Status": status,
-      "Coach Name": coach.name,
+      "Coach Name": coach?.name,
       "Full class capacity": fullcapacity,
       Enrolled: fullcapacityfilled,
       "Waitlist capacity": waitcapacity,
