@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import {
   AccordionContainer,
-  CardCol4,
   CardRow,
   Description,
   HeadingText,
@@ -102,8 +101,6 @@ const AddEditClassModal = (props) => {
   const [genders, setGenders] = useState([""]);
   const [ages, setAges] = useState([1]);
   const [selectedTerm, setSelectedTerm] = useState({ _id: "" });
-  const [classStartDate, setClassStartDate] = useState(new Date());
-  const [classEndDate, setClassEndDate] = useState(new Date());
   const [classCharges, setClassCharges] = useState([
     {
       name: "",
@@ -195,8 +192,8 @@ const AddEditClassModal = (props) => {
           name: name,
           term: {
             _id: selectedTerm._id,
-            startDate: classStartDate.toISOString().split("T")[0],
-            endDate: classEndDate.toISOString().split("T")[0],
+            startDate: selectedTerm?.startDate?.split("T")[0],
+            endDate: selectedTerm?.endDate?.split("T")[0],
           },
           pattern: {
             day: ShortWeekNames[dayIndex],
@@ -247,16 +244,32 @@ const AddEditClassModal = (props) => {
       registrationform,
       categoryId,
       evaluationSchemeId,
+      about,
+      charges,
+      enrolmentControls,
     } = classObj;
+    let existingCharges = charges.map(
+      ({ name, amount, mandatory, payFrequency }) => ({
+        name,
+        amount,
+        isMandatory: mandatory,
+        payFrequency,
+      })
+    );
     setClassName(name);
     setSelectedBusinessId(businessId);
     setSelectedStatus(selectedStatus);
     setSelectedConsentForm(registrationform);
     setSelectedCategory(categoryId);
     setSelectedEvaluationScheme(evaluationSchemeId);
+    setAboutClass(about);
+    setClassCharges(existingCharges);
+    setAges(enrolmentControls[0].values);
+    setGenders(enrolmentControls[1].values);
   }, [classObj]);
 
   useEffect(() => {
+    console.log("classObj", classObj);
     if (isEditMode) {
       populateClassData();
     }
@@ -639,9 +652,6 @@ const AddEditClassModal = (props) => {
                       }}
                     >
                       <Box sx={{ padding: "15px" }}>
-                        {/* <CardRow>
-                          <Outputs arr={objectToArray(sessionId)} />
-                        </CardRow> */}
                         <CardRow
                           sx={{
                             marginTop: "1%",
@@ -728,9 +738,11 @@ const AddEditClassModal = (props) => {
                 <GradientButton
                   size="large"
                   sx={{ marginRight: "1%" }}
-                  onClick={handleAddClass}
+                  onClick={() => {
+                    handleAddClass(isEditMode);
+                  }}
                 >
-                  Save
+                  {isEditMode ? "Edit" : "Save"}
                 </GradientButton>
                 <GradientButton size="large" discard onClick={handleClose}>
                   Discard
