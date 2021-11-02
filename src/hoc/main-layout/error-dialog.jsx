@@ -19,7 +19,11 @@ const ErrorDialog = ({ children }) => {
   };
   return (
     <>
-      <Dialog open={!!errors.length} onClose={removeErrorHandler}>
+      <Dialog
+        open={!!errors.length}
+        onClose={removeErrorHandler}
+        sx={{ zIndex: (theme) => theme.zIndex.modal + 1 }}
+      >
         <DialogTitle>The following error occurred</DialogTitle>
         <DialogContent>
           <DialogContentText>{errors[0]}</DialogContentText>
