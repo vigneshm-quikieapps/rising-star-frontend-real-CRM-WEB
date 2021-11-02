@@ -4,7 +4,6 @@ import {
   deleteClassByID,
   getClassById,
   addNewClass,
-  getTermsListOfClass,
 } from "../../services/class-services";
 import { startLoading, stopLoading } from "../action/shared-actions";
 import { classActionTypes, sharedActionTypes } from "../types";
@@ -87,18 +86,6 @@ export function* watchAddClass() {
 export function* addClass(action) {
   const classObj = yield call(addNewClass, action.payload);
   yield put({ type: classActionTypes.ADD_CLASS_SUCCEEDED, payload: classObj });
-}
-
-export function* watchGetTermsOfClass() {
-  yield takeEvery(classActionTypes.GET_TERMS_OF_CLASS, getTermsOfClass);
-}
-
-export function* getTermsOfClass(action) {
-  const termsList = yield call(getTermsListOfClass, action.payload);
-  yield put({
-    type: classActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED,
-    payload: termsList,
-  });
 }
 
 export default function* classSagas() {

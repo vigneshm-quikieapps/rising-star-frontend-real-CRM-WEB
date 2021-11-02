@@ -17,11 +17,9 @@ import moreIcon from "../../assets/icons/icon-more.png";
 import verifiedIcon from "../../assets/icons/icon-allergy.png";
 import { objectToArray } from "../../utils";
 import { enrollmentHeaders } from "../../helper/constants";
-import {
-  getAllMembersEnrolledInASession,
-  getSessionsByTermId,
-} from "../../redux/action/sessionAction";
-import { getAllTerms } from "../../redux/action/terms-actions";
+import { getSessionsByTermId } from "../../redux/action/sessionAction";
+import { getTermsOfClass } from "../../redux/action/terms-actions";
+import { getMembersOfSession } from "../../redux/action/memberAction";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -35,16 +33,14 @@ const UpIconButton = () => (
   </IconButton>
 );
 
-const ClassEnrolments = () => {
+const ClassEnrollments = () => {
   const { id } = useParams();
-  const allMembers = useSelector((state) => state.sessions.allMembersEnrolled);
-  const classObj = useSelector((state) => state.classes.class);
-  const allTerms = useSelector((state) => state.terms.allTerms);
+  const members = useSelector((state) => state.members);
+  const allTerms = useSelector((state) => state.terms.termsOfClass);
   const allSessions = useSelector((state) => state.sessions.sessionsOfTerm);
-  const [page, setPage] = useState(allMembers.page);
-  const [pages] = useState(allMembers.totalPages);
+  const [page, setPage] = useState(members.page);
+  const [pages] = useState(members.totalPages);
   const [tableRowData, setTableRowData] = useState([]);
-  const [classInfoArray, setClassInfoArray] = useState([]);
   const [termsData, setTermsData] = useState([]);
   const [sessionsData, setSessionsData] = useState([]);
   const [selectedTermId, setSelectedTermId] = useState("");
@@ -75,18 +71,30 @@ const ClassEnrolments = () => {
   );
 
   const setTableRows = () => {
-    let sessionMembersDetailsArray = allMembers.docs.map((item) => {
-      return {
-        name: item.member.name,
-        allergies: item.memberConsent && item.memberConsent.consent.allergies,
-        conditions: item.memberConsent && item.memberConsent.consent.condition,
-        startDate: item.startDate ? item.startDate : "N/A",
-        enrolledDate: item.registeredDate ? item.registeredDate : "N/A",
-        enrolledStatus: item.enrolledStatus,
-        discontinuationReason: item.discontinuationReason,
-        droppedDate: item.droppedDate ? item.droppedDate : "N/A",
-      };
-    });
+    let sessionMembersDetailsArray = members.membersOfSession.map(
+      ({
+        droppedDate,
+        discontinuationReason,
+        member,
+        memberConsent,
+        startDate,
+        registeredDate,
+        enrolledStatus,
+      }) => {
+        let date = registeredDate?.split("T");
+        let enrolledDate = date ? `${date[0]}/${date[1]}` : "N/A";
+        return {
+          name: member.name,
+          allergies: memberConsent && memberConsent.consent.allergies,
+          conditions: memberConsent && memberConsent.consent.condition,
+          startDate: startDate ? startDate.split("T")[0] : "N/A",
+          enrolledDate,
+          enrolledStatus: enrolledStatus,
+          discontinuationReason: discontinuationReason,
+          droppedDate: droppedDate ? droppedDate : "N/A",
+        };
+      }
+    );
     let finalRowDataArray = sessionMembersDetailsArray.map((item, index) => {
       let itemArray = objectToArray(item);
       return {
@@ -102,23 +110,13 @@ const ClassEnrolments = () => {
     setTableRowData(finalRowDataArray);
   };
 
-  const setClassInfo = () => {
-    const { business } = classObj;
-    const classInfoObject = {
-      // "Class ID": "DL39020458",
-      "City / Town": business?.city,
-      "Post Code": business?.postcode,
-      Status: business?.status,
-    };
-    setClassInfoArray(objectToArray(classInfoObject));
-  };
-
   const handleTermChange = (e) => {
     let termId = e.target.value;
     setSelectedTermId(termId);
     termId !== 0 ? dispatch(getSessionsByTermId(termId)) : setSessionsData([]);
-    setSelectedSession();
+    setSelectedSession(0);
     setSessionDetailsArray([]);
+    setTableRowData([]);
   };
 
   const handleSessionChange = (e) => {
@@ -130,8 +128,10 @@ const ClassEnrolments = () => {
       ? renderSessionData(selectedSessionObj)
       : setSessionDetailsArray([]);
   };
+
   const renderSessionData = (Obj) => {
     const {
+      _id,
       term,
       pattern,
       status,
@@ -141,6 +141,9 @@ const ClassEnrolments = () => {
       waitcapacity,
       waitcapacityfilled,
     } = Obj;
+
+    dispatch(getMembersOfSession(_id));
+
     let sessionsDataObject = {
       "Start Date": term.startDate.split("T")[0],
       "End Date": term.endDate.split("T")[0],
@@ -160,29 +163,25 @@ const ClassEnrolments = () => {
     setSessionDetailsArray(sessionsDataArray);
   };
   useEffect(() => {
-    dispatch(getAllTerms());
-    dispatch(getAllMembersEnrolledInASession(id));
+    dispatch(getTermsOfClass(id));
   }, [dispatch, id]);
 
   useEffect(() => {
     // setting terms data
     let termOptions =
-      allTerms &&
+      allTerms.length &&
       allTerms.map((item) => {
         return {
           id: item._id,
-          termName: item.business[0].name,
+          termName: item.label,
         };
       });
     setTermsData(termOptions);
-    setSelectedTermId(0);
-    setSelectedSession();
 
-    allMembers && allMembers.docs && setTableRows();
-    classObj && setClassInfo();
+    members.membersOfSession.length && setTableRows();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allMembers, classObj]);
+  }, [members, allTerms]);
 
   useEffect(() => {
     let sessionOptions =
@@ -260,4 +259,4 @@ const ClassEnrolments = () => {
   );
 };
 
-export default ClassEnrolments;
+export default ClassEnrollments;

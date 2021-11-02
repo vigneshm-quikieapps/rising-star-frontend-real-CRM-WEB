@@ -5,7 +5,6 @@ const initialState = {
   totalPages: 1,
   currentPage: 1,
   class: { business: {} },
-  termsOfClass: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -37,15 +36,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         classList: updatedClassList,
-      };
-    }
-    case classActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED: {
-      const { classList, totalPages, currentPage } = action.payload;
-      return {
-        ...state,
-        classList,
-        totalPages,
-        currentPage,
       };
     }
 

@@ -2,6 +2,7 @@ import { memberActionTypes } from "../types";
 
 const INITIAL_STATE = {
   memberList: [],
+  membersOfSession: [],
   enrolmentList: [],
   progressRecord: {},
   consentRecord: {},
@@ -24,6 +25,14 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, progressRecord: action.payload };
     case memberActionTypes.CONSENT_RECORD_OF_MEMBER_SUCCEEDED:
       return { ...state, consentRecord: action.payload };
+    case memberActionTypes.GET_MEMBERS_OF_SESSION_SUCCEEDED:
+      const { totalPages, page, docs } = action.payload;
+      return {
+        ...state,
+        membersOfSession: docs,
+        totalPages,
+        currentPage: page,
+      };
     default:
       return state;
   }

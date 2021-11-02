@@ -5,6 +5,7 @@ import {
   addTerm,
   deleteTerm,
   editTerm,
+  getTermsListOfClass,
 } from "../../services/term-services";
 import { startLoading, stopLoading } from "../action/shared-actions";
 import { sharedActionTypes, termsActionTypes } from "../types";
@@ -125,6 +126,18 @@ export function* watchEditTerm() {
   yield takeEvery(termsActionTypes.EDIT_TERM, editTermSaga);
 }
 
+export function* watchGetTermsOfClass() {
+  yield takeEvery(termsActionTypes.GET_TERMS_OF_CLASS, getTermsOfClass);
+}
+
+export function* getTermsOfClass(action) {
+  const termsList = yield call(getTermsListOfClass, action.payload);
+  yield put({
+    type: termsActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED,
+    payload: termsList,
+  });
+}
+
 export default function* termSagas() {
   yield all([
     watchGetAllTerms(),
@@ -132,5 +145,6 @@ export default function* termSagas() {
     watchAddNewTerm(),
     watchDeleteTerm(),
     watchEditTerm(),
+    watchGetTermsOfClass(),
   ]);
 }

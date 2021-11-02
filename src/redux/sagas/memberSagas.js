@@ -6,6 +6,7 @@ import {
   fetchgetProgresRecordOfAMember,
   updateMulitpleStatusOnProgresRecordOfAMember,
   axiosGetConsentByClubmembership,
+  getMemberListOfSession,
 } from "../../services/memberServices";
 
 import { startLoading, stopLoading } from "../action/shared-actions";
@@ -169,6 +170,33 @@ export function* watchgetConsentRecordOfAMember() {
   );
 }
 
+export function* getMembersOfSession(action) {
+  try {
+    yield put(startLoading());
+    const memberList = yield call(getMemberListOfSession, action.payload);
+    yield put({
+      type: memberActionTypes.GET_MEMBERS_OF_SESSION_SUCCEEDED,
+      payload: memberList,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the members of a session",
+    });
+  }
+}
+
+//watchingGeneratedFunction
+export function* watchGetMembersOfSession() {
+  yield takeEvery(
+    memberActionTypes.GET_MEMBERS_OF_SESSION,
+    getMembersOfSession
+  );
+}
+
 export default function* memberSagas() {
   yield all([
     watchGetMember(),
@@ -177,5 +205,6 @@ export default function* memberSagas() {
     watchgetProgresRecordOfAMember(),
     watchupdateMulitpleStatusOnProgressRecordOfMember(),
     watchgetConsentRecordOfAMember(),
+    watchGetMembersOfSession(),
   ]);
 }
