@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   memberList: [],
   enrolmentList: [],
   progressRecord: {},
-  consentRecord: {},
+  consentRecord: [],
   currentMember: null,
   totalPages: 1,
   currentPage: 1,
