@@ -49,7 +49,7 @@ const enrolStatus = [
   { name: "Enroled", value: "Enrolled" },
   { name: "Dropped", value: "Dropped" },
   { name: "Suspend", value: "Suspend" },
-  { name: "Return from suspend", value: "Return from suspend" },
+  { name: "Return from suspend", value: "Return_from_suspension" },
   { name: "Waitlisted", value: "Waitlisted" },
 ];
 
@@ -124,9 +124,9 @@ const MemberEnrollment = () => {
 
   const [selectedSession, setSelectedSession] = useState("");
 
-  const [textfieldDisabled, setTextfieldDisabled] = useState(false);
+  const [enrolStatusDisabled, setEnrolStatusDisabled] = useState(false);
   const [sessionDisabled, setSessionDisabled] = useState(false);
-  const [dropReasonDisabled, setDropReasonDisabled] = useState("");
+  const [dropReasonDisabled, setDropReasonDisabled] = useState(false);
 
   const [enrolmentDetailsInput, setEnrolmentDetailsInput] = useState({
     enrolmentId: "",
@@ -143,7 +143,7 @@ const MemberEnrollment = () => {
   const [expanded, setExpanded] = useState("panel1");
 
   useEffect(() => {
-    businessId && setSelectedBusiness(businessId);
+    businessId && setSelectedBusiness(businessId || "");
   }, [businessId]);
 
   const params = useCallback((id, businessId) => {
@@ -186,28 +186,46 @@ const MemberEnrollment = () => {
   }, [dispatch, classfetchPrarams, enrollmentList]);
 
   useEffect(() => {
-    sessionList && setSelectedSession(sessionList[0]?._id);
+    sessionList && setSelectedSession(sessionList[0]?._id || "");
   }, [sessionList]);
 
   useEffect(() => {
+    const sessionListInMemberEnrolment = enrollmentList.map(
+      (enrolment) => enrolment.session._id
+    );
     const filterSessionList = sessionList.filter(
-      (session) => session._id === enrollmentList[0]?.session._id
+      // (session) => session._id === enrollmentList[0]?.session._id
+      (session) => sessionListInMemberEnrolment.map((li) => li === session._id)
     );
 
-    const filterEnrolmentList = enrollmentList.filter(
-      (enrolment) => enrolment.session._id === filterSessionList[0]?._id
+    const modifiedfilterSessionList = filterSessionList.map(
+      (session) => session._id
     );
+    const filterEnrolmentListOnclassChange = () => {
+      const array1 = enrollmentList.filter(
+        (enrolment) => enrolment.session._id === filterSessionList[0]?._id
+      );
+      if (array1.length > 0) {
+        return array1;
+      } else {
+        return enrollmentList.filter((enrolment) =>
+          modifiedfilterSessionList.map((li) => enrolment.session._id === li)
+        );
+      }
+    };
+
+    const filterEnrolmentList = filterEnrolmentListOnclassChange();
 
     if (filterEnrolmentList.length > 0) {
       setEnrolmentDetailsInput((previous) => ({
         ...previous,
         enrolmentId: `${filterEnrolmentList[0]?._id}`,
-        enrolStatus: `${StatusConverter(
-          filterEnrolmentList[0]?.enrolledStatus
-        )}`,
-        dropReason: `${StatusConverter(
-          filterEnrolmentList[0]?.discontinuationReason
-        )}`,
+        enrolStatus: `${
+          StatusConverter(filterEnrolmentList[0]?.enrolledStatus) || ""
+        }`,
+        dropReason: `${
+          StatusConverter(filterEnrolmentList[0]?.discontinuationReason) || ""
+        }`,
         timming: `${timeConverter(
           filterEnrolmentList[0]?.session.pattern[0].day,
           filterEnrolmentList[0]?.session.pattern[0].startTime,
@@ -220,9 +238,8 @@ const MemberEnrollment = () => {
       }));
       // setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
       setDate(dateConverter(filterEnrolmentList[0]?.startDate));
-      setTextfieldDisabled(
-        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped" ||
-          StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Suspend"
+      setEnrolStatusDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
           ? true
           : false
       );
@@ -264,6 +281,7 @@ const MemberEnrollment = () => {
   };
 
   const classChangehandler = (e) => {
+    // const { name, value } = e.target;
     const tragetId = e.target.value;
 
     dispatch(
@@ -272,6 +290,10 @@ const MemberEnrollment = () => {
         termId: enrolmentDetailsInput.term,
       })
     );
+    setEnrolmentDetailsInput({
+      ...enrolmentDetailsInput,
+      className: tragetId,
+    });
   };
 
   const sessionChangeHandler = (e) => {
@@ -307,7 +329,7 @@ const MemberEnrollment = () => {
       }));
       // setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
       setDate(dateConverter(filterEnrolmentList[0]?.startDate));
-      setTextfieldDisabled(
+      setEnrolStatusDisabled(
         StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
           ? true
           : false
@@ -332,7 +354,7 @@ const MemberEnrollment = () => {
         dropDateTime: "- - -",
       }));
       setDate(null);
-      setTextfieldDisabled(true);
+      setEnrolStatusDisabled(true);
       setDropReasonDisabled(true);
       // setSessionDisabled(true);
     }
@@ -382,7 +404,7 @@ const MemberEnrollment = () => {
     ) {
       dispatch(memberEnrolmentSuspend(enrolID));
     } else if (
-      enrolmentDetailsInput.enrolStatus === "Return from suspend" &&
+      enrolmentDetailsInput.enrolStatus === "Return_from_suspension" &&
       enrolmentDetailsInput.dropReason === ""
     ) {
       dispatch(memberEnrolmentReturnFromSuspend(enrolID));
@@ -547,7 +569,7 @@ const MemberEnrollment = () => {
                 sx={{
                   width: "100%",
                 }}
-                disabled={textfieldDisabled}
+                disabled={enrolStatusDisabled}
               >
                 {enrolStatus.map((li) => (
                   <MenuItem key={`ES${li.name}`} value={li.value}>
@@ -589,7 +611,7 @@ const MemberEnrollment = () => {
                 label="Start Date"
                 date={date}
                 onChange={(newDate) => setDate(newDate)}
-                disabled={textfieldDisabled}
+                disabled={enrolStatusDisabled}
               /> */}
               <Output title="Start Date" description={date ? date : "- - -"} />
             </Grid>

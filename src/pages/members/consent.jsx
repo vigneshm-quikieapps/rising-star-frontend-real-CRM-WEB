@@ -44,7 +44,7 @@ const MemberConsent = () => {
   const [expanded, setExpanded] = useState("panel1");
 
   useEffect(() => {
-    setSelectedBusiness(businessList[0]?._id);
+    setSelectedBusiness(businessList[0]?._id || "");
   }, [businessList]);
 
   useEffect(() => {
@@ -113,14 +113,16 @@ const MemberConsent = () => {
         </AccordionSummary>
         <AccordionDetails>
           <ConsentDisplayComponent
-            questionText="Does your child have any allergies we should be aware of"
+            questionText="Does your child have any allergies we should be aware of ?"
             field={true}
             text={consentRecord[0]?.consent.allergies}
+            flexDirection="column"
           />
           <ConsentDisplayComponent
-            questionText="Does your child have any conditions we should be aware of"
+            questionText="Does your child have any conditions we should be aware of ?"
             field={true}
             text={consentRecord[0]?.consent.condition}
+            flexDirection="column"
           />
           <Box
             sx={{
@@ -157,12 +159,16 @@ const MemberConsent = () => {
             </Typography>
           </Box>
           <ConsentDisplayComponent
-            questionText="Does your child have any conditions we should be aware of"
+            questionText="Does your child have any conditions we should be aware of ?"
             field={false}
+            flexDirection="row"
+            text={consentRecord[0]?.consent.photographConsent}
           />
           <ConsentDisplayComponent
-            questionText={`Signed by (Parent / Carer)`}
+            questionText={`Signed by (Parent / Carer) ?`}
             field={false}
+            flexDirection="row"
+            text={consentRecord[0]?.consent.signedByParent}
           />
         </AccordionDetails>
       </Accordion>
@@ -179,9 +185,24 @@ const MemberConsent = () => {
 
 export default MemberConsent;
 
-const ConsentDisplayComponent = ({ questionText, field, text }) => {
+const ConsentDisplayComponent = ({
+  questionText,
+  field,
+  text,
+  flexDirection,
+}) => {
   return (
-    <Box sx={{ marginBottom: "20px" }}>
+    <Box
+      sx={{
+        marginBottom: "20px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: `${
+          flexDirection === "column" ? "flex-start" : "space-between"
+        }`,
+        flexDirection: `${flexDirection}`,
+      }}
+    >
       <Typography
         variant="subtitle2"
         component="div"
@@ -193,7 +214,8 @@ const ConsentDisplayComponent = ({ questionText, field, text }) => {
       >
         {questionText}
       </Typography>
-      {field && (
+
+      {field ? (
         <TextField
           variant="filled"
           multiline
@@ -209,6 +231,17 @@ const ConsentDisplayComponent = ({ questionText, field, text }) => {
           }}
           rows={4}
         />
+      ) : (
+        <Typography
+          variant="subtitle2"
+          component="div"
+          sx={{
+            fontSize: "1rem",
+            marginTop: "15px",
+          }}
+        >
+          {text ? "Yes" : "No"}
+        </Typography>
       )}
     </Box>
   );

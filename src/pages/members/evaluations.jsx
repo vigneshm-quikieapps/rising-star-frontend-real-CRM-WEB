@@ -212,8 +212,8 @@ const MemberEvaluations = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setBusinessId(businessListofLoggedInUser[0]?._id);
-    setEvaluationSchemeId(evalautionSchemeList[0]?._id);
+    setBusinessId(businessListofLoggedInUser[0]?._id || "");
+    setEvaluationSchemeId(evalautionSchemeList[0]?._id || "");
     setLevels(progressRecord.levels);
   }, [businessListofLoggedInUser, evalautionSchemeList, progressRecord]);
 
