@@ -52,11 +52,11 @@ export const getMemberById = async (id) => {
   }
 };
 
-export const axiosGetConsentByClubmembership = async (clubmembershipId) => {
+export const axiosGetConsentByClubmembership = async (id) => {
   try {
-    const api = `member-consents/by-club-membership-id/${clubmembershipId}`;
+    const api = `member-consents/by-club-membership-id/${id}`;
     const consent = await axiosInstance.get(api);
-    return consent.data;
+    return consent.data.memberConsent;
   } catch (error) {
     throw error;
   }

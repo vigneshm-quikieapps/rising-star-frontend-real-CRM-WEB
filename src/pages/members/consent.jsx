@@ -5,10 +5,13 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useSelector, useDispatch } from "react-redux";
 
-import GradientButton from "../../components/gradient-button";
-import Accordion from "../../components/accordion";
-import TextField from "../../components/textfield";
-import Output from "../../components/output";
+import {
+  GradientButton,
+  Accordion,
+  TextField,
+  Output,
+} from "../../components/index";
+import { icons } from "../../helper/constants";
 
 import { getMemberConsentRecord } from "../../redux/action/memberAction";
 
@@ -40,16 +43,6 @@ const MemberConsent = () => {
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [expanded, setExpanded] = useState("panel1");
 
-  // const consentParams = () => {
-  //   return new Promise((resolve, reject) => {
-  //     const data = {
-  //       clubMembershipId: currentMember.clubMembershipId,
-  //     }
-  //     resolve(data);
-  //   });
-
-  // }
-
   useEffect(() => {
     setSelectedBusiness(businessList[0]?._id);
   }, [businessList]);
@@ -63,8 +56,6 @@ const MemberConsent = () => {
       );
     }
   }, [dispatch, currentMember]);
-
-  console.log(consentRecord);
 
   const businessChangeHandler = (e) => {
     setSelectedBusiness(e.target.value);
@@ -121,29 +112,57 @@ const MemberConsent = () => {
           <Typography>Consent Details</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <QandAcomponent
+          <ConsentDisplayComponent
             questionText="Does your child have any allergies we should be aware of"
-            needTextfield={true}
-            textForTextfield={
-              consentRecord.memberConsent[0] &&
-              consentRecord.memberConsent[0].consent.allergies
-            }
+            field={true}
+            text={consentRecord[0]?.consent.allergies}
           />
-          <QandAcomponent
+          <ConsentDisplayComponent
             questionText="Does your child have any conditions we should be aware of"
-            needTextfield={true}
-            textForTextfield={
-              consentRecord.memberConsent[0] &&
-              consentRecord.memberConsent[0].consent.condition
-            }
+            field={true}
+            text={consentRecord[0]?.consent.condition}
           />
-          <QandAcomponent
+          <Box
+            sx={{
+              padding: "0 10px",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <img
+              src={icons.allergy}
+              alt="allergy"
+              style={{
+                width: "20px",
+                height: "20px",
+                marginRight: "5px",
+                objectFit: "contain",
+                opacity: "0.5",
+              }}
+            />
+
+            <Typography
+              variant="caption"
+              display="block"
+              sx={{
+                letterSpacing: "0.5px",
+                fontWeight: "bold",
+                opacity: "0.5",
+              }}
+            >
+              Zippy’s occasionally takes videos and photographs for promotional
+              and training purposes and during displays
+            </Typography>
+          </Box>
+          <ConsentDisplayComponent
             questionText="Does your child have any conditions we should be aware of"
-            needTextfield={false}
+            field={false}
           />
-          <QandAcomponent
+          <ConsentDisplayComponent
             questionText={`Signed by (Parent / Carer)`}
-            needTextfield={false}
+            field={false}
           />
         </AccordionDetails>
       </Accordion>
@@ -160,7 +179,7 @@ const MemberConsent = () => {
 
 export default MemberConsent;
 
-const QandAcomponent = ({ questionText, needTextfield, textForTextfield }) => {
+const ConsentDisplayComponent = ({ questionText, field, text }) => {
   return (
     <Box sx={{ marginBottom: "20px" }}>
       <Typography
@@ -174,13 +193,13 @@ const QandAcomponent = ({ questionText, needTextfield, textForTextfield }) => {
       >
         {questionText}
       </Typography>
-      {needTextfield && (
+      {field && (
         <TextField
           variant="filled"
           multiline
           disabled
           placeholder="Further details..."
-          value={textForTextfield}
+          value={text}
           sx={{
             width: "100%",
             "& .MuiInputBase-root": {

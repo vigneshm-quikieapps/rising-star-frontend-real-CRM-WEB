@@ -1,17 +1,20 @@
 import { useParams } from "react-router";
 import React, { useState, useCallback } from "react";
-import Output from "../../components/output";
 
 import { MenuItem, styled, Box, Grid, Typography } from "@mui/material";
-import Accordion from "../../components/accordion";
-import GradientButton from "../../components/gradient-button";
-import DatePicker from "../../components/date-picker";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import IconButton from "../../components/icon-button";
 import { icons } from "../../helper/constants";
-import TextField from "../../components/textfield";
+import {
+  Accordion,
+  GradientButton,
+  DatePicker,
+  TextField,
+  Output,
+} from "../../components/index";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
@@ -121,6 +124,7 @@ const MemberEnrollment = () => {
   const [selectedSession, setSelectedSession] = useState("");
 
   const [textfieldDisabled, setTextfieldDisabled] = useState(false);
+  const [sessionDisabled, setSessionDisabled] = useState(false);
 
   const [enrolmentDetailsInput, setEnrolmentDetailsInput] = useState({
     enrolmentId: "",
@@ -188,9 +192,15 @@ const MemberEnrollment = () => {
       (session) => session._id === enrollmentList[0]?.session._id
     );
 
+    console.log(filterSessionList);
+
     const filterEnrolmentList = enrollmentList.filter(
       (enrolment) => enrolment.session._id === filterSessionList[0]?._id
     );
+
+    console.log(filterEnrolmentList);
+
+    console.log(enrollmentList);
 
     if (filterEnrolmentList.length > 0) {
       setEnrolmentDetailsInput((previous) => ({
@@ -215,10 +225,17 @@ const MemberEnrollment = () => {
       setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
       setTextfieldDisabled(
         StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped" ||
-          "Suspend"
+          StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Suspend"
           ? true
           : false
       );
+      setSessionDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped" ||
+          StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Suspend"
+          ? true
+          : false
+      );
+      setSelectedSession(filterEnrolmentList[0]?.session._id);
     }
   }, [enrollmentList, sessionList]);
 
@@ -285,11 +302,11 @@ const MemberEnrollment = () => {
         dropDateTime: `${dateConverter(filterEnrolmentList[0]?.droppedDate)}`,
       }));
       setDate(new Date(`${filterEnrolmentList[0]?.startDate}`));
-      // setTextfieldDisabled(
-      //   StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
-      //     ? true
-      //     : false
-      // );
+      setTextfieldDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) === "Dropped"
+          ? true
+          : false
+      );
     } else {
       setEnrolmentDetailsInput((previous) => ({
         ...previous,
@@ -305,6 +322,7 @@ const MemberEnrollment = () => {
       }));
       setDate(null);
       setTextfieldDisabled(true);
+      // setSessionDisabled(false)
     }
   };
 
@@ -337,6 +355,7 @@ const MemberEnrollment = () => {
       enrolmentId: enrolID,
       newSessionId: selectedSession,
     };
+    console.log(transferData);
     if (
       enrolmentDetailsInput.enrolStatus === "Dropped" &&
       enrolmentDetailsInput.dropReason === "Dropped"
@@ -358,7 +377,7 @@ const MemberEnrollment = () => {
     ) {
       dispatch(memberEnrolmentReturnFromSuspend(enrolID));
     } else if (
-      enrolmentDetailsInput.enrolStatus === "Enrolled" &&
+      enrolmentDetailsInput.enrolStatus === "" &&
       enrolmentDetailsInput.dropReason === ""
     ) {
       dispatch(transferEnrolment(transferData));
@@ -366,6 +385,10 @@ const MemberEnrollment = () => {
     }
   };
 
+  // console.log(
+  //   enrolmentDetailsInput.enrolStatus,
+  //   enrolmentDetailsInput.dropReason
+  // );
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
@@ -486,7 +509,7 @@ const MemberEnrollment = () => {
                 sx={{ width: "100%" }}
                 value={selectedSession}
                 onChange={sessionChangeHandler}
-                disabled={textfieldDisabled}
+                disabled={sessionDisabled}
               >
                 {/* <MenuItem
                   key={`BS${enrolmentDetailsInput.session}`}
