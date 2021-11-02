@@ -5,7 +5,7 @@ import { Output, Status } from ".";
 const statusMap = { ACTIVE: "green", INACTIVE: "red" };
 
 const Outputs = ({
-  items,
+  items = {},
   columnCount = 4,
   columnGap = "0",
   rowGap = "10px",
