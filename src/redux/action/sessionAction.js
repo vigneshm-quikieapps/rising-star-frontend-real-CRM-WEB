@@ -2,7 +2,7 @@ import { sessionActionTypes } from "../types";
 
 export const getAllMembersEnrolledInASession = (id) => {
   return {
-    type: sessionActionTypes.GET_ALL_MEMBERS_ENROLLED_IN_A_SESSION_SAGA,
+    type: sessionActionTypes.GET_ALL_MEMBERS_ENROLLED_IN_A_SESSION,
     payload: id,
   };
 };

@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import {
   AccordionContainer,
+  CardCol4,
   CardRow,
   Description,
   HeadingText,
@@ -100,7 +101,7 @@ const AddEditClassModal = (props) => {
   const [aboutClass, setAboutClass] = useState("");
   const [genders, setGenders] = useState([""]);
   const [ages, setAges] = useState([1]);
-  const [selectedTerm, setSelectedTerm] = useState("");
+  const [selectedTerm, setSelectedTerm] = useState({ _id: "" });
   const [classStartDate, setClassStartDate] = useState(new Date());
   const [classEndDate, setClassEndDate] = useState(new Date());
   const [classCharges, setClassCharges] = useState([
@@ -146,6 +147,7 @@ const AddEditClassModal = (props) => {
   };
 
   const handleAddClass = () => {
+    console.log("add handle called");
     let newClassObject = {
       name: className,
       status: selectedStatus,
@@ -192,7 +194,7 @@ const AddEditClassModal = (props) => {
         return {
           name: name,
           term: {
-            _id: selectedTerm,
+            _id: selectedTerm._id,
             startDate: classStartDate.toISOString().split("T")[0],
             endDate: classEndDate.toISOString().split("T")[0],
           },
@@ -646,42 +648,49 @@ const AddEditClassModal = (props) => {
                             justifyContent: "space-between",
                           }}
                         >
-                          <StyledTextField
-                            select
-                            label="term"
-                            value={selectedTerm}
-                            variant={"filled"}
-                            onChange={(e) => {
-                              setSelectedTerm(e.target.value);
-                            }}
-                            sx={{ width: "55%" }}
-                          >
-                            {termsOfBusiness.length ? (
-                              termsOfBusiness.map(({ _id, label }) => {
-                                return (
-                                  <MenuItem key={label} value={_id}>
-                                    {label}
-                                  </MenuItem>
+                          <Box sx={{ width: "40%" }}>
+                            <StyledTextField
+                              select
+                              label="term"
+                              value={selectedTerm._id}
+                              variant={"filled"}
+                              onChange={(e) => {
+                                setSelectedTerm(
+                                  termsOfBusiness.find(
+                                    ({ _id }) => _id === e.target.value
+                                  )
                                 );
-                              })
-                            ) : (
-                              <MenuItem value="">No terms</MenuItem>
-                            )}
-                          </StyledTextField>
-
-                          <DatePicker
-                            label="Start Date"
-                            date={classStartDate}
-                            onChange={(date) => {
-                              setClassStartDate(date);
-                            }}
-                          />
-
-                          <DatePicker
-                            label="End Date"
-                            date={classEndDate}
-                            onChange={(date) => setClassEndDate(date)}
-                          />
+                              }}
+                              sx={{ width: "100%" }}
+                            >
+                              {termsOfBusiness.length ? (
+                                termsOfBusiness.map(({ _id, label }) => {
+                                  return (
+                                    <MenuItem key={label} value={_id}>
+                                      {label}
+                                    </MenuItem>
+                                  );
+                                })
+                              ) : (
+                                <MenuItem value="">No terms</MenuItem>
+                              )}
+                            </StyledTextField>
+                          </Box>
+                          <Box sx={{ width: "20%" }}>
+                            <DatePicker
+                              disabled
+                              label="Start Date"
+                              date={selectedTerm?.startDate}
+                            />
+                          </Box>
+                          <Box sx={{ width: "20%" }}>
+                            <DatePicker
+                              disabled
+                              label="End Date"
+                              date={selectedTerm?.endDate}
+                              sx={{ width: "100%", margin: 20 }}
+                            />
+                          </Box>
                         </CardRow>
                       </Box>
                       {classSessions.length ? (

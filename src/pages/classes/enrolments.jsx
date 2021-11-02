@@ -122,7 +122,7 @@ const ClassEnrollments = () => {
   const handleSessionChange = (e) => {
     let sessionId = e.target.value;
     let selectedSessionObj =
-      allSessions && allSessions.docs.find((e) => e._id === sessionId);
+      allSessions.length && allSessions.find((e) => e._id === sessionId);
     setSelectedSession(selectedSessionObj);
     selectedSessionObj !== undefined
       ? renderSessionData(selectedSessionObj)
@@ -152,7 +152,7 @@ const ClassEnrollments = () => {
       Pattern: pattern[0].day,
       Facility: "Gym Hall (static)",
       "Session Enrolment Status": status,
-      "Coach Name": coach[0].name,
+      "Coach Name": coach.name,
       "Full class capacity": fullcapacity,
       Enrolled: fullcapacityfilled,
       "Waitlist capacity": waitcapacity,
@@ -162,6 +162,7 @@ const ClassEnrollments = () => {
     let sessionsDataArray = objectToArray(sessionsDataObject);
     setSessionDetailsArray(sessionsDataArray);
   };
+
   useEffect(() => {
     dispatch(getTermsOfClass(id));
   }, [dispatch, id]);
@@ -170,10 +171,10 @@ const ClassEnrollments = () => {
     // setting terms data
     let termOptions =
       allTerms.length &&
-      allTerms.map((item) => {
+      allTerms.map(({ _id, label }) => {
         return {
-          id: item._id,
-          termName: item.label,
+          id: _id,
+          termName: label,
         };
       });
     setTermsData(termOptions);
@@ -185,11 +186,11 @@ const ClassEnrollments = () => {
 
   useEffect(() => {
     let sessionOptions =
-      allSessions &&
-      allSessions.docs.map((item) => {
+      allSessions.length &&
+      allSessions.map(({ _id, name }) => {
         return {
-          id: item._id,
-          sessionName: item.name,
+          id: _id,
+          sessionName: name,
         };
       });
 
@@ -211,9 +212,9 @@ const ClassEnrollments = () => {
           >
             <MenuItem value={0}>Select Term</MenuItem>
             {termsData &&
-              termsData.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.termName}
+              termsData.map(({ id, termName }) => (
+                <MenuItem key={id} value={id}>
+                  {termName}
                 </MenuItem>
               ))}
           </TextField>
@@ -229,10 +230,10 @@ const ClassEnrollments = () => {
           >
             <MenuItem value={0}>Select Session</MenuItem>
             {sessionsData &&
-              sessionsData.map((item) => {
+              sessionsData.map(({ id, sessionName }) => {
                 return (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.sessionName}
+                  <MenuItem key={id} value={id}>
+                    {sessionName}
                   </MenuItem>
                 );
               })}

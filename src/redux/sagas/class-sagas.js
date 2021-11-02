@@ -84,8 +84,23 @@ export function* watchAddClass() {
 }
 
 export function* addClass(action) {
-  const classObj = yield call(addNewClass, action.payload);
-  yield put({ type: classActionTypes.ADD_CLASS_SUCCEEDED, payload: classObj });
+  try {
+    yield put(startLoading());
+    const classObj = yield call(addNewClass, action.payload);
+    yield put({
+      type: classActionTypes.ADD_CLASS_SUCCEEDED,
+      payload: classObj,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(stopLoading());
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while adding a new class",
+    });
+  }
 }
 
 export default function* classSagas() {

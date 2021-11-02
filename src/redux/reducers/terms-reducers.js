@@ -6,8 +6,8 @@ const INITIAL_STATE = {
   termsOfBusiness: [],
   termsOfClass: [],
   currentBusinessId: undefined,
-  currentPage: 0,
-  totalPages: 0,
+  currentPage: 1,
+  totalPages: 1,
 };
 
 export default function reducer(state = INITIAL_STATE, action) {

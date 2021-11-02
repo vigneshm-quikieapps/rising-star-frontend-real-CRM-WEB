@@ -131,11 +131,22 @@ export function* watchGetTermsOfClass() {
 }
 
 export function* getTermsOfClass(action) {
-  const termsList = yield call(getTermsListOfClass, action.payload);
-  yield put({
-    type: termsActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED,
-    payload: termsList,
-  });
+  try {
+    yield put(startLoading());
+    const termsList = yield call(getTermsListOfClass, action.payload);
+    yield put({
+      type: termsActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED,
+      payload: termsList,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting terms of a class",
+    });
+  }
 }
 
 export default function* termSagas() {
