@@ -4,7 +4,6 @@ import {
   deleteClassByID,
   getClassById,
   addNewClass,
-  getTermsListOfClass,
   getClassSessions,
 } from "../../services/class-services";
 import { startLoading, stopLoading } from "../action/shared-actions";
@@ -86,20 +85,23 @@ export function* watchAddClass() {
 }
 
 export function* addClass(action) {
-  const classObj = yield call(addNewClass, action.payload);
-  yield put({ type: classActionTypes.ADD_CLASS_SUCCEEDED, payload: classObj });
-}
-
-export function* watchGetTermsOfClass() {
-  yield takeEvery(classActionTypes.GET_TERMS_OF_CLASS, getTermsOfClass);
-}
-
-export function* getTermsOfClass(action) {
-  const termsList = yield call(getTermsListOfClass, action.payload);
-  yield put({
-    type: classActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED,
-    payload: termsList,
-  });
+  try {
+    yield put(startLoading());
+    const classObj = yield call(addNewClass, action.payload);
+    yield put({
+      type: classActionTypes.ADD_CLASS_SUCCEEDED,
+      payload: classObj,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(stopLoading());
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while adding a new class",
+    });
+  }
 }
 
 export function* getSessionsOfClass(action) {

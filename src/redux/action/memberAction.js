@@ -35,3 +35,10 @@ export const getMemberConsentRecord = (id) => {
     payload: id,
   };
 };
+
+export const getMembersOfSession = (sessionId) => {
+  return {
+    type: memberActionTypes.GET_MEMBERS_OF_SESSION,
+    payload: sessionId,
+  };
+};

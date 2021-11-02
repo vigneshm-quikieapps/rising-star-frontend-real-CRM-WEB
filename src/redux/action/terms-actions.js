@@ -24,3 +24,7 @@ export const editTerm = (termData) => {
 export const deleteTerm = (termId) => {
   return { type: termsActionTypes.DELETE_TERM, payload: termId };
 };
+
+export const getTermsOfClass = (id) => {
+  return { type: termsActionTypes.GET_TERMS_OF_CLASS, payload: id };
+};

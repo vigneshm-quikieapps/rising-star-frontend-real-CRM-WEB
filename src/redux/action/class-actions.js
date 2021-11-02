@@ -16,10 +16,6 @@ export const addClass = (data) => {
   return { type: classActionTypes.ADD_CLASS, payload: data };
 };
 
-export const getTermsOfClass = (id) => {
-  return { type: classActionTypes.GET_TERMS_OF_CLASS, payload: id };
-};
-
 export const getSessionsOfClass = (classId) => ({
   type: classActionTypes.GET_CLASS_SESSIONS,
   payload: classId,

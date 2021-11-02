@@ -21,6 +21,9 @@ import {
   attendanceObject2,
 } from "../../helper/constants";
 import { objectToArray } from "../../utils";
+import { getTermsOfClass } from "../../redux/action/terms-actions";
+import { getSessionsByTermId } from "../../redux/action/sessionAction";
+import { getMembersOfSession } from "../../redux/action/memberAction";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -41,6 +44,14 @@ const ClassAttendance = () => {
   const classObj = useSelector((state) => state.classes.class);
   const [classInfoArray, setClassInfoArray] = useState([]);
   const dispatch = useDispatch();
+  const allTerms = useSelector((state) => state.terms.termsOfClass);
+  const [termsData, setTermsData] = useState([]);
+  const members = useSelector((state) => state.members);
+  const allSessions = useSelector((state) => state.sessions.sessionsOfTerm);
+  const [selectedSession, setSelectedSession] = useState("");
+  const [selectedTermId, setSelectedTermId] = useState("");
+  const [sessionDetailsArray, setSessionDetailsArray] = useState([]);
+  const [sessionsData, setSessionsData] = useState([]);
 
   const setClassInfo = () => {
     const { business } = classObj;
@@ -51,6 +62,57 @@ const ClassAttendance = () => {
       Status: business?.status,
     };
     setClassInfoArray(objectToArray(classInfoObject));
+  };
+
+  const handleTermChange = (e) => {
+    let termId = e.target.value;
+    setSelectedTermId(termId);
+    termId !== 0 ? dispatch(getSessionsByTermId(termId)) : setSessionsData([]);
+    setSelectedSession(0);
+    setSessionDetailsArray([]);
+  };
+
+  const renderSessionData = (Obj) => {
+    const {
+      _id,
+      term,
+      pattern,
+      status,
+      coach,
+      fullcapacity,
+      fullcapacityfilled,
+      waitcapacity,
+      waitcapacityfilled,
+    } = Obj;
+
+    dispatch(getMembersOfSession(_id));
+
+    let sessionsDataObject = {
+      "Start Date": term.startDate.split("T")[0],
+      "End Date": term.endDate.split("T")[0],
+      "Start Time": pattern[0].startTime.split("T")[0],
+      "End Time": pattern[0].endTime.split("T")[0],
+      Pattern: pattern[0].day,
+      Facility: "Gym Hall (static)",
+      "Session Enrolment Status": status,
+      "Coach Name": coach.name,
+      "Full class capacity": fullcapacity,
+      Enrolled: fullcapacityfilled,
+      "Waitlist capacity": waitcapacity,
+      "Waitlist Enrolled": waitcapacityfilled,
+    };
+
+    let sessionsDataArray = objectToArray(sessionsDataObject);
+    setSessionDetailsArray(sessionsDataArray);
+  };
+  const handleSessionChange = (e) => {
+    let sessionId = e.target.value;
+    let selectedSessionObj =
+      allSessions.length && allSessions.find((e) => e._id === sessionId);
+    setSelectedSession(selectedSessionObj);
+    selectedSessionObj !== undefined
+      ? renderSessionData(selectedSessionObj)
+      : setSessionDetailsArray([]);
   };
 
   const pagination = (
@@ -81,38 +143,79 @@ const ClassAttendance = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classObj]);
 
+  useEffect(() => {
+    dispatch(getTermsOfClass(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    // setting terms data
+    let termOptions =
+      allTerms.length &&
+      allTerms.map(({ _id, label }) => {
+        return {
+          id: _id,
+          termName: label,
+        };
+      });
+    setTermsData(termOptions);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [members, allTerms]);
+
+  useEffect(() => {
+    let sessionOptions =
+      allSessions.length &&
+      allSessions.map(({ _id, name }) => {
+        return {
+          id: _id,
+          sessionName: name,
+        };
+      });
+
+    setSessionsData(sessionOptions);
+  }, [allSessions]);
+
   return (
     <Box>
       <Card sx={{ height: "194px" }}>
-        <CardRow>
+        <CardRow sx={{ justifyContent: "flex-start" }}>
           <TextField
             select
             id="demo-simple-select"
-            value={10}
+            value={selectedTermId}
             label="Term"
-            onChange={() => {}}
+            onChange={handleTermChange}
             variant="filled"
-            sx={{ width: "272px" }}
+            sx={{ width: "272px", marginRight: "15px" }}
           >
-            <MenuItem value={10}>2022 Summer</MenuItem>
-            <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={0}>Select Term</MenuItem>
+            {termsData &&
+              termsData.map(({ id, termName }) => (
+                <MenuItem key={id} value={id}>
+                  {termName}
+                </MenuItem>
+              ))}
           </TextField>
 
           <TextField
             select
             label="Session"
             id="demo-simple-select"
-            value={20}
-            onChange={() => {}}
+            value={selectedSession ? selectedSession._id : ""}
+            onChange={handleSessionChange}
             variant="filled"
-            sx={{ width: "272px" }}
+            sx={{ width: "272px", marginRight: "15px" }}
           >
-            <MenuItem value={10}>2022 Summer</MenuItem>
-            <MenuItem value={20}>Mon, 9:30 am to 11:30 am</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={0}>Select Session</MenuItem>
+            {sessionsData &&
+              sessionsData.map(({ id, sessionName }) => {
+                return (
+                  <MenuItem key={id} value={id}>
+                    {sessionName}
+                  </MenuItem>
+                );
+              })}
           </TextField>
-
           <DatePicker
             label="Date"
             date={date}
@@ -124,11 +227,10 @@ const ClassAttendance = () => {
         <CardRow
           sx={{
             marginTop: "15px",
-            flexWrap: "wrap",
             justifyContent: "flex-start",
           }}
         >
-          <Outputs arr={arr2} />
+          <Outputs arr={sessionDetailsArray} />
         </CardRow>
       </Card>
 

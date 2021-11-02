@@ -8,16 +8,16 @@ const ClassAddEdit = () => {
   const query = useQuery();
   const classList = useSelector((state) => state.classes.classList);
   const classObj = useSelector((state) => state.classes.class);
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     const isEdit = query.get("edit") === "true" ? true : false;
-    setIsEdit(isEdit);
+    setIsEditMode(isEdit);
   }, [classList, query]);
 
   return (
     <>
-      <AddEditClassModal isEditMode={isEdit} classObj={classObj} />
+      <AddEditClassModal isEditMode={isEditMode} classObj={classObj} />
     </>
   );
 };

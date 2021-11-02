@@ -44,7 +44,7 @@ import Charge from "../class-list/charge";
 import { getTermsOfBusiness } from "../../redux/action/terms-actions";
 import { ShortWeekNames } from "../../helper/constants";
 import { useHistory } from "react-router";
-import { addClass } from "../../redux/action/class-actions";
+import { addClass, getSessionsOfClass } from "../../redux/action/class-actions";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   // applied to label of all variants
@@ -100,9 +100,7 @@ const AddEditClassModal = (props) => {
   const [aboutClass, setAboutClass] = useState("");
   const [genders, setGenders] = useState([""]);
   const [ages, setAges] = useState([1]);
-  const [selectedTerm, setSelectedTerm] = useState("");
-  const [classStartDate, setClassStartDate] = useState(new Date());
-  const [classEndDate, setClassEndDate] = useState(new Date());
+  const [selectedTerm, setSelectedTerm] = useState({ _id: "" });
   const [classCharges, setClassCharges] = useState([
     {
       name: "",
@@ -133,7 +131,7 @@ const AddEditClassModal = (props) => {
   const evaluationSchemeList = useSelector(
     (state) => state.evaluation.evaluationList
   );
-
+  const sessionsOfClass = useSelector((state) => state.classes.classSessions);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -145,7 +143,9 @@ const AddEditClassModal = (props) => {
     setPage(value);
   };
 
-  const handleAddClass = () => {
+  const handleAddClass = (isEdit) => {
+    console.log("add / edit handle called");
+
     let newClassObject = {
       name: className,
       status: selectedStatus,
@@ -192,9 +192,9 @@ const AddEditClassModal = (props) => {
         return {
           name: name,
           term: {
-            _id: selectedTerm,
-            startDate: classStartDate.toISOString().split("T")[0],
-            endDate: classEndDate.toISOString().split("T")[0],
+            _id: selectedTerm._id,
+            startDate: selectedTerm?.startDate?.split("T")[0],
+            endDate: selectedTerm?.endDate?.split("T")[0],
           },
           pattern: {
             day: ShortWeekNames[dayIndex],
@@ -208,7 +208,11 @@ const AddEditClassModal = (props) => {
         };
       }),
     };
-    dispatch(addClass(newClassObject));
+
+    if (!isEdit) {
+      dispatch(addClass(newClassObject));
+    } else {
+    }
   };
 
   const addChargeRow = () => {
@@ -241,24 +245,55 @@ const AddEditClassModal = (props) => {
     const {
       name,
       businessId,
-      selectedStatus,
+      status,
       registrationform,
       categoryId,
       evaluationSchemeId,
+      about,
+      charges,
+      enrolmentControls,
     } = classObj;
+    let existingCharges = charges?.map(
+      ({ name, amount, mandatory, payFrequency }) => ({
+        name,
+        amount,
+        isMandatory: mandatory,
+        payFrequency,
+      })
+    );
+
+    let existingSessions = sessionsOfClass?.map(
+      ({ name, facility, fullcapacity, waitcapacity, coachId, pattern }) => ({
+        name,
+        dayIndex: ShortWeekNames.indexOf(pattern[0].day),
+        facility: facility,
+        fullCapacity: fullcapacity,
+        waitlistCapacity: waitcapacity,
+        coachId: coachId,
+        startTime: pattern[0].startTime,
+        endTime: pattern[0].endTime,
+      })
+    );
     setClassName(name);
     setSelectedBusinessId(businessId);
-    setSelectedStatus(selectedStatus);
+    setSelectedStatus(status);
     setSelectedConsentForm(registrationform);
     setSelectedCategory(categoryId);
     setSelectedEvaluationScheme(evaluationSchemeId);
-  }, [classObj]);
+    setAboutClass(about);
+    setClassCharges(existingCharges);
+    setAges(enrolmentControls[0].values);
+    setGenders(enrolmentControls[1].values);
+    setClassSessions(existingSessions);
+  }, [classObj, sessionsOfClass]);
 
   useEffect(() => {
     if (isEditMode) {
-      populateClassData();
+      if (sessionsOfClass.length === 0 && classObj._id)
+        dispatch(getSessionsOfClass(classObj._id));
+      classObj._id && populateClassData();
     }
-  }, [isEditMode, classObj, populateClassData]);
+  }, [dispatch, isEditMode, classObj, populateClassData, sessionsOfClass]);
 
   useEffect(() => {
     dispatch(getEvaluationSchemeList());
@@ -637,51 +672,55 @@ const AddEditClassModal = (props) => {
                       }}
                     >
                       <Box sx={{ padding: "15px" }}>
-                        {/* <CardRow>
-                          <Outputs arr={objectToArray(sessionId)} />
-                        </CardRow> */}
                         <CardRow
                           sx={{
                             marginTop: "1%",
                             justifyContent: "space-between",
                           }}
                         >
-                          <StyledTextField
-                            select
-                            label="term"
-                            value={selectedTerm}
-                            variant={"filled"}
-                            onChange={(e) => {
-                              setSelectedTerm(e.target.value);
-                            }}
-                            sx={{ width: "55%" }}
-                          >
-                            {termsOfBusiness.length ? (
-                              termsOfBusiness.map(({ _id, label }) => {
-                                return (
-                                  <MenuItem key={label} value={_id}>
-                                    {label}
-                                  </MenuItem>
+                          <Box sx={{ width: "40%" }}>
+                            <StyledTextField
+                              select
+                              label="term"
+                              value={selectedTerm._id}
+                              variant={"filled"}
+                              onChange={(e) => {
+                                setSelectedTerm(
+                                  termsOfBusiness.find(
+                                    ({ _id }) => _id === e.target.value
+                                  )
                                 );
-                              })
-                            ) : (
-                              <MenuItem value="">No terms</MenuItem>
-                            )}
-                          </StyledTextField>
-
-                          <DatePicker
-                            label="Start Date"
-                            date={classStartDate}
-                            onChange={(date) => {
-                              setClassStartDate(date);
-                            }}
-                          />
-
-                          <DatePicker
-                            label="End Date"
-                            date={classEndDate}
-                            onChange={(date) => setClassEndDate(date)}
-                          />
+                              }}
+                              sx={{ width: "100%" }}
+                            >
+                              {termsOfBusiness.length ? (
+                                termsOfBusiness.map(({ _id, label }) => {
+                                  return (
+                                    <MenuItem key={label} value={_id}>
+                                      {label}
+                                    </MenuItem>
+                                  );
+                                })
+                              ) : (
+                                <MenuItem value="">No terms</MenuItem>
+                              )}
+                            </StyledTextField>
+                          </Box>
+                          <Box sx={{ width: "20%" }}>
+                            <DatePicker
+                              disabled
+                              label="Start Date"
+                              date={selectedTerm?.startDate}
+                            />
+                          </Box>
+                          <Box sx={{ width: "20%" }}>
+                            <DatePicker
+                              disabled
+                              label="End Date"
+                              date={selectedTerm?.endDate}
+                              sx={{ width: "100%", margin: 20 }}
+                            />
+                          </Box>
                         </CardRow>
                       </Box>
                       {classSessions.length ? (
@@ -719,9 +758,11 @@ const AddEditClassModal = (props) => {
                 <GradientButton
                   size="large"
                   sx={{ marginRight: "1%" }}
-                  onClick={handleAddClass}
+                  onClick={() => {
+                    handleAddClass(isEditMode);
+                  }}
                 >
-                  Save
+                  {isEditMode ? "Edit" : "Save"}
                 </GradientButton>
                 <GradientButton size="large" discard onClick={handleClose}>
                   Discard

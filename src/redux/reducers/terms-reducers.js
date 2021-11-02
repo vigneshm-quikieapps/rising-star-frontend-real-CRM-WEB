@@ -4,9 +4,10 @@ const INITIAL_STATE = {
   allTerms: [],
   termSessions: [],
   termsOfBusiness: [],
+  termsOfClass: [],
   currentBusinessId: undefined,
-  currentPage: 0,
-  totalPages: 0,
+  currentPage: 1,
+  totalPages: 1,
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -70,6 +71,14 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         allTerms: updatedTermList,
         termsOfBusiness: updatedTermsOfBusiness,
+      };
+    }
+
+    case termsActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED: {
+      const { terms } = action.payload;
+      return {
+        ...state,
+        termsOfClass: terms,
       };
     }
 
