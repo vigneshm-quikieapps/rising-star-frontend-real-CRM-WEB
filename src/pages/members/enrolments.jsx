@@ -232,7 +232,12 @@ const MemberEnrollment = () => {
           ? true
           : false
       );
-      setDropReasonDisabled(true);
+      setDropReasonDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) !== "Dropped" ||
+          StatusConverter(filterEnrolmentList[0]?.enrolledStatus) !== "Suspend"
+          ? true
+          : false
+      );
 
       setSelectedSession(filterEnrolmentList[0]?.session._id);
     }
@@ -307,6 +312,12 @@ const MemberEnrollment = () => {
           ? true
           : false
       );
+      // setDropReasonDisabled(true);
+      setDropReasonDisabled(
+        StatusConverter(filterEnrolmentList[0]?.enrolledStatus) !== "Dropped"
+          ? true
+          : false
+      );
     } else {
       setEnrolmentDetailsInput((previous) => ({
         ...previous,
@@ -322,7 +333,8 @@ const MemberEnrollment = () => {
       }));
       setDate(null);
       setTextfieldDisabled(true);
-      // setSessionDisabled(false)
+      setDropReasonDisabled(true);
+      // setSessionDisabled(true);
     }
   };
 
