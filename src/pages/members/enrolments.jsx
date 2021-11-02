@@ -340,9 +340,11 @@ const MemberEnrollment = () => {
 
   const enrolStatusChangeHandler = (e) => {
     if (
-      e.target.value === "Enrolled" ||
-      e.target.value === "Suspend" ||
-      e.target.value === "Return from suspend"
+      // e.target.value === "Enrolled" ||
+      // e.target.value === "Suspend" ||
+      // e.target.value === "Return from suspend" ||
+      // e.target.value === "Waitlisted"
+      e.target.value !== "Dropped"
     ) {
       setEnrolmentDetailsInput({
         ...enrolmentDetailsInput,
