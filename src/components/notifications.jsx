@@ -4,7 +4,7 @@ import { Badge, Box, List, ListItem, Popover, Typography } from "@mui/material";
 
 import IconButton from "./icon-button";
 import ImgIcon from "./img-icon";
-import notificationsIcon from "../assets/icons/icon-notificaton.png";
+import notificationsIcon from "../assets/icons/icon-notification.png";
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
   marginTop: theme.spacing(3),
