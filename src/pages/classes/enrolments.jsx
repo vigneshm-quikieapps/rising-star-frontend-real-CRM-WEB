@@ -171,30 +171,16 @@ const ClassEnrollments = () => {
     [dispatch]
   );
 
-  const handleSessionChange = useCallback(
-    (e) => {
-      let sessionId = e?.target ? e.target.value : e;
-
-      let selectedSessionObj =
-        allSessions.length && allSessions.find((e) => e._id === sessionId);
-
-      if (selectedSessionObj !== undefined) {
-        setSelectedSession(selectedSessionObj);
-        renderSessionData(selectedSessionObj);
-      } else {
-        setSessionDetailsArray([]);
-      }
-    },
-    [allSessions, renderSessionData]
-  );
+  const handleSessionChange = (e) => {
+    const sessionId = e.target.value;
+    setSelectedSession(sessionId);
+  };
 
   useEffect(() => {
-    console.log("1");
     dispatch(getTermsOfClass(id));
   }, [dispatch, id]);
 
   useEffect(() => {
-    console.log("2");
     // setting terms data
     let termOptions =
       allTerms.length &&
@@ -208,11 +194,10 @@ const ClassEnrollments = () => {
     selectedSession === "" &&
       allTerms.length &&
       handleTermChange(allTerms[0]._id);
-    members.membersOfSession.length && setTableRows();
+    members?.membersOfSession?.length && setTableRows();
   }, [members, allTerms, setTableRows, handleTermChange, selectedSession]);
 
   useEffect(() => {
-    console.log("3");
     let sessionOptions =
       allSessions.length &&
       allSessions.map(({ _id, name }) => {
@@ -221,12 +206,17 @@ const ClassEnrollments = () => {
           sessionName: name,
         };
       });
-
     setSessionsData(sessionOptions);
-    allSessions.length &&
-      selectedSession === "" &&
-      handleSessionChange(allSessions[0]._id);
-  }, [allSessions, handleSessionChange, selectedSession]);
+  }, [allSessions]);
+
+  useEffect(() => {
+    const value = sessionsData[0] ? sessionsData[0].id : "";
+    setSelectedSession(value);
+  }, [sessionsData]);
+
+  useEffect(() => {
+    selectedSession && dispatch(getMembersOfSession(selectedSession));
+  }, [selectedSession, dispatch]);
 
   return (
     <Box>
@@ -254,20 +244,22 @@ const ClassEnrollments = () => {
             select
             label="Session"
             id="demo-simple-select"
-            value={selectedSession ? selectedSession._id : ""}
+            value={selectedSession || ""}
             onChange={handleSessionChange}
             variant="filled"
             sx={{ width: "272px" }}
           >
-            <MenuItem value={0}>Select Session</MenuItem>
-            {sessionsData &&
+            {sessionsData ? (
               sessionsData.map(({ id, sessionName }) => {
                 return (
                   <MenuItem key={id} value={id}>
                     {sessionName}
                   </MenuItem>
                 );
-              })}
+              })
+            ) : (
+              <MenuItem value=""></MenuItem>
+            )}
           </TextField>
         </CardRow>
 
