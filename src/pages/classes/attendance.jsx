@@ -15,16 +15,12 @@ import {
 } from "../../components";
 import { Outputs, TitleDescription } from "../../containers/outputs";
 import moreIcon from "../../assets/icons/icon-more.png";
-import {
-  attendanceRows,
-  attendanceHeaders,
-  attendanceObject2,
-} from "../../helper/constants";
+import { attendanceRows, attendanceHeaders } from "../../helper/constants";
 import { objectToArray } from "../../utils";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import {
+  getAttendanceOfSessionByDate,
   getSessionInAclassByTermId,
-  getSessionsByTermId,
 } from "../../redux/action/sessionAction";
 import { getMembersOfSession } from "../../redux/action/memberAction";
 
@@ -42,10 +38,8 @@ const UpIconButton = () => (
 
 const ClassAttendance = () => {
   const { id } = useParams();
-  const [date, setDate] = useState(new Date("2014-08-18T21:11:54"));
+  const [date, setDate] = useState(new Date());
   const [page, setPage] = useState(1);
-  const classObj = useSelector((state) => state.classes.class);
-  const [classInfoArray, setClassInfoArray] = useState([]);
   const dispatch = useDispatch();
   const allTerms = useSelector((state) => state.terms.termsOfClass);
   const [termsData, setTermsData] = useState([]);
@@ -57,73 +51,6 @@ const ClassAttendance = () => {
   const [selectedTermId, setSelectedTermId] = useState("");
   const [sessionDetailsArray, setSessionDetailsArray] = useState([]);
   const [sessionsData, setSessionsData] = useState([]);
-
-  const setClassInfo = () => {
-    const { business } = classObj;
-    const classInfoObject = {
-      // "Class ID": "DL39020458",
-      "City / Town": business?.city,
-      "Post Code": business?.postcode,
-      Status: business?.status,
-    };
-    setClassInfoArray(objectToArray(classInfoObject));
-  };
-
-  const handleTermChange = (e) => {
-    let termId = e.target.value;
-    setSelectedTermId(termId);
-    if (termId !== 0) {
-      dispatch(
-        getSessionInAclassByTermId({
-          classId: id,
-          termId: termId,
-        })
-      );
-    } else {
-      setSessionsData([]);
-    }
-    setSelectedSession(0);
-    setSessionDetailsArray([]);
-  };
-
-  const renderSessionData = (Obj) => {
-    const {
-      _id,
-      term,
-      pattern,
-      status,
-      coach,
-      fullcapacity,
-      fullcapacityfilled,
-      waitcapacity,
-      waitcapacityfilled,
-    } = Obj;
-
-    dispatch(getMembersOfSession(_id));
-
-    let sessionsDataObject = {
-      "Start Time": pattern[0].startTime.split("T")[0],
-      "End Time": pattern[0].endTime.split("T")[0],
-
-      Facility: "Gym Hall (static)",
-      "Coach Name": coach.name,
-      Pattern: pattern[0].day,
-      "Full class capacity": fullcapacity,
-      Enrolled: fullcapacityfilled,
-    };
-
-    let sessionsDataArray = objectToArray(sessionsDataObject);
-    setSessionDetailsArray(sessionsDataArray);
-  };
-  const handleSessionChange = (e) => {
-    let sessionId = e.target.value;
-    let selectedSessionObj =
-      allSessions.length && allSessions.find((e) => e._id === sessionId);
-    setSelectedSession(selectedSessionObj);
-    selectedSessionObj !== undefined
-      ? renderSessionData(selectedSessionObj)
-      : setSessionDetailsArray([]);
-  };
 
   const pagination = (
     <Pagination
@@ -146,12 +73,13 @@ const ClassAttendance = () => {
     </CardRow>
   );
 
-  const arr2 = objectToArray(attendanceObject2);
+  const handleTermChange = (e) => {
+    setSelectedTermId(e.target.value);
+  };
 
-  useEffect(() => {
-    classObj && setClassInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [classObj]);
+  const handleSessionChange = (e) => {
+    setSelectedSession(e.target.value);
+  };
 
   useEffect(() => {
     dispatch(getTermsOfClass(id));
@@ -168,9 +96,12 @@ const ClassAttendance = () => {
         };
       });
     setTermsData(termOptions);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members, allTerms]);
+
+  useEffect(() => {
+    const value = termsData[0] ? termsData[0].id : "";
+    setSelectedTermId(value);
+  }, [termsData]);
 
   useEffect(() => {
     let sessionOptions =
@@ -185,6 +116,59 @@ const ClassAttendance = () => {
     setSessionsData(sessionOptions);
   }, [allSessions]);
 
+  useEffect(() => {
+    if (selectedTermId !== "") {
+      dispatch(
+        getSessionInAclassByTermId({
+          classId: id,
+          termId: selectedTermId,
+        })
+      );
+    } else {
+      setSessionsData([]);
+    }
+
+    setSessionDetailsArray([]);
+  }, [dispatch, id, selectedTermId]);
+
+  useEffect(() => {
+    const value = sessionsData[0] ? sessionsData[0].id : "";
+    setSelectedSession(value);
+  }, [sessionsData]);
+
+  useEffect(() => {
+    selectedSession && dispatch(getMembersOfSession(selectedSession));
+    let selectedSessionObj = allSessions.find(
+      (item) => item._id === selectedSession
+    );
+    if (selectedSessionObj) {
+      const { pattern, coach, fullcapacity, fullcapacityfilled } =
+        selectedSessionObj;
+      let sessionsDataObject = {
+        "Start Time": pattern[0].startTime.split("T")[0],
+        "End Time": pattern[0].endTime.split("T")[0],
+        Facility: "Gym Hall (static)",
+        "Coach Name": coach.name,
+        Pattern: pattern[0].day,
+        "Full class capacity": fullcapacity,
+        Enrolled: fullcapacityfilled,
+      };
+
+      let sessionsDataArray = objectToArray(sessionsDataObject);
+      setSessionDetailsArray(sessionsDataArray);
+    }
+  }, [selectedSession, dispatch, allSessions]);
+
+  useEffect(() => {
+    if (selectedSession) {
+      let params = {
+        sessionId: selectedSession,
+        date: date.toISOString().split("T")[0],
+      };
+      dispatch(getAttendanceOfSessionByDate(params));
+    }
+  }, [date, dispatch, selectedSession]);
+
   return (
     <Box>
       <Card sx={{ height: "194px" }}>
@@ -198,33 +182,37 @@ const ClassAttendance = () => {
             variant="filled"
             sx={{ width: "272px", marginRight: "15px" }}
           >
-            <MenuItem value={0}>Select Term</MenuItem>
-            {termsData &&
+            {termsData ? (
               termsData.map(({ id, termName }) => (
                 <MenuItem key={id} value={id}>
                   {termName}
                 </MenuItem>
-              ))}
+              ))
+            ) : (
+              <MenuItem value=""></MenuItem>
+            )}
           </TextField>
 
           <TextField
             select
             label="Session"
             id="demo-simple-select"
-            value={selectedSession ? selectedSession._id : ""}
+            value={selectedSession || ""}
             onChange={handleSessionChange}
             variant="filled"
             sx={{ width: "272px", marginRight: "15px" }}
           >
-            <MenuItem value={0}>Select Session</MenuItem>
-            {sessionsData &&
+            {sessionsData ? (
               sessionsData.map(({ id, sessionName }) => {
                 return (
                   <MenuItem key={id} value={id}>
                     {sessionName}
                   </MenuItem>
                 );
-              })}
+              })
+            ) : (
+              <MenuItem value={""}></MenuItem>
+            )}
           </TextField>
           <DatePicker
             label="Date"

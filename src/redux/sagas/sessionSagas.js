@@ -2,6 +2,7 @@ import { put, takeEvery, call, all } from "redux-saga/effects";
 import {
   axiosGetMembersEnrolledInASession,
   axiosGetSessionInAclassByTermId,
+  getAttendanceListOfSessionByDate,
 } from "../../services/sessionServices";
 import { axiosGetSessionsByTermId } from "../../services/term-services";
 import { sessionActionTypes, sharedActionTypes } from "../types";
@@ -93,10 +94,41 @@ export function* watchgetSessionInAclassByTermId() {
   );
 }
 
+export function* getAttendanceOfSessionByDate(action) {
+  try {
+    yield put(startLoading());
+    const attendanceList = yield call(
+      getAttendanceListOfSessionByDate,
+      action.payload
+    );
+    yield put({
+      type: sessionActionTypes.GET_ATTENDANCE_OF_SESSION_BY_DATE_SUCCEEDED,
+      payload: attendanceList,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put({
+      type: sharedActionTypes.SET_ERROR,
+      payload:
+        error?.response?.data?.message ||
+        "Something went wrong while getting the attendance list of a session by date.",
+    });
+  }
+}
+
+//watchingGeneratedFunction
+export function* watchGetAttendanceOfSessionByDate() {
+  yield takeEvery(
+    sessionActionTypes.GET_ATTENDANCE_OF_SESSION_BY_DATE,
+    getAttendanceOfSessionByDate
+  );
+}
+
 export default function* sessionSagas() {
   yield all([
     watchGetMemberEnrolledInSession(),
     watchGetSessionsByTermId(),
     watchgetSessionInAclassByTermId(),
+    watchGetAttendanceOfSessionByDate(),
   ]);
 }
