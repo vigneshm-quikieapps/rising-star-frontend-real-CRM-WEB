@@ -19,3 +19,13 @@ export const axiosGetSessionInAclassByTermId = async (params) => {
     throw error;
   }
 };
+
+export const getAttendanceListOfSessionByDate = async (params) => {
+  try {
+    const api = `attendance/of-a-session-by-date`;
+    const attendanceList = await axiosInstance.post(api, params);
+    return attendanceList.data;
+  } catch (error) {
+    throw error;
+  }
+};
