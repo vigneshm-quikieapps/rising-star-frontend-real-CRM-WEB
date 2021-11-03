@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   allMembersEnrolled: [],
   sessionsOfTerm: [],
   sessionListInAclassByterm: [],
-  attendanceList: [],
+  attendanceList: { attendance: {} },
   currentPage: 1,
   totalPages: 1,
 };
