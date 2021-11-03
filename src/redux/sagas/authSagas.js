@@ -1,7 +1,8 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
 
-import { logInFailure, logInSuccess } from "../action/authAction";
+import { logInSuccess } from "../action/authAction";
 import { LoginActionTypes } from "../types";
+import { setError } from "../action/shared-actions";
 
 import logIn from "../../services/authServices";
 
@@ -10,7 +11,7 @@ export function* logInWithCredentials({ payload: { mobileNo, password } }) {
     const user = yield logIn(mobileNo, password);
     yield put(logInSuccess(user));
   } catch (error) {
-    yield put(logInFailure(error));
+    yield put(setError(error, "Something went wrong while trying to login"));
   }
 }
 

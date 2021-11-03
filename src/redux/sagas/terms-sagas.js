@@ -8,7 +8,7 @@ import {
   getTermsListOfClass,
 } from "../../services/term-services";
 import { startLoading, stopLoading } from "../action/shared-actions";
-import { sharedActionTypes, termsActionTypes } from "../types";
+import { termsActionTypes } from "../types";
 import { setError } from "../action/shared-actions";
 
 export function* getAllTerms() {
