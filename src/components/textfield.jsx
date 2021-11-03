@@ -2,6 +2,10 @@ import { styled } from "@mui/material/styles";
 import { TextField } from "@mui/material";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
+  "& .Mui-disabled": {
+    color: theme.palette.text.secondary,
+    "-webkit-text-fill-color": `initial !important`,
+  },
   // applied to label of all variants
   "& label": {
     color: theme.palette.text.secondary,
