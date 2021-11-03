@@ -12,10 +12,11 @@ import {
   ImgIcon,
   IconButton,
   Pagination,
+  CheckBox,
 } from "../../components";
 import { Outputs, TitleDescription } from "../../containers/outputs";
 import moreIcon from "../../assets/icons/icon-more.png";
-import { attendanceRows, attendanceHeaders } from "../../helper/constants";
+import { attendanceHeaders } from "../../helper/constants";
 import { objectToArray } from "../../utils";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import {
@@ -24,6 +25,8 @@ import {
 } from "../../redux/action/sessionAction";
 import { getMembersOfSession } from "../../redux/action/memberAction";
 import verifiedIcon from "../../assets/icons/icon-allergy.png";
+import phoneIcon from "../../assets/icons/icon-phone.png";
+import StyledTextField from "../../components/textfield";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -206,7 +209,13 @@ const ClassAttendance = () => {
             return <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>;
           }
           if (i[0] === "parentContact" || i[0] === "ecContact") {
-            return <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>;
+            return <ImgIcon alt="phone">{phoneIcon}</ImgIcon>;
+          }
+          if (i[0] === "attended") {
+            return <CheckBox checked={i[1]} onClick={() => {}} />;
+          }
+          if (i[0] === "comments") {
+            return <StyledTextField value={i[1]} />;
           }
           return i[1];
         }),
