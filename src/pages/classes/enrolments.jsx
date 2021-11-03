@@ -112,32 +112,77 @@ const ClassEnrollments = () => {
     setTableRowData(finalRowDataArray);
   }, [members.membersOfSession]);
 
-  const handleTermChange = useCallback(
-    (e) => {
-      let termId = e?.target ? e.target.value : e;
-      setSelectedTermId(termId);
+  const handleTermChange = (e) => {
+    setSelectedTermId(e.target.value);
+  };
 
-      if (termId !== 0) {
-        dispatch(
-          getSessionInAclassByTermId({
-            classId: id,
-            termId: termId,
-          })
-        );
-      } else {
-        setSessionsData([]);
-      }
-      setSelectedSession(0);
-      setSessionDetailsArray([]);
-      setTableRowData([]);
-    },
-    [dispatch, id]
-  );
+  const handleSessionChange = (e) => {
+    setSelectedSession(e.target.value);
+  };
 
-  const renderSessionData = useCallback(
-    (Obj) => {
+  useEffect(() => {
+    dispatch(getTermsOfClass(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    // setting terms data
+    let termOptions =
+      allTerms.length &&
+      allTerms.map(({ _id, label }) => {
+        return {
+          id: _id,
+          termName: label,
+        };
+      });
+    setTermsData(termOptions);
+    members?.membersOfSession?.length && setTableRows();
+  }, [members, allTerms, setTableRows, selectedSession]);
+
+  useEffect(() => {
+    const value = termsData[0] ? termsData[0].id : "";
+    setSelectedTermId(value);
+  }, [termsData]);
+
+  useEffect(() => {
+    let sessionOptions =
+      allSessions.length &&
+      allSessions.map(({ _id, name }) => {
+        return {
+          id: _id,
+          sessionName: name,
+        };
+      });
+    setSessionsData(sessionOptions);
+  }, [allSessions]);
+
+  useEffect(() => {
+    if (selectedTermId !== "") {
+      dispatch(
+        getSessionInAclassByTermId({
+          classId: id,
+          termId: selectedTermId,
+        })
+      );
+    } else {
+      setSessionsData([]);
+    }
+
+    setSessionDetailsArray([]);
+    setTableRowData([]);
+  }, [dispatch, id, selectedTermId]);
+
+  useEffect(() => {
+    const value = sessionsData[0] ? sessionsData[0].id : "";
+    setSelectedSession(value);
+  }, [sessionsData]);
+
+  useEffect(() => {
+    selectedSession && dispatch(getMembersOfSession(selectedSession));
+    let selectedSessionObj = allSessions.find(
+      (item) => item._id === selectedSession
+    );
+    if (selectedSessionObj) {
       const {
-        _id,
         term,
         pattern,
         status,
@@ -146,9 +191,7 @@ const ClassEnrollments = () => {
         fullcapacityfilled,
         waitcapacity,
         waitcapacityfilled,
-      } = Obj;
-
-      dispatch(getMembersOfSession(_id));
+      } = selectedSessionObj;
 
       let sessionsDataObject = {
         "Start Date": term.startDate.split("T")[0],
@@ -167,56 +210,8 @@ const ClassEnrollments = () => {
 
       let sessionsDataArray = objectToArray(sessionsDataObject);
       setSessionDetailsArray(sessionsDataArray);
-    },
-    [dispatch]
-  );
-
-  const handleSessionChange = (e) => {
-    const sessionId = e.target.value;
-    setSelectedSession(sessionId);
-  };
-
-  useEffect(() => {
-    dispatch(getTermsOfClass(id));
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    // setting terms data
-    let termOptions =
-      allTerms.length &&
-      allTerms.map(({ _id, label }) => {
-        return {
-          id: _id,
-          termName: label,
-        };
-      });
-    setTermsData(termOptions);
-    selectedSession === "" &&
-      allTerms.length &&
-      handleTermChange(allTerms[0]._id);
-    members?.membersOfSession?.length && setTableRows();
-  }, [members, allTerms, setTableRows, handleTermChange, selectedSession]);
-
-  useEffect(() => {
-    let sessionOptions =
-      allSessions.length &&
-      allSessions.map(({ _id, name }) => {
-        return {
-          id: _id,
-          sessionName: name,
-        };
-      });
-    setSessionsData(sessionOptions);
-  }, [allSessions]);
-
-  useEffect(() => {
-    const value = sessionsData[0] ? sessionsData[0].id : "";
-    setSelectedSession(value);
-  }, [sessionsData]);
-
-  useEffect(() => {
-    selectedSession && dispatch(getMembersOfSession(selectedSession));
-  }, [selectedSession, dispatch]);
+    }
+  }, [selectedSession, dispatch, allSessions]);
 
   return (
     <Box>
@@ -231,13 +226,15 @@ const ClassEnrollments = () => {
             variant="filled"
             sx={{ width: "272px", marginRight: "15px" }}
           >
-            <MenuItem value={0}>Select Term</MenuItem>
-            {termsData &&
+            {termsData ? (
               termsData.map(({ id, termName }) => (
                 <MenuItem key={id} value={id}>
                   {termName}
                 </MenuItem>
-              ))}
+              ))
+            ) : (
+              <MenuItem value=""></MenuItem>
+            )}
           </TextField>
 
           <TextField

@@ -1,8 +1,9 @@
+import transformError from "../../utils/transformError";
 import { sharedActionTypes } from "../types";
 
-export const setError = (errorMessage) => ({
+export const setError = (error, customMessage) => ({
   type: sharedActionTypes.SET_ERROR,
-  payload: errorMessage,
+  payload: transformError(error, customMessage),
 });
 
 export const removeError = () => ({ type: sharedActionTypes.REMOVE_ERROR });

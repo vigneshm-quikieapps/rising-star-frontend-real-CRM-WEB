@@ -9,6 +9,7 @@ import {
 } from "../../services/term-services";
 import { startLoading, stopLoading } from "../action/shared-actions";
 import { sharedActionTypes, termsActionTypes } from "../types";
+import { setError } from "../action/shared-actions";
 
 export function* getAllTerms() {
   try {
@@ -20,10 +21,9 @@ export function* getAllTerms() {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload: error.message,
-    });
+    yield put(
+      setError(error, "Something went wrong while getting the list of terms")
+    );
   }
 }
 
@@ -41,12 +41,12 @@ export function* getTermListOfBusiness(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting list of terms of the business",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting list of terms of the business"
+      )
+    );
   }
 }
 
@@ -67,12 +67,9 @@ export function* addNewTerm(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while adding the new term",
-    });
+    yield put(
+      setError(error, "Something went wrong while adding the new term")
+    );
   }
 }
 
@@ -90,12 +87,7 @@ export function* deleteTermSaga(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while deleting the term",
-    });
+    yield put(setError(error, "Something went wrong while deleting the term"));
   }
 }
 
@@ -113,12 +105,9 @@ export function* editTermSaga(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while editing the specified term",
-    });
+    yield put(
+      setError(error, "Something went wrong while editing the specified term")
+    );
   }
 }
 
@@ -140,12 +129,9 @@ export function* getTermsOfClass(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting terms of a class",
-    });
+    yield put(
+      setError(error, "Something went wrong while getting terms of a class")
+    );
   }
 }
 

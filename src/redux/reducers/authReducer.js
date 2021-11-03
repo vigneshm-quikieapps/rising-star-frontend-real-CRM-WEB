@@ -13,6 +13,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
         currentUser: action.payload,
       };
     case LoginActionTypes.LOG_OUT:
+      localStorage.clear();
+      window.location = "/login";
       return INITIAL_STATE;
     default:
       return state;

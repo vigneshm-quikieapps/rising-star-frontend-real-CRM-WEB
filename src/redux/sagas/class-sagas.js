@@ -5,8 +5,9 @@ import {
   getClassById,
   addNewClass,
   getClassSessions,
+  updateClass,
 } from "../../services/class-services";
-import { startLoading, stopLoading } from "../action/shared-actions";
+import { setError, startLoading, stopLoading } from "../action/shared-actions";
 import { classActionTypes, sharedActionTypes } from "../types";
 
 export function* getClassList(action) {
@@ -128,6 +129,25 @@ export function* watchGetSessionsOfClass() {
   yield takeLatest(classActionTypes.GET_CLASS_SESSIONS, getSessionsOfClass);
 }
 
+export function* watchEditClass() {
+  yield takeEvery(classActionTypes.EDIT_CLASS, editClass);
+}
+
+export function* editClass(action) {
+  try {
+    yield put(startLoading());
+    const classObj = yield call(updateClass, action.payload);
+    yield put({
+      type: classActionTypes.EDIT_CLASS_SUCCEEDED,
+      payload: classObj,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(stopLoading());
+    yield put(setError(error, "Something went wrong while editing a class"));
+  }
+}
+
 export default function* classSagas() {
   yield all([
     classListSaga(),
@@ -135,5 +155,6 @@ export default function* classSagas() {
     watchGetClassById(),
     watchAddClass(),
     watchGetSessionsOfClass(),
+    watchEditClass(),
   ]);
 }

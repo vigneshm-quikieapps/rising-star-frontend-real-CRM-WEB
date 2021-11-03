@@ -33,7 +33,23 @@ export default function reducer(state = initialState, action) {
     }
     case classActionTypes.ADD_CLASS_SUCCEEDED: {
       let updatedClassList = [...state.classList];
-      updatedClassList.push(action.payload.businessClass);
+      let newClass = action.payload.businessClass;
+      updatedClassList.push(newClass);
+      return {
+        ...state,
+        classList: updatedClassList,
+      };
+    }
+
+    case classActionTypes.EDIT_CLASS_SUCCEEDED: {
+      let newClass = action.payload.businessClass;
+
+      let updatedClassList = state.classList.map((item) => {
+        if (item._id === newClass._id) {
+          return newClass;
+        }
+        return item;
+      });
       return {
         ...state,
         classList: updatedClassList,

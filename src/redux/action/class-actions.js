@@ -20,3 +20,7 @@ export const getSessionsOfClass = (classId) => ({
   type: classActionTypes.GET_CLASS_SESSIONS,
   payload: classId,
 });
+
+export const editClass = (data) => {
+  return { type: classActionTypes.EDIT_CLASS, payload: data };
+};

@@ -44,10 +44,14 @@ import Charge from "../class-list/charge";
 import { getTermsOfBusiness } from "../../redux/action/terms-actions";
 import { ShortWeekNames } from "../../helper/constants";
 import { useHistory } from "react-router";
-import { addClass, getSessionsOfClass } from "../../redux/action/class-actions";
+import {
+  addClass,
+  editClass,
+  getSessionsOfClass,
+} from "../../redux/action/class-actions";
+import { menuSX } from "../../components/textfield";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
-  // applied to label of all variants
   "& .MuiOutlinedInput-root": {
     "& fieldset": { border: "none" },
     backgroundColor: "#f4f4f4",
@@ -63,20 +67,6 @@ const CrossIconButton = ({ onClick }) => (
     <CloseIcon />
   </IconButton>
 );
-
-// const DeleteButton = () => (
-//   <IconButton sx={{ borderRadius: "50%" }}>
-//     <ImgIcon alt="delete">{deleteIcon}</ImgIcon>
-//   </IconButton>
-// );
-
-// const classId = {
-//   "Class ID": "DL39020458",
-// };
-
-// const sessionId = {
-//   "Session ID": "00394827321",
-// };
 
 const genderArray = ["MALE", "FEMALE"];
 const ageArray = Array(15)
@@ -139,13 +129,25 @@ const AddEditClassModal = (props) => {
     setOpen(false);
   };
 
+  const handleAgeSelect = (e) => {
+    const {
+      target: { value },
+    } = e;
+    setAges(typeof value === "string" ? value.split(",") : value);
+  };
+
+  const handleGenderSelect = (e) => {
+    const {
+      target: { value },
+    } = e;
+    setGenders(typeof value === "string" ? value.split(",") : value);
+  };
+
   const handleChange = (event, value) => {
     setPage(value);
   };
 
   const handleAddClass = (isEdit) => {
-    console.log("add / edit handle called");
-
     let newClassObject = {
       name: className,
       status: selectedStatus,
@@ -212,6 +214,7 @@ const AddEditClassModal = (props) => {
     if (!isEdit) {
       dispatch(addClass(newClassObject));
     } else {
+      dispatch(editClass({ data: newClassObject, id: classObj._id }));
     }
   };
 
@@ -285,6 +288,7 @@ const AddEditClassModal = (props) => {
     setAges(enrolmentControls[0].values);
     setGenders(enrolmentControls[1].values);
     setClassSessions(existingSessions);
+    sessionsOfClass.length && setSelectedTerm(sessionsOfClass[0].term);
   }, [classObj, sessionsOfClass]);
 
   useEffect(() => {
@@ -298,6 +302,14 @@ const AddEditClassModal = (props) => {
   useEffect(() => {
     dispatch(getEvaluationSchemeList());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (selectedBusinessId) {
+      dispatch(getCategoriesOfBusiness(selectedBusinessId));
+      dispatch(getTermsOfBusiness(selectedBusinessId));
+      dispatch(getCoachesOfBusiness(selectedBusinessId));
+    }
+  }, [selectedBusinessId, dispatch]);
 
   return (
     <Box>
@@ -383,9 +395,6 @@ const AddEditClassModal = (props) => {
                   onChange={(e) => {
                     let businessId = e.target.value;
                     setSelectedBusinessId(businessId);
-                    dispatch(getCategoriesOfBusiness(businessId));
-                    dispatch(getTermsOfBusiness(businessId));
-                    dispatch(getCoachesOfBusiness(businessId));
                   }}
                 >
                   {currentUserBusinesses.length ? (
@@ -505,12 +514,16 @@ const AddEditClassModal = (props) => {
                       <CardRow sx={{ marginTop: "10px" }}>
                         <StyledTextField
                           select
+                          SelectProps={{
+                            multiple: true,
+                            MenuProps: {
+                              sx: menuSX,
+                            },
+                          }}
                           sx={{ width: "40%" }}
                           label="Age"
-                          value={ages[0]}
-                          onChange={(e) => {
-                            setAges([e.target.value]);
-                          }}
+                          value={ages}
+                          onChange={handleAgeSelect}
                         >
                           {ageArray.length ? (
                             ageArray.map((item) => {
@@ -526,13 +539,16 @@ const AddEditClassModal = (props) => {
                         </StyledTextField>
                         <StyledTextField
                           select
-                          multiple
+                          SelectProps={{
+                            multiple: true,
+                            MenuProps: {
+                              sx: menuSX,
+                            },
+                          }}
                           sx={{ width: "40%" }}
                           label="Gender"
-                          value={genders[0]}
-                          onChange={(e) => {
-                            setGenders([e.target.value]);
-                          }}
+                          value={genders}
+                          onChange={handleGenderSelect}
                         >
                           {genderArray.length ? (
                             genderArray.map((item) => {

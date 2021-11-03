@@ -2,15 +2,15 @@ import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 const Main = styled("main", {
-  shouldForwardProp: (prop) => ["open", "drawerWidth"].indexOf(prop) === -1,
-})(({ theme, open, drawerWidth }) => ({
+  shouldForwardProp: (prop) => ["drawerOpen", "drawerWidth"].indexOf(prop) === -1,
+})(({ theme, drawerOpen, drawerWidth }) => ({
   transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   marginTop: theme.spacing(2),
   marginLeft: 0,
-  ...(open && {
+  ...(drawerOpen && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -19,8 +19,8 @@ const Main = styled("main", {
   }),
 }));
 
-const MainRoot = ({ children, drawerWidth, open }) => (
-  <Main drawerWidth={drawerWidth} open={open}>
+const MainRoot = ({ children, drawerWidth, drawerOpen }) => (
+  <Main drawerWidth={drawerWidth} drawerOpen={drawerOpen}>
     <Box
       sx={{
         maxWidth: "100%",
