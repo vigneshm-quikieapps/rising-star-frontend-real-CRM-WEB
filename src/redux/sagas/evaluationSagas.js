@@ -1,5 +1,5 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
-import { evaluationsActionTypes, sharedActionTypes } from "../types";
+import { evaluationsActionTypes } from "../types";
 
 import { getAllEvaluationScheme } from "../../services/evaluationServices";
 

@@ -6,7 +6,7 @@ import {
   axiosmemberReturnFromSuspend,
   transferEnrolment,
 } from "../../services/enrolmentServices";
-import { enrolmentActionTypes, sharedActionTypes, setError } from "../types";
+import { enrolmentActionTypes, setError } from "../types";
 
 export function* dropMemberFromEnrolment(action) {
   try {

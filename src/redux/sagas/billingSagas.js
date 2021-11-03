@@ -1,5 +1,5 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
-import { billingActionTypes, sharedActionTypes } from "../types";
+import { billingActionTypes } from "../types";
 
 import { getPaymentDetailsOfSession } from "../../services/billingServices";
 
