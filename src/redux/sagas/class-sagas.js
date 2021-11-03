@@ -148,7 +148,7 @@ export function* editClass(action) {
       type: sharedActionTypes.SET_ERROR,
       payload:
         error?.response?.data?.message ||
-        "Something went wrong while editing a new class",
+        "Something went wrong while editing a class",
     });
   }
 }
