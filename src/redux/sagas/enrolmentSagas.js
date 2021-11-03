@@ -1,12 +1,12 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
-import { startLoading, stopLoading } from "../action/shared-actions";
+import { startLoading, stopLoading, setError } from "../action/shared-actions";
 import {
   axiosmemberDropped,
   axiosmemberSuspend,
   axiosmemberReturnFromSuspend,
   transferEnrolment,
 } from "../../services/enrolmentServices";
-import { enrolmentActionTypes, setError } from "../types";
+import { enrolmentActionTypes } from "../types";
 
 export function* dropMemberFromEnrolment(action) {
   try {
