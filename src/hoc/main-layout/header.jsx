@@ -1,5 +1,5 @@
-import { cloneElement } from "react";
-import { useSelector } from "react-redux";
+import { cloneElement, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -8,6 +8,8 @@ import {
   useScrollTrigger,
   Typography,
   LinearProgress,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -17,9 +19,11 @@ import Notifications from "../../components/notifications";
 import menuIcon from "../../assets/icons/icon-menu.png";
 import homeIcon from "../../assets/icons/icon-home.png";
 import userIcon from "../../assets/icons/icon-user.png";
+import { logout } from "../../redux/action/authAction";
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => ["drawerOpen", "drawerWidth"].indexOf(prop) === -1,
+  shouldForwardProp: (prop) =>
+    ["drawerOpen", "drawerWidth"].indexOf(prop) === -1,
 })(({ theme, drawerOpen, drawerWidth }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
@@ -28,6 +32,7 @@ const AppBar = styled(MuiAppBar, {
   ...(drawerOpen && {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: `${drawerWidth}px`,
+    paddingRight: "100px",
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -59,7 +64,22 @@ const Header = ({
   userName,
   ...otherProps
 }) => {
+  const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = useState(null);
   const loading = useSelector((state) => state.shared.loading);
+  const open = Boolean(anchorEl);
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleUserMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <>
       <ElevationScroll {...otherProps}>
@@ -132,9 +152,53 @@ const Header = ({
               </Typography>
               <Typography>{userName}</Typography>
             </Box>
-            <IconButton>
+            <IconButton onClick={handleAvatarClick}>
               <ImgIcon>{userIcon}</ImgIcon>
             </IconButton>
+            <Menu
+              open={open}
+              onClose={handleUserMenuClose}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+              sx={{
+                mt: 3,
+                "& .MuiPaper-root": {
+                  border: (theme) => `1px solid ${theme.palette.text.disabled}`,
+                  borderRadius: (theme) => theme.shape.borderRadiuses.primary,
+                  overflow: "visible",
+                  "&::before": {
+                    content: '" "',
+                    position: "absolute",
+                    bottom: "100%",
+                    left: "50%",
+                    transform: "translate(-50%, 0)",
+                    borderWidth: 18,
+                    borderStyle: "solid",
+                    borderColor: (theme) =>
+                      `transparent transparent ${theme.palette.text.disabled} transparent`,
+                  },
+                  "&::after": {
+                    content: '" "',
+                    position: "absolute",
+                    bottom: "100%",
+                    left: "50%",
+                    transform: "translate(-50%, 0)",
+                    borderWidth: 16,
+                    borderStyle: "solid",
+                    borderColor: "transparent transparent #fff transparent",
+                  },
+                },
+              }}
+            >
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
       </ElevationScroll>

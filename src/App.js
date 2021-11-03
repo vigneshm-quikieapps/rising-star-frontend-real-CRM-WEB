@@ -8,6 +8,12 @@ import store from "./redux/store/configureStore";
 import MainRouter from "./router";
 
 function App() {
+  if (
+    ["/login", "/login/"].indexOf(window.location.pathname) < 0 &&
+    !localStorage.getItem("accessToken")
+  )
+    window.location = "/login";
+
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
