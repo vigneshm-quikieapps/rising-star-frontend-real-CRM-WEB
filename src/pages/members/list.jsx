@@ -213,13 +213,13 @@ const Members = () => {
       const {
         name,
         gender,
-        // parent: { name: parentName, email: parentEmail, contact: parentPhone },
+        parent: { name: parentName, email: parentEmail, mobileNo: parentPhone },
       } = singleMember;
       return {
         id: singleMember.id,
         onClick: () => handleRowClick(id),
-        // items: [name, gender, parentName, parentEmail, parentPhone],
-        items: [name, gender, "static", "static", "static"],
+        items: [name, gender, parentName, parentEmail, parentPhone],
+        // items: [name, gender, "static", "static", "static"],
       };
     });
   }, [memberList, handleRowClick]);
