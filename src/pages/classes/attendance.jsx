@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, MenuItem } from "@mui/material";
@@ -23,6 +23,7 @@ import {
   getSessionInAclassByTermId,
 } from "../../redux/action/sessionAction";
 import { getMembersOfSession } from "../../redux/action/memberAction";
+import verifiedIcon from "../../assets/icons/icon-allergy.png";
 
 const MoreIconButton = () => (
   <IconButton>
@@ -47,10 +48,12 @@ const ClassAttendance = () => {
   const allSessions = useSelector(
     (state) => state.sessions.sessionListInAclassByterm
   );
+  const attendanceList = useSelector((state) => state.sessions.attendanceList);
   const [selectedSession, setSelectedSession] = useState("");
   const [selectedTermId, setSelectedTermId] = useState("");
   const [sessionDetailsArray, setSessionDetailsArray] = useState([]);
   const [sessionsData, setSessionsData] = useState([]);
+  const [tableRowData, setTableRowData] = useState([]);
 
   const pagination = (
     <Pagination
@@ -169,6 +172,55 @@ const ClassAttendance = () => {
     }
   }, [date, dispatch, selectedSession]);
 
+  const setTableRows = useCallback(() => {
+    let attendanceRecords = attendanceList?.attendance?.records;
+    let attendanceArray = attendanceRecords?.map(
+      ({
+        attended,
+        comments,
+        member: { name, contacts },
+        memberConsent: {
+          consent: { allergies, condition },
+        },
+      }) => {
+        return {
+          name,
+          parentContact: null,
+          ecContact: contacts[0]?.contact,
+          allergies: allergies,
+          conditions: condition,
+          paymentStatus: "no data",
+          startDate: "no data",
+          attended,
+          comments: comments || "",
+        };
+      }
+    );
+
+    let finalRowDataArray = attendanceArray.map((item, index) => {
+      let itemArray = objectToArray(item);
+      return {
+        id: index,
+        items: itemArray.map((i) => {
+          if (i[0] === "allergies" || i[0] === "conditions") {
+            return <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>;
+          }
+          if (i[0] === "parentContact" || i[0] === "ecContact") {
+            return <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>;
+          }
+          return i[1];
+        }),
+      };
+    });
+    setTableRowData(finalRowDataArray);
+  }, [attendanceList]);
+
+  useEffect(() => {
+    if (attendanceList?.attendance?.records?.length) {
+      setTableRows();
+    }
+  }, [attendanceList, setTableRows]);
+
   return (
     <Box>
       <Card sx={{ height: "194px" }}>
@@ -245,7 +297,7 @@ const ClassAttendance = () => {
       <CustomTable
         heading={heading}
         headers={attendanceHeaders}
-        rows={attendanceRows}
+        rows={tableRowData}
         pagination={pagination}
       />
     </Box>
