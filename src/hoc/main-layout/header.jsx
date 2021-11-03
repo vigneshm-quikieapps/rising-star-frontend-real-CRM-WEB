@@ -19,13 +19,13 @@ import homeIcon from "../../assets/icons/icon-home.png";
 import userIcon from "../../assets/icons/icon-user.png";
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => ["open", "drawerWidth"].indexOf(prop) === -1,
-})(({ theme, open, drawerWidth }) => ({
+  shouldForwardProp: (prop) => ["drawerOpen", "drawerWidth"].indexOf(prop) === -1,
+})(({ theme, drawerOpen, drawerWidth }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
+  ...(drawerOpen && {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: `${drawerWidth}px`,
     transition: theme.transitions.create(["margin", "width"], {
@@ -53,7 +53,7 @@ function ElevationScroll(props) {
 
 const Header = ({
   handleDrawerOpen,
-  open,
+  drawerOpen,
   drawerWidth,
   userRole,
   userName,
@@ -65,7 +65,7 @@ const Header = ({
       <ElevationScroll {...otherProps}>
         <AppBar
           position="fixed"
-          open={open}
+          drawerOpen={drawerOpen}
           drawerWidth={drawerWidth}
           color="background"
         >
