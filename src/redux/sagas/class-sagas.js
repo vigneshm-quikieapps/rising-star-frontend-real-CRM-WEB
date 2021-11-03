@@ -7,7 +7,7 @@ import {
   getClassSessions,
   updateClass,
 } from "../../services/class-services";
-import { startLoading, stopLoading } from "../action/shared-actions";
+import { setError, startLoading, stopLoading } from "../action/shared-actions";
 import { classActionTypes, sharedActionTypes } from "../types";
 
 export function* getClassList(action) {
@@ -144,12 +144,7 @@ export function* editClass(action) {
     yield put(stopLoading());
   } catch (error) {
     yield put(stopLoading());
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while editing a class",
-    });
+    yield put(setError(error, "Something went wrong while editing a class"));
   }
 }
 

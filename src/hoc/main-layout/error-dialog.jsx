@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Typography,
 } from "@mui/material";
 
 import { removeError } from "../../redux/action/shared-actions";
@@ -26,7 +27,9 @@ const ErrorDialog = ({ children }) => {
       >
         <DialogTitle>The following error occurred</DialogTitle>
         <DialogContent>
-          <DialogContentText>{errors[0]}</DialogContentText>
+          <DialogContentText>
+            <Typography component="pre">{errors[0]}</Typography>
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={removeErrorHandler}>Discard</Button>
