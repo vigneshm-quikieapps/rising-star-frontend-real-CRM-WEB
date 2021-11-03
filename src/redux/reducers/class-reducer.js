@@ -37,7 +37,6 @@ export default function reducer(state = initialState, action) {
       updatedClassList.push(newClass);
       return {
         ...state,
-        class: newClass,
         classList: updatedClassList,
       };
     }
@@ -53,7 +52,6 @@ export default function reducer(state = initialState, action) {
       });
       return {
         ...state,
-        class: newClass,
         classList: updatedClassList,
       };
     }
