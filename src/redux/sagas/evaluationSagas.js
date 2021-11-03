@@ -1,9 +1,9 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
-import { evaluationsActionTypes, sharedActionTypes } from "../types";
+import { evaluationsActionTypes } from "../types";
 
 import { getAllEvaluationScheme } from "../../services/evaluationServices";
 
-import { startLoading, stopLoading } from "../action/shared-actions";
+import { startLoading, stopLoading, setError } from "../action/shared-actions";
 
 export function* getEvaluationSchemeList() {
   try {
@@ -15,12 +15,12 @@ export function* getEvaluationSchemeList() {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the evaluation scheme list",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the evaluation scheme list"
+      )
+    );
   }
 }
 

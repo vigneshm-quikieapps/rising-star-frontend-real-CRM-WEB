@@ -6,7 +6,7 @@ import {
   axiosmemberReturnFromSuspend,
   transferEnrolment,
 } from "../../services/enrolmentServices";
-import { enrolmentActionTypes, sharedActionTypes } from "../types";
+import { enrolmentActionTypes, setError } from "../types";
 
 export function* dropMemberFromEnrolment(action) {
   try {
@@ -17,12 +17,7 @@ export function* dropMemberFromEnrolment(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the member dropping a member",
-    });
+    yield put(setError(error, "Something went wrong while dropping a member"));
   }
 }
 
@@ -42,12 +37,9 @@ export function* suspendMemberFromEnrolment(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the member suspending a member",
-    });
+    yield put(
+      setError(error, "Something went wrong while suspending a member")
+    );
   }
 }
 
@@ -67,12 +59,9 @@ export function* returnFromSuspendMemberFromEnrolment(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while marking return from suspend",
-    });
+    yield put(
+      setError(error, "Something went wrong while marking return from suspend")
+    );
   }
 }
 
@@ -92,12 +81,7 @@ export function* returnTransferEnrolment(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while session transfer",
-    });
+    yield put(setError(error, "Something went wrong while session transfer"));
   }
 }
 

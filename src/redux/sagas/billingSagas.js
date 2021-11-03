@@ -1,9 +1,9 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
-import { billingActionTypes, sharedActionTypes } from "../types";
+import { billingActionTypes } from "../types";
 
 import { getPaymentDetailsOfSession } from "../../services/billingServices";
 
-import { startLoading, stopLoading } from "../action/shared-actions";
+import { startLoading, stopLoading, setError } from "../action/shared-actions";
 
 export function* getPaymentDetailsOfSessionInAClass(action) {
   try {
@@ -15,12 +15,12 @@ export function* getPaymentDetailsOfSessionInAClass(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the evaluation scheme list",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the payment details of a session"
+      )
+    );
   }
 }
 
