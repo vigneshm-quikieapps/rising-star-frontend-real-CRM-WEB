@@ -148,8 +148,6 @@ const AddEditClassModal = (props) => {
   };
 
   const handleAddClass = (isEdit) => {
-    console.log("add / edit handle called");
-
     let newClassObject = {
       name: className,
       status: selectedStatus,
