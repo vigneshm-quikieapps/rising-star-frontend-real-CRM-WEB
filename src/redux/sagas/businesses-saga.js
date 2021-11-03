@@ -4,8 +4,8 @@ import {
   getCategoryListOfBusiness,
   getCoachListOfBusiness,
 } from "../../services/businesses-service";
-import { startLoading, stopLoading } from "../action/shared-actions";
-import { businessesActionTypes, sharedActionTypes } from "../types";
+import { setError, startLoading, stopLoading } from "../action/shared-actions";
+import { businessesActionTypes } from "../types";
 
 export function* getBusinessList() {
   try {
@@ -17,12 +17,12 @@ export function* getBusinessList() {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the list of businesses",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the list of businesses"
+      )
+    );
   }
 }
 
@@ -38,12 +38,12 @@ export function* getCategoriesOfBusiness(action) {
       payload: categoryList,
     });
   } catch (error) {
-    yield put({
-      type: businessesActionTypes.GET_CATEGORIES_OF_BUSINESS_FAILED,
-      payload:
-        error.response.data.message ||
-        "Something went wrong while getting the list of Categories  of the business",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the list of Categories  of the business"
+      )
+    );
   }
 }
 
@@ -62,7 +62,12 @@ export function* getCoachesOfBusiness(action) {
       payload: coachList,
     });
   } catch (error) {
-    throw error;
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting coaches  of the business"
+      )
+    );
   }
 }
 

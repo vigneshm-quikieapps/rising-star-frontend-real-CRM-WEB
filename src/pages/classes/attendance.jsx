@@ -172,54 +172,54 @@ const ClassAttendance = () => {
     }
   }, [date, dispatch, selectedSession]);
 
-  // const setTableRows = useCallback(() => {
-  //   let attendanceRecords = attendanceList?.attendance?.records;
-  //   let attendanceArray = attendanceRecords?.map((item) => {
-  //     const {
-  //       attended,
-  //       comments,
-  //       member: { name },
-  //       contacts,
-  //       memberConsent: {
-  //         consent: { allergies, condition },
-  //       },
-  //     } = item;
-  //     return {
-  //       name,
-  //       parentContact: null,
-  //       ecContact: contacts[0]?.contact,
-  //       allergies: allergies,
-  //       conditions: condition,
-  //       paymentStatus: null,
-  //       startDate: null,
-  //       attended,
-  //       comments: comments || "",
-  //     };
-  //   });
+  const setTableRows = useCallback(() => {
+    let attendanceRecords = attendanceList?.attendance?.records;
+    let attendanceArray = attendanceRecords?.map(
+      ({
+        attended,
+        comments,
+        member: { name, contacts },
+        memberConsent: {
+          consent: { allergies, condition },
+        },
+      }) => {
+        return {
+          name,
+          parentContact: null,
+          ecContact: contacts[0]?.contact,
+          allergies: allergies,
+          conditions: condition,
+          paymentStatus: "no data",
+          startDate: "no data",
+          attended,
+          comments: comments || "",
+        };
+      }
+    );
 
-  //   let finalRowDataArray = attendanceArray.map((item, index) => {
-  //     let itemArray = objectToArray(item);
-  //     return {
-  //       id: index,
-  //       items: itemArray.map((i) => {
-  //         if (i[0] === "allergies" || i[0] === "conditions") {
-  //           return <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>;
-  //         }
-  //         return i[1];
-  //       }),
-  //     };
-  //   });
-  //   setTableRowData(finalRowDataArray);
-  // }, [attendanceList]);
+    let finalRowDataArray = attendanceArray.map((item, index) => {
+      let itemArray = objectToArray(item);
+      return {
+        id: index,
+        items: itemArray.map((i) => {
+          if (i[0] === "allergies" || i[0] === "conditions") {
+            return <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>;
+          }
+          if (i[0] === "parentContact" || i[0] === "ecContact") {
+            return <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>;
+          }
+          return i[1];
+        }),
+      };
+    });
+    setTableRowData(finalRowDataArray);
+  }, [attendanceList]);
 
   useEffect(() => {
-    if (attendanceList?.attendance) {
-      // setTableRows();
+    if (attendanceList?.attendance?.records?.length) {
+      setTableRows();
     }
-  }, [
-    attendanceList,
-    //  setTableRows
-  ]);
+  }, [attendanceList, setTableRows]);
 
   return (
     <Box>
@@ -297,7 +297,7 @@ const ClassAttendance = () => {
       <CustomTable
         heading={heading}
         headers={attendanceHeaders}
-        rows={attendanceRows}
+        rows={tableRowData}
         pagination={pagination}
       />
     </Box>

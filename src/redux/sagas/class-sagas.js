@@ -8,7 +8,7 @@ import {
   updateClass,
 } from "../../services/class-services";
 import { setError, startLoading, stopLoading } from "../action/shared-actions";
-import { classActionTypes, sharedActionTypes } from "../types";
+import { classActionTypes } from "../types";
 
 export function* getClassList(action) {
   try {
@@ -20,12 +20,9 @@ export function* getClassList(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the class list",
-    });
+    yield put(
+      setError(error, "Something went wrong while getting the class list")
+    );
   }
 }
 
@@ -44,12 +41,7 @@ export function* deleteClass(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while deleting the class",
-    });
+    yield put(setError(error, "Something went wrong while deleting the class"));
   }
 }
 
@@ -67,13 +59,9 @@ export function* getSingleClassById(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put(stopLoading());
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the class by ID",
-    });
+    yield put(
+      setError(error, "Something went wrong while getting the class by ID")
+    );
   }
 }
 
@@ -95,13 +83,7 @@ export function* addClass(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put(stopLoading());
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while adding a new class",
-    });
+    yield put(setError(error, "Something went wrong while adding a new class"));
   }
 }
 
@@ -115,13 +97,9 @@ export function* getSessionsOfClass(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put(stopLoading());
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the class sessions",
-    });
+    yield put(
+      setError(error, "Something went wrong while getting the class sessions")
+    );
   }
 }
 
@@ -143,7 +121,6 @@ export function* editClass(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put(stopLoading());
     yield put(setError(error, "Something went wrong while editing a class"));
   }
 }
