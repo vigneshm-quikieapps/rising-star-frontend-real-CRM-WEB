@@ -33,9 +33,11 @@ export default function reducer(state = initialState, action) {
     }
     case classActionTypes.ADD_CLASS_SUCCEEDED: {
       let updatedClassList = [...state.classList];
-      updatedClassList.push(action.payload.businessClass);
+      let newClass = action.payload.businessClass;
+      updatedClassList.push(newClass);
       return {
         ...state,
+        class: newClass,
         classList: updatedClassList,
       };
     }
@@ -51,6 +53,7 @@ export default function reducer(state = initialState, action) {
       });
       return {
         ...state,
+        class: newClass,
         classList: updatedClassList,
       };
     }
