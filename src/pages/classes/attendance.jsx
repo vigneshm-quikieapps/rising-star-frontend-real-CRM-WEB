@@ -227,6 +227,8 @@ const ClassAttendance = () => {
   useEffect(() => {
     if (attendanceList?.attendance?.records?.length) {
       setTableRows();
+    } else {
+      setTableRowData([]);
     }
   }, [attendanceList, setTableRows]);
 
