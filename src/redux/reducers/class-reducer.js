@@ -39,6 +39,21 @@ export default function reducer(state = initialState, action) {
         classList: updatedClassList,
       };
     }
+
+    case classActionTypes.EDIT_CLASS_SUCCEEDED: {
+      let newClass = action.payload.businessClass;
+
+      let updatedClassList = state.classList.map((item) => {
+        if (item._id === newClass._id) {
+          return newClass;
+        }
+        return item;
+      });
+      return {
+        ...state,
+        classList: updatedClassList,
+      };
+    }
     case classActionTypes.GET_CLASS_SESSIONS_SUCCEEDED: {
       return { ...state, classSessions: action.payload };
     }

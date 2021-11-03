@@ -51,3 +51,14 @@ export const getClassSessions = async (classId) => {
     throw error;
   }
 };
+
+export async function updateClass({ data, id }) {
+  try {
+    const api = `classes/${id}`;
+    const response = await axiosInstance.put(api, data);
+    const res = response.data;
+    return res;
+  } catch (error) {
+    throw error;
+  }
+}
