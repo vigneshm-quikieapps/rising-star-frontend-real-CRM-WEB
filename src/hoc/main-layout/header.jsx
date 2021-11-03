@@ -25,6 +25,7 @@ const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) =>
     ["drawerOpen", "drawerWidth"].indexOf(prop) === -1,
 })(({ theme, drawerOpen, drawerWidth }) => ({
+  paddingRight: "100px",
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -32,7 +33,6 @@ const AppBar = styled(MuiAppBar, {
   ...(drawerOpen && {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: `${drawerWidth}px`,
-    paddingRight: "100px",
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -89,7 +89,7 @@ const Header = ({
           drawerWidth={drawerWidth}
           color="background"
         >
-          <Toolbar>
+          <Toolbar disableGutters>
             {loading && (
               <LinearProgress
                 sx={{ position: "absolute", width: "100%", left: 0, bottom: 0 }}
