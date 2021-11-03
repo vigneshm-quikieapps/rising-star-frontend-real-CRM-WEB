@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, MenuItem } from "@mui/material";
@@ -17,10 +17,7 @@ import moreIcon from "../../assets/icons/icon-more.png";
 import verifiedIcon from "../../assets/icons/icon-allergy.png";
 import { objectToArray } from "../../utils";
 import { enrollmentHeaders } from "../../helper/constants";
-import {
-  getSessionInAclassByTermId,
-  getSessionsByTermId,
-} from "../../redux/action/sessionAction";
+import { getSessionInAclassByTermId } from "../../redux/action/sessionAction";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getMembersOfSession } from "../../redux/action/memberAction";
 
@@ -75,7 +72,7 @@ const ClassEnrollments = () => {
     </CardRow>
   );
 
-  const setTableRows = () => {
+  const setTableRows = useCallback(() => {
     let sessionMembersDetailsArray = members.membersOfSession.map(
       ({
         droppedDate,
@@ -113,76 +110,91 @@ const ClassEnrollments = () => {
       };
     });
     setTableRowData(finalRowDataArray);
-  };
+  }, [members.membersOfSession]);
 
-  const handleTermChange = (e) => {
-    let termId = e.target.value;
-    setSelectedTermId(termId);
+  const handleTermChange = useCallback(
+    (e) => {
+      let termId = e?.target ? e.target.value : e;
+      setSelectedTermId(termId);
 
-    if (termId !== 0) {
-      dispatch(
-        getSessionInAclassByTermId({
-          classId: id,
-          termId: termId,
-        })
-      );
-    } else {
-      setSessionsData([]);
-    }
-    setSelectedSession(0);
-    setSessionDetailsArray([]);
-    setTableRowData([]);
-  };
+      if (termId !== 0) {
+        dispatch(
+          getSessionInAclassByTermId({
+            classId: id,
+            termId: termId,
+          })
+        );
+      } else {
+        setSessionsData([]);
+      }
+      setSelectedSession(0);
+      setSessionDetailsArray([]);
+      setTableRowData([]);
+    },
+    [dispatch, id]
+  );
 
-  const handleSessionChange = (e) => {
-    let sessionId = e.target.value;
-    let selectedSessionObj =
-      allSessions.length && allSessions.find((e) => e._id === sessionId);
-    setSelectedSession(selectedSessionObj);
-    selectedSessionObj !== undefined
-      ? renderSessionData(selectedSessionObj)
-      : setSessionDetailsArray([]);
-  };
+  const renderSessionData = useCallback(
+    (Obj) => {
+      const {
+        _id,
+        term,
+        pattern,
+        status,
+        coach,
+        fullcapacity,
+        fullcapacityfilled,
+        waitcapacity,
+        waitcapacityfilled,
+      } = Obj;
 
-  const renderSessionData = (Obj) => {
-    const {
-      _id,
-      term,
-      pattern,
-      status,
-      coach,
-      fullcapacity,
-      fullcapacityfilled,
-      waitcapacity,
-      waitcapacityfilled,
-    } = Obj;
+      dispatch(getMembersOfSession(_id));
 
-    dispatch(getMembersOfSession(_id));
+      let sessionsDataObject = {
+        "Start Date": term.startDate.split("T")[0],
+        "End Date": term.endDate.split("T")[0],
+        "Start Time": pattern[0].startTime.split("T")[0],
+        "End Time": pattern[0].endTime.split("T")[0],
+        Pattern: pattern[0].day,
+        Facility: "Gym Hall (static)",
+        "Session Enrolment Status": status,
+        "Coach Name": coach?.name,
+        "Full class capacity": fullcapacity,
+        Enrolled: fullcapacityfilled,
+        "Waitlist capacity": waitcapacity,
+        "Waitlist Enrolled": waitcapacityfilled,
+      };
 
-    let sessionsDataObject = {
-      "Start Date": term.startDate.split("T")[0],
-      "End Date": term.endDate.split("T")[0],
-      "Start Time": pattern[0].startTime.split("T")[0],
-      "End Time": pattern[0].endTime.split("T")[0],
-      Pattern: pattern[0].day,
-      Facility: "Gym Hall (static)",
-      "Session Enrolment Status": status,
-      "Coach Name": coach?.name,
-      "Full class capacity": fullcapacity,
-      Enrolled: fullcapacityfilled,
-      "Waitlist capacity": waitcapacity,
-      "Waitlist Enrolled": waitcapacityfilled,
-    };
+      let sessionsDataArray = objectToArray(sessionsDataObject);
+      setSessionDetailsArray(sessionsDataArray);
+    },
+    [dispatch]
+  );
 
-    let sessionsDataArray = objectToArray(sessionsDataObject);
-    setSessionDetailsArray(sessionsDataArray);
-  };
+  const handleSessionChange = useCallback(
+    (e) => {
+      let sessionId = e?.target ? e.target.value : e;
+
+      let selectedSessionObj =
+        allSessions.length && allSessions.find((e) => e._id === sessionId);
+
+      if (selectedSessionObj !== undefined) {
+        setSelectedSession(selectedSessionObj);
+        renderSessionData(selectedSessionObj);
+      } else {
+        setSessionDetailsArray([]);
+      }
+    },
+    [allSessions, renderSessionData]
+  );
 
   useEffect(() => {
+    console.log("1");
     dispatch(getTermsOfClass(id));
   }, [dispatch, id]);
 
   useEffect(() => {
+    console.log("2");
     // setting terms data
     let termOptions =
       allTerms.length &&
@@ -193,13 +205,14 @@ const ClassEnrollments = () => {
         };
       });
     setTermsData(termOptions);
-
+    selectedSession === "" &&
+      allTerms.length &&
+      handleTermChange(allTerms[0]._id);
     members.membersOfSession.length && setTableRows();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [members, allTerms]);
+  }, [members, allTerms, setTableRows, handleTermChange, selectedSession]);
 
   useEffect(() => {
+    console.log("3");
     let sessionOptions =
       allSessions.length &&
       allSessions.map(({ _id, name }) => {
@@ -210,7 +223,10 @@ const ClassEnrollments = () => {
       });
 
     setSessionsData(sessionOptions);
-  }, [allSessions]);
+    allSessions.length &&
+      selectedSession === "" &&
+      handleSessionChange(allSessions[0]._id);
+  }, [allSessions, handleSessionChange, selectedSession]);
 
   return (
     <Box>

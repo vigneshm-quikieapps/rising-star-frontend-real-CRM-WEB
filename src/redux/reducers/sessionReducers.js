@@ -17,7 +17,6 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, sessionsOfTerm: docs, currentPage, totalPages };
     case sessionActionTypes.GET_ALL_SESSION_OF_A_CLASS_BY_TERM_SUCCEEDED:
       return { ...state, sessionListInAclassByterm: action.payload };
-
     default:
       return state;
   }
