@@ -29,6 +29,7 @@ import setupAndProcess from "../assets/icons/icon-setup-and-processes.png";
 import term from "../assets/icons/icon-term.png";
 import user from "../assets/icons/icon-user.png";
 import loginPageImage from "../assets/images/illustration-login.png";
+import { CheckBox, TextField } from "../components";
 
 export const classListHeaders = [
   "Class Name",
@@ -149,9 +150,8 @@ export const attendanceRows = Array(10)
       <ImgIcon alt="phone">{verifiedIcon}</ImgIcon>,
       <Status status="green" title="Paid" />,
       "09/08/2021",
-      "Yes",
-      "No",
-      "Took a day off yester…",
+      <CheckBox />,
+      <TextField value="Took a day off yester…" />,
     ],
   }));
 
@@ -164,7 +164,6 @@ export const attendanceHeaders = [
   "Payment Status",
   "Start Date",
   "Attended",
-  "No Show",
   "Comments",
 ];
 
