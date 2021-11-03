@@ -50,10 +50,10 @@ const MainLayout = ({ children }) => {
   return (
     <>
       <Header
-        open={navOpen}
+        drawerOpen={navOpen}
         drawerWidth={drawerWidth}
         userRole="Business Admin"
-        userName="Carole Chimako"
+        userName={localStorage.getItem("userName") || "Logged Out"}
         handleDrawerOpen={toggleNav}
       />
       <SideNav
@@ -64,7 +64,7 @@ const MainLayout = ({ children }) => {
         width={drawerWidth}
       />
       <ErrorDialog>
-        <Main drawerWidth={drawerWidth} open={navOpen}>
+        <Main drawerWidth={drawerWidth} drawerOpen={navOpen}>
           {children}
         </Main>
       </ErrorDialog>

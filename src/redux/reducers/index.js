@@ -7,6 +7,7 @@ import sessionReducers from "./sessionReducers";
 import termsReducers from "./terms-reducers";
 import evaluationReducers from "./evaluationReducers";
 import sharedReducer from "./shared-reducer";
+import billingReducers from "./billingReducers";
 
 const rootReducer = combineReducers({
   //By defining a field inside the reducers parameter
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   terms: termsReducers,
   evaluation: evaluationReducers,
   shared: sharedReducer,
+  billing: billingReducers,
 });
 
 export default rootReducer;

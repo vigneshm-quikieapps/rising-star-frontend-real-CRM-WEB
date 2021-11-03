@@ -91,7 +91,7 @@ const Login = () => {
           value={credentials.password}
           InputProps={{
             endAdornment: (
-              <InputAdornment onClick={togglePassVisibility}>
+              <InputAdornment onClick={togglePassVisibility} position="end">
                 <IconButton>
                   {visiblePass ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
