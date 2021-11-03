@@ -5,9 +5,9 @@ import {
   getAttendanceListOfSessionByDate,
 } from "../../services/sessionServices";
 import { axiosGetSessionsByTermId } from "../../services/term-services";
-import { sessionActionTypes, sharedActionTypes } from "../types";
+import { sessionActionTypes } from "../types";
 
-import { startLoading, stopLoading } from "../action/shared-actions";
+import { startLoading, stopLoading, setError } from "../action/shared-actions";
 
 export function* getMembersEnrolledInSession(action) {
   try {
@@ -22,12 +22,12 @@ export function* getMembersEnrolledInSession(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting members enrolled in a session",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting members enrolled in a session"
+      )
+    );
   }
 }
 
@@ -48,12 +48,12 @@ export function* getSessionsByTermId(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting all sessions of  a term",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting all sessions of  a term"
+      )
+    );
   }
 }
 
@@ -77,12 +77,12 @@ export function* getSessionInAclassByTermId(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the session list of a class by term id.",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the session list of a class by term id."
+      )
+    );
   }
 }
 
@@ -107,12 +107,12 @@ export function* getAttendanceOfSessionByDate(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the attendance list of a session by date.",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the attendance list of a session by date."
+      )
+    );
   }
 }
 

@@ -9,8 +9,8 @@ import {
   getMemberListOfSession,
 } from "../../services/memberServices";
 
-import { startLoading, stopLoading } from "../action/shared-actions";
-import { memberActionTypes, sharedActionTypes } from "../types";
+import { startLoading, stopLoading, setError } from "../action/shared-actions";
+import { memberActionTypes } from "../types";
 
 export function* getMemberList(action) {
   try {
@@ -22,12 +22,9 @@ export function* getMemberList(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the member list",
-    });
+    yield put(
+      setError(error, "Something went wrong while getting the member list")
+    );
   }
 }
 
@@ -45,12 +42,7 @@ export function* getMember(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the member",
-    });
+    yield put(setError(error, "Something went wrong while getting the member"));
   }
 }
 
@@ -68,12 +60,12 @@ export function* getAllErolmentOfAMember(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the member enrolment list",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the member enrolment list"
+      )
+    );
   }
 }
 
@@ -98,12 +90,12 @@ export function* getProgresRecordOfAMember(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the member progress record",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the member progress record"
+      )
+    );
   }
 }
 
@@ -124,12 +116,12 @@ export function* updateMulitpleStatusOnProgressRecordOfMember(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while updating the multiple status on progress record",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while updating the multiple status on progress record"
+      )
+    );
   }
 }
 
@@ -153,12 +145,12 @@ export function* getConsentRecordOfAMember(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the member consent record",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the member consent record"
+      )
+    );
   }
 }
 
@@ -180,12 +172,12 @@ export function* getMembersOfSession(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    yield put({
-      type: sharedActionTypes.SET_ERROR,
-      payload:
-        error?.response?.data?.message ||
-        "Something went wrong while getting the members of a session",
-    });
+    yield put(
+      setError(
+        error,
+        "Something went wrong while getting the members of a session"
+      )
+    );
   }
 }
 
