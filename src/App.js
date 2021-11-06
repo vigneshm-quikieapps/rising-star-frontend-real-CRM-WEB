@@ -1,13 +1,21 @@
-import MainLayout from "./hoc/main-layout";
-import "./styles/global.css";
+import { Provider } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+
 import theme from "./styles/theme";
+import "./styles/global.css";
+import store from "./redux/store/configureStore";
+import MainRouter from "./router";
+// import SearchMembers from "./pages/searchMembers";
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      {/* dry run your component inside here */}
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <MainRouter />
+      </ThemeProvider>
+    </Provider>
   );
 }
 
