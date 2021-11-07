@@ -51,7 +51,7 @@ const MemberConsent = () => {
     if (currentMember) {
       dispatch(
         getMemberConsentRecord(
-          currentMember.member.membership[0].clubMembershipId
+          currentMember.membership[0].clubMembershipId
         )
       );
     }
@@ -69,7 +69,7 @@ const MemberConsent = () => {
     <Box>
       <StyleBox>
         <Typography variant="h4" component="div">
-          {currentMember ? currentMember.member.name : "- - -"}
+          {currentMember ? currentMember.name : "- - -"}
         </Typography>
         <Typography variant="subtitle2" component="div">
           Student/Member
@@ -96,7 +96,7 @@ const MemberConsent = () => {
               title="Club Membership Number"
               description={
                 currentMember
-                  ? currentMember.member.membership[0].clubMembershipId
+                  ? currentMember.membership[0].clubMembershipId
                   : "- - -"
               }
               sx={{ marginLeft: "20px" }}

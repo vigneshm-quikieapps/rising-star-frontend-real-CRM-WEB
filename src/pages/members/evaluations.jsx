@@ -197,7 +197,7 @@ const MemberEvaluations = () => {
         const data = {
           memberId: id,
           clubMembershipId:
-            currentMember?.member.membership[0].clubMembershipId,
+            currentMember?.membership[0].clubMembershipId,
           businessId: businessList,
           evaluationSchemeId: evalautionSchemeList,
         };
@@ -271,7 +271,7 @@ const MemberEvaluations = () => {
     <Box sx={{ width: "100%", paddingBottom: "20px" }}>
       <StyleBox>
         <Typography variant="h4" component="div">
-          {currentMember ? currentMember.member.name : "- - -"}
+          {currentMember ? currentMember.name : "- - -"}
         </Typography>
         <Typography variant="subtitle2" component="div">
           Student/Member
@@ -280,7 +280,7 @@ const MemberEvaluations = () => {
           <Grid item xs={3}>
             <Output
               title="Full Name"
-              description={currentMember ? currentMember.member.name : "- - -"}
+              description={currentMember ? currentMember.name : "- - -"}
             />
           </Grid>
           {/* <Grid item xs={3}>
@@ -291,7 +291,7 @@ const MemberEvaluations = () => {
               title="Club Membership Number"
               description={
                 currentMember
-                  ? currentMember.member.membership[0].clubMembershipId
+                  ? currentMember.membership[0].clubMembershipId
                   : "- - -"
               }
             />
