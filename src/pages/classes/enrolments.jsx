@@ -9,7 +9,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { Card, CardRow } from "../../components/common";
+import { Card } from "../../components/common";
 import {
   Accordion,
   TextField,
@@ -23,7 +23,6 @@ import {
 import moreIcon from "../../assets/icons/icon-more.png";
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
 import allergyIcon from "../../assets/icons/icon-allergy.png";
-import { objectToArray } from "../../utils";
 import { enrollmentHeaders } from "../../helper/constants";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
