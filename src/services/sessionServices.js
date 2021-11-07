@@ -10,10 +10,10 @@ export const axiosGetMembersEnrolledInASession = async (id) => {
   }
 };
 
-export const axiosGetSessionInAclassByTermId = async (params) => {
+export const getClassSessionsByTermId = async ({ classId, termId }) => {
   try {
     const api = `sessions/in-a-class/of-a-particular-term`;
-    const allMembers = await axiosInstance.post(api, params);
+    const allMembers = await axiosInstance.post(api, { classId, termId });
     return allMembers.data.docs;
   } catch (error) {
     throw error;

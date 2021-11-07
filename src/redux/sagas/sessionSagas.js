@@ -1,7 +1,7 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
 import {
   axiosGetMembersEnrolledInASession,
-  axiosGetSessionInAclassByTermId,
+  getClassSessionsByTermId,
   getAttendanceListOfSessionByDate,
 } from "../../services/sessionServices";
 import { axiosGetSessionsByTermId } from "../../services/term-services";
@@ -64,13 +64,10 @@ export function* watchGetSessionsByTermId() {
   );
 }
 
-export function* getSessionInAclassByTermId(action) {
+export function* getClassSessionsByTerm(action) {
   try {
     yield put(startLoading());
-    const enrol_list = yield call(
-      axiosGetSessionInAclassByTermId,
-      action.payload
-    );
+    const enrol_list = yield call(getClassSessionsByTermId, action.payload);
     yield put({
       type: sessionActionTypes.GET_ALL_SESSION_OF_A_CLASS_BY_TERM_SUCCEEDED,
       payload: enrol_list,
@@ -87,10 +84,10 @@ export function* getSessionInAclassByTermId(action) {
 }
 
 //watchingGeneratedFunction
-export function* watchgetSessionInAclassByTermId() {
+export function* watchGetClassSessionsByTerm() {
   yield takeEvery(
     sessionActionTypes.GET_ALL_SESSION_OF_A_CLASS_BY_TERM,
-    getSessionInAclassByTermId
+    getClassSessionsByTerm
   );
 }
 
@@ -128,7 +125,7 @@ export default function* sessionSagas() {
   yield all([
     watchGetMemberEnrolledInSession(),
     watchGetSessionsByTermId(),
-    watchgetSessionInAclassByTermId(),
+    watchGetClassSessionsByTerm(),
     watchGetAttendanceOfSessionByDate(),
   ]);
 }
