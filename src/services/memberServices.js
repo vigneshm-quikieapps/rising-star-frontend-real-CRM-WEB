@@ -62,10 +62,10 @@ export const axiosGetConsentByClubmembership = async (id) => {
   }
 };
 
-export const getMemberListOfSession = async (sessionId) => {
+export const getMemberListOfSession = async ({ sessionId, params }) => {
   try {
     const api = `sessions/${sessionId}/members`;
-    const members = await axiosInstance.get(api);
+    const members = await axiosInstance.get(api, { params });
     return members.data;
   } catch (error) {
     throw error;

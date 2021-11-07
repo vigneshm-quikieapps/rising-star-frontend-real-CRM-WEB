@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useCallback, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -55,17 +55,24 @@ const ClassEnrollments = () => {
   const membersOfSession = useSelector(
     (state) => state.members.membersOfSession
   );
-  const { page: currentPage, totalPages } = useSelector(
-    (state) => state.members
-  );
+  const { currentPage, totalPages } = useSelector((state) => state.members);
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
 
+  const handlePageChange = useCallback(
+    (_, value) => {
+      if (value !== currentPage)
+        dispatch(getMembersOfSession(selectedSession, { page: value }));
+    },
+    [dispatch, currentPage, selectedSession]
+  );
+
   const pagination = (
     <Pagination
+      sx={{ my: "20px" }}
       count={totalPages}
       page={currentPage}
-      onChange={(event, value) => {}}
+      onChange={handlePageChange}
     />
   );
 
