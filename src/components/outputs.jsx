@@ -7,7 +7,7 @@ const statusMap = { ACTIVE: "green", INACTIVE: "red" };
 const Outputs = ({
   items = {},
   columnCount = 4,
-  columnGap = "0",
+  columnGap = "20px",
   rowGap = "10px",
 }) => {
   const arrayItems = Object.entries(items);
@@ -18,7 +18,7 @@ const Outputs = ({
         display: "grid",
         rowGap,
         columnGap,
-        gridTemplateColumns: `repeat(${columnCount},${100 / columnCount}%)`,
+        gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
         // "&>*": { width: itemWidth },
       }}
     >
