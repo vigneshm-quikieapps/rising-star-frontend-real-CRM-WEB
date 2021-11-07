@@ -429,7 +429,7 @@ const MemberEnrollment = () => {
     <Box sx={{ width: "100%" }}>
       <StyleBox>
         <Typography variant="h4" component="div">
-          {currentMember ? currentMember.member.name : "- - -"}
+          {currentMember ? currentMember.name : "- - -"}
         </Typography>
         <Typography variant="subtitle2" component="div">
           Student/Member

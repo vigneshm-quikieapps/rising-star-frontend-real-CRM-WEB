@@ -45,8 +45,8 @@ export const getMembers = async (params) => {
 export const getMemberById = async (id) => {
   try {
     const api = `members/${id}`;
-    const member = await axiosInstance.get(api);
-    return member.data;
+    const response = await axiosInstance.get(api);
+    return response.data.member;
   } catch (error) {
     throw error;
   }

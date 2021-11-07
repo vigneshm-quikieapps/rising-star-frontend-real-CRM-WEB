@@ -1,157 +1,113 @@
-import { useParams } from "react-router";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
 import {
-  AccordionContainer,
-  Card,
-  CardRow,
-  HeadingText,
-  SubHeadingText,
-} from "../../components/common";
-import { Typography, Box } from "@mui/material";
+  Box,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from "@mui/material";
+
+import { Accordion, IconButton, ImgIcon, Outputs } from "../../components";
 import moreIcon from "../../assets/icons/icon-more.png";
-import IconButton from "../../components/icon-button";
-import ImgIcon from "../../components/img-icon";
-import { objectToArray } from "../../utils";
-import { Outputs } from "../../containers/outputs";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllMembersList } from "../../redux/action/memberAction";
-import Accordion from "../../components/accordion";
+import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
 
 const MoreIconButton = () => (
-  <IconButton>
+  <IconButton sx={{ position: "absolute", top: "10px", right: "10px" }}>
     <ImgIcon alt="more">{moreIcon}</ImgIcon>
   </IconButton>
 );
 
+const ExpandIcon = () => <ImgIcon>{arrowDownIcon}</ImgIcon>;
+
+const Details = ({ title, details }) => (
+  <Accordion defaultExpanded>
+    <AccordionSummary expandIcon={<ExpandIcon />}>
+      <Typography>{title}</Typography>
+    </AccordionSummary>
+    <AccordionDetails>
+      <Outputs items={details} columnCount={3} />
+    </AccordionDetails>
+  </Accordion>
+);
+
+const extractContactInfo = (contact) => {
+  const { name: Name, relationship: Relationship, contact: mobileNo } = contact;
+  return { Name, Relationship, "Contact Number*": mobileNo };
+};
+
 const MemberInfo = () => {
-  const { id } = useParams();
-  const [basicInfoArr, setBasicInfoArr] = useState([]);
-  const [parentInfoArr, setParentInfoArr] = useState([]);
-  const [primaryContactInfoArr, setPrimaryContactInfoArr] = useState([]);
-  const [secondaryContactInfoArr, setSecondaryContactInfoArr] = useState([]);
+  const currentMember = useSelector((state) => state.members.currentMember);
 
-  const dispatch = useDispatch();
-  const currentMember = useSelector(
-    (state) => state.members.currentMember && state.members.currentMember.member
-  );
-
-  const getMemberInfo = () => {
-    const { name, gender, dob, contacts, userId } = currentMember;
-    const { email, name: pName, mobileNo } = userId;
-
-    // setting basic info object
-    let date = new Date(dob.split("T")[0]);
-    let info = {
+  const basicInfo = useMemo(() => {
+    if (!currentMember) return {};
+    const { name, gender, dob } = currentMember;
+    const dateOfBirth = new Date(dob.split("T")[0]).toDateString();
+    return {
       "Full Name": name,
       "Gender*": gender,
-      "Date of Birth*": date.toDateString(),
+      "Date of Birth*": dateOfBirth,
     };
-    setBasicInfoArr(objectToArray(info));
+  }, [currentMember]);
 
-    // setting parent info
-    let parentInfo = {
-      "Full Name*": pName,
+  const parentInfo = useMemo(() => {
+    if (!currentMember) return {};
+    const { email, name: parentName, mobileNo } = currentMember.userId;
+    return {
+      "Full Name*": parentName,
       Email: email,
       "Contact Number": mobileNo,
     };
-    setParentInfoArr(objectToArray(parentInfo));
+  }, [currentMember]);
 
-    // setting primary and secondary contact info arrays
-    contacts.forEach((item) => {
-      let obj = {
-        Name: item.name,
-        Relationship: item.relationship,
-        "Contact Number*": item.contact,
-      };
-      let arr = objectToArray(obj);
-      item.type === "PRIMARY"
-        ? setPrimaryContactInfoArr(arr)
-        : setSecondaryContactInfoArr(arr);
-    });
-  };
+  const primaryContactInfo = useMemo(() => {
+    if (!currentMember) return {};
+    const { contacts } = currentMember;
+    const primaryContact = contacts.find(({ type }) => type === "PRIMARY");
+    return extractContactInfo(primaryContact);
+  }, [currentMember]);
 
-  useEffect(() => {
-    dispatch(getAllMembersList());
-
-    return () => {
-      setBasicInfoArr([]);
-      setParentInfoArr([]);
-      setPrimaryContactInfoArr([]);
-      setSecondaryContactInfoArr([]);
-    };
-  }, [id, dispatch]);
-
-  useEffect(() => {
-    currentMember && getMemberInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const secondaryContactInfo = useMemo(() => {
+    if (!currentMember) return {};
+    const { contacts } = currentMember;
+    const secondaryContact = contacts.find(({ type }) => type !== "PRIMARY");
+    return extractContactInfo(secondaryContact);
   }, [currentMember]);
 
   return (
-    <Box>
-      <Card>
-        <CardRow>
-          <HeadingText>{currentMember && currentMember.name}</HeadingText>
-          <MoreIconButton />
-        </CardRow>
-        <SubHeadingText>Student/Member</SubHeadingText>
-        <CardRow sx={{ justifyContent: "flex-start" }}>
-          <Outputs arr={basicInfoArr} />
-        </CardRow>
-      </Card>
-      <AccordionContainer>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Parent / Carer Details</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <CardRow sx={{ justifyContent: "flex-start" }}>
-              <Outputs arr={parentInfoArr} />
-            </CardRow>
-          </AccordionDetails>
-        </Accordion>
-      </AccordionContainer>
-
-      <AccordionContainer>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography> Emergency Contact (Primary)</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <CardRow sx={{ justifyContent: "flex-start" }}>
-              <Outputs arr={primaryContactInfoArr} />
-            </CardRow>
-          </AccordionDetails>
-        </Accordion>
-      </AccordionContainer>
-
-      <AccordionContainer>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography> Emergency Contact (Secondary)</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <CardRow sx={{ justifyContent: "flex-start" }}>
-              <Outputs arr={secondaryContactInfoArr} />
-            </CardRow>
-          </AccordionDetails>
-        </Accordion>
-      </AccordionContainer>
-    </Box>
+    <>
+      <Box
+        sx={{
+          position: "relative",
+          border: (theme) => `1px solid ${theme.palette.highlight.main}`,
+          borderRadius: (theme) => theme.shape.borderRadiuses.secondary,
+          p: "20px",
+        }}
+      >
+        <MoreIconButton />
+        <Typography variant="h2" sx={{ fontSize: "28px", fontWeight: "bold" }}>
+          {basicInfo["Full Name"]}
+        </Typography>
+        <Typography
+          sx={{
+            color: (theme) => theme.palette.text.secondary,
+            fontWeight: "bold",
+            mb: "10px",
+          }}
+        >
+          Student / Member
+        </Typography>
+        <Outputs items={basicInfo} columnCount={3} />
+      </Box>
+      <Details title="Parent / Carer Details" details={parentInfo} />
+      <Details
+        title="Emergency Contact (Primary)"
+        details={primaryContactInfo}
+      />
+      <Details
+        title="Emergency Contact (Secondary)"
+        details={secondaryContactInfo}
+      />
+    </>
   );
 };
 

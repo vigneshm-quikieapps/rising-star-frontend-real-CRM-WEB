@@ -177,21 +177,6 @@ const ClassEnrollments = () => {
   }, [sessionsData]);
 
   useEffect(() => {
-    if (selectedTermId !== "") {
-      dispatch(
-        getSessionInAclassByTermId({
-          classId: id,
-          termId: selectedTermId,
-        })
-      );
-    } else {
-      setSessionsData([]);
-    }
-
-    setSessionDetailsArray([]);
-  }, [dispatch, id, selectedTermId]);
-
-  useEffect(() => {
     selectedSession && dispatch(getMembersOfSession(selectedSession));
     let selectedSessionObj = allSessions.find(
       (item) => item._id === selectedSession

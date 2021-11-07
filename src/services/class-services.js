@@ -14,7 +14,7 @@ export async function getClasses(params) {
 
 export async function deleteClassByID(id) {
   try {
-    await axiosInstance.delete("/classes/" + id);
+    await axiosInstance.delete("classes/" + id);
     return id;
   } catch (error) {
     throw error;
