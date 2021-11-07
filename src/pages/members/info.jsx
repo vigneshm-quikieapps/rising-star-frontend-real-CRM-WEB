@@ -10,6 +10,7 @@ import {
 import { Accordion, IconButton, ImgIcon, Outputs } from "../../components";
 import moreIcon from "../../assets/icons/icon-more.png";
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
+import toKebab from "../../utils/to-kebab";
 
 const MoreIconButton = () => (
   <IconButton sx={{ position: "absolute", top: "10px", right: "10px" }}>
@@ -31,8 +32,12 @@ const Details = ({ title, details }) => (
 );
 
 const extractContactInfo = (contact) => {
-  const { name: Name, relationship: Relationship, contact: mobileNo } = contact;
-  return { Name, Relationship, "Contact Number*": mobileNo };
+  const { name, relationship, contact: mobileNo } = contact;
+  return {
+    Name: toKebab(name),
+    Relationship: toKebab(relationship),
+    "Contact Number*": mobileNo,
+  };
 };
 
 const MemberInfo = () => {
@@ -43,8 +48,8 @@ const MemberInfo = () => {
     const { name, gender, dob } = currentMember;
     const dateOfBirth = new Date(dob.split("T")[0]).toDateString();
     return {
-      "Full Name": name,
-      "Gender*": gender,
+      "Full Name": toKebab(name),
+      "Gender*": toKebab(gender),
       "Date of Birth*": dateOfBirth,
     };
   }, [currentMember]);
@@ -53,7 +58,7 @@ const MemberInfo = () => {
     if (!currentMember) return {};
     const { email, name: parentName, mobileNo } = currentMember.userId;
     return {
-      "Full Name*": parentName,
+      "Full Name*": toKebab(parentName),
       Email: email,
       "Contact Number": mobileNo,
     };
