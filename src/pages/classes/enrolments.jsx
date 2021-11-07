@@ -18,8 +18,8 @@ import {
   IconButton,
   Pagination,
   Tooltip,
+  Outputs,
 } from "../../components";
-import { Outputs } from "../../containers/outputs";
 import moreIcon from "../../assets/icons/icon-more.png";
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
 import allergyIcon from "../../assets/icons/icon-allergy.png";
@@ -143,11 +143,49 @@ const ClassEnrollments = () => {
     selectedSession && dispatch(getMembersOfSession(selectedSession));
   }, [selectedSession, dispatch]);
 
+  const sessionInfo = useMemo(() => {
+    if (!selectedSession) return;
+    const currentSession = classSessionsInTerm.find(
+      (session) => session._id === selectedSession
+    );
+    const {
+      term,
+      pattern,
+      status,
+      facility,
+      coach,
+      fullcapacity,
+      fullcapacityfilled,
+      waitcapacity,
+      waitcapacityfilled,
+    } = currentSession;
+    const info = {
+      "Start Date": term.startDate.split("T")[0],
+      "End Date": term.endDate.split("T")[0],
+      "Start Time": pattern[0].startTime.split("T")[0],
+      "End Time": pattern[0].endTime.split("T")[0],
+      Pattern: pattern[0].day,
+      Facility: facility,
+      "Session Enrolment Status": status,
+      "Coach Name": coach?.name,
+      "Full class capacity": fullcapacity,
+      Enrolled: fullcapacityfilled,
+      "Waitlist Capacity": waitcapacity,
+      "Waitlist Enrolled": waitcapacityfilled,
+    };
+    return info;
+  }, [selectedSession, classSessionsInTerm]);
+
   return (
     <Box>
-      <VerifiedIcon title="working" />
       <Card>
-        <Box sx={{ display: "flex", "&>div": { width: "30%", mr: "20px" } }}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, minmax(250px, 1fr))",
+            columnGap: "20px",
+          }}
+        >
           <TextField
             select
             value={selectedTerm}
@@ -185,15 +223,9 @@ const ClassEnrollments = () => {
             )}
           </TextField>
         </Box>
-
-        <CardRow
-          sx={{
-            marginTop: "15px",
-            justifyContent: "flex-start",
-          }}
-        >
-          {/* <Outputs arr={sessionDetailsArray} /> */}
-        </CardRow>
+        <Box sx={{ mt: "20px" }}>
+          <Outputs items={sessionInfo} />
+        </Box>
       </Card>
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandIcon />}>
