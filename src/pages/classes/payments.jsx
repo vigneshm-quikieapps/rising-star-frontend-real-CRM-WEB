@@ -24,7 +24,7 @@ import {
 } from "../../components/index";
 
 import { getTermsOfClass } from "../../redux/action/terms-actions";
-import { getSessionInAclassByTermId } from "../../redux/action/sessionAction";
+import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import { getPaymentDetailsOfSession } from "../../redux/action/billingActions";
 
 const StyleBox = styled(Box)(({ theme }) => ({
@@ -86,7 +86,7 @@ const ClassPayments = () => {
 
   const termList = useSelector((state) => state.terms.termsOfClass);
   const sessionList = useSelector(
-    (state) => state.sessions.sessionListInAclassByterm
+    (state) => state.sessions.sessionsOfClassInTerm
   );
   const paymentList = useSelector((state) => state.billing.paymentList);
 
@@ -105,16 +105,6 @@ const ClassPayments = () => {
 
   const tableHeaders = ["Name", "Start Date", "Start", "Payment Status"];
 
-  const getSessiomParams = useCallback((selectedTerm, id) => {
-    return new Promise((resolve, reject) => {
-      const sessionParams = {
-        termId: selectedTerm,
-        classId: id,
-      };
-      resolve(sessionParams);
-    });
-  }, []);
-
   const getPaymentTableParams = useCallback((sessionId, date) => {
     return new Promise((resolve, reject) => {
       const paymentTableParams = {
@@ -126,7 +116,7 @@ const ClassPayments = () => {
   }, []);
 
   useEffect(() => {
-    id && dispatch(getTermsOfClass(id));
+    dispatch(getTermsOfClass(id));
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -134,12 +124,8 @@ const ClassPayments = () => {
   }, [termList]);
 
   useEffect(() => {
-    getSessiomParams(selectedTerm, id).then((res) => {
-      if (res.classId && res.termId) {
-        dispatch(getSessionInAclassByTermId(res));
-      }
-    });
-  }, [dispatch, getSessiomParams, id, selectedTerm]);
+    if (selectedTerm) dispatch(getClassSessionsByTermId(id, selectedTerm));
+  }, [dispatch, id, selectedTerm]);
 
   useEffect(() => {
     sessionList && setSelectedSession(sessionList[0]?._id || "");

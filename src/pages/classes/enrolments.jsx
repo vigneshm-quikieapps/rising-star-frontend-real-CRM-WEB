@@ -1,119 +1,120 @@
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useMemo, useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, MenuItem } from "@mui/material";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-
-import { Card, CardRow, HeadingText } from "../../components/common";
 import {
+  AccordionSummary,
+  AccordionDetails,
+  Box,
+  Typography,
+  MenuItem,
+} from "@mui/material";
+
+import { Card, CardRow } from "../../components/common";
+import {
+  Accordion,
   TextField,
   Table as CustomTable,
   ImgIcon,
   IconButton,
   Pagination,
+  Tooltip,
 } from "../../components";
 import { Outputs } from "../../containers/outputs";
 import moreIcon from "../../assets/icons/icon-more.png";
-import verifiedIcon from "../../assets/icons/icon-allergy.png";
+import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
+import allergyIcon from "../../assets/icons/icon-allergy.png";
 import { objectToArray } from "../../utils";
 import { enrollmentHeaders } from "../../helper/constants";
-import { getSessionInAclassByTermId } from "../../redux/action/sessionAction";
+import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getMembersOfSession } from "../../redux/action/memberAction";
 
 const MoreIconButton = () => (
-  <IconButton>
+  <IconButton sx={{ mr: "10px" }}>
     <ImgIcon alt="more">{moreIcon}</ImgIcon>
   </IconButton>
 );
 
-const UpIconButton = () => (
-  <IconButton sx={{ marginRight: "10px" }}>
-    <KeyboardArrowUpIcon />
-  </IconButton>
+const ExpandIcon = () => <ImgIcon>{arrowDownIcon}</ImgIcon>;
+
+const VerifiedIcon = ({ title = "test" }) => (
+  <Tooltip title={title}>
+    <Box sx={{ display: "inline-block" }}>
+      <ImgIcon>{allergyIcon}</ImgIcon>
+    </Box>
+  </Tooltip>
 );
 
 const ClassEnrollments = () => {
-  const { id } = useParams();
-  const members = useSelector((state) => state.members);
-  const allTerms = useSelector((state) => state.terms.termsOfClass);
-  const allSessions = useSelector(
-    (state) => state.sessions.sessionListInAclassByterm
-  );
-  const [page, setPage] = useState(members.page);
-  const [pages] = useState(members.totalPages);
-  const [tableRowData, setTableRowData] = useState([]);
-  const [termsData, setTermsData] = useState([]);
-  const [sessionsData, setSessionsData] = useState([]);
-  const [selectedTermId, setSelectedTermId] = useState("");
-  const [selectedSession, setSelectedSession] = useState("");
-  const [sessionDetailsArray, setSessionDetailsArray] = useState([]);
-
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { id: classId } = useParams();
+  const classTerms = useSelector((state) => state.terms.termsOfClass);
+  const classSessionsInTerm = useSelector(
+    (state) => state.sessions.sessionsOfClassInTerm
+  );
+  const membersOfSession = useSelector(
+    (state) => state.members.membersOfSession
+  );
+  const { page: currentPage, totalPages } = useSelector(
+    (state) => state.members
+  );
+  const [selectedTerm, setSelectedTerm] = useState("");
+  const [selectedSession, setSelectedSession] = useState("");
 
   const pagination = (
     <Pagination
-      count={pages}
-      page={page}
-      onChange={(event, value) => setPage(value)}
+      count={totalPages}
+      page={currentPage}
+      onChange={(event, value) => {}}
     />
   );
-  const heading = (
-    <CardRow
-      sx={{
-        margin: "10px 20px",
-      }}
-    >
-      <HeadingText>Members</HeadingText>
-      <CardRow>
-        <UpIconButton />
-        <MoreIconButton />
-      </CardRow>
-    </CardRow>
+
+  const tableRows = useMemo(
+    () =>
+      membersOfSession.map(
+        ({
+          _id,
+          droppedDate,
+          discontinuationReason,
+          member,
+          memberConsent,
+          startDate,
+          registeredDate,
+          enrolledStatus,
+        }) => {
+          let date = new Date(registeredDate);
+          let enrolledDate = registeredDate
+            ? date.toISOString().split("T")[0] +
+              " / " +
+              date.toLocaleTimeString()
+            : "N/A";
+          const allergy = (
+            <VerifiedIcon title={memberConsent?.consent?.allergies} />
+          );
+          const condition = (
+            <VerifiedIcon title={memberConsent?.consent?.condition} />
+          );
+          return {
+            onClick: () => history.push(`/members/info/${_id}`),
+            items: [
+              member.name,
+              allergy,
+              condition,
+              startDate ? startDate.split("T")[0] : "N/A",
+              enrolledDate,
+              enrolledStatus,
+              discontinuationReason,
+              droppedDate ? droppedDate : "N/A",
+            ],
+          };
+        }
+      ),
+    [membersOfSession, history]
   );
 
-  const setTableRows = useCallback(() => {
-    let sessionMembersDetailsArray = members.membersOfSession.map(
-      ({
-        droppedDate,
-        discontinuationReason,
-        member,
-        memberConsent,
-        startDate,
-        registeredDate,
-        enrolledStatus,
-      }) => {
-        let date = registeredDate?.split("T");
-        let enrolledDate = date ? `${date[0]}/${date[1]}` : "N/A";
-        return {
-          name: member.name,
-          allergies: memberConsent && memberConsent.consent.allergies,
-          conditions: memberConsent && memberConsent.consent.condition,
-          startDate: startDate ? startDate.split("T")[0] : "N/A",
-          enrolledDate,
-          enrolledStatus: enrolledStatus,
-          discontinuationReason: discontinuationReason,
-          droppedDate: droppedDate ? droppedDate : "N/A",
-        };
-      }
-    );
-    let finalRowDataArray = sessionMembersDetailsArray.map((item, index) => {
-      let itemArray = objectToArray(item);
-      return {
-        id: index,
-        items: itemArray.map((i) => {
-          if (i[0] === "allergies" || i[0] === "conditions") {
-            return <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>;
-          }
-          return i[1];
-        }),
-      };
-    });
-    setTableRowData(finalRowDataArray);
-  }, [members.membersOfSession]);
-
   const handleTermChange = (e) => {
-    setSelectedTermId(e.target.value);
+    setSelectedTerm(e.target.value);
   };
 
   const handleSessionChange = (e) => {
@@ -121,144 +122,69 @@ const ClassEnrollments = () => {
   };
 
   useEffect(() => {
-    dispatch(getTermsOfClass(id));
-  }, [dispatch, id]);
+    dispatch(getTermsOfClass(classId));
+  }, [dispatch, classId]);
+
+  useEffect(
+    () => classTerms.length && setSelectedTerm(classTerms[0]._id),
+    [classTerms]
+  );
 
   useEffect(() => {
-    // setting terms data
-    let termOptions =
-      allTerms.length &&
-      allTerms.map(({ _id, label }) => {
-        return {
-          id: _id,
-          termName: label,
-        };
-      });
-    setTermsData(termOptions);
-    members?.membersOfSession?.length && setTableRows();
-  }, [members, allTerms, setTableRows, selectedSession]);
+    if (selectedTerm) dispatch(getClassSessionsByTermId(classId, selectedTerm));
+  }, [dispatch, classId, selectedTerm]);
 
   useEffect(() => {
-    const value = termsData[0] ? termsData[0].id : "";
-    setSelectedTermId(value);
-  }, [termsData]);
-
-  useEffect(() => {
-    let sessionOptions =
-      allSessions.length &&
-      allSessions.map(({ _id, name }) => {
-        return {
-          id: _id,
-          sessionName: name,
-        };
-      });
-    setSessionsData(sessionOptions);
-  }, [allSessions]);
-
-  useEffect(() => {
-    if (selectedTermId !== "") {
-      dispatch(
-        getSessionInAclassByTermId({
-          classId: id,
-          termId: selectedTermId,
-        })
-      );
-    } else {
-      setSessionsData([]);
-    }
-
-    setSessionDetailsArray([]);
-    setTableRowData([]);
-  }, [dispatch, id, selectedTermId]);
-
-  useEffect(() => {
-    const value = sessionsData[0] ? sessionsData[0].id : "";
-    setSelectedSession(value);
-  }, [sessionsData]);
+    classSessionsInTerm.length &&
+      setSelectedSession(classSessionsInTerm[0]._id);
+  }, [classSessionsInTerm]);
 
   useEffect(() => {
     selectedSession && dispatch(getMembersOfSession(selectedSession));
-    let selectedSessionObj = allSessions.find(
-      (item) => item._id === selectedSession
-    );
-    if (selectedSessionObj) {
-      const {
-        term,
-        pattern,
-        status,
-        coach,
-        fullcapacity,
-        fullcapacityfilled,
-        waitcapacity,
-        waitcapacityfilled,
-      } = selectedSessionObj;
-
-      let sessionsDataObject = {
-        "Start Date": term.startDate.split("T")[0],
-        "End Date": term.endDate.split("T")[0],
-        "Start Time": pattern[0].startTime.split("T")[0],
-        "End Time": pattern[0].endTime.split("T")[0],
-        Pattern: pattern[0].day,
-        Facility: "Gym Hall (static)",
-        "Session Enrolment Status": status,
-        "Coach Name": coach?.name,
-        "Full class capacity": fullcapacity,
-        Enrolled: fullcapacityfilled,
-        "Waitlist capacity": waitcapacity,
-        "Waitlist Enrolled": waitcapacityfilled,
-      };
-
-      let sessionsDataArray = objectToArray(sessionsDataObject);
-      setSessionDetailsArray(sessionsDataArray);
-    }
-  }, [selectedSession, dispatch, allSessions]);
+  }, [selectedSession, dispatch]);
 
   return (
     <Box>
-      <Card sx={{ height: "249px" }}>
-        <CardRow sx={{ justifyContent: "flex-start" }}>
+      <VerifiedIcon title="working" />
+      <Card>
+        <Box sx={{ display: "flex", "&>div": { width: "30%", mr: "20px" } }}>
           <TextField
             select
-            id="demo-simple-select"
-            value={selectedTermId}
+            value={selectedTerm}
             label="Term"
             onChange={handleTermChange}
             variant="filled"
-            sx={{ width: "272px", marginRight: "15px" }}
           >
-            {termsData ? (
-              termsData.map(({ id, termName }) => (
-                <MenuItem key={id} value={id}>
-                  {termName}
+            {classTerms ? (
+              classTerms.map(({ _id, label }) => (
+                <MenuItem key={_id} value={_id}>
+                  {label}
                 </MenuItem>
               ))
             ) : (
-              <MenuItem value=""></MenuItem>
+              <MenuItem value="" />
             )}
           </TextField>
-
           <TextField
             select
             label="Session"
-            id="demo-simple-select"
-            value={selectedSession || ""}
+            value={selectedSession}
             onChange={handleSessionChange}
             variant="filled"
-            sx={{ width: "272px" }}
           >
-            {sessionsData ? (
-              sessionsData.map(({ id, sessionName }) => {
+            {classSessionsInTerm ? (
+              classSessionsInTerm.map(({ _id, name }) => {
                 return (
-                  <MenuItem key={id} value={id}>
-                    {sessionName}
+                  <MenuItem key={_id} value={_id}>
+                    {name}
                   </MenuItem>
                 );
               })
             ) : (
-              <MenuItem value=""></MenuItem>
+              <MenuItem value="" />
             )}
           </TextField>
-        </CardRow>
+        </Box>
 
         <CardRow
           sx={{
@@ -266,16 +192,26 @@ const ClassEnrollments = () => {
             justifyContent: "flex-start",
           }}
         >
-          <Outputs arr={sessionDetailsArray} />
+          {/* <Outputs arr={sessionDetailsArray} /> */}
         </CardRow>
       </Card>
-
-      <CustomTable
-        heading={heading}
-        headers={enrollmentHeaders}
-        rows={tableRowData}
-        pagination={pagination}
-      />
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandIcon />}>
+          <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
+            <Typography variant="h3" sx={{ fontSize: "20px", flex: 1 }}>
+              Members
+            </Typography>
+            <MoreIconButton />
+          </Box>
+        </AccordionSummary>
+        <AccordionDetails sx={{ p: 0 }}>
+          <CustomTable
+            headers={enrollmentHeaders}
+            rows={tableRows}
+            pagination={pagination}
+          />
+        </AccordionDetails>
+      </Accordion>
     </Box>
   );
 };

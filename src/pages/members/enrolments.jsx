@@ -25,7 +25,7 @@ import {
   memberEnrolmentReturnFromSuspend,
   transferEnrolment,
 } from "../../redux/action/enrolmentAction";
-import { getSessionInAclassByTermId } from "../../redux/action/sessionAction";
+import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -114,7 +114,7 @@ const MemberEnrollment = () => {
   const currentMember = useSelector((state) => state.members.currentMember);
   const businessList = useSelector((state) => state.businesses.businessList);
   const sessionList = useSelector(
-    (state) => state.sessions.sessionListInAclassByterm
+    (state) => state.sessions.sessionsOfClassInTerm
   );
   const businessId = businessList[0]?._id;
 
@@ -156,16 +156,6 @@ const MemberEnrollment = () => {
     });
   }, []);
 
-  const classfetchPrarams = useCallback((classId, termId) => {
-    return new Promise((resolve, reject) => {
-      const data = {
-        termId: termId,
-        classId: classId,
-      };
-      resolve(data);
-    });
-  }, []);
-
   useEffect(() => {
     params(id, selectedBusiness).then((res) => {
       if (res.memberId && res.businessId) {
@@ -175,15 +165,14 @@ const MemberEnrollment = () => {
   }, [dispatch, id, params, selectedBusiness]);
 
   useEffect(() => {
-    classfetchPrarams(
-      enrollmentList[0]?.classId,
-      enrollmentList[0]?.session.term._id
-    ).then((res) => {
-      if (res.classId && res.termId) {
-        dispatch(getSessionInAclassByTermId(res));
-      }
-    });
-  }, [dispatch, classfetchPrarams, enrollmentList]);
+    if (enrollmentList.length)
+      dispatch(
+        getClassSessionsByTermId(
+          enrollmentList[0].classId,
+          enrollmentList[0].session.term._id
+        )
+      );
+  }, [dispatch, enrollmentList]);
 
   useEffect(() => {
     sessionList && setSelectedSession(sessionList[0]?._id || "");
@@ -280,19 +269,14 @@ const MemberEnrollment = () => {
     });
   };
 
-  const classChangehandler = (e) => {
+  const classChangeHandler = (e) => {
     // const { name, value } = e.target;
-    const tragetId = e.target.value;
+    const targetId = e.target.value;
 
-    dispatch(
-      getSessionInAclassByTermId({
-        classId: tragetId,
-        termId: enrolmentDetailsInput.term,
-      })
-    );
+    dispatch(getClassSessionsByTermId(targetId, enrolmentDetailsInput.term));
     setEnrolmentDetailsInput({
       ...enrolmentDetailsInput,
-      className: tragetId,
+      className: targetId,
     });
   };
 
@@ -521,7 +505,7 @@ const MemberEnrollment = () => {
                 variant="filled"
                 sx={{ width: "100%" }}
                 value={enrolmentDetailsInput.className}
-                onChange={classChangehandler}
+                onChange={classChangeHandler}
               >
                 {removeDuplicateClass(enrollmentList, "classId")?.map((li) => (
                   <MenuItem key={li.class.name} value={li.class._id}>
