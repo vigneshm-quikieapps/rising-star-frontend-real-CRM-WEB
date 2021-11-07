@@ -1,15 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const Card = styled(Box)({
+export const Card = styled(Box)(({ theme }) => ({
   width: "100%",
-  height: "148px",
-  margin: "25px 150px 10px 0",
-  padding: "10px 10px 20px 20px",
-  borderRadius: "20px",
-  border: "solid 2px #f2f1f6",
-  backgroundColor: "#fff",
-});
+  margin: "10px 0",
+  padding: "20px",
+  borderRadius: theme.shape.borderRadiuses.secondary,
+  border: `solid 1px ${theme.palette.highlight.main}`,
+  backgroundColor: theme.palette.background.main,
+}));
 
 export const CardRow = styled(Box)({
   display: "flex",
@@ -17,7 +16,6 @@ export const CardRow = styled(Box)({
   alignItems: "center",
   justifyContent: "space-between",
   flexWrap: "wrap",
-  // margin: "15px 0",
   gap: "15px 0",
 });
 
@@ -25,34 +23,22 @@ export const CardCol4 = styled(Box)({
   width: "25%",
 });
 
-export const HeadingText = styled(Typography)({
-  // width: "605px",
-  height: "38px",
+export const HeadingText = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
-  fontFamily: "Manrope",
   fontSize: "28px",
   fontWeight: "bold",
-  fontStretch: "normal",
-  fontStyle: "normal",
   lineHeight: "normal",
   letterSpacing: "0.2px",
-  color: "#000",
-});
+  color: theme.palette.text.primary,
+}));
 
-export const SubHeadingText = styled(Typography)({
-  //   width: "118px",
-  height: "19px",
+export const SubHeadingText = styled(Typography)(({ theme }) => ({
   margin: "6px 0px 10px 0",
-  opacity: "0.5",
-  fontFamily: "Manrope",
   fontSize: "14px",
   fontWeight: "bold",
-  fontStretch: "normal",
-  fontStyle: "normal",
   lineHeight: "normal",
-  letterSpacing: "normal",
-  color: "#000",
-});
+  color: theme.palette.text.secondary,
+}));
 
 export const Title = styled(Typography)({
   width: "94px",
