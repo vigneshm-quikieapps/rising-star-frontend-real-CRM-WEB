@@ -22,79 +22,97 @@ const Session = (props) => {
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
 
   const handleNameChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
-      ...data,
-      name: e.target.value,
-    };
+    let newSession = sessions.map((item) => {
+      if (item.id === index) {
+        return { ...data, name: e.target.value };
+      }
+      return item;
+    });
+
     setSessionData(newSession);
   };
 
   const handleDayIndexChange = (i) => {
-    let newSession = [...sessions];
-    newSession[index] = {
-      ...data,
-      dayIndex: i,
-    };
+    let newSession = sessions.map((item) => {
+      if (item.id === index) {
+        return { ...data, dayIndex: i };
+      }
+      return item;
+    });
+
     setSessionData(newSession);
   };
 
   const handleFacilityChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
-      ...data,
-      facility: e.target.value,
-    };
+    let newSession = sessions.map((item) => {
+      if (item.id === index) {
+        return { ...data, facility: e.target.value };
+      }
+      return item;
+    });
+
     setSessionData(newSession);
   };
 
   const handleFullCapacityChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
-      ...data,
-      fullCapacity: e.target.value,
-    };
+    let newSession = sessions.map((item) => {
+      if (item.id === index) {
+        return { ...data, fullCapacity: e.target.value };
+      }
+      return item;
+    });
+
     setSessionData(newSession);
   };
 
   const handleWaitlistCapacityChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
-      ...data,
-      waitlistCapacity: e.target.value,
-    };
+    let newSession = sessions.map((item) => {
+      if (item.id === index) {
+        return { ...data, waitlistCapacity: e.target.value };
+      }
+      return item;
+    });
+
     setSessionData(newSession);
   };
 
   const handleCoachChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
-      ...data,
-      coachId: e.target.value,
-    };
+    let newSession = sessions.map((item) => {
+      if (item.id === index) {
+        return { ...data, coachId: e.target.value };
+      }
+      return item;
+    });
+
     setSessionData(newSession);
   };
 
   const handleStartTimeChange = (time) => {
-    let newSession = [...sessions];
-    newSession[index] = {
-      ...data,
-      startTime: time,
-    };
+    let newSession = sessions.map((item) => {
+      if (item.id === index) {
+        return { ...data, startTime: time };
+      }
+      return item;
+    });
+
     setSessionData(newSession);
   };
 
   const handleEndTimeChange = (time) => {
-    let newSession = [...sessions];
-    newSession[index] = {
-      ...data,
-      endTime: time,
-    };
+    let newSession = sessions.map((item) => {
+      if (item.id === index) {
+        return { ...data, endTime: time };
+      }
+      return item;
+    });
     setSessionData(newSession);
   };
 
   const handleDelete = () => {
-    let newSession = removeItemByIndex(sessions, index);
+    let newSession = sessions.filter((item) => {
+      return item.id !== index;
+    });
+
     setSessionData(newSession);
   };
   return (

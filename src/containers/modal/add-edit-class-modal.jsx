@@ -50,6 +50,7 @@ import {
 } from "../../redux/action/class-actions";
 import { menuSX } from "../../components/textfield";
 import Warning from "./warning";
+import { nanoid } from "nanoid";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
@@ -101,6 +102,7 @@ const AddEditClassModal = (props) => {
   ]);
   const [classSessions, setClassSessions] = useState([
     {
+      id: nanoid(),
       name: "",
       dayIndex: -1,
       facility: "",
@@ -231,6 +233,7 @@ const AddEditClassModal = (props) => {
   const addSessionRow = () => {
     let newSessions = [...classSessions];
     newSessions.push({
+      id: nanoid(),
       name: "",
       dayIndex: -1,
       facility: "",
@@ -264,7 +267,16 @@ const AddEditClassModal = (props) => {
     );
 
     let existingSessions = sessionsOfClass?.map(
-      ({ name, facility, fullcapacity, waitcapacity, coachId, pattern }) => ({
+      ({
+        name,
+        facility,
+        fullcapacity,
+        waitcapacity,
+        coachId,
+        pattern,
+        _id,
+      }) => ({
+        id: _id,
         name,
         dayIndex: ShortWeekNames.indexOf(pattern[0].day.toLowerCase()),
         facility: facility,
@@ -314,6 +326,7 @@ const AddEditClassModal = (props) => {
       dispatch(getCoachesOfBusiness(selectedBusinessId));
     }
   }, [selectedBusinessId, dispatch]);
+
   return (
     <Box>
       <Modal
@@ -761,9 +774,9 @@ const AddEditClassModal = (props) => {
                           {classSessions.map((session, index) => {
                             return (
                               <Session
-                                key={index}
+                                key={session.id}
                                 data={session}
-                                index={index}
+                                index={session.id}
                                 sessions={classSessions}
                                 setSessionData={setClassSessions}
                               />
