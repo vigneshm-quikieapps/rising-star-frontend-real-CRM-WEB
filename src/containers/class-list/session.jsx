@@ -97,7 +97,6 @@ const Session = (props) => {
     let newSession = removeItemByIndex(sessions, index);
     setSessionData(newSession);
   };
-
   return (
     <Box
       key={index}
@@ -185,7 +184,7 @@ const Session = (props) => {
 
         <StyledTextField
           select
-          value={data.coachId}
+          value={allCoaches.length ? data.coachId : ""}
           sx={{ width: "23%", margin: 0 }}
           label="Coach Name"
           variant="filled"

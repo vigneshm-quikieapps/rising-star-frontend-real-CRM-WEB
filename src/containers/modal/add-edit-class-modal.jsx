@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import {
@@ -50,6 +49,7 @@ import {
   getSessionsOfClass,
 } from "../../redux/action/class-actions";
 import { menuSX } from "../../components/textfield";
+import Warning from "./warning";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
@@ -79,7 +79,7 @@ const AddEditClassModal = (props) => {
   const { classObj, isEditMode } = props;
   const dispatch = useDispatch();
   const history = useHistory();
-  const [open, setOpen] = useState(true);
+  const [isWarnOpen, setIsWarnOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [className, setClassName] = useState("");
   const [selectedBusinessId, setSelectedBusinessId] = useState("");
@@ -123,12 +123,10 @@ const AddEditClassModal = (props) => {
   );
   const sessionsOfClass = useSelector((state) => state.classes.classSessions);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
-  const handleOpen = () => setOpen(true);
   const handleClose = () => {
+    setIsWarnOpen(false);
     history.push("/classes");
-    setOpen(false);
   };
-
   const handleAgeSelect = (e) => {
     const {
       target: { value },
@@ -268,7 +266,7 @@ const AddEditClassModal = (props) => {
     let existingSessions = sessionsOfClass?.map(
       ({ name, facility, fullcapacity, waitcapacity, coachId, pattern }) => ({
         name,
-        dayIndex: ShortWeekNames.indexOf(pattern[0].day),
+        dayIndex: ShortWeekNames.indexOf(pattern[0].day.toLowerCase()),
         facility: facility,
         fullCapacity: fullcapacity,
         waitlistCapacity: waitcapacity,
@@ -291,6 +289,12 @@ const AddEditClassModal = (props) => {
     sessionsOfClass.length && setSelectedTerm(sessionsOfClass[0].term);
   }, [classObj, sessionsOfClass]);
 
+  const handleWarningClose = () => {
+    setIsWarnOpen(false);
+  };
+  const handleWarn = () => {
+    setIsWarnOpen(true);
+  };
   useEffect(() => {
     if (isEditMode) {
       if (sessionsOfClass.length === 0 && classObj._id)
@@ -310,13 +314,11 @@ const AddEditClassModal = (props) => {
       dispatch(getCoachesOfBusiness(selectedBusinessId));
     }
   }, [selectedBusinessId, dispatch]);
-
   return (
     <Box>
-      <Button onClick={handleOpen}>Open modal</Button>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={true}
+        onClose={handleWarn}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         sx={{ overflow: "hidden" }}
@@ -351,7 +353,7 @@ const AddEditClassModal = (props) => {
             <HeadingText id="modal-modal-title" variant="h6" component="h2">
               Class Definition and Schedule
             </HeadingText>
-            <CrossIconButton onClick={handleClose} />
+            <CrossIconButton onClick={handleWarn} />
           </CardRow>
           <Box
             sx={{
@@ -391,7 +393,7 @@ const AddEditClassModal = (props) => {
                   select
                   sx={{ width: "30%" }}
                   label="Business Name*"
-                  value={selectedBusinessId}
+                  value={currentUserBusinesses.length ? selectedBusinessId : ""}
                   onChange={(e) => {
                     let businessId = e.target.value;
                     setSelectedBusinessId(businessId);
@@ -406,7 +408,7 @@ const AddEditClassModal = (props) => {
                       );
                     })
                   ) : (
-                    <MenuItem value="No options">No options</MenuItem>
+                    <MenuItem value="">No options</MenuItem>
                   )}
                 </StyledTextField>
 
@@ -441,7 +443,7 @@ const AddEditClassModal = (props) => {
                   select
                   sx={{ width: "30%" }}
                   label="Class Category*"
-                  value={selectedCategory}
+                  value={categories.length ? selectedCategory : ""}
                   onChange={(e) => {
                     setSelectedCategory(e.target.value);
                   }}
@@ -463,7 +465,9 @@ const AddEditClassModal = (props) => {
                   select
                   sx={{ width: "30%" }}
                   label="Evaluation Scheme*"
-                  value={selectedEvaluationScheme}
+                  value={
+                    evaluationSchemeList.length ? selectedEvaluationScheme : ""
+                  }
                   onChange={(e) => {
                     setSelectedEvaluationScheme(e.target.value);
                   }}
@@ -698,7 +702,9 @@ const AddEditClassModal = (props) => {
                             <StyledTextField
                               select
                               label="term"
-                              value={selectedTerm._id}
+                              value={
+                                termsOfBusiness.length ? selectedTerm._id : ""
+                              }
                               variant={"filled"}
                               onChange={(e) => {
                                 setSelectedTerm(
@@ -780,10 +786,18 @@ const AddEditClassModal = (props) => {
                 >
                   {isEditMode ? "Edit" : "Save"}
                 </GradientButton>
-                <GradientButton size="large" discard onClick={handleClose}>
+                <GradientButton size="large" discard onClick={handleWarn}>
                   Discard
                 </GradientButton>
               </CardRow>
+
+              <Warning
+                open={isWarnOpen}
+                title="Warning"
+                description="Are you sure, you want to close? data will be lost!"
+                handleClose={handleWarningClose}
+                accept={handleClose}
+              />
             </Box>
           </Box>
         </Box>
