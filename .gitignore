@@ -24,3 +24,5 @@ yarn-error.log*
 
 # temporary
 /src/temp.jsx
+# Local Netlify folder
+.netlify
