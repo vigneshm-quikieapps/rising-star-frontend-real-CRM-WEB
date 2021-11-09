@@ -11,11 +11,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  IconButton,
 } from "@mui/material";
 import {
   ExpandMore as ExpandMoreIcon,
   Done as DoneIcon,
-  Add as AddIcon,
+  Save as AddIcon,
+  ClearRounded as CancelIcon,
 } from "@mui/icons-material";
 
 import {
@@ -32,7 +34,9 @@ import {
   DatePicker,
   Actions,
   Pagination,
+  ImgIcon,
 } from "../../components";
+import deleteIcon from "../../assets/icons/icon-delete.png";
 
 const tableHeaders = ["Term Label", "Start Date", "End Date", "Actions"];
 
@@ -46,10 +50,12 @@ const Term = ({
   onDelete,
   add = false,
 }) => {
+  const [touched, setTouched] = useState(false);
   const [label, setLabel] = useState(initialLabel || "");
   const [startDate, setStartDate] = useState(new Date(initialStartDate));
   const [endDate, setEndDate] = useState(new Date(initialEndDate));
   const changeHandler = (e, field) => {
+    setTouched(true);
     const value = field === "label" ? e.target.value : e;
     switch (field) {
       case "label": {
@@ -103,22 +109,32 @@ const Term = ({
         />
       </TableCell>
       <TableCell>
-        <Actions
-          editIcon={
-            add ? <AddIcon color="success" /> : <DoneIcon color="success" />
-          }
-          onEdit={() => {
-            onEdit({
-              _id,
-              businessId,
-              label,
-              startDate: startDate.toISOString().split("T")[0],
-              endDate: endDate.toISOString().split("T")[0],
-            });
-            add && setLabel("");
-          }}
-          onDelete={() => onDelete(_id)}
-        />
+        <Box sx={{ width: "80px" }}>
+          <IconButton onClick={() => onDelete(_id)}>
+            {!add ? (
+              <ImgIcon>{deleteIcon}</ImgIcon>
+            ) : (
+              <CancelIcon color="secondary" />
+            )}
+          </IconButton>
+          {touched && (
+            <IconButton
+              onClick={() => {
+                onEdit({
+                  _id,
+                  businessId,
+                  label,
+                  startDate: startDate.toISOString().split("T")[0],
+                  endDate: endDate.toISOString().split("T")[0],
+                });
+                add && setLabel("");
+                setTouched(false);
+              }}
+            >
+              {add ? <AddIcon /> : <DoneIcon color="success" />}
+            </IconButton>
+          )}
+        </Box>
       </TableCell>
     </TableRow>
   );
@@ -146,6 +162,7 @@ const Terms = () => {
   const addTermHandler = useCallback(
     (termData) => {
       dispatch(addTermAction(termData));
+      setShowAddTerm(false);
     },
     [dispatch]
   );
@@ -264,7 +281,7 @@ const Terms = () => {
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Box sx={{ display: "flex", width: "100%", alignItems: "center" }}>
             <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
-              Billing
+              Term List
             </Typography>
             <GradientButton
               size="large"

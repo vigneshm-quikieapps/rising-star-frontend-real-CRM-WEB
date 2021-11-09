@@ -30,13 +30,13 @@ export default function reducer(state = INITIAL_STATE, action) {
       };
     }
     case termsActionTypes.ADD_NEW_TERM_SUCCEEDED: {
-      const updatedTerm = action.payload;
-      const { businessId } = updatedTerm;
+      const newTerm = action.payload;
+      const { businessId } = newTerm;
       const updatedTermsOfBusiness =
         businessId === state.currentBusinessId
-          ? [...state.termsOfBusiness, updatedTerm]
+          ? [newTerm, ...state.termsOfBusiness]
           : [...state.termsOfBusiness];
-      const updatedTermList = [...state.allTerms, updatedTerm];
+      const updatedTermList = [newTerm, ...state.allTerms];
       return {
         ...state,
         allTerms: updatedTermList,
