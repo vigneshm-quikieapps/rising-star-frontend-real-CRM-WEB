@@ -31,7 +31,7 @@ export async function getClassById(id) {
   }
 }
 
-export async function addNewClass(data) {
+export async function addNewClass({ data }) {
   try {
     const api = `classes`;
     const response = await axiosInstance.post(api, data);

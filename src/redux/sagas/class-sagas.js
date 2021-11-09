@@ -81,6 +81,7 @@ export function* addClass(action) {
       type: classActionTypes.ADD_CLASS_SUCCEEDED,
       payload: classObj,
     });
+    yield call(action.payload.callback);
     yield put(stopLoading());
   } catch (error) {
     yield put(setError(error, "Something went wrong while adding a new class"));
@@ -119,8 +120,10 @@ export function* editClass(action) {
       type: classActionTypes.EDIT_CLASS_SUCCEEDED,
       payload: classObj,
     });
+    yield call(action.payload.callback);
     yield put(stopLoading());
   } catch (error) {
+    console.log(error);
     yield put(setError(error, "Something went wrong while editing a class"));
   }
 }

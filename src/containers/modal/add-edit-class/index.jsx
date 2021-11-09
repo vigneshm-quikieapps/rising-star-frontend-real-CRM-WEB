@@ -1,56 +1,52 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  AccordionDetails,
+  AccordionSummary,
+  MenuItem,
+  Box,
+  Typography,
+  Modal,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+
 import {
   AccordionContainer,
   CardRow,
   Description,
   HeadingText,
-} from "../../components/common";
-import CloseIcon from "@mui/icons-material/Close";
+} from "../../../components/common";
 import {
   IconButton,
   TextField,
   Accordion,
   GradientButton,
-  ImgIcon,
-  Pagination as StyledPagination,
-  DatePicker,
-  TableMui,
-} from "../../components";
-import {
-  AccordionDetails,
-  AccordionSummary,
-  MenuItem,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+} from "../../../components";
+import { menuSX } from "../../../components/textfield";
+
+import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import plusIcon from "../../assets/icons/icon-add.png";
-import { styled } from "@mui/material/styles";
-import Session from "../class-list/session";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+
+import { getEvaluationSchemeList } from "../../../redux/action/evaluationActions";
+import { getTermsOfBusiness } from "../../../redux/action/terms-actions";
+import { ShortWeekNames } from "../../../helper/constants";
+import { useHistory } from "react-router";
+
 import {
   getCategoriesOfBusiness,
   getCoachesOfBusiness,
-} from "../../redux/action/businesses-actions";
-import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
-import Charge from "../class-list/charge";
-import { getTermsOfBusiness } from "../../redux/action/terms-actions";
-import { ShortWeekNames } from "../../helper/constants";
-import { useHistory } from "react-router";
+} from "../../../redux/action/businesses-actions";
 import {
   addClass,
   editClass,
   getSessionsOfClass,
-} from "../../redux/action/class-actions";
-import { menuSX } from "../../components/textfield";
-import Warning from "./warning";
-import { nanoid } from "nanoid";
+} from "../../../redux/action/class-actions";
+
+import Warning from "../warning";
+import Charges from "./charges";
+import Sessions from "./sessions";
+import Loader from "./loader";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
@@ -81,7 +77,6 @@ const AddEditClassModal = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [isWarnOpen, setIsWarnOpen] = useState(false);
-  const [page, setPage] = useState(1);
   const [className, setClassName] = useState("");
   const [selectedBusinessId, setSelectedBusinessId] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -102,7 +97,6 @@ const AddEditClassModal = (props) => {
   ]);
   const [classSessions, setClassSessions] = useState([
     {
-      id: nanoid(),
       name: "",
       dayIndex: -1,
       facility: "",
@@ -123,8 +117,8 @@ const AddEditClassModal = (props) => {
   const evaluationSchemeList = useSelector(
     (state) => state.evaluation.evaluationList
   );
+  const isLoading = useSelector((state) => state.shared.loading);
   const sessionsOfClass = useSelector((state) => state.classes.classSessions);
-  const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const handleClose = () => {
     setIsWarnOpen(false);
     history.push("/classes");
@@ -141,10 +135,6 @@ const AddEditClassModal = (props) => {
       target: { value },
     } = e;
     setGenders(typeof value === "string" ? value.split(",") : value);
-  };
-
-  const handleChange = (event, value) => {
-    setPage(value);
   };
 
   const handleAddClass = (isEdit) => {
@@ -212,37 +202,22 @@ const AddEditClassModal = (props) => {
     };
 
     if (!isEdit) {
-      dispatch(addClass(newClassObject));
+      dispatch(
+        addClass({ data: newClassObject, callback: redirectToClassList })
+      );
     } else {
-      dispatch(editClass({ data: newClassObject, id: classObj._id }));
+      dispatch(
+        editClass({
+          data: newClassObject,
+          id: classObj._id,
+          callback: redirectToClassList,
+        })
+      );
     }
   };
 
-  const addChargeRow = () => {
-    let newCharges = [...classCharges];
-    newCharges.push({
-      name: "",
-      amount: "",
-      isMandatory: false,
-      payFrequency: "",
-    });
-
-    setClassCharges(newCharges);
-  };
-
-  const addSessionRow = () => {
-    let newSessions = [...classSessions];
-    newSessions.push({
-      id: nanoid(),
-      name: "",
-      dayIndex: -1,
-      facility: "",
-      fullCapacity: "",
-      waitlistCapacity: "",
-      coachId: "",
-    });
-
-    setClassSessions(newSessions);
+  const redirectToClassList = () => {
+    history.push("/classes");
   };
 
   const populateClassData = useCallback(() => {
@@ -585,209 +560,17 @@ const AddEditClassModal = (props) => {
                 </AccordionContainer>
               </CardRow>
 
-              <CardRow>
-                <AccordionContainer>
-                  <Accordion defaultExpanded>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon id="collapse-button" />}
-                      aria-controls="collapse-button"
-                      id="panel1a-header"
-                    >
-                      <CardRow
-                        sx={{
-                          margin: "10px 0",
-                          width: "100%",
-                          padding: "0 10px 0 0",
-                        }}
-                        onClick={() => {}}
-                      >
-                        <Typography>Charges</Typography>
-                        <GradientButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            addChargeRow();
-                          }}
-                        >
-                          <ImgIcon alt="plus">{plusIcon}</ImgIcon>Add Charge
-                        </GradientButton>
-                      </CardRow>
-                    </AccordionSummary>
-                    {classCharges.length ? (
-                      <AccordionDetails
-                        sx={{
-                          padding: 0,
-                          backgroundColor: "rgba(219, 216, 227, 0.5)",
-                        }}
-                      >
-                        <TableMui>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Charge Name</TableCell>
-                              <TableCell>Amount</TableCell>
-                              <TableCell>Mandatory</TableCell>
-                              <TableCell>Pay Frequency</TableCell>
-                              <TableCell>Action</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {classCharges.map((item, index) => {
-                              return (
-                                <Charge
-                                  key={index}
-                                  data={item}
-                                  index={index}
-                                  setChargeData={setClassCharges}
-                                  charges={classCharges}
-                                />
-                              );
-                            })}
-                          </TableBody>
-                        </TableMui>
-                        <CardRow
-                          sx={{
-                            justifyContent: "center",
-                          }}
-                        >
-                          <StyledPagination
-                            sx={{
-                              "& ul": {
-                                justifyContent: "center",
-                                margin: "15px",
-                                "& .MuiButtonBase-root": {
-                                  width: 30,
-                                  height: 30,
-                                  backgroundColor: "#fff",
-                                  borderRadius: (theme) =>
-                                    theme.shape.borderRadiuses.primary,
-                                },
-                                "& .Mui-selected": {
-                                  backgroundColor: (theme) =>
-                                    theme.palette.darkIndigo.main,
-                                  color: "#fff",
-                                },
-                              },
-                            }}
-                            count={5}
-                            page={page}
-                            onChange={handleChange}
-                          />
-                        </CardRow>
-                      </AccordionDetails>
-                    ) : null}
-                  </Accordion>
-                </AccordionContainer>
-              </CardRow>
+              <Charges
+                classCharges={classCharges}
+                setClassCharges={setClassCharges}
+              />
 
-              <CardRow>
-                <AccordionContainer>
-                  <Accordion defaultExpanded>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                    >
-                      <CardRow sx={{ width: "100%", padding: "0 10px 0 0" }}>
-                        <Typography>Class Schedule</Typography>
-                        <GradientButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            addSessionRow();
-                          }}
-                        >
-                          <ImgIcon alt="plus">{plusIcon}</ImgIcon>Add Session
-                        </GradientButton>
-                      </CardRow>
-                    </AccordionSummary>
-                    <AccordionDetails
-                      sx={{
-                        padding: 0,
-                        backgroundColor: "rgba(219, 216, 227, 0.5)",
-                      }}
-                    >
-                      <Box sx={{ padding: "15px" }}>
-                        <CardRow
-                          sx={{
-                            marginTop: "1%",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Box sx={{ width: "40%" }}>
-                            <StyledTextField
-                              select
-                              label="term"
-                              value={
-                                termsOfBusiness.length ? selectedTerm._id : ""
-                              }
-                              variant={"filled"}
-                              onChange={(e) => {
-                                setSelectedTerm(
-                                  termsOfBusiness.find(
-                                    ({ _id }) => _id === e.target.value
-                                  )
-                                );
-                              }}
-                              sx={{ width: "100%" }}
-                            >
-                              {termsOfBusiness.length ? (
-                                termsOfBusiness.map(({ _id, label }) => {
-                                  return (
-                                    <MenuItem key={label} value={_id}>
-                                      {label}
-                                    </MenuItem>
-                                  );
-                                })
-                              ) : (
-                                <MenuItem value="">No terms</MenuItem>
-                              )}
-                            </StyledTextField>
-                          </Box>
-                          <Box sx={{ width: "20%" }}>
-                            <DatePicker
-                              disabled
-                              label="Start Date"
-                              date={selectedTerm?.startDate}
-                            />
-                          </Box>
-                          <Box sx={{ width: "20%" }}>
-                            <DatePicker
-                              disabled
-                              label="End Date"
-                              date={selectedTerm?.endDate}
-                              sx={{ width: "100%", margin: 20 }}
-                            />
-                          </Box>
-                        </CardRow>
-                      </Box>
-                      {classSessions.length ? (
-                        <>
-                          <CardRow>
-                            <Description
-                              sx={{
-                                fontSize: "16px",
-                                fontWeight: "bold",
-                                margin: "17px 0px 5px 15px",
-                              }}
-                            >
-                              Sessions
-                            </Description>
-                          </CardRow>
-                          {classSessions.map((session, index) => {
-                            return (
-                              <Session
-                                key={session.id}
-                                data={session}
-                                index={session.id}
-                                sessions={classSessions}
-                                setSessionData={setClassSessions}
-                              />
-                            );
-                          })}
-                        </>
-                      ) : null}
-                    </AccordionDetails>
-                  </Accordion>
-                </AccordionContainer>
-              </CardRow>
+              <Sessions
+                setClassSessions={setClassSessions}
+                classSessions={classSessions}
+                selectedTerm={selectedTerm}
+                setSelectedTerm={setSelectedTerm}
+              />
 
               <CardRow sx={{ justifyContent: "flex-start" }}>
                 <GradientButton
@@ -815,6 +598,7 @@ const AddEditClassModal = (props) => {
           </Box>
         </Box>
       </Modal>
+      {isLoading ? <Loader /> : null}
     </Box>
   );
 };

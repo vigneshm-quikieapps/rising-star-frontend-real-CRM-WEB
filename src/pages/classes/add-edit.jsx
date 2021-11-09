@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import AddEditClassModal from "../../containers/modal/add-edit-class-modal";
+import AddEditClassModal from "../../containers/modal/add-edit-class";
 import useQuery from "../../hooks/useQuery";
 
 const ClassAddEdit = () => {
