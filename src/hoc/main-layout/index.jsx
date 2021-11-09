@@ -12,7 +12,7 @@ import Main from "./main";
 import { navItems } from "../../helper/constants";
 import ErrorDialog from "./error-dialog";
 
-const drawerWidth = 192;
+const drawerWidth = 270;
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",

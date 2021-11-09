@@ -58,73 +58,15 @@ export const navItems = [
   },
   {
     id: "2",
-    title: "Class",
+    title: "Classes",
     urlPath: "/classes",
     icon: <ImgIcon>{classIcon}</ImgIcon>,
-    items: [
-      {
-        id: "2-1",
-        title: "Definition",
-        urlPath: "/classes/definition",
-        disabled: true,
-      },
-      {
-        id: "2-2",
-        title: "Enrolments",
-        urlPath: "/classes/enrolments",
-        disabled: true,
-      },
-      {
-        id: "2-3",
-        title: "Attendance",
-        urlPath: "/classes/attendance",
-        disabled: true,
-      },
-      {
-        id: "2-4",
-        title: "Payments",
-        urlPath: "/classes/payments",
-        disabled: true,
-      },
-    ],
   },
   {
     id: "3",
     title: "Members",
     urlPath: "/members",
     icon: <ImgIcon>{membersIcon}</ImgIcon>,
-    items: [
-      {
-        id: "3-1",
-        title: "Personal Info",
-        urlPath: "/members/info",
-        disabled: true,
-      },
-      {
-        id: "3-2",
-        title: "Enrolments",
-        urlPath: "/members/enrolments",
-        disabled: true,
-      },
-      {
-        id: "3-3",
-        title: "Consent Record",
-        urlPath: "/members/consent",
-        disabled: true,
-      },
-      {
-        id: "3-4",
-        title: "Evaluations",
-        urlPath: "/members/evaluations",
-        disabled: true,
-      },
-      {
-        id: "3-5",
-        title: "Finance Record",
-        urlPath: "/members/finance",
-        disabled: true,
-      },
-    ],
   },
   {
     id: "4",
