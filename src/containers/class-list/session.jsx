@@ -1,25 +1,74 @@
-import { Box } from "@mui/system";
-import { CardRow, DayText } from "../../components/common";
-import StyledTextField from "../../components/textfield";
-import deleteIcon from "../../assets/icons/icon-delete.png";
-import IconButton from "../../components/icon-button";
-import ImgIcon from "../../components/img-icon";
-import { ShortWeekNames } from "../../helper/constants";
-import StyledCheckbox from "../../components/styled-checkbox";
-import { MenuItem } from "@mui/material";
+import { useState } from "react";
 import { useSelector } from "react-redux";
+import { MenuItem, Box } from "@mui/material";
+import {
+  TextField,
+  DatePicker,
+  TimePicker,
+  CheckBox,
+  IconButton,
+  ImgIcon,
+  CardRow,
+  DayText,
+} from "../../components";
+
+import DoneIcon from "@mui/icons-material/Done";
+import deleteIcon from "../../assets/icons/icon-delete.png";
+
+import { ShortWeekNames } from "../../helper/constants";
 import { removeItemByIndex } from "../../utils";
-import BasicTimePicker from "../../components/time-picker";
 
 const DeleteButton = (props) => (
-  <IconButton {...props} sx={{ borderRadius: "50%", margin: "15px 0 5px" }}>
+  <IconButton {...props} sx={{ borderRadius: "50%" }}>
     <ImgIcon alt="delete">{deleteIcon}</ImgIcon>
   </IconButton>
 );
 
 const Session = (props) => {
-  const { data, index, sessions, setSessionData } = props;
+  const { data, index, sessions, setSessionData, isEdit } = props;
+  const [startingDate, setStartingDate] = useState(
+    data.selectedTerm?.startDate
+  );
+  const [endingDate, setEndingDate] = useState(data.selectedTerm?.endDate);
+
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
+  const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
+
+  const handleTermChange = (e) => {
+    let newSession = [...sessions];
+    let selectedTerm = termsOfBusiness.find(
+      ({ _id }) => _id === e.target.value
+    );
+    newSession[index] = {
+      ...data,
+      startDate: selectedTerm.startDate,
+      endDate: selectedTerm.endDate,
+      selectedTerm,
+    };
+    setStartingDate(selectedTerm.startDate);
+    setEndingDate(selectedTerm.endDate);
+    setSessionData(newSession);
+  };
+
+  const handleStartDateChange = (date) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      startDate: date,
+    };
+    setSessionData(newSession);
+    setStartingDate(date);
+  };
+
+  const handleEndDateChange = (date) => {
+    let newSession = [...sessions];
+    newSession[index] = {
+      ...data,
+      endDate: date,
+    };
+    setSessionData(newSession);
+    setEndingDate(date);
+  };
 
   const handleNameChange = (e) => {
     let newSession = [...sessions];
@@ -32,9 +81,14 @@ const Session = (props) => {
 
   const handleDayIndexChange = (i) => {
     let newSession = [...sessions];
+    let newIndex = [...data.dayIndex];
+
+    if (newIndex.includes(i)) newIndex = newIndex.filter((item) => item !== i);
+    else newIndex.push(i);
+
     newSession[index] = {
       ...data,
-      dayIndex: i,
+      dayIndex: newIndex,
     };
     setSessionData(newSession);
   };
@@ -107,8 +161,51 @@ const Session = (props) => {
         margin: "10px 0",
       }}
     >
+      <CardRow
+        sx={{
+          margin: "15px auto",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ width: "40%" }}>
+          <TextField
+            select
+            label="term"
+            value={termsOfBusiness.length ? data.selectedTerm?._id : ""}
+            variant={"filled"}
+            onChange={handleTermChange}
+            sx={{ width: "100%" }}
+          >
+            {termsOfBusiness.length ? (
+              termsOfBusiness.map(({ _id, label }) => {
+                return (
+                  <MenuItem key={label} value={_id}>
+                    {label}
+                  </MenuItem>
+                );
+              })
+            ) : (
+              <MenuItem value="">No terms</MenuItem>
+            )}
+          </TextField>
+        </Box>
+        <Box sx={{ width: "20%" }}>
+          <DatePicker
+            onChange={handleStartDateChange}
+            label="Start Date"
+            date={startingDate}
+          />
+        </Box>
+        <Box sx={{ width: "20%" }}>
+          <DatePicker
+            onChange={handleEndDateChange}
+            label="End Date"
+            date={endingDate}
+          />
+        </Box>
+      </CardRow>
       <CardRow>
-        <StyledTextField
+        <TextField
           variant="filled"
           label="Session Name"
           sx={{ width: "100%" }}
@@ -135,8 +232,8 @@ const Session = (props) => {
                 }}
               >
                 <DayText> {day}</DayText>
-                <StyledCheckbox
-                  checked={data.dayIndex === i}
+                <CheckBox
+                  checked={data.dayIndex.includes(i)}
                   onClick={() => {
                     handleDayIndexChange(i);
                   }}
@@ -146,12 +243,12 @@ const Session = (props) => {
           })}
         </CardRow>
 
-        <BasicTimePicker
+        <TimePicker
           label="Start time"
           date={data.startTime}
           onChange={handleStartTimeChange}
         />
-        <BasicTimePicker
+        <TimePicker
           label="End time"
           date={data.endTime}
           onChange={handleEndTimeChange}
@@ -159,7 +256,7 @@ const Session = (props) => {
       </CardRow>
 
       <CardRow>
-        <StyledTextField
+        <TextField
           variant="filled"
           label="Facility"
           value={data.facility}
@@ -167,7 +264,7 @@ const Session = (props) => {
           onChange={handleFacilityChange}
         />
 
-        <StyledTextField
+        <TextField
           variant="filled"
           value={data.fullCapacity}
           label="Full class capacity"
@@ -175,7 +272,7 @@ const Session = (props) => {
           onChange={handleFullCapacityChange}
         />
 
-        <StyledTextField
+        <TextField
           value={data.waitlistCapacity}
           variant="filled"
           label="Waitlist capacity"
@@ -183,7 +280,7 @@ const Session = (props) => {
           onChange={handleWaitlistCapacityChange}
         />
 
-        <StyledTextField
+        <TextField
           select
           value={allCoaches.length ? data.coachId : ""}
           sx={{ width: "23%", margin: 0 }}
@@ -202,15 +299,26 @@ const Session = (props) => {
           ) : (
             <MenuItem value="">No coaches</MenuItem>
           )}
-        </StyledTextField>
+        </TextField>
       </CardRow>
 
       <CardRow
         sx={{
           justifyContent: "center",
+          margin: "15px 0 5px",
         }}
       >
         <DeleteButton onClick={handleDelete} />
+        {isEdit ? (
+          <IconButton sx={{ borderRadius: "50%", marginLeft: "15px" }}>
+            <DoneIcon
+              sx={{
+                color: (theme) => theme.palette.secondary.main,
+                fontSize: "28px",
+              }}
+            />
+          </IconButton>
+        ) : null}
       </CardRow>
     </Box>
   );

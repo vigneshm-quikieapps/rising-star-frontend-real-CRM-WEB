@@ -1,10 +1,5 @@
 import { MenuItem, TableCell, TableRow } from "@mui/material";
-import {
-  CheckBox as StyledCheckbox,
-  TextField,
-  IconButton,
-  ImgIcon,
-} from "../../components";
+import { CheckBox, TextField, IconButton, ImgIcon } from "../../components";
 import { styled } from "@mui/material/styles";
 import deleteIcon from "./../../assets/icons/icon-delete.png";
 import { removeItemByIndex } from "../../utils";
@@ -103,10 +98,7 @@ const Charge = (props) => {
       </TableCell>
 
       <TableCell>
-        <StyledCheckbox
-          checked={data.isMandatory}
-          onClick={handleMandatoryChange}
-        />
+        <CheckBox checked={data.isMandatory} onClick={handleMandatoryChange} />
       </TableCell>
 
       <TableCell>

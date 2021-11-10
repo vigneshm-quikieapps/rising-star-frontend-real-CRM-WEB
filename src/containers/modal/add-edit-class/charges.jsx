@@ -13,7 +13,6 @@ import {
 import {
   Accordion,
   GradientButton,
-  ImgIcon,
   TableMui,
   Pagination as StyledPagination,
 } from "../../../components";
@@ -21,7 +20,7 @@ import Charge from "../../class-list/charge";
 import { AccordionContainer, CardRow } from "../../../components/common";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import plusIcon from "../../../assets/icons/icon-add.png";
+import AddIcon from "@mui/icons-material/Add";
 
 const paginationCustomStyle = {
   "& ul": {
@@ -88,7 +87,8 @@ const Charges = (props) => {
                   addChargeRow();
                 }}
               >
-                <ImgIcon alt="plus">{plusIcon}</ImgIcon>Add Charge
+                <AddIcon />
+                Add Charge
               </GradientButton>
             </CardRow>
           </AccordionSummary>

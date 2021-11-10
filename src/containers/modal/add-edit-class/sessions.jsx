@@ -1,14 +1,8 @@
-import {
-  AccordionDetails,
-  AccordionSummary,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import {
   Accordion,
-  DatePicker,
   GradientButton,
-  ImgIcon,
+  Pagination as StyledPagination,
 } from "../../../components";
 import {
   AccordionContainer,
@@ -16,13 +10,9 @@ import {
   Description,
 } from "../../../components/common";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import plusIcon from "../../../assets/icons/icon-add.png";
+import AddIcon from "@mui/icons-material/Add";
 
-import { Box } from "@mui/system";
-import StyledTextField from "../../../components/textfield";
-import { useSelector } from "react-redux";
 import Session from "../../class-list/session";
-import StyledPagination from "../../../components/pagination";
 import { useState } from "react";
 
 const paginationCustomStyle = {
@@ -43,11 +33,8 @@ const paginationCustomStyle = {
 };
 
 const Sessions = (props) => {
-  const { classSessions, setClassSessions, selectedTerm, setSelectedTerm } =
-    props;
+  const { classSessions, setClassSessions, isEdit } = props;
   const [page, setPage] = useState(1);
-
-  const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
 
   const handleChange = (event, value) => {
     setPage(value);
@@ -55,20 +42,24 @@ const Sessions = (props) => {
 
   const addSessionRow = () => {
     let newSessions = [...classSessions];
-    newSessions.push({
+    newSessions.unshift({
       name: "",
-      dayIndex: -1,
+      dayIndex: [],
       facility: "",
       fullCapacity: "",
       waitlistCapacity: "",
       coachId: "",
+      selectedTerm: { _id: "" },
+      startDate: new Date(),
+      endDate: new Date(),
+      startTime: new Date(),
+      endTime: new Date(),
     });
     setPage(1);
     setClassSessions(newSessions);
   };
 
-  const totalPages = Math.ceil(classSessions.length / 2);
-
+  const totalPages = Math.ceil(classSessions.length / 3);
   return (
     <CardRow>
       <AccordionContainer>
@@ -86,7 +77,7 @@ const Sessions = (props) => {
                   addSessionRow();
                 }}
               >
-                <ImgIcon alt="plus">{plusIcon}</ImgIcon>Add Session
+                <AddIcon /> Add Session
               </GradientButton>
             </CardRow>
           </AccordionSummary>
@@ -96,58 +87,6 @@ const Sessions = (props) => {
               backgroundColor: "rgba(219, 216, 227, 0.5)",
             }}
           >
-            <Box sx={{ padding: "15px" }}>
-              <CardRow
-                sx={{
-                  marginTop: "1%",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Box sx={{ width: "40%" }}>
-                  <StyledTextField
-                    select
-                    label="term"
-                    value={termsOfBusiness.length ? selectedTerm._id : ""}
-                    variant={"filled"}
-                    onChange={(e) => {
-                      setSelectedTerm(
-                        termsOfBusiness.find(
-                          ({ _id }) => _id === e.target.value
-                        )
-                      );
-                    }}
-                    sx={{ width: "100%" }}
-                  >
-                    {termsOfBusiness.length ? (
-                      termsOfBusiness.map(({ _id, label }) => {
-                        return (
-                          <MenuItem key={label} value={_id}>
-                            {label}
-                          </MenuItem>
-                        );
-                      })
-                    ) : (
-                      <MenuItem value="">No terms</MenuItem>
-                    )}
-                  </StyledTextField>
-                </Box>
-                <Box sx={{ width: "20%" }}>
-                  <DatePicker
-                    disabled
-                    label="Start Date"
-                    date={selectedTerm?.startDate}
-                  />
-                </Box>
-                <Box sx={{ width: "20%" }}>
-                  <DatePicker
-                    disabled
-                    label="End Date"
-                    date={selectedTerm?.endDate}
-                    sx={{ width: "100%", margin: 20 }}
-                  />
-                </Box>
-              </CardRow>
-            </Box>
             {classSessions.length ? (
               <>
                 <CardRow>
@@ -162,10 +101,11 @@ const Sessions = (props) => {
                   </Description>
                 </CardRow>
                 {classSessions.map((session, index) => {
-                  const start = (page - 1) * 2;
-                  if (index >= start && index <= start + 1) {
+                  const start = (page - 1) * 3;
+                  if (index >= start && index <= start + 2) {
                     return (
                       <Session
+                        isEdit={isEdit}
                         key={index}
                         data={session}
                         index={index}

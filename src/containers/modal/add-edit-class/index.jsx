@@ -16,14 +16,12 @@ import {
   CardRow,
   Description,
   HeadingText,
-} from "../../../components/common";
-import {
   IconButton,
   TextField,
   Accordion,
   GradientButton,
+  menuSX,
 } from "../../../components";
-import { menuSX } from "../../../components/textfield";
 
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -43,7 +41,7 @@ import {
   getSessionsOfClass,
 } from "../../../redux/action/class-actions";
 
-import Warning from "../warning";
+import Warning from "./dialog";
 import Charges from "./charges";
 import Sessions from "./sessions";
 import Loader from "./loader";
@@ -86,7 +84,6 @@ const AddEditClassModal = (props) => {
   const [aboutClass, setAboutClass] = useState("");
   const [genders, setGenders] = useState([""]);
   const [ages, setAges] = useState([1]);
-  const [selectedTerm, setSelectedTerm] = useState({ _id: "" });
   const [classCharges, setClassCharges] = useState([
     {
       name: "",
@@ -98,11 +95,14 @@ const AddEditClassModal = (props) => {
   const [classSessions, setClassSessions] = useState([
     {
       name: "",
-      dayIndex: -1,
+      dayIndex: [],
       facility: "",
       fullCapacity: "",
       waitlistCapacity: "",
       coachId: "",
+      selectedTerm: { _id: "" },
+      startDate: new Date(),
+      endDate: new Date(),
       startTime: new Date(),
       endTime: new Date(),
     },
@@ -180,23 +180,30 @@ const AddEditClassModal = (props) => {
           dayIndex,
           startTime,
           endTime,
+          startDate,
+          endDate,
+          selectedTerm,
         } = item;
         return {
-          name: name,
+          name,
           term: {
             _id: selectedTerm._id,
             startDate: selectedTerm?.startDate?.split("T")[0],
             endDate: selectedTerm?.endDate?.split("T")[0],
           },
-          pattern: {
-            day: ShortWeekNames[dayIndex],
-            startTime,
-            endTime,
-          },
-          coachId: coachId,
+          startDate,
+          endDate,
+          pattern: dayIndex.map((day) => {
+            return {
+              day: ShortWeekNames[day],
+              startTime,
+              endTime,
+            };
+          }),
+          coachId,
           fullcapacity: fullCapacity,
           waitcapacity: waitlistCapacity,
-          facility: facility,
+          facility,
         };
       }),
     };
@@ -249,15 +256,21 @@ const AddEditClassModal = (props) => {
         waitcapacity,
         coachId,
         pattern,
-        _id,
+        term,
+        startDate,
+        endDate,
       }) => ({
-        id: _id,
         name,
-        dayIndex: ShortWeekNames.indexOf(pattern[0].day.toLowerCase()),
+        dayIndex: pattern.map((item) => {
+          return ShortWeekNames.indexOf(item.day.toLowerCase());
+        }),
         facility: facility,
         fullCapacity: fullcapacity,
         waitlistCapacity: waitcapacity,
         coachId: coachId,
+        startDate,
+        endDate,
+        selectedTerm: term,
         startTime: pattern[0].startTime,
         endTime: pattern[0].endTime,
       })
@@ -273,7 +286,6 @@ const AddEditClassModal = (props) => {
     setAges(enrolmentControls[0].values);
     setGenders(enrolmentControls[1].values);
     setClassSessions(existingSessions);
-    sessionsOfClass.length && setSelectedTerm(sessionsOfClass[0].term);
   }, [classObj, sessionsOfClass]);
 
   const handleWarningClose = () => {
@@ -307,8 +319,6 @@ const AddEditClassModal = (props) => {
       <Modal
         open={true}
         onClose={handleWarn}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
         sx={{ overflow: "hidden" }}
         BackdropProps={{
           onClick: () => {},
@@ -369,6 +379,7 @@ const AddEditClassModal = (props) => {
               </CardRow>
               <CardRow sx={{ marginBottom: "20px" }}>
                 <StyledTextField
+                  variant="filled"
                   sx={{ width: "30%" }}
                   label="Class Name*"
                   value={className}
@@ -378,6 +389,7 @@ const AddEditClassModal = (props) => {
                 />
 
                 <StyledTextField
+                  variant="filled"
                   select
                   sx={{ width: "30%" }}
                   label="Business Name*"
@@ -401,6 +413,7 @@ const AddEditClassModal = (props) => {
                 </StyledTextField>
 
                 <StyledTextField
+                  variant="filled"
                   select
                   sx={{ width: "30%" }}
                   label="Class Status"
@@ -416,6 +429,7 @@ const AddEditClassModal = (props) => {
 
               <CardRow sx={{ marginBottom: "20px" }}>
                 <StyledTextField
+                  variant="filled"
                   select
                   sx={{ width: "30%" }}
                   label="Registration Consent Form"
@@ -429,6 +443,7 @@ const AddEditClassModal = (props) => {
 
                 <StyledTextField
                   select
+                  variant="filled"
                   sx={{ width: "30%" }}
                   label="Class Category*"
                   value={categories.length ? selectedCategory : ""}
@@ -451,6 +466,7 @@ const AddEditClassModal = (props) => {
 
                 <StyledTextField
                   select
+                  variant="filled"
                   sx={{ width: "30%" }}
                   label="Evaluation Scheme*"
                   value={
@@ -482,6 +498,7 @@ const AddEditClassModal = (props) => {
                       height: "auto",
                     },
                   }}
+                  variant="filled"
                   multiline
                   rows={4}
                   placeholder={"About this class"}
@@ -505,6 +522,7 @@ const AddEditClassModal = (props) => {
                     <AccordionDetails>
                       <CardRow sx={{ marginTop: "10px" }}>
                         <StyledTextField
+                          variant="filled"
                           select
                           SelectProps={{
                             multiple: true,
@@ -530,6 +548,7 @@ const AddEditClassModal = (props) => {
                           )}
                         </StyledTextField>
                         <StyledTextField
+                          variant="filled"
                           select
                           SelectProps={{
                             multiple: true,
@@ -566,10 +585,9 @@ const AddEditClassModal = (props) => {
               />
 
               <Sessions
+                isEdit={isEditMode}
                 setClassSessions={setClassSessions}
                 classSessions={classSessions}
-                selectedTerm={selectedTerm}
-                setSelectedTerm={setSelectedTerm}
               />
 
               <CardRow sx={{ justifyContent: "flex-start" }}>
