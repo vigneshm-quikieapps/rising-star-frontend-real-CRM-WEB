@@ -35,9 +35,9 @@ const ClassInfo = () => {
   return name ? (
     <Card>
       <CardRow>
-        <HeadingText>{name}</HeadingText>
+        <HeadingText>{toKebab(name)}</HeadingText>
       </CardRow>
-      <SubHeadingText>{businessName}</SubHeadingText>
+      <SubHeadingText>{toKebab(businessName)}</SubHeadingText>
       <CardRow>
         <Outputs items={items} columnCount={3} />
       </CardRow>
