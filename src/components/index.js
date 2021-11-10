@@ -17,4 +17,6 @@ export { default as TabNav } from "./tabular-navigation";
 export { default as TextField, menuSX } from "./textfield";
 export { default as Tooltip } from "./tooltip";
 export { default as TimePicker } from "./time-picker";
+export { default as Loader } from "./loader";
+export { default as Warning } from "./dialog";
 export * from "./common";

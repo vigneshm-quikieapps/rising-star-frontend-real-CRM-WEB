@@ -21,6 +21,8 @@ import {
   Accordion,
   GradientButton,
   menuSX,
+  Loader,
+  Warning,
 } from "../../../components";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -41,10 +43,8 @@ import {
   getSessionsOfClass,
 } from "../../../redux/action/class-actions";
 
-import Warning from "./dialog";
 import Charges from "./charges";
 import Sessions from "./sessions";
-import Loader from "./loader";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
@@ -193,13 +193,9 @@ const AddEditClassModal = (props) => {
           },
           startDate,
           endDate,
-          pattern: dayIndex.map((day) => {
-            return {
-              day: ShortWeekNames[day],
-              startTime,
-              endTime,
-            };
-          }),
+          startTime,
+          endTime,
+          pattern: dayIndex.map((day) => ShortWeekNames[day]),
           coachId,
           fullcapacity: fullCapacity,
           waitcapacity: waitlistCapacity,
