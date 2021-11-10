@@ -117,7 +117,7 @@ const Term = ({
         />
       </TableCell>
       <TableCell>
-        <Box sx={{ width: "120px" }}>
+        <Box sx={{ width: "80px" }}>
           {add && (
             <IconButton onClick={() => onDelete(_id)}>
               <CancelIcon color="secondary" />
