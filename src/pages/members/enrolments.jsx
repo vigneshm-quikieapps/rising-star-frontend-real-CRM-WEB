@@ -11,7 +11,6 @@ import { icons } from "../../helper/constants";
 import {
   Accordion,
   GradientButton,
-  DatePicker,
   TextField,
   Output,
 } from "../../components/index";
@@ -26,6 +25,7 @@ import {
   transferEnrolment,
 } from "../../redux/action/enrolmentAction";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
+import toKebab from "../../utils/to-kebab";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -585,7 +585,7 @@ const MemberEnrollment = () => {
                 title="Timings"
                 description={
                   enrolmentDetailsInput
-                    ? enrolmentDetailsInput.timing
+                    ? toKebab(enrolmentDetailsInput.timing)
                     : "- - -"
                 }
               />
