@@ -1,5 +1,5 @@
 import { sharedActionTypes } from "../types";
-const initialState = { errors: [], loading: 0 };
+const initialState = { errors: [], loading: false };
 
 const sharedReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -7,7 +7,7 @@ const sharedReducer = (state = initialState, action) => {
       if (!action.payload) return state;
       const updatedErrors = [...state.errors];
       updatedErrors.push(action.payload);
-      return { ...state, errors: updatedErrors, loading: state.loading - 1 };
+      return { ...state, errors: updatedErrors, loading: false };
     }
     case sharedActionTypes.REMOVE_ERROR: {
       const updatedErrors = [...state.errors];
@@ -18,10 +18,10 @@ const sharedReducer = (state = initialState, action) => {
       return { ...state, errors: [] };
     }
     case sharedActionTypes.START_LOADING: {
-      return { ...state, loading: state.loading + 1 };
+      return { ...state, loading: true };
     }
     case sharedActionTypes.STOP_LOADING: {
-      return { ...state, loading: state.loading - 1 };
+      return { ...state, loading: false };
     }
     default:
       return state;

@@ -14,6 +14,7 @@ import {
   Pagination,
 } from "../../components";
 import MemberList from "./components/members-table";
+import toKebab from "../../utils/to-kebab";
 
 const operators = {
   STARTS_WITH: "STARTS_WITH",
@@ -103,7 +104,7 @@ const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
         }}
       >
         <TextField
-          placeholder="search member by name"
+          placeholder="Search member by name"
           sx={{
             gridArea: "basicInput",
             bgcolor: (theme) => theme.palette.highlight.main,
@@ -218,8 +219,13 @@ const Members = () => {
       return {
         id: singleMember.id,
         onClick: () => handleRowClick(id),
-        items: [name, gender, parentName, parentEmail, parentPhone],
-        // items: [name, gender, "static", "static", "static"],
+        items: [
+          toKebab(name),
+          toKebab(gender),
+          toKebab(parentName),
+          parentEmail,
+          parentPhone,
+        ],
       };
     });
   }, [memberList, handleRowClick]);
@@ -269,7 +275,7 @@ const Members = () => {
         <TextField
           onChange={searchValueChangeHandler}
           value={searchValue}
-          placeholder="search member by name"
+          placeholder="Search member by name"
           sx={{ flex: 1, mr: "20px" }}
           InputProps={{
             startAdornment: (
