@@ -118,13 +118,16 @@ const Term = ({
       </TableCell>
       <TableCell>
         <Box sx={{ width: "120px" }}>
-          <IconButton onClick={() => onDelete(_id)}>
-            {!add ? (
-              <ImgIcon>{deleteIcon}</ImgIcon>
-            ) : (
+          {add && (
+            <IconButton onClick={() => onDelete(_id)}>
               <CancelIcon color="secondary" />
-            )}
-          </IconButton>
+            </IconButton>
+          )}
+          {!touched && !add && (
+            <IconButton onClick={() => onDelete(_id)}>
+              <ImgIcon>{deleteIcon}</ImgIcon>
+            </IconButton>
+          )}
           {touched && (
             <IconButton
               onClick={() => {
