@@ -1,4 +1,4 @@
-const toKebab = (string) => {
+const toKebab = (string = "") => {
   const words = string.toLowerCase().split(" ");
   const result = words.reduce((prev, word, index) => {
     if (!word || word === " ") return prev;

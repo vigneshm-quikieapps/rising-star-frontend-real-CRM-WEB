@@ -79,14 +79,14 @@ const ClassDefinition = () => {
           "Start Date": startDate.split("T")[0],
           "End Date": endDate.split("T")[0],
           "Trail Session Allowed": trailAllowed ? "Yes" : "No",
-          "Session Name": name,
+          "Session Name": toKebab(name),
           Pattern: toKebab(day),
           "Start Time": new Date(startTime).toLocaleTimeString(),
           "End Time": new Date(endTime).toLocaleTimeString(),
-          "Coach Name": coachName,
-          "Full class capacity": fullcapacity,
-          "Wait-list capacity": waitcapacity,
-          Facility: facility,
+          "Coach Name": toKebab(coachName),
+          "Full Class Capacity": fullcapacity,
+          "Waitlist Capacity": waitcapacity,
+          Facility: toKebab(facility),
         };
         return (
           <OutputsContainer
@@ -103,7 +103,7 @@ const ClassDefinition = () => {
   const enrolmentControlItems = useMemo(() => {
     return enrolmentControls.reduce((prev, { name = "", values = [] }) => {
       let title = toKebab(name);
-      const description = values.join(" ,");
+      const description = toKebab(values.join(", "));
       return { ...prev, [title]: description };
     }, {});
   }, [enrolmentControls]);

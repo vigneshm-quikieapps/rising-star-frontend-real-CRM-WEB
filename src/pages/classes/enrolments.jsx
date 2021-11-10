@@ -27,6 +27,7 @@ import { enrollmentHeaders } from "../../helper/constants";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getMembersOfSession } from "../../redux/action/memberAction";
+import toKebab from "../../utils/to-kebab";
 
 const MoreIconButton = () => (
   <IconButton sx={{ mr: "10px" }}>
@@ -104,13 +105,13 @@ const ClassEnrollments = () => {
           return {
             onClick: () => history.push(`/members/info/${_id}`),
             items: [
-              member.name,
+              toKebab(member.name),
               allergy,
               condition,
               startDate ? startDate.split("T")[0] : "N/A",
               enrolledDate,
-              enrolledStatus,
-              discontinuationReason,
+              toKebab(enrolledStatus),
+              toKebab(discontinuationReason),
               droppedDate ? droppedDate : "N/A",
             ],
           };
@@ -170,10 +171,10 @@ const ClassEnrollments = () => {
       "End Date": term.endDate.split("T")[0],
       "Start Time": pattern[0].startTime.split("T")[0],
       "End Time": pattern[0].endTime.split("T")[0],
-      Pattern: pattern[0].day,
-      Facility: facility,
-      "Session Enrolment Status": status,
-      "Coach Name": coach?.name,
+      Pattern: toKebab(pattern[0].day),
+      Facility: toKebab(facility),
+      "Session Enrolment Status": toKebab(status),
+      "Coach Name": toKebab(coach?.name),
       "Full class capacity": fullcapacity,
       Enrolled: fullcapacityfilled,
       "Waitlist Capacity": waitcapacity,

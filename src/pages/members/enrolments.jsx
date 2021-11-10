@@ -135,7 +135,7 @@ const MemberEnrollment = () => {
     // session: "",
     enrolStatus: "",
     dropReason: "",
-    timming: "",
+    timing: "",
     enrolDateTime: "",
     dropDateTime: "",
   });
@@ -215,7 +215,7 @@ const MemberEnrollment = () => {
         dropReason: `${
           StatusConverter(filterEnrolmentList[0]?.discontinuationReason) || ""
         }`,
-        timming: `${timeConverter(
+        timing: `${timeConverter(
           filterEnrolmentList[0]?.session.pattern[0].day,
           filterEnrolmentList[0]?.session.pattern[0].startTime,
           filterEnrolmentList[0]?.session.pattern[0].endTime
@@ -301,7 +301,7 @@ const MemberEnrollment = () => {
         dropReason: `${StatusConverter(
           filterEnrolmentList[0]?.discontinuationReason
         )}`,
-        timming: `${timeConverter(
+        timing: `${timeConverter(
           filterEnrolmentList[0]?.session.pattern[0].day,
           filterEnrolmentList[0]?.session.pattern[0].startTime,
           filterEnrolmentList[0]?.session.pattern[0].endTime
@@ -329,7 +329,7 @@ const MemberEnrollment = () => {
         ...previous,
         enrolStatus: "",
         dropReason: "",
-        timming: `${timeConverter(
+        timing: `${timeConverter(
           filterSessionList[0]?.pattern[0].day,
           filterSessionList[0]?.pattern[0].startTime,
           filterSessionList[0]?.pattern[0].endTime
@@ -582,10 +582,10 @@ const MemberEnrollment = () => {
             </Grid>
             <Grid item xs={4}>
               <Output
-                title="Timmings"
+                title="Timings"
                 description={
                   enrolmentDetailsInput
-                    ? enrolmentDetailsInput.timming
+                    ? enrolmentDetailsInput.timing
                     : "- - -"
                 }
               />
