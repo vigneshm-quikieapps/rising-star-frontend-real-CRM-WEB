@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -45,6 +45,7 @@ import {
 
 import Charges from "./charges";
 import Sessions from "./sessions";
+import { useDefaultDate } from "../../../hooks";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
@@ -74,6 +75,7 @@ const AddEditClassModal = (props) => {
   const { classObj, isEditMode } = props;
   const dispatch = useDispatch();
   const history = useHistory();
+  const defaultDate = useDefaultDate();
   const [isWarnOpen, setIsWarnOpen] = useState(false);
   const [className, setClassName] = useState("");
   const [selectedBusinessId, setSelectedBusinessId] = useState("");
@@ -101,10 +103,10 @@ const AddEditClassModal = (props) => {
       waitlistCapacity: "",
       coachId: "",
       selectedTerm: { _id: "" },
-      startDate: new Date(),
-      endDate: new Date(),
-      startTime: new Date(),
-      endTime: new Date(),
+      startDate: defaultDate,
+      endDate: defaultDate,
+      startTime: defaultDate,
+      endTime: defaultDate,
     },
   ]);
 
