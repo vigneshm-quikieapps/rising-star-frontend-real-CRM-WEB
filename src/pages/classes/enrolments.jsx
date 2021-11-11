@@ -27,7 +27,7 @@ import { enrollmentHeaders } from "../../helper/constants";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getMembersOfSession } from "../../redux/action/memberAction";
-import toKebab from "../../utils/to-kebab";
+import toPascal from "../../utils/to-pascal";
 
 const MoreIconButton = () => (
   <IconButton sx={{ mr: "10px" }}>
@@ -105,13 +105,13 @@ const ClassEnrollments = () => {
           return {
             onClick: () => history.push(`/members/info/${_id}`),
             items: [
-              toKebab(member.name),
+              toPascal(member.name),
               allergy,
               condition,
               startDate ? startDate.split("T")[0] : "N/A",
               enrolledDate,
-              toKebab(enrolledStatus),
-              toKebab(discontinuationReason),
+              toPascal(enrolledStatus),
+              toPascal(discontinuationReason),
               droppedDate ? droppedDate : "N/A",
             ],
           };
@@ -171,10 +171,10 @@ const ClassEnrollments = () => {
       "End Date": term.endDate.split("T")[0],
       "Start Time": pattern[0].startTime.split("T")[0],
       "End Time": pattern[0].endTime.split("T")[0],
-      Pattern: toKebab(pattern[0].day),
-      Facility: toKebab(facility),
-      "Session Enrolment Status": toKebab(status),
-      "Coach Name": toKebab(coach?.name),
+      Pattern: toPascal(pattern[0].day),
+      Facility: toPascal(facility),
+      "Session Enrolment Status": toPascal(status),
+      "Coach Name": toPascal(coach?.name),
       "Full class capacity": fullcapacity,
       Enrolled: fullcapacityfilled,
       "Waitlist Capacity": waitcapacity,

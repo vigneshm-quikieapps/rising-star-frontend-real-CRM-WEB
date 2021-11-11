@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 
 import { getSessionsOfClass } from "../../redux/action/class-actions";
-import toKebab from "../../utils/to-kebab";
+import toPascal from "../../utils/to-pascal";
 import { Accordion, Output, Outputs, ImgIcon } from "../../components";
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
 
@@ -46,13 +46,13 @@ const ClassDefinition = () => {
         const outputItems = {
           Amount: amount,
           Mandatory: mandatory ? "Yes" : "No",
-          "Pay Frequency": toKebab(payFrequency),
+          "Pay Frequency": toPascal(payFrequency),
         };
 
         return (
           <OutputsContainer
             key={_id}
-            header={{ title: "Charge", description: toKebab(name) }}
+            header={{ title: "Charge", description: toPascal(name) }}
           >
             <Outputs items={outputItems} />
           </OutputsContainer>
@@ -79,19 +79,19 @@ const ClassDefinition = () => {
           "Start Date": startDate.split("T")[0],
           "End Date": endDate.split("T")[0],
           "Trail Session Allowed": trailAllowed ? "Yes" : "No",
-          "Session Name": toKebab(name),
-          Pattern: toKebab(day),
+          "Session Name": toPascal(name),
+          Pattern: toPascal(day),
           "Start Time": new Date(startTime).toLocaleTimeString(),
           "End Time": new Date(endTime).toLocaleTimeString(),
-          "Coach Name": toKebab(coachName),
+          "Coach Name": toPascal(coachName),
           "Full Class Capacity": fullcapacity,
           "Waitlist Capacity": waitcapacity,
-          Facility: toKebab(facility),
+          Facility: toPascal(facility),
         };
         return (
           <OutputsContainer
             key={_id}
-            header={{ title: "Term", description: toKebab(termLabel) }}
+            header={{ title: "Term", description: toPascal(termLabel) }}
           >
             <Outputs items={outputItems} />
           </OutputsContainer>
@@ -102,8 +102,8 @@ const ClassDefinition = () => {
 
   const enrolmentControlItems = useMemo(() => {
     return enrolmentControls.reduce((prev, { name = "", values = [] }) => {
-      let title = toKebab(name);
-      const description = toKebab(values.join(", "));
+      let title = toPascal(name);
+      const description = toPascal(values.join(", "));
       return { ...prev, [title]: description };
     }, {});
   }, [enrolmentControls]);

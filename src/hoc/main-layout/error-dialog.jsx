@@ -14,7 +14,7 @@ import { removeError } from "../../redux/action/shared-actions";
 const ErrorDialog = ({ children }) => {
   const dispatch = useDispatch();
   const errors = useSelector((state) => state.shared.errors);
-  if (!errors.length) return children;
+  if (!errors.length) return null;
   const removeErrorHandler = () => {
     dispatch(removeError());
   };
@@ -35,7 +35,6 @@ const ErrorDialog = ({ children }) => {
           <Button onClick={removeErrorHandler}>Discard</Button>
         </DialogActions>
       </Dialog>
-      {children}
     </>
   );
 };

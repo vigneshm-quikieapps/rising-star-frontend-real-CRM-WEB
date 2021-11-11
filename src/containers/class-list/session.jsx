@@ -163,11 +163,13 @@ const Session = (props) => {
     >
       <CardRow
         sx={{
+          display: "grid",
+          columnGap: "20px",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
           margin: "15px auto",
-          justifyContent: "space-between",
         }}
       >
-        <Box sx={{ width: "40%" }}>
+        <Box sx={{ gridColumn: "1 / span 2" }}>
           <TextField
             select
             label="term"
@@ -189,14 +191,14 @@ const Session = (props) => {
             )}
           </TextField>
         </Box>
-        <Box sx={{ width: "20%" }}>
+        <Box>
           <DatePicker
             onChange={handleStartDateChange}
             label="Start Date"
             date={startingDate}
           />
         </Box>
-        <Box sx={{ width: "20%" }}>
+        <Box>
           <DatePicker
             onChange={handleEndDateChange}
             label="End Date"
@@ -216,10 +218,19 @@ const Session = (props) => {
 
       <CardRow
         sx={{
+          display: "grid",
+          columnGap: "20px",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
           margin: "15px auto",
         }}
       >
-        <CardRow sx={{ width: "46%" }}>
+        <CardRow
+          sx={{
+            gridColumn: "1 / span 2",
+            margin: "0",
+            justifyContent: "space-around",
+          }}
+        >
           {ShortWeekNames.map((day, i) => {
             return (
               <Box
@@ -227,7 +238,6 @@ const Session = (props) => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  margin: "auto",
                   flexWrap: "nowrap",
                 }}
               >
@@ -255,35 +265,34 @@ const Session = (props) => {
         />
       </CardRow>
 
-      <CardRow>
+      <CardRow
+        sx={{
+          display: "grid",
+          columnGap: "20px",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+        }}
+      >
         <TextField
           variant="filled"
           label="Facility"
           value={data.facility}
-          sx={{ width: "23%", margin: 0 }}
           onChange={handleFacilityChange}
         />
-
         <TextField
           variant="filled"
           value={data.fullCapacity}
           label="Full class capacity"
-          sx={{ width: "23%", margin: 0 }}
           onChange={handleFullCapacityChange}
         />
-
         <TextField
           value={data.waitlistCapacity}
           variant="filled"
           label="Waitlist capacity"
-          sx={{ width: "23%", margin: 0 }}
           onChange={handleWaitlistCapacityChange}
         />
-
         <TextField
           select
           value={allCoaches.length ? data.coachId : ""}
-          sx={{ width: "23%", margin: 0 }}
           label="Coach Name"
           variant="filled"
           onChange={handleCoachChange}

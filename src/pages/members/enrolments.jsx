@@ -25,7 +25,7 @@ import {
   transferEnrolment,
 } from "../../redux/action/enrolmentAction";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
-import toKebab from "../../utils/to-kebab";
+import toPascal from "../../utils/to-pascal";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -585,7 +585,7 @@ const MemberEnrollment = () => {
                 title="Timings"
                 description={
                   enrolmentDetailsInput
-                    ? toKebab(enrolmentDetailsInput.timing)
+                    ? toPascal(enrolmentDetailsInput.timing)
                     : "- - -"
                 }
               />
