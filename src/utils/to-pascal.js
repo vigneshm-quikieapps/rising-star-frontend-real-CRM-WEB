@@ -1,4 +1,4 @@
-const toKebab = (string = "") => {
+const toPascal = (string = "") => {
   const words = string.toLowerCase().split(" ");
   const result = words.reduce((prev, word, index) => {
     if (!word || word === " ") return prev;
@@ -10,4 +10,4 @@ const toKebab = (string = "") => {
   return result.trim();
 };
 
-export default toKebab;
+export default toPascal;

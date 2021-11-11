@@ -14,7 +14,7 @@ import {
   Pagination,
 } from "../../components";
 import MemberList from "./components/members-table";
-import toKebab from "../../utils/to-kebab";
+import toPascal from "../../utils/to-pascal";
 
 const operators = {
   STARTS_WITH: "STARTS_WITH",
@@ -220,9 +220,9 @@ const Members = () => {
         id: singleMember.id,
         onClick: () => handleRowClick(id),
         items: [
-          toKebab(name),
-          toKebab(gender),
-          toKebab(parentName),
+          toPascal(name),
+          toPascal(gender),
+          toPascal(parentName),
           parentEmail,
           parentPhone,
         ],
