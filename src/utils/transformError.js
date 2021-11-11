@@ -3,13 +3,14 @@ const transformError = (error, customMessage = "something went wrong") => {
   let message = error?.message || customMessage;
   let errors = error?.errors;
   if (Array.isArray(errors) && errors.length > 0) {
-    message = errors.reduce(
-      (prev, errorObject) =>
-        (prev += Object.values(errorObject).join("\n") + "\n"),
-      ""
-    );
+    message = errors.reduce((prev, errorItem) => {
+      if (typeof errorItem === "string") return (prev += errorItem + "\n");
+      const errorEntries = Object.entries(errorItem);
+      console.log(errorEntries);
+      const errorMessages = errorEntries.map((entry) => entry.join(": "));
+      return (prev += errorMessages.join("\n") + "\n");
+    }, "");
   }
-  console.log(message);
   return message;
 };
 
