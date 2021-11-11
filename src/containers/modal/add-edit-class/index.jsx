@@ -184,10 +184,12 @@ const AddEditClassModal = (props) => {
           endDate,
           selectedTerm,
         } = item;
+        console.log("selectedTerm", selectedTerm);
         return {
           name,
           term: {
             _id: selectedTerm._id,
+            label: selectedTerm.label,
             startDate: selectedTerm?.startDate?.split("T")[0],
             endDate: selectedTerm?.endDate?.split("T")[0],
           },
