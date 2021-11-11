@@ -10,6 +10,7 @@ import {
   SubHeadingText,
 } from "../../../components/common";
 import { Outputs } from "../../../components";
+import toKebab from "../../../utils/to-kebab";
 
 const ClassInfo = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,11 @@ const ClassInfo = () => {
     status,
     business: { city, postcode, name: businessName },
   } = classObj;
-  const items = { "City / Town": city, "Post Code": postcode, status };
+  const items = {
+    "City / Town": toKebab(city),
+    "Post Code": postcode,
+    status: toKebab(status),
+  };
 
   useEffect(() => {
     dispatch(getClassById(id));
@@ -30,9 +35,9 @@ const ClassInfo = () => {
   return name ? (
     <Card>
       <CardRow>
-        <HeadingText>{name}</HeadingText>
+        <HeadingText>{toKebab(name)}</HeadingText>
       </CardRow>
-      <SubHeadingText>{businessName}</SubHeadingText>
+      <SubHeadingText>{toKebab(businessName)}</SubHeadingText>
       <CardRow>
         <Outputs items={items} columnCount={3} />
       </CardRow>

@@ -86,7 +86,6 @@ const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
   useEffect(() => setFilters(filters), [filters, setFilters]);
 
   const searchHandler = () => {
-    console.log("filters", filters);
     dispatch(getMemberListAction({ filters }));
   };
 

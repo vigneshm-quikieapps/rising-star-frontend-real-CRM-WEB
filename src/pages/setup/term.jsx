@@ -17,6 +17,7 @@ import {
   ExpandMore as ExpandMoreIcon,
   Done as DoneIcon,
   Save as AddIcon,
+  Undo as RestoreDefaultsIcon,
   ClearRounded as CancelIcon,
 } from "@mui/icons-material";
 
@@ -32,7 +33,6 @@ import {
   TableMui as Table,
   GradientButton,
   DatePicker,
-  Actions,
   Pagination,
   ImgIcon,
 } from "../../components";
@@ -72,6 +72,14 @@ const Term = ({
       }
     }
   };
+
+  const restoreDefaults = () => {
+    setLabel(initialLabel);
+    setStartDate(new Date(initialStartDate));
+    setEndDate(new Date(initialEndDate));
+    setTouched(false);
+  };
+
   return (
     <TableRow>
       <TableCell>
@@ -110,13 +118,16 @@ const Term = ({
       </TableCell>
       <TableCell>
         <Box sx={{ width: "80px" }}>
-          <IconButton onClick={() => onDelete(_id)}>
-            {!add ? (
-              <ImgIcon>{deleteIcon}</ImgIcon>
-            ) : (
+          {add && (
+            <IconButton onClick={() => onDelete(_id)}>
               <CancelIcon color="secondary" />
-            )}
-          </IconButton>
+            </IconButton>
+          )}
+          {!touched && !add && (
+            <IconButton onClick={() => onDelete(_id)}>
+              <ImgIcon>{deleteIcon}</ImgIcon>
+            </IconButton>
+          )}
           {touched && (
             <IconButton
               onClick={() => {
@@ -132,6 +143,11 @@ const Term = ({
               }}
             >
               {add ? <AddIcon /> : <DoneIcon color="success" />}
+            </IconButton>
+          )}
+          {!add && touched && (
+            <IconButton onClick={restoreDefaults}>
+              <RestoreDefaultsIcon />
             </IconButton>
           )}
         </Box>

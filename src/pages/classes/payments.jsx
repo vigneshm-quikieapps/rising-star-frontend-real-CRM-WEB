@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   MenuItem,
   styled,
@@ -12,22 +12,21 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import TopNav from "./components/top-nav";
 import {
   Accordion,
-  GradientButton,
   DatePicker,
   TextField,
-  Output,
   Outputs,
   Table,
-} from "../../components/index";
+  Status,
+} from "../../components";
 
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import { getPaymentDetailsOfSession } from "../../redux/action/billingActions";
+import toKebab from "../../utils/to-kebab";
 
-const StyleBox = styled(Box)(({ theme }) => ({
+const InputsContainer = styled(Box)(({ theme }) => ({
   padding: "20px",
   marginBottom: "15px",
   border: `1px solid ${theme.palette.ternary.main}`,
@@ -46,74 +45,34 @@ const StyleBox = styled(Box)(({ theme }) => ({
 }));
 
 const timeConverter = (time) => {
+  if (time === undefined || time === "Invalid Date") return "- - -";
   const convertedTime = new Date(time).toLocaleTimeString("en", {
     timeStyle: "short",
     hour12: true,
-    timeZone: "UTC",
   });
-
-  if (time === undefined || time === "Invalid Date") {
-    return "- - -";
-  } else {
-    return convertedTime;
-  }
+  return convertedTime;
 };
 
-const dateToIsoDateConverter = (simpleDate) => {
-  // console.log(new Date(simpleDate).getFullYear());
-  if (simpleDate) {
-    // let date = simpleDate.toISOString();
-    let date = new Date(simpleDate);
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let dt = "1";
-
-    if (dt < 10) {
-      dt = "0" + dt;
-    }
-    if (month < 10) {
-      month = "0" + month;
-    }
-
-    // console.log(year+'-' + month + '-'+dt);
-    return `${year}-${month}-${dt}`;
-  }
+const toISODate = (simpleDate) => {
+  let date = new Date(simpleDate);
+  const year = date.getFullYear();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  return `${year}-${month}-01`;
 };
+
+const tableHeaders = ["Name", "Payment Status"];
 
 const ClassPayments = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-
   const termList = useSelector((state) => state.terms.termsOfClass);
   const sessionList = useSelector(
     (state) => state.sessions.sessionsOfClassInTerm
   );
   const paymentList = useSelector((state) => state.billing.paymentList);
-
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
   const [date, setDate] = useState(new Date());
-  const [items, setItems] = useState({
-    "Start Time": "- - -",
-    "End Time": "- - -",
-    Facility: "- - -",
-    "Coach Name": "- - -",
-    Pattern: "- - -",
-    "Full class capacity": "- - -",
-    Enrolled: "- - -",
-  });
-
-  const tableHeaders = ["Name", "Start Date", "Start", "Payment Status"];
-
-  const getPaymentTableParams = useCallback((sessionId, date) => {
-    return new Promise((resolve, reject) => {
-      const paymentTableParams = {
-        sessionId: sessionId,
-        date: dateToIsoDateConverter(date),
-      };
-      resolve(paymentTableParams);
-    });
-  }, []);
 
   useEffect(() => {
     dispatch(getTermsOfClass(id));
@@ -129,31 +88,35 @@ const ClassPayments = () => {
 
   useEffect(() => {
     sessionList && setSelectedSession(sessionList[0]?._id || "");
-    sessionList &&
-      setItems((previous) => ({
-        ...previous,
-        "Start Time": `${timeConverter(
-          sessionList[0]?.pattern[0].startTime || "- - -"
-        )}`,
-        "End Time": `${timeConverter(
-          sessionList[0]?.pattern[0].endTime || "- - -"
-        )}`,
-        Facility: sessionList[0]?.facility || "- - -",
-        "Coach Name": sessionList[0]?.coach.name || "- - -",
-        Pattern: sessionList[0]?.pattern[0].day || "- - -",
-        "Full class capacity": sessionList[0]?.fullcapacity || "- - -",
-        Enrolled: sessionList[0]?.fullcapacityfilled || "- - -",
-      }));
   }, [sessionList]);
 
+  const items = useMemo(() => {
+    const currentSession = sessionList.find(
+      (session) => session._id === selectedSession
+    );
+    return {
+      "Start Time": `${timeConverter(
+        currentSession?.pattern[0].startTime || ""
+      )}`,
+      "End Time": `${timeConverter(currentSession?.pattern[0].endTime || "")}`,
+      Facility: toKebab(currentSession?.facility) || "",
+      "Coach Name": toKebab(currentSession?.coach.name) || "",
+      Pattern: toKebab(currentSession?.pattern[0].day) || "",
+      "Full Class Capacity": currentSession?.fullcapacity || "",
+      Enrolled: currentSession?.fullcapacityfilled || "",
+    };
+  }, [sessionList, selectedSession]);
+
   useEffect(() => {
-    getPaymentTableParams(selectedSession, date).then((res) => {
-      console.log(res);
-      if (res.sessionId && res.date) {
-        dispatch(getPaymentDetailsOfSession(res));
-      }
-    });
-  }, [dispatch, getPaymentTableParams, selectedSession, date]);
+    if (selectedSession && date) {
+      dispatch(
+        getPaymentDetailsOfSession({
+          sessionId: selectedSession,
+          date: toISODate(date),
+        })
+      );
+    }
+  }, [dispatch, selectedSession, date]);
 
   const termChangeHandler = (e) => {
     setSelectedTerm(e.target.value);
@@ -162,31 +125,25 @@ const ClassPayments = () => {
   const sessionChangeHandler = (e) => {
     const sessionId = e.target.value;
     setSelectedSession(sessionId);
-    const filterSession = sessionList.filter(
-      (session) => session._id === sessionId
-    );
-    setItems((previous) => ({
-      ...previous,
-      "Start Time": `${timeConverter(
-        filterSession[0]?.pattern[0].startTime || "- - -"
-      )}`,
-      "End Time": `${timeConverter(
-        filterSession[0]?.pattern[0].endTime || "- - -"
-      )}`,
-      Facility: filterSession[0]?.facility || "- - -",
-      "Coach Name": filterSession[0]?.coach.name || "- - -",
-      Pattern: filterSession[0]?.pattern[0].day || "- - -",
-      "Full class capacity": filterSession[0]?.fullcapacity || "- - -",
-      Enrolled: filterSession[0]?.fullcapacityfilled || "- - -",
-    }));
   };
 
-  console.log(paymentList);
+  const tableItems = useMemo(() => {
+    if (!paymentList) return [];
+    return paymentList.map(({ _id, member: { name }, paid }) => ({
+      id: _id,
+      items: [
+        toKebab(name),
+        <Status
+          status={paid ? "green" : "red"}
+          title={paid ? "Paid" : "Unpaid"}
+        />,
+      ],
+    }));
+  }, [paymentList]);
 
   return (
     <Box sx={{ width: "100%" }}>
-      {/* <TopNav /> */}
-      <StyleBox>
+      <InputsContainer>
         <Grid
           container
           alignItems="center"
@@ -218,16 +175,16 @@ const ClassPayments = () => {
               value={selectedSession}
               onChange={sessionChangeHandler}
             >
-              {sessionList.map((li, index) => (
-                <MenuItem key={`s${index}`} value={`${li._id}`}>
-                  {li.name}
+              {sessionList.map(({ _id, name }) => (
+                <MenuItem key={_id} value={_id}>
+                  {name}
                 </MenuItem>
               ))}
             </TextField>
           </Grid>
           <Grid item xs={4}>
             <DatePicker
-              label="Start Date"
+              label="Pay Month"
               date={date}
               onChange={(newDate) => setDate(newDate)}
               views={["year", "month"]}
@@ -240,19 +197,13 @@ const ClassPayments = () => {
           </Grid>
         </Grid>
         <Outputs items={items} columnCount={4} rowGap={2} />
-      </StyleBox>
-      <Accordion
-        // expanded={expanded === `panel${index + 1}`}
-        // onChange={handleChange(`panel${index + 1}`)}
-        sx={{ marginBottom: "16px" }}
-      >
+      </InputsContainer>
+      <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Registered Members</Typography>
         </AccordionSummary>
-        <AccordionDetails
-        // sx={{ padding: 0, paddingBottom: "10px" }}
-        >
-          {/* <Table headers={tableHeaders} /> */}
+        <AccordionDetails>
+          <Table headers={tableHeaders} rows={tableItems} />
         </AccordionDetails>
       </Accordion>
     </Box>
