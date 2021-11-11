@@ -26,9 +26,7 @@ const ErrorDialog = () => {
     >
       <DialogTitle>The following error occurred</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          <Typography component="pre">{errors[0]}</Typography>
-        </DialogContentText>
+        <DialogContentText component="pre">{errors[0]}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={removeErrorHandler}>Discard</Button>
