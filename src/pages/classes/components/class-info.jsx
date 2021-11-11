@@ -10,7 +10,7 @@ import {
   SubHeadingText,
 } from "../../../components/common";
 import { Outputs } from "../../../components";
-import toKebab from "../../../utils/to-kebab";
+import toPascal from "../../../utils/to-pascal";
 
 const ClassInfo = () => {
   const dispatch = useDispatch();
@@ -23,9 +23,9 @@ const ClassInfo = () => {
     business: { city, postcode, name: businessName },
   } = classObj;
   const items = {
-    "City / Town": toKebab(city),
+    "City / Town": toPascal(city),
     "Post Code": postcode,
-    status: toKebab(status),
+    status: toPascal(status),
   };
 
   useEffect(() => {
@@ -35,9 +35,9 @@ const ClassInfo = () => {
   return name ? (
     <Card>
       <CardRow>
-        <HeadingText>{toKebab(name)}</HeadingText>
+        <HeadingText>{toPascal(name)}</HeadingText>
       </CardRow>
-      <SubHeadingText>{toKebab(businessName)}</SubHeadingText>
+      <SubHeadingText>{toPascal(businessName)}</SubHeadingText>
       <CardRow>
         <Outputs items={items} columnCount={3} />
       </CardRow>

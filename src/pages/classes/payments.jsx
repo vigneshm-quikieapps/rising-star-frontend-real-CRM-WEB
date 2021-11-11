@@ -24,7 +24,7 @@ import {
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import { getPaymentDetailsOfSession } from "../../redux/action/billingActions";
-import toKebab from "../../utils/to-kebab";
+import toPascal from "../../utils/to-pascal";
 
 const InputsContainer = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -99,9 +99,9 @@ const ClassPayments = () => {
         currentSession?.pattern[0].startTime || ""
       )}`,
       "End Time": `${timeConverter(currentSession?.pattern[0].endTime || "")}`,
-      Facility: toKebab(currentSession?.facility) || "",
-      "Coach Name": toKebab(currentSession?.coach.name) || "",
-      Pattern: toKebab(currentSession?.pattern[0].day) || "",
+      Facility: toPascal(currentSession?.facility) || "",
+      "Coach Name": toPascal(currentSession?.coach.name) || "",
+      Pattern: toPascal(currentSession?.pattern[0].day) || "",
       "Full Class Capacity": currentSession?.fullcapacity || "",
       Enrolled: currentSession?.fullcapacityfilled || "",
     };
@@ -132,7 +132,7 @@ const ClassPayments = () => {
     return paymentList.map(({ _id, member: { name }, paid }) => ({
       id: _id,
       items: [
-        toKebab(name),
+        toPascal(name),
         <Status
           status={paid ? "green" : "red"}
           title={paid ? "Paid" : "Unpaid"}
