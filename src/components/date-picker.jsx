@@ -20,7 +20,12 @@ export default function BasicDatePicker({
           onChange && onChange(newValue);
         }}
         renderInput={(params) => (
-          <TextField variant="filled" {...params} {...inputProps} />
+          <TextField
+            variant="filled"
+            {...params}
+            {...inputProps}
+            sx={{ width: "100%" }}
+          />
         )}
         {...otherProps}
       />
