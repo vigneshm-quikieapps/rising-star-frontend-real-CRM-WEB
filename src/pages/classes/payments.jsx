@@ -140,7 +140,6 @@ const ClassPayments = () => {
       ],
     }));
   }, [paymentList]);
-  console.log(tableItems);
 
   return (
     <Box sx={{ width: "100%" }}>

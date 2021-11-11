@@ -6,7 +6,6 @@ const transformError = (error, customMessage = "something went wrong") => {
     message = errors.reduce((prev, errorItem) => {
       if (typeof errorItem === "string") return (prev += errorItem + "\n");
       const errorEntries = Object.entries(errorItem);
-      console.log(errorEntries);
       const errorMessages = errorEntries.map((entry) => entry.join(": "));
       return (prev += errorMessages.join("\n") + "\n");
     }, "");

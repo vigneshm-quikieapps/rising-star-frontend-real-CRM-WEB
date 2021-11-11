@@ -121,7 +121,6 @@ const SkillsComponent = ({
   }, [checkStatusConverter, status, skillId]);
 
   const checkboxHandler = (name, skillId, e) => {
-    console.log(e.target.checked);
     if (name === "attained") {
       setCheckboxes({
         ...checkbox,
@@ -137,7 +136,6 @@ const SkillsComponent = ({
     }
   };
 
-  // console.log(checkbox);
   return (
     <Box
       key={skillIndex}
@@ -187,7 +185,6 @@ const MemberEvaluations = () => {
   const [expanded, setExpanded] = useState("panel1");
 
   const handleChange = (panel) => (event, newExpanded) => {
-    // console.log(newExpanded);
     setExpanded(newExpanded ? panel : true);
   };
 
@@ -196,8 +193,7 @@ const MemberEvaluations = () => {
       return new Promise((resolve, reject) => {
         const data = {
           memberId: id,
-          clubMembershipId:
-            currentMember?.membership[0].clubMembershipId,
+          clubMembershipId: currentMember?.membership[0].clubMembershipId,
           businessId: businessList,
           evaluationSchemeId: evalautionSchemeList,
         };
@@ -243,8 +239,6 @@ const MemberEvaluations = () => {
       progressId: progressRecord._id,
       skills: convertStatusToArray(newSkills),
     };
-
-    console.log(data);
     dispatch(updateMultipleStatusOnMemberProgressRecord(data));
   };
 

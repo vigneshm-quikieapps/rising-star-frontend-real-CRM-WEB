@@ -371,7 +371,6 @@ const MemberEnrollment = () => {
       enrolmentId: enrolID,
       newSessionId: selectedSession,
     };
-    console.log(transferData);
     if (
       enrolmentDetailsInput.enrolStatus === "Dropped" &&
       enrolmentDetailsInput.dropReason === "Dropped"
@@ -397,14 +396,9 @@ const MemberEnrollment = () => {
       enrolmentDetailsInput.dropReason === ""
     ) {
       dispatch(transferEnrolment(transferData));
-      // console.log(transferData);
     }
   };
 
-  // console.log(
-  //   enrolmentDetailsInput.enrolStatus,
-  //   enrolmentDetailsInput.dropReason
-  // );
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
