@@ -35,11 +35,11 @@ const Session = (props) => {
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
 
   const handleTermChange = (e) => {
-    let newSession = [...sessions];
+    let newSessions = [...sessions];
     let selectedTerm = termsOfBusiness.find(
       ({ _id }) => _id === e.target.value
     );
-    newSession[index] = {
+    newSessions[index] = {
       ...data,
       startDate: selectedTerm.startDate,
       endDate: selectedTerm.endDate,
@@ -47,109 +47,109 @@ const Session = (props) => {
     };
     setStartingDate(selectedTerm.startDate);
     setEndingDate(selectedTerm.endDate);
-    setSessionData(newSession);
+    setSessionData(newSessions);
   };
 
   const handleStartDateChange = (date) => {
-    let newSession = [...sessions];
-    newSession[index] = {
+    let newSessions = [...sessions];
+    newSessions[index] = {
       ...data,
       startDate: date,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
     setStartingDate(date);
   };
 
   const handleEndDateChange = (date) => {
-    let newSession = [...sessions];
-    newSession[index] = {
+    let newSessions = [...sessions];
+    newSessions[index] = {
       ...data,
       endDate: date,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
     setEndingDate(date);
   };
 
   const handleNameChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
+    let newSessions = [...sessions];
+    newSessions[index] = {
       ...data,
       name: e.target.value,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
   };
 
   const handleDayIndexChange = (i) => {
-    let newSession = [...sessions];
+    let newSessions = [...sessions];
     let newIndex = [...data.dayIndex];
 
     if (newIndex.includes(i)) newIndex = newIndex.filter((item) => item !== i);
     else newIndex.push(i);
 
-    newSession[index] = {
+    newSessions[index] = {
       ...data,
       dayIndex: newIndex,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
   };
 
   const handleFacilityChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
+    let newSessions = [...sessions];
+    newSessions[index] = {
       ...data,
       facility: e.target.value,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
   };
 
   const handleFullCapacityChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
+    let newSessions = [...sessions];
+    newSessions[index] = {
       ...data,
       fullCapacity: e.target.value,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
   };
 
   const handleWaitlistCapacityChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
+    let newSessions = [...sessions];
+    newSessions[index] = {
       ...data,
       waitlistCapacity: e.target.value,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
   };
 
   const handleCoachChange = (e) => {
-    let newSession = [...sessions];
-    newSession[index] = {
+    let newSessions = [...sessions];
+    newSessions[index] = {
       ...data,
       coachId: e.target.value,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
   };
 
   const handleStartTimeChange = (time) => {
-    let newSession = [...sessions];
-    newSession[index] = {
+    let newSessions = [...sessions];
+    newSessions[index] = {
       ...data,
       startTime: time,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
   };
 
   const handleEndTimeChange = (time) => {
-    let newSession = [...sessions];
-    newSession[index] = {
+    let newSessions = [...sessions];
+    newSessions[index] = {
       ...data,
       endTime: time,
     };
-    setSessionData(newSession);
+    setSessionData(newSessions);
   };
 
   const handleDelete = () => {
-    let newSession = removeItemByIndex(sessions, index);
-    setSessionData(newSession);
+    let newSessions = removeItemByIndex(sessions, index);
+    setSessionData(newSessions);
   };
 
   return (
