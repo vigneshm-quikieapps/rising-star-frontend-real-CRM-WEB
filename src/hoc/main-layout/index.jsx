@@ -63,11 +63,10 @@ const MainLayout = ({ children }) => {
         items={navItems}
         width={drawerWidth}
       />
-      <ErrorDialog>
-        <Main drawerWidth={drawerWidth} drawerOpen={navOpen}>
-          {children}
-        </Main>
-      </ErrorDialog>
+      <Main drawerWidth={drawerWidth} drawerOpen={navOpen}>
+        {children}
+      </Main>
+      <ErrorDialog />
       <Footer />
     </>
   );
