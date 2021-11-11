@@ -82,7 +82,7 @@ const AddEditClassModal = (props) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedEvaluationScheme, setSelectedEvaluationScheme] = useState("");
   const [aboutClass, setAboutClass] = useState("");
-  const [genders, setGenders] = useState([""]);
+  const [genders, setGenders] = useState([]);
   const [ages, setAges] = useState([1]);
   const [classCharges, setClassCharges] = useState([
     {
