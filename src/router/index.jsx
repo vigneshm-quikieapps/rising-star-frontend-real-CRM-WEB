@@ -1,6 +1,6 @@
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
-import ErrorBoundary from "../hoc/error-boundary";
+// import ErrorBoundary from "../hoc/error-boundary";
 import {
   Dashboard,
   Login,
