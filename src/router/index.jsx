@@ -11,7 +11,7 @@ import {
   NoMatch,
 } from "../pages";
 
-import MainLayout from "../hoc/main-layout";
+import MainLayout from "../hoc";
 
 const MainRouter = () => (
   <BrowserRouter>
