@@ -94,6 +94,7 @@ const ClassPayments = () => {
     const currentSession = sessionList.find(
       (session) => session._id === selectedSession
     );
+    const days = currentSession?.pattern.map(({ day }) => day).join(", ");
     return {
       "Start Time": `${timeConverter(
         currentSession?.pattern[0].startTime || ""
@@ -101,7 +102,7 @@ const ClassPayments = () => {
       "End Time": `${timeConverter(currentSession?.pattern[0].endTime || "")}`,
       Facility: toPascal(currentSession?.facility) || "",
       "Coach Name": toPascal(currentSession?.coach.name) || "",
-      Pattern: toPascal(currentSession?.pattern[0].day) || "",
+      Pattern: toPascal(days) || "",
       "Full Class Capacity": currentSession?.fullcapacity || "",
       Enrolled: currentSession?.fullcapacityfilled || "",
     };

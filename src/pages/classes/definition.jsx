@@ -71,16 +71,19 @@ const ClassDefinition = () => {
           fullcapacity,
           waitcapacity,
           facility,
-          termData: { startDate, endDate, label: termLabel },
-          pattern: [{ day, startTime, endTime }],
+          startDate,
+          endDate,
+          termData: { label: termLabel },
+          pattern: [{ startTime, endTime }],
           coach: { name: coachName },
         } = session;
+        const days = session.pattern.map(({ day }) => day).join(", ");
         const outputItems = {
           "Start Date": startDate.split("T")[0],
           "End Date": endDate.split("T")[0],
           "Trail Session Allowed": trailAllowed ? "Yes" : "No",
           "Session Name": toPascal(name),
-          Pattern: toPascal(day),
+          Pattern: toPascal(days),
           "Start Time": new Date(startTime).toLocaleTimeString(),
           "End Time": new Date(endTime).toLocaleTimeString(),
           "Coach Name": toPascal(coachName),

@@ -151,12 +151,14 @@ const ClassEnrollments = () => {
   }, [selectedSession, dispatch]);
 
   const sessionInfo = useMemo(() => {
-    if (!selectedSession) return;
+    if (!selectedSession) return {};
     const currentSession = classSessionsInTerm.find(
       (session) => session._id === selectedSession
     );
+    if (!currentSession) return {};
     const {
-      term,
+      startDate,
+      endDate,
       pattern,
       status,
       facility,
@@ -166,12 +168,13 @@ const ClassEnrollments = () => {
       waitcapacity,
       waitcapacityfilled,
     } = currentSession;
+    const days = pattern.map(({ day }) => day).join(", ");
     const info = {
-      "Start Date": term.startDate.split("T")[0],
-      "End Date": term.endDate.split("T")[0],
-      "Start Time": pattern[0].startTime.split("T")[0],
-      "End Time": pattern[0].endTime.split("T")[0],
-      Pattern: toPascal(pattern[0].day),
+      "Start Date": startDate.split("T")[0],
+      "End Date": endDate.split("T")[0],
+      "Start Time": new Date(pattern[0].startTime).toLocaleTimeString(),
+      "End Time": new Date(pattern[0].endTime).toLocaleTimeString(),
+      Pattern: toPascal(days),
       Facility: toPascal(facility),
       "Session Enrolment Status": toPascal(status),
       "Coach Name": toPascal(coach?.name),
