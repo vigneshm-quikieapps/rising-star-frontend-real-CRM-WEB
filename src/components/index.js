@@ -19,4 +19,5 @@ export { default as Tooltip } from "./tooltip";
 export { default as TimePicker } from "./time-picker";
 export { default as Loader } from "./loader";
 export { default as Warning } from "./dialog";
+export { default as Grid } from "./grid";
 export * from "./common";
