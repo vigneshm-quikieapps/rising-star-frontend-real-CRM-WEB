@@ -1,6 +1,6 @@
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
-import ErrorBoundary from "../hoc/main-layout/error-boundary";
+import ErrorBoundary from "../hoc/error-boundary";
 import {
   Dashboard,
   Login,
@@ -11,7 +11,7 @@ import {
   NoMatch,
 } from "../pages";
 
-import MainLayout from "../hoc";
+import MainLayout from "../hoc/main-layout";
 
 const MainRouter = () => (
   <BrowserRouter>
