@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -96,6 +96,7 @@ const AddEditClassModal = (props) => {
   ]);
   const [classSessions, setClassSessions] = useState([
     {
+      id: "",
       name: "",
       dayIndex: [],
       facility: "",
@@ -125,6 +126,7 @@ const AddEditClassModal = (props) => {
     setIsWarnOpen(false);
     history.push("/classes");
   };
+
   const handleAgeSelect = (e) => {
     const {
       target: { value },
@@ -186,7 +188,6 @@ const AddEditClassModal = (props) => {
           endDate,
           selectedTerm,
         } = item;
-        console.log("selectedTerm", selectedTerm);
         return {
           name,
           term: {
@@ -250,16 +251,18 @@ const AddEditClassModal = (props) => {
 
     let existingSessions = sessionsOfClass?.map(
       ({
+        _id,
         name,
         facility,
         fullcapacity,
         waitcapacity,
         coachId,
         pattern,
-        term,
+        termData: term,
         startDate,
         endDate,
       }) => ({
+        id: _id,
         name,
         dayIndex: pattern.map((item) => {
           return ShortWeekNames.indexOf(item.day.toLowerCase());
@@ -294,10 +297,15 @@ const AddEditClassModal = (props) => {
   const handleWarn = () => {
     setIsWarnOpen(true);
   };
+
+  useEffect(() => {
+    if (isEditMode && classObj._id) {
+      dispatch(getSessionsOfClass(classObj._id));
+    }
+  }, [classObj, isEditMode, dispatch]);
+
   useEffect(() => {
     if (isEditMode) {
-      if (sessionsOfClass.length === 0 && classObj._id)
-        dispatch(getSessionsOfClass(classObj._id));
       classObj._id && populateClassData();
     }
   }, [dispatch, isEditMode, classObj, populateClassData, sessionsOfClass]);
@@ -332,7 +340,9 @@ const AddEditClassModal = (props) => {
             height: "90%",
             margin: "2.5% 10%",
             borderRadius: "20px",
-            border: "solid 1px #f2f1f6",
+            borderStyle: "solid",
+            borderWidth: "1px",
+            borderColor: (theme) => theme.palette.highlight,
             backgroundColor: "#fff",
             "&:focus-visible": {
               outline: "none",

@@ -62,3 +62,13 @@ export async function updateClass({ data, id }) {
     throw error;
   }
 }
+
+export const updateSessionOfClass = async (data) => {
+  try {
+    const api = `sessions/${data.id}`;
+    const session = await axiosInstance.put(api, data);
+    return session.data.businessSession;
+  } catch (error) {
+    throw error;
+  }
+};

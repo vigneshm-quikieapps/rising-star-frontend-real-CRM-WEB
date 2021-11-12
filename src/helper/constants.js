@@ -109,54 +109,6 @@ export const attendanceHeaders = [
   "Comments",
 ];
 
-export const attendanceObject1 = {
-  "Class ID": "DL39020458",
-  "City / Town": "Glasgow",
-  "Post Code": "G46 7TL",
-  Status: "Active",
-};
-
-export const attendanceObject2 = {
-  "Start Time": "9:30 am",
-  "End Time": "11:30 am",
-  Facility: "Gym Hall",
-  "Coach Name": "Bethany Lafferty",
-  Pattern: "Mon",
-  "Full class capacity": "20",
-  Enrolled: "15",
-};
-
-export const enrollmentObject2 = {
-  "Start Date": "9:30 am",
-  "End Date": "11:30 am",
-  "Start Time": "9:30 am",
-  "End Time": "11:30 am",
-  Pattern: "Mon",
-  Facility: "Gym Hall",
-  "Session Enrolment Status": "Open for Enrolment",
-  "Coach Name": "Bethany Lafferty",
-  "Full class capacity": "20",
-  Enrolled: "15",
-  "Waitlist capacity": "10",
-  "Waitlist Enrolled": "0",
-};
-
-export const enrollmentRows = Array(10)
-  .fill(1)
-  .map((_, index) => ({
-    id: index,
-    items: [
-      "Ayman Mogal",
-      <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>,
-      <ImgIcon alt="verify">{verifiedIcon}</ImgIcon>,
-      "02/08/2021",
-      "01/08/2021 9:00",
-      "Dropped",
-      "Class transfer",
-      "06/08/2021 10:00",
-    ],
-  }));
-
 export const enrollmentHeaders = [
   "Name",
   "Allergies",
@@ -167,31 +119,6 @@ export const enrollmentHeaders = [
   "Drop/Cancel Reason",
   "Dropped Date/Time",
 ];
-
-export const personalInfoObject1 = {
-  "Full Name": "Ayman Mogal",
-  "Gender*": "Boy",
-  "Date of Birth*": "5th January, 1992",
-};
-
-export const personalInfoObject2 = {
-  "Parent User ID*": "Driving Licence",
-  "Full Name*": "Nizam Mogal",
-  Email: "ni@gmail.com",
-  "Contact Number": "0757576757",
-};
-
-export const personalInfoObject3 = {
-  Name: "Marama Petera",
-  Relationship: "Uncle",
-  "Contact Number*": "0757576757",
-};
-
-export const personalInfoObject4 = {
-  Name: "Marama Petera",
-  Relationship: "Friend",
-  "Contact Number*": "0757576757",
-};
 
 export const icons = {
   arrowDownDark,

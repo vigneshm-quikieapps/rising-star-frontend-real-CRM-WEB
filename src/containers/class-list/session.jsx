@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { MenuItem, Box } from "@mui/material";
 import {
   TextField,
@@ -12,11 +12,15 @@ import {
   DayText,
 } from "../../components";
 
-import DoneIcon from "@mui/icons-material/Done";
+import {
+  Done as DoneIcon,
+  Undo as RestoreDefaultsIcon,
+} from "@mui/icons-material";
 import deleteIcon from "../../assets/icons/icon-delete.png";
 
 import { ShortWeekNames } from "../../helper/constants";
 import { removeItemByIndex } from "../../utils";
+import { editSessionOfClass } from "../../redux/action/class-actions";
 
 const DeleteButton = (props) => (
   <IconButton {...props} sx={{ borderRadius: "50%" }}>
@@ -26,6 +30,8 @@ const DeleteButton = (props) => (
 
 const Session = (props) => {
   const { data, index, sessions, setSessionData, isEdit } = props;
+  const [touched, setTouched] = useState(false);
+  const dispatch = useDispatch();
   const [startingDate, setStartingDate] = useState(
     data.selectedTerm?.startDate
   );
@@ -34,117 +40,111 @@ const Session = (props) => {
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
 
-  const handleTermChange = (e) => {
+  const initialData = useRef(data);
+
+  const handleChange = (e, field) => {
+    setTouched(true);
     let newSessions = [...sessions];
-    let selectedTerm = termsOfBusiness.find(
-      ({ _id }) => _id === e.target.value
-    );
-    newSessions[index] = {
-      ...data,
-      startDate: selectedTerm.startDate,
-      endDate: selectedTerm.endDate,
-      selectedTerm,
-    };
-    setStartingDate(selectedTerm.startDate);
-    setEndingDate(selectedTerm.endDate);
+    let updatedSession = { ...data };
+
+    const value =
+      field === "startTime" ||
+      field === "endTime" ||
+      field === "startDate" ||
+      field === "endDate" ||
+      field === "dayIndex"
+        ? e
+        : e.target.value;
+
+    switch (field) {
+      case "startDate":
+        setStartingDate(value);
+        break;
+      case "endDate":
+        setEndingDate(value);
+        break;
+      default:
+    }
+
+    switch (field) {
+      case "startDate":
+      case "endDate":
+      case "startTime":
+      case "endTime":
+      case "coachId":
+      case "waitlistCapacity":
+      case "fullCapacity":
+      case "facility":
+      case "name":
+        updatedSession[field] = value;
+        break;
+
+      case "dayIndex":
+        let newIndex = [...data.dayIndex];
+        if (newIndex.includes(value))
+          newIndex = newIndex.filter((item) => item !== value);
+        else newIndex.push(value);
+        updatedSession[field] = newIndex;
+        break;
+
+      case "selectedTerm":
+        let selectedTerm = termsOfBusiness.find(({ _id }) => _id === value);
+        updatedSession["startDate"] = selectedTerm.startDate;
+        updatedSession["endDate"] = selectedTerm.endDate;
+        updatedSession[field] = selectedTerm;
+        setStartingDate(selectedTerm.startDate);
+        setEndingDate(selectedTerm.endDate);
+        break;
+
+      default:
+    }
+
+    newSessions[index] = updatedSession;
     setSessionData(newSessions);
   };
 
-  const handleStartDateChange = (date) => {
+  const restoreDefaults = () => {
     let newSessions = [...sessions];
-    newSessions[index] = {
-      ...data,
-      startDate: date,
-    };
+    newSessions[index] = { ...initialData.current };
     setSessionData(newSessions);
-    setStartingDate(date);
+    setTouched(false);
   };
 
-  const handleEndDateChange = (date) => {
-    let newSessions = [...sessions];
-    newSessions[index] = {
-      ...data,
-      endDate: date,
-    };
-    setSessionData(newSessions);
-    setEndingDate(date);
+  const onEditSuccess = () => {
+    setTouched(false);
   };
 
-  const handleNameChange = (e) => {
-    let newSessions = [...sessions];
-    newSessions[index] = {
-      ...data,
-      name: e.target.value,
+  const onEdit = () => {
+    const {
+      id,
+      name,
+      dayIndex,
+      selectedTerm: term,
+      endDate,
+      endTime,
+      startDate,
+      startTime,
+      coachId,
+      fullCapacity: fullcapacity,
+      waitlistCapacity: waitcapacity,
+      facility,
+    } = sessions[index];
+
+    let data = {
+      id,
+      name,
+      pattern: dayIndex.map((day) => ShortWeekNames[day]),
+      term,
+      endDate,
+      endTime,
+      startDate,
+      startTime,
+      coachId,
+      fullcapacity,
+      waitcapacity,
+      facility,
     };
-    setSessionData(newSessions);
-  };
-
-  const handleDayIndexChange = (i) => {
-    let newSessions = [...sessions];
-    let newIndex = [...data.dayIndex];
-
-    if (newIndex.includes(i)) newIndex = newIndex.filter((item) => item !== i);
-    else newIndex.push(i);
-
-    newSessions[index] = {
-      ...data,
-      dayIndex: newIndex,
-    };
-    setSessionData(newSessions);
-  };
-
-  const handleFacilityChange = (e) => {
-    let newSessions = [...sessions];
-    newSessions[index] = {
-      ...data,
-      facility: e.target.value,
-    };
-    setSessionData(newSessions);
-  };
-
-  const handleFullCapacityChange = (e) => {
-    let newSessions = [...sessions];
-    newSessions[index] = {
-      ...data,
-      fullCapacity: e.target.value,
-    };
-    setSessionData(newSessions);
-  };
-
-  const handleWaitlistCapacityChange = (e) => {
-    let newSessions = [...sessions];
-    newSessions[index] = {
-      ...data,
-      waitlistCapacity: e.target.value,
-    };
-    setSessionData(newSessions);
-  };
-
-  const handleCoachChange = (e) => {
-    let newSessions = [...sessions];
-    newSessions[index] = {
-      ...data,
-      coachId: e.target.value,
-    };
-    setSessionData(newSessions);
-  };
-
-  const handleStartTimeChange = (time) => {
-    let newSessions = [...sessions];
-    newSessions[index] = {
-      ...data,
-      startTime: time,
-    };
-    setSessionData(newSessions);
-  };
-
-  const handleEndTimeChange = (time) => {
-    let newSessions = [...sessions];
-    newSessions[index] = {
-      ...data,
-      endTime: time,
-    };
-    setSessionData(newSessions);
+    dispatch(editSessionOfClass({ callback: onEditSuccess, data }));
   };
 
   const handleDelete = () => {
@@ -172,10 +172,10 @@ const Session = (props) => {
         <Box sx={{ gridColumn: "1 / span 2" }}>
           <TextField
             select
-            label="term"
+            label="Term"
             value={termsOfBusiness.length ? data.selectedTerm?._id : ""}
             variant={"filled"}
-            onChange={handleTermChange}
+            onChange={(e) => handleChange(e, "selectedTerm")}
             sx={{ width: "100%" }}
           >
             {termsOfBusiness.length ? (
@@ -193,14 +193,14 @@ const Session = (props) => {
         </Box>
         <Box>
           <DatePicker
-            onChange={handleStartDateChange}
+            onChange={(e) => handleChange(e, "startDate")}
             label="Start Date"
             date={startingDate}
           />
         </Box>
         <Box>
           <DatePicker
-            onChange={handleEndDateChange}
+            onChange={(e) => handleChange(e, "endDate")}
             label="End Date"
             date={endingDate}
           />
@@ -212,7 +212,7 @@ const Session = (props) => {
           label="Session Name"
           sx={{ width: "100%" }}
           value={data.name}
-          onChange={handleNameChange}
+          onChange={(e) => handleChange(e, "name")}
         />
       </CardRow>
 
@@ -241,11 +241,11 @@ const Session = (props) => {
                   flexWrap: "nowrap",
                 }}
               >
-                <DayText> {day}</DayText>
+                <DayText sx={{ textTransform: "capitalize" }}> {day}</DayText>
                 <CheckBox
                   checked={data.dayIndex.includes(i)}
                   onClick={() => {
-                    handleDayIndexChange(i);
+                    handleChange(i, "dayIndex");
                   }}
                 />
               </Box>
@@ -254,14 +254,14 @@ const Session = (props) => {
         </CardRow>
 
         <TimePicker
-          label="Start time"
+          label="Start Time"
           date={data.startTime}
-          onChange={handleStartTimeChange}
+          onChange={(e) => handleChange(e, "startTime")}
         />
         <TimePicker
-          label="End time"
+          label="End Time"
           date={data.endTime}
-          onChange={handleEndTimeChange}
+          onChange={(e) => handleChange(e, "endTime")}
         />
       </CardRow>
 
@@ -276,26 +276,26 @@ const Session = (props) => {
           variant="filled"
           label="Facility"
           value={data.facility}
-          onChange={handleFacilityChange}
+          onChange={(e) => handleChange(e, "facility")}
         />
         <TextField
           variant="filled"
           value={data.fullCapacity}
-          label="Full class capacity"
-          onChange={handleFullCapacityChange}
+          label="Full Class Capacity"
+          onChange={(e) => handleChange(e, "fullCapacity")}
         />
         <TextField
           value={data.waitlistCapacity}
           variant="filled"
-          label="Waitlist capacity"
-          onChange={handleWaitlistCapacityChange}
+          label="Waitlist Capacity"
+          onChange={(e) => handleChange(e, "waitlistCapacity")}
         />
         <TextField
           select
           value={allCoaches.length ? data.coachId : ""}
           label="Coach Name"
           variant="filled"
-          onChange={handleCoachChange}
+          onChange={(e) => handleChange(e, "coachId")}
         >
           {allCoaches.length ? (
             allCoaches.map((item, i) => {
@@ -317,17 +317,23 @@ const Session = (props) => {
           margin: "15px 0 5px",
         }}
       >
-        <DeleteButton onClick={handleDelete} />
-        {isEdit ? (
-          <IconButton sx={{ borderRadius: "50%", marginLeft: "15px" }}>
-            <DoneIcon
-              sx={{
-                color: (theme) => theme.palette.secondary.main,
-                fontSize: "28px",
-              }}
-            />
+        {!touched ? <DeleteButton onClick={handleDelete} /> : null}
+        {touched && isEdit && (
+          <IconButton
+            sx={{ borderRadius: "50%", marginLeft: "15px" }}
+            onClick={onEdit}
+          >
+            <DoneIcon color="success" />
           </IconButton>
-        ) : null}
+        )}
+        {isEdit && touched && (
+          <IconButton
+            sx={{ borderRadius: "50%", marginLeft: "15px" }}
+            onClick={restoreDefaults}
+          >
+            <RestoreDefaultsIcon />
+          </IconButton>
+        )}
       </CardRow>
     </Box>
   );
