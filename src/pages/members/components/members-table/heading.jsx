@@ -1,16 +1,6 @@
-import { styled } from "@mui/material/styles";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
-const AddButton = styled(Button)(({ theme }) => ({
-  backgroundImage: theme.palette.gradients.diagonal,
-  borderRadius: theme.shape.borderRadiuses.primary,
-  color: "#fff",
-  width: 52,
-  minWidth: 52,
-  height: 48,
-  padding: 0,
-  fontSize: 24,
-}));
+import { AddButton } from "../../../../components";
 
 const MemberListHeading = ({ title, description, action }) => (
   <Box sx={{ display: "flex", px: "20px", pt: "20px" }}>
@@ -25,9 +15,7 @@ const MemberListHeading = ({ title, description, action }) => (
         {description}
       </Typography>
     </Box>
-    <AddButton variant="contained" onClick={action || (() => {})}>
-      +
-    </AddButton>
+    <AddButton onClick={action || (() => {})} />
   </Box>
 );
 

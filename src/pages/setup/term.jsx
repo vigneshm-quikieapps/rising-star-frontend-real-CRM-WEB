@@ -31,10 +31,10 @@ import {
   TextField,
   Accordion,
   TableMui as Table,
-  GradientButton,
   DatePicker,
   Pagination,
   ImgIcon,
+  AddButton,
 } from "../../components";
 import deleteIcon from "../../assets/icons/icon-delete.png";
 
@@ -299,21 +299,13 @@ const Terms = () => {
             <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
               Term List
             </Typography>
-            <GradientButton
-              size="large"
-              sx={{
-                px: 0,
-                minWidth: "52px",
-                mr: "10px",
-                borderRadius: (theme) => theme.shape.borderRadiuses.primary,
-              }}
+            <AddButton
+              sx={{ mr: "10px" }}
               onClick={(e) => {
                 e.stopPropagation();
                 setShowAddTerm((prevShow) => !prevShow);
               }}
-            >
-              +
-            </GradientButton>
+            />
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{ padding: 0 }}>{termList}</AccordionDetails>

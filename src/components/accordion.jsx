@@ -22,7 +22,7 @@ const Accordion = styled(MuiAccordion)(({ theme }) => ({
     border: `1px solid ${theme.palette.ternary.main}`,
     borderRadius: `${theme.shape.borderRadiuses.primary}`,
     color: `${theme.palette.text.primary}`,
-    padding: "10px",
+    padding: "11px 13px",
   },
   "& .MuiAccordionDetails-root": {
     borderTop: `1px solid ${theme.palette.ternary.main}`,

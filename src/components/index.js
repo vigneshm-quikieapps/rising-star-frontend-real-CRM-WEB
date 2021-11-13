@@ -20,4 +20,5 @@ export { default as TimePicker } from "./time-picker";
 export { default as Loader } from "./loader";
 export { default as Warning } from "./dialog";
 export { default as Grid } from "./grid";
+export { default as AddButton } from "./add-button";
 export * from "./common";

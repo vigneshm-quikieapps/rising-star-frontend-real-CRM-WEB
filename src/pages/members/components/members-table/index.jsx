@@ -14,7 +14,7 @@ const MemberList = ({ list = [], pagination, onAdd }) => (
     <Table
       headers={memberListHeaders}
       rows={list}
-      heading={<Heading title="Member List" />}
+      heading={<Heading title="Member List" action={onAdd} />}
       pagination={pagination}
     />
   </Box>
