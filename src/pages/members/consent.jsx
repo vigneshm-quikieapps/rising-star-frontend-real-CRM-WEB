@@ -174,7 +174,7 @@ const MemberConsent = () => {
       </Accordion>
       {/* <GradientButton
         sx={{ textTransform: "none", marginTop: "15px" }}
-        discard
+        invert
         size="large"
       >
         Okay

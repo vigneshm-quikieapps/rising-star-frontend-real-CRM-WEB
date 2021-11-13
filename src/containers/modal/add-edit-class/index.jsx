@@ -600,7 +600,7 @@ const AddEditClassModal = (props) => {
                 >
                   {isEditMode ? "Edit" : "Save"}
                 </GradientButton>
-                <GradientButton size="large" discard onClick={handleWarn}>
+                <GradientButton size="large" invert onClick={handleWarn}>
                   Discard
                 </GradientButton>
               </CardRow>

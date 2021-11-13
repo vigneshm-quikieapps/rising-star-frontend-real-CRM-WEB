@@ -404,7 +404,7 @@ const MemberEvaluations = () => {
         <Button sx={{ textTransform: "none" }} onClick={saveHandler}>
           Save
         </Button>
-        <Button discard sx={{ marginLeft: "10px", textTransform: "none" }}>
+        <Button invert sx={{ marginLeft: "10px", textTransform: "none" }}>
           Cancel
         </Button>
       </Box>
