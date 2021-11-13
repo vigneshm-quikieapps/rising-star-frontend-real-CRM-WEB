@@ -1,13 +1,4 @@
-const toPascal = (string = "") => {
-  const words = string.toLowerCase().split(" ");
-  const result = words.reduce((prev, word, index) => {
-    if (!word || word === " ") return prev;
-    let updatedResult = (index ? " " : "") + prev;
-    updatedResult += word.charAt(0).toUpperCase() + word.slice(1);
-    updatedResult += index === words.length ? "" : " ";
-    return updatedResult;
-  }, "");
-  return result.trim();
-};
+const toPascal = (string = "") =>
+  string.replace(/\w+/g, (w) => w[0].toUpperCase() + w.slice(1).toLowerCase());
 
 export default toPascal;
