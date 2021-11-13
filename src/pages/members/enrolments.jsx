@@ -58,7 +58,14 @@ const Enrolment = () => {
   const [selectedSession, setSelectedSession] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedDropReason, setSelectedDropReason] = useState("");
-  const [endPoint, setEndPoint] = useState(null);
+
+  const clubMembershipId = useMemo(() => {
+    const list = member?.membership;
+    const membership = list?.find(
+      (mShip) => mShip.businessId === selectedBusiness
+    );
+    return membership?.clubMembershipId || "";
+  }, [member, selectedBusiness]);
 
   useEffect(() => {
     businessList.length && setSelectedBusiness(businessList[0]._id);
@@ -79,15 +86,37 @@ const Enrolment = () => {
     if (enrolmentList.length) {
       setSelectedEnrolment(enrolmentList[0]._id);
       setSelectedStatus(enrolmentList[0].enrolledStatus);
-      setSelectedDropReason(enrolmentList[0].discontinuationReason || "");
+      setSelectedDropReason(enrolmentList[0]?.discontinuationReason || "");
+      dispatch(
+        getClassSessionsByTermId(
+          enrolmentList[0].class._id,
+          enrolmentList[0].session.term._id
+        )
+      );
     }
-  }, [enrolmentList]);
+  }, [dispatch, enrolmentList]);
 
   const currentEnrolment = useMemo(() => {
     return enrolmentList.find(
-      (enrolment) => enrolment?._id === selectedEnrolment
+      (enrolment) => enrolment._id === selectedEnrolment
     );
   }, [enrolmentList, selectedEnrolment]);
+
+  useEffect(() => {
+    if (!sessionList.length || !currentEnrolment) return;
+    // When we select a new class (enrolment), request for getting the new
+    // sessionList is sent, but sessionList is not updated yet so we have to
+    // check if we have the currentEnrolment.sessionId in sessionList
+    const defaultSession = sessionList.find(
+      ({ _id }) => _id === currentEnrolment.sessionId
+    );
+    setSelectedSession(defaultSession?._id || "");
+  }, [sessionList, currentEnrolment]);
+
+  const initialSessionId = useMemo(() => {
+    if (!currentEnrolment) return "";
+    return currentEnrolment.sessionId;
+  }, [currentEnrolment]);
 
   const enrolmentDate = useMemo(() => {
     if (!currentEnrolment) return " - - - ";
@@ -96,51 +125,10 @@ const Enrolment = () => {
   }, [currentEnrolment]);
 
   const dropDate = useMemo(() => {
-    if (!currentEnrolment) return " - - - ";
-    return currentEnrolment?.droppedDate || "N/A";
+    if (!currentEnrolment || !currentEnrolment?.droppedDate) return "N/A";
+    const date = new Date(currentEnrolment.droppedDate);
+    return date.toLocaleString();
   }, [currentEnrolment]);
-
-  useEffect(() => {
-    if (!currentEnrolment) return;
-    setSelectedEnrolment(currentEnrolment._id);
-    setSelectedStatus(currentEnrolment.enrolledStatus);
-    setSelectedDropReason(currentEnrolment.discontinuationReason || "");
-  }, [currentEnrolment]);
-
-  const initialSessionId = useMemo(() => {
-    if (!currentEnrolment || !sessionList.length) return "";
-    const initialSession = sessionList.find(
-      ({ _id }) => _id === currentEnrolment.sessionId
-    );
-    return initialSession?._id || "";
-  }, [currentEnrolment, sessionList]);
-
-  useEffect(() => {
-    if (!initialSessionId) return;
-    setSelectedSession(initialSessionId);
-  }, [initialSessionId]);
-
-  useEffect(() => {
-    currentEnrolment &&
-      dispatch(
-        getClassSessionsByTermId(
-          currentEnrolment.class._id,
-          currentEnrolment.session.term._id
-        )
-      );
-  }, [dispatch, currentEnrolment]);
-
-  useEffect(() => {
-    if (!currentEnrolment) return;
-    if (selectedSession !== currentEnrolment.session._id) {
-      setSelectedDropReason("");
-      setSelectedStatus("");
-      setEndPoint(endpointList.transfer);
-    } else {
-      setSelectedStatus(currentEnrolment.enrolledStatus);
-      setSelectedDropReason(currentEnrolment.discontinuationReason || "");
-    }
-  }, [currentEnrolment, selectedSession]);
 
   const pattern = useMemo(() => {
     if (!selectedSession) return "";
@@ -151,35 +139,71 @@ const Enrolment = () => {
       session.pattern[0].startTime
     ).toLocaleTimeString();
     const endTime = new Date(session.pattern[0].endTime).toLocaleTimeString();
-    return `${toPascal(days)}, ${startTime} to ${endTime}`.replace(/:00 /, " ");
+    return `${toPascal(days)}, ${startTime} to ${endTime}`.replace(
+      /:00 /g,
+      " "
+    );
   }, [selectedSession, sessionList]);
 
   const businessChangeHandler = (e) => setSelectedBusiness(e.target.value);
-  const enrolmentChangeHandler = (e) => setSelectedEnrolment(e.target.value);
-  const sessionChangeHandler = (e) => setSelectedSession(e.target.value);
+
+  const enrolmentChangeHandler = (e) => {
+    const enrolmentId = e.target.value;
+    setSelectedEnrolment(enrolmentId);
+    const enrolmentObject = enrolmentList.find(
+      (enrolment) => enrolment._id === enrolmentId
+    );
+    setSelectedStatus(enrolmentObject.enrolledStatus);
+    setSelectedDropReason(enrolmentObject?.discontinuationReason || "");
+    dispatch(
+      getClassSessionsByTermId(
+        enrolmentObject.class._id,
+        enrolmentObject.session.term._id
+      )
+    );
+  };
+
+  const sessionChangeHandler = (e) => {
+    const sessionId = e.target.value;
+    setSelectedSession(sessionId);
+    if (sessionId !== initialSessionId) {
+      setSelectedDropReason("");
+      setSelectedStatus("");
+    } else {
+      setSelectedStatus(currentEnrolment.enrolledStatus);
+      setSelectedDropReason(currentEnrolment?.discontinuationReason || "");
+    }
+  };
+
   const statusChangeHandler = (e) => {
     const status = e.target.value;
     if (status !== statusMap.DROPPED) setSelectedDropReason("");
     setSelectedStatus(e.target.value);
-    switch (status) {
-      case statusMap.DROPPED: {
-        setEndPoint(endpointList.drop);
-        break;
-      }
-      case statusMap.SUSPEND: {
-        setEndPoint(endpointList.suspend);
-        break;
-      }
-      case statusMap.RETURN_FROM_SUSPENSION: {
-        setEndPoint(endpointList.return);
-        break;
-      }
-      default: {
-        setEndPoint(null);
-      }
-    }
   };
+
   const dropReasonChangeHandler = (e) => setSelectedDropReason(e.target.value);
+
+  const currentEndpoint = useMemo(() => {
+    if (!currentEnrolment) return null;
+    if (
+      selectedSession &&
+      currentEnrolment.sessionId !== selectedSession &&
+      currentEnrolment.enrolledStatus !== "DROPPED"
+    )
+      return endpointList.transfer;
+    if (currentEnrolment.enrolledStatus === selectedStatus) return null;
+    switch (selectedStatus) {
+      case "DROPPED":
+        return endpointList.drop;
+      case "SUSPEND":
+        return endpointList.suspend;
+      case "RETURN_FROM_SUSPENSION":
+        return endpointList.return;
+      default:
+        return null;
+    }
+  }, [currentEnrolment, selectedSession, selectedStatus]);
+
   if (!member)
     return (
       <Box
@@ -193,17 +217,12 @@ const Enrolment = () => {
         <CircularProgress />
       </Box>
     );
-  const { name: memberName, membership } = member;
-  const clubMembershipId =
-    membership?.find((mShip) => mShip.businessId === selectedBusiness)
-      ?.clubMembershipId || "";
 
-  console.log(selectedDropReason);
-  console.log(endPoint);
+  console.log(currentEndpoint);
 
   const discardHandler = () => history.goBack();
   const saveHandler = () => {
-    switch (endPoint) {
+    switch (currentEndpoint) {
       case endpointList.transfer: {
         dispatch(transferEnrolment(selectedEnrolment, selectedSession));
         break;
@@ -228,7 +247,7 @@ const Enrolment = () => {
   return (
     <>
       <Card>
-        <HeadingText>{memberName}</HeadingText>
+        <HeadingText>{member.name}</HeadingText>
         <SubHeadingText>Student/Member</SubHeadingText>
         <Grid>
           <TextField
