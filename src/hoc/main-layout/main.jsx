@@ -5,7 +5,6 @@ const Main = styled("main", {
   shouldForwardProp: (prop) =>
     ["drawerOpen", "drawerWidth"].indexOf(prop) === -1,
 })(({ theme, drawerOpen, drawerWidth }) => ({
-  minHeight: "calc(100vh - 80px)",
   transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
