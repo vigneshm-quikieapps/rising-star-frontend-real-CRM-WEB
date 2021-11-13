@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import {
   Box,
   MenuItem,
@@ -10,13 +11,14 @@ import {
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 
-import { TextField, Grid, Output, Accordion } from "../../components";
 import {
-  Card,
-  CardRow,
-  HeadingText,
-  SubHeadingText,
-} from "../../components/common";
+  TextField,
+  Grid,
+  Output,
+  Accordion,
+  GradientButton,
+} from "../../components";
+import { Card, HeadingText, SubHeadingText } from "../../components/common";
 import { getMemberEnrolmentList } from "../../redux/action/memberAction";
 import {
   memberEnrolmentDropped,
@@ -37,6 +39,7 @@ const statusMap = {
 };
 
 const Enrolment = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
   const businessList = useSelector((state) => state.businesses.businessList);
@@ -192,6 +195,8 @@ const Enrolment = () => {
   console.log(selectedDropReason);
   console.log(endPoint);
 
+  const discardHandler = () => history.goBack();
+
   return (
     <>
       <Card>
@@ -302,6 +307,10 @@ const Enrolment = () => {
           </Grid>
         </AccordionDetails>
       </Accordion>
+      <GradientButton size="large">Save</GradientButton>
+      <GradientButton size="large" invert onClick={discardHandler}>
+        Discard
+      </GradientButton>
     </>
   );
 };
