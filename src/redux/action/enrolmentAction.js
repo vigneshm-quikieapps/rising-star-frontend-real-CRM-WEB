@@ -1,8 +1,8 @@
 import { enrolmentActionTypes } from "../types";
 
-export const memberEnrolmentDropped = (id) => {
+export const memberEnrolmentDrop = (id) => {
   return {
-    type: enrolmentActionTypes.MEMBER_ENROLMENT_DROPPED,
+    type: enrolmentActionTypes.MEMBER_ENROLMENT_DROP,
     payload: id,
   };
 };
@@ -21,9 +21,9 @@ export const memberEnrolmentReturnFromSuspend = (id) => {
   };
 };
 
-export const transferEnrolment = (params) => {
+export const transferEnrolment = (enrolmentId, newSessionId) => {
   return {
     type: enrolmentActionTypes.TRANSFER_MEMBER_ENROLMENT,
-    payload: params,
+    payload: { enrolmentId, newSessionId },
   };
 };

@@ -21,14 +21,13 @@ import {
 import { Card, HeadingText, SubHeadingText } from "../../components/common";
 import { getMemberEnrolmentList } from "../../redux/action/memberAction";
 import {
-  memberEnrolmentDropped,
+  memberEnrolmentDrop,
   memberEnrolmentSuspend,
   memberEnrolmentReturnFromSuspend,
   transferEnrolment,
 } from "../../redux/action/enrolmentAction";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import toPascal from "../../utils/to-pascal";
-import { getClassList } from "../../redux/action/class-actions";
 
 const statusMap = {
   ENROLLED: "Enrolled",
@@ -36,6 +35,13 @@ const statusMap = {
   SUSPEND: "Suspended",
   RETURN_FROM_SUSPENSION: "Return From Suspension",
   WAITLISTED: "In Waitlist",
+};
+
+const endpointList = {
+  transfer: "transfer",
+  drop: "drop",
+  suspend: "suspend",
+  return: "return",
 };
 
 const Enrolment = () => {
@@ -129,7 +135,7 @@ const Enrolment = () => {
     if (selectedSession !== currentEnrolment.session._id) {
       setSelectedDropReason("");
       setSelectedStatus("");
-      setEndPoint("transfer");
+      setEndPoint(endpointList.transfer);
     } else {
       setSelectedStatus(currentEnrolment.enrolledStatus);
       setSelectedDropReason(currentEnrolment.discontinuationReason || "");
@@ -157,15 +163,15 @@ const Enrolment = () => {
     setSelectedStatus(e.target.value);
     switch (status) {
       case statusMap.DROPPED: {
-        setEndPoint("drop");
+        setEndPoint(endpointList.drop);
         break;
       }
       case statusMap.SUSPEND: {
-        setEndPoint("suspend");
+        setEndPoint(endpointList.suspend);
         break;
       }
       case statusMap.RETURN_FROM_SUSPENSION: {
-        setEndPoint("return");
+        setEndPoint(endpointList.return);
         break;
       }
       default: {
@@ -196,6 +202,28 @@ const Enrolment = () => {
   console.log(endPoint);
 
   const discardHandler = () => history.goBack();
+  const saveHandler = () => {
+    switch (endPoint) {
+      case endpointList.transfer: {
+        dispatch(transferEnrolment(selectedEnrolment, selectedSession));
+        break;
+      }
+      case endpointList.drop: {
+        dispatch(memberEnrolmentDrop(selectedEnrolment));
+        break;
+      }
+      case endpointList.suspend: {
+        dispatch(memberEnrolmentSuspend(selectedEnrolment));
+        break;
+      }
+      case endpointList.return: {
+        dispatch(memberEnrolmentReturnFromSuspend(selectedEnrolment));
+        break;
+      }
+      default:
+        return;
+    }
+  };
 
   return (
     <>
@@ -227,9 +255,16 @@ const Enrolment = () => {
       </Card>
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h2" sx={{ fontSize: "20px" }}>
-            Enrolment Details
-          </Typography>
+          <Box
+            sx={{ display: "flex", flex: 1, alignItems: "center", mr: "10px" }}
+          >
+            <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
+              Enrolment Details
+            </Typography>
+            <GradientButton sx={{ fontWeight: "bold" }}>
+              Add a new enrolment
+            </GradientButton>
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Grid>
@@ -307,7 +342,9 @@ const Enrolment = () => {
           </Grid>
         </AccordionDetails>
       </Accordion>
-      <GradientButton size="large">Save</GradientButton>
+      <GradientButton size="large" onClick={saveHandler}>
+        Save
+      </GradientButton>
       <GradientButton size="large" invert onClick={discardHandler}>
         Discard
       </GradientButton>

@@ -1,40 +1,33 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
 import { startLoading, stopLoading, setError } from "../action/shared-actions";
 import {
-  axiosmemberDropped,
-  axiosmemberSuspend,
-  axiosmemberReturnFromSuspend,
-  transferEnrolment,
+  drop,
+  suspend,
+  returnFromSuspend,
+  transfer,
 } from "../../services/enrolmentServices";
 import { enrolmentActionTypes } from "../types";
 
-export function* dropMemberFromEnrolment(action) {
+export function* dropMember(action) {
   try {
     yield put(startLoading());
-    yield call(axiosmemberDropped, action.payload);
-    yield put({
-      type: enrolmentActionTypes.MEMBER_ENROLMENT_DROPPED_SUCCEEDED,
-    });
+    yield call(drop, action.payload);
+    yield put({ type: enrolmentActionTypes.DROP_SUCCEEDED });
     yield put(stopLoading());
   } catch (error) {
     yield put(setError(error, "Something went wrong while dropping a member"));
   }
 }
 
-export function* watchdropMemberFromEnrolment() {
-  yield takeEvery(
-    enrolmentActionTypes.MEMBER_ENROLMENT_DROPPED,
-    dropMemberFromEnrolment
-  );
+export function* watchDropMember() {
+  yield takeEvery(enrolmentActionTypes.DROP, dropMember);
 }
 
-export function* suspendMemberFromEnrolment(action) {
+export function* suspendEnrolment(action) {
   try {
     yield put(startLoading());
-    yield call(axiosmemberSuspend, action.payload);
-    yield put({
-      type: enrolmentActionTypes.MEMBER_ENROLMENT_SUSPEND_SUCCEEDED,
-    });
+    yield call(suspend, action.payload);
+    yield put({ type: enrolmentActionTypes.SUSPEND_SUCCEEDED });
     yield put(stopLoading());
   } catch (error) {
     yield put(
@@ -43,20 +36,15 @@ export function* suspendMemberFromEnrolment(action) {
   }
 }
 
-export function* watchsuspendMemberFromEnrolment() {
-  yield takeEvery(
-    enrolmentActionTypes.MEMBER_ENROLMENT_SUSPEND,
-    suspendMemberFromEnrolment
-  );
+export function* watchSuspend() {
+  yield takeEvery(enrolmentActionTypes.SUSPEND, suspendEnrolment);
 }
 
-export function* returnFromSuspendMemberFromEnrolment(action) {
+export function* returnFromSuspendSaga(action) {
   try {
     yield put(startLoading());
-    yield call(axiosmemberReturnFromSuspend, action.payload);
-    yield put({
-      type: enrolmentActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND_SUCCEEDED,
-    });
+    yield call(returnFromSuspend, action.payload);
+    yield put({ type: enrolmentActionTypes.RETURN_FROM_SUSPEND_SUCCEEDED });
     yield put(stopLoading());
   } catch (error) {
     yield put(
@@ -65,20 +53,18 @@ export function* returnFromSuspendMemberFromEnrolment(action) {
   }
 }
 
-export function* watchreturnFromSuspendMemberFromEnrolment() {
+export function* watchReturnFromSuspend() {
   yield takeEvery(
-    enrolmentActionTypes.MEMBER_ENROLMENT_RETURN_FROM_SUSPEND,
-    returnFromSuspendMemberFromEnrolment
+    enrolmentActionTypes.RETURN_FROM_SUSPEND,
+    returnFromSuspendSaga
   );
 }
 
-export function* returnTransferEnrolment(action) {
+export function* transferEnrolmentSaga(action) {
   try {
     yield put(startLoading());
-    yield call(transferEnrolment, action.payload);
-    yield put({
-      type: enrolmentActionTypes.TRANSFER_MEMBER_ENROLMENT_SUCCEEDED,
-    });
+    yield call(transfer, action.payload);
+    yield put({ type: enrolmentActionTypes.TRANSFER_SUCCEEDED });
     yield put(stopLoading());
   } catch (error) {
     yield put(setError(error, "Something went wrong while session transfer"));
@@ -86,17 +72,14 @@ export function* returnTransferEnrolment(action) {
 }
 
 export function* watchTransferEnrolment() {
-  yield takeEvery(
-    enrolmentActionTypes.TRANSFER_MEMBER_ENROLMENT,
-    returnTransferEnrolment
-  );
+  yield takeEvery(enrolmentActionTypes.TRANSFER, transferEnrolmentSaga);
 }
 
 export default function* enrolmentSagas() {
   yield all([
-    watchdropMemberFromEnrolment(),
-    watchsuspendMemberFromEnrolment(),
-    watchreturnFromSuspendMemberFromEnrolment(),
+    watchDropMember(),
+    watchSuspend(),
+    watchReturnFromSuspend(),
     watchTransferEnrolment(),
   ]);
 }
