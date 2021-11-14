@@ -12,7 +12,10 @@ export function* dropMember(action) {
   try {
     yield put(startLoading());
     yield call(drop, action.payload);
-    yield put({ type: enrolmentActionTypes.DROP_SUCCEEDED });
+    yield put({
+      type: enrolmentActionTypes.DROP_SUCCEEDED,
+      payload: { enrolmentId: action.payload },
+    });
     yield put(stopLoading());
   } catch (error) {
     yield put(setError(error, "Something went wrong while dropping a member"));
@@ -27,7 +30,10 @@ export function* suspendEnrolment(action) {
   try {
     yield put(startLoading());
     yield call(suspend, action.payload);
-    yield put({ type: enrolmentActionTypes.SUSPEND_SUCCEEDED });
+    yield put({
+      type: enrolmentActionTypes.SUSPEND_SUCCEEDED,
+      payload: { enrolmentId: action.payload },
+    });
     yield put(stopLoading());
   } catch (error) {
     yield put(
@@ -44,7 +50,10 @@ export function* returnFromSuspendSaga(action) {
   try {
     yield put(startLoading());
     yield call(returnFromSuspend, action.payload);
-    yield put({ type: enrolmentActionTypes.RETURN_FROM_SUSPEND_SUCCEEDED });
+    yield put({
+      type: enrolmentActionTypes.RETURN_FROM_SUSPEND_SUCCEEDED,
+      payload: { enrolmentId: action.payload },
+    });
     yield put(stopLoading());
   } catch (error) {
     yield put(
@@ -64,7 +73,10 @@ export function* transferEnrolmentSaga(action) {
   try {
     yield put(startLoading());
     yield call(transfer, action.payload);
-    yield put({ type: enrolmentActionTypes.TRANSFER_SUCCEEDED });
+    yield put({
+      type: enrolmentActionTypes.TRANSFER_SUCCEEDED,
+      payload: action.payload,
+    });
     yield put(stopLoading());
   } catch (error) {
     yield put(setError(error, "Something went wrong while session transfer"));

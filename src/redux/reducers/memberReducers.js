@@ -1,4 +1,5 @@
-import { memberActionTypes } from "../types";
+import store from "../store/configureStore";
+import { memberActionTypes, enrolmentActionTypes } from "../types";
 
 const INITIAL_STATE = {
   memberList: [],
@@ -9,6 +10,44 @@ const INITIAL_STATE = {
   currentMember: null,
   totalPages: 1,
   currentPage: 1,
+};
+
+const enrolmentChangeHandler = (state, action, type) => {
+  const { enrolmentId, newSessionId } = action.payload;
+  const enrolmentIndex = state.enrolmentList.findIndex(
+    ({ _id }) => _id === enrolmentId
+  );
+  const updatedEnrolment = { ...state.enrolmentList[enrolmentIndex] };
+  switch (type) {
+    case "transfer": {
+      updatedEnrolment.sessionId = newSessionId;
+      const rootState = store.getState();
+      const sessionList = rootState.sessions.sessionsOfClassInTerm;
+      const sessionIndex = sessionList.findIndex(
+        ({ _id }) => _id === newSessionId
+      );
+      const newSession = [...sessionList[sessionIndex]];
+      updatedEnrolment.session = newSession;
+      break;
+    }
+    case "drop": {
+      updatedEnrolment.enrolledStatus = "DROPPED";
+      break;
+    }
+    case "suspend": {
+      updatedEnrolment.enrolledStatus = "SUSPEND";
+      break;
+    }
+    case "return": {
+      updatedEnrolment.enrolledStatus = "RETURN_FROM_SUSPENSION";
+      break;
+    }
+    default:
+      break;
+  }
+  const updatedList = [...state.enrolmentList];
+  updatedList[enrolmentIndex] = updatedEnrolment;
+  return { ...state, enrolmentList: updatedList };
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -33,6 +72,20 @@ export default function reducer(state = INITIAL_STATE, action) {
         totalPages,
         currentPage: page,
       };
+    case enrolmentActionTypes.TRANSFER_SUCCEEDED: {
+      // just for updating the state so the component will reload and dispatch
+      // actions to get the new data
+      return enrolmentChangeHandler(state, action, "transfer");
+    }
+    case enrolmentActionTypes.DROP_SUCCEEDED: {
+      return enrolmentChangeHandler(state, action, "drop");
+    }
+    case enrolmentActionTypes.SUSPEND_SUCCEEDED: {
+      return enrolmentChangeHandler(state, action, "suspend");
+    }
+    case enrolmentActionTypes.RETURN_FROM_SUSPEND_SUCCEEDED: {
+      return enrolmentChangeHandler(state, action, "return");
+    }
     default:
       return state;
   }
