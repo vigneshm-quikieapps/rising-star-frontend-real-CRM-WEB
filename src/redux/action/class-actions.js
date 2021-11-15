@@ -24,3 +24,10 @@ export const getSessionsOfClass = (classId) => ({
 export const editClass = (data) => {
   return { type: classActionTypes.EDIT_CLASS, payload: data };
 };
+
+export const editSessionOfClass = (data) => {
+  return {
+    type: classActionTypes.UPDATE_SESSION_OF_CLASS,
+    payload: data,
+  };
+};

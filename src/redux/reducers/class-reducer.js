@@ -58,6 +58,17 @@ export default function reducer(state = initialState, action) {
     case classActionTypes.GET_CLASS_SESSIONS_SUCCEEDED: {
       return { ...state, classSessions: action.payload };
     }
+
+    case classActionTypes.UPDATE_SESSION_OF_CLASS_SUCCEEDED: {
+      return {
+        ...state,
+        classSessions: state.classSessions.map((session) => {
+          if (session._id === action.payload._id) return action.payload;
+          return { ...action.payload, term: action.payload.termData };
+        }),
+      };
+    }
+
     default:
       return state;
   }
