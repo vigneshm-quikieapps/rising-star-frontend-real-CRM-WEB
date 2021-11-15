@@ -21,9 +21,9 @@ export const memberEnrolmentReturnFromSuspend = (id) => {
   };
 };
 
-export const transferEnrolment = (enrolmentId, newSessionId) => {
+export const transferEnrolment = (enrolmentId, newSessionId, sessionList) => {
   return {
     type: enrolmentActionTypes.TRANSFER,
-    payload: { enrolmentId, newSessionId },
+    payload: { enrolmentId, newSessionId, sessionList },
   };
 };

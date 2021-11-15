@@ -83,7 +83,7 @@ const Enrolment = () => {
   }, [dispatch, member, selectedBusiness]);
 
   useEffect(() => {
-    if (enrolmentList.length) {
+    if (enrolmentList.length && !selectedEnrolment) {
       setSelectedEnrolment(enrolmentList[0]._id);
       setSelectedStatus(enrolmentList[0].enrolledStatus);
       setSelectedDropReason(enrolmentList[0]?.discontinuationReason || "");
@@ -94,7 +94,7 @@ const Enrolment = () => {
         )
       );
     }
-  }, [dispatch, enrolmentList]);
+  }, [dispatch, enrolmentList, selectedEnrolment]);
 
   const currentEnrolment = useMemo(() => {
     return enrolmentList.find(
@@ -106,11 +106,15 @@ const Enrolment = () => {
     if (!sessionList.length || !currentEnrolment) return;
     // When we select a new class (enrolment), request for getting the new
     // sessionList is sent, but sessionList is not updated yet so we have to
-    // check if we have the currentEnrolment.sessionId in sessionList
+    // check if we have the currentEnrolment.sessionId in sessionList, otherwise
+    // currentEnrolment.sessionId is not in the options of
+    // session dropdown (select)
     const defaultSession = sessionList.find(
       ({ _id }) => _id === currentEnrolment.sessionId
     );
     setSelectedSession(defaultSession?._id || "");
+    setSelectedStatus(currentEnrolment.enrolledStatus);
+    setSelectedDropReason(currentEnrolment?.discontinuationReason || "");
   }, [sessionList, currentEnrolment]);
 
   const initialSessionId = useMemo(() => {
@@ -204,27 +208,13 @@ const Enrolment = () => {
     }
   }, [currentEnrolment, selectedSession, selectedStatus]);
 
-  if (!member)
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "calc(100vh - 153px)",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-
-  console.log(currentEndpoint);
-
   const discardHandler = () => history.goBack();
   const saveHandler = () => {
     switch (currentEndpoint) {
       case endpointList.transfer: {
-        dispatch(transferEnrolment(selectedEnrolment, selectedSession));
+        dispatch(
+          transferEnrolment(selectedEnrolment, selectedSession, sessionList)
+        );
         break;
       }
       case endpointList.drop: {
@@ -243,6 +233,20 @@ const Enrolment = () => {
         return;
     }
   };
+
+  if (!member)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "calc(100vh - 153px)",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
 
   return (
     <>

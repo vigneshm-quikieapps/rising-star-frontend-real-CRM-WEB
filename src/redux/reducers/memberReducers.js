@@ -1,4 +1,3 @@
-import store from "../store/configureStore";
 import { memberActionTypes, enrolmentActionTypes } from "../types";
 
 const INITIAL_STATE = {
@@ -13,7 +12,7 @@ const INITIAL_STATE = {
 };
 
 const enrolmentChangeHandler = (state, action, type) => {
-  const { enrolmentId, newSessionId } = action.payload;
+  const { enrolmentId, newSessionId, sessionList } = action.payload;
   const enrolmentIndex = state.enrolmentList.findIndex(
     ({ _id }) => _id === enrolmentId
   );
@@ -21,12 +20,10 @@ const enrolmentChangeHandler = (state, action, type) => {
   switch (type) {
     case "transfer": {
       updatedEnrolment.sessionId = newSessionId;
-      const rootState = store.getState();
-      const sessionList = rootState.sessions.sessionsOfClassInTerm;
       const sessionIndex = sessionList.findIndex(
         ({ _id }) => _id === newSessionId
       );
-      const newSession = [...sessionList[sessionIndex]];
+      const newSession = { ...sessionList[sessionIndex] };
       updatedEnrolment.session = newSession;
       break;
     }
