@@ -2,13 +2,13 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 
-import TextField from "./textfield";
+import Textfield from "./textfield";
 
 export default function BasicDatePicker({
   label = "Select a date",
   date,
   onChange,
-  inputProps = {},
+  textfieldProps = {},
   ...otherProps
 }) {
   return (
@@ -20,10 +20,10 @@ export default function BasicDatePicker({
           onChange && onChange(newValue);
         }}
         renderInput={(params) => (
-          <TextField
+          <Textfield
             variant="filled"
             {...params}
-            {...inputProps}
+            {...textfieldProps}
             sx={{ width: "100%" }}
           />
         )}

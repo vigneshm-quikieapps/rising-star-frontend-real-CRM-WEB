@@ -95,7 +95,7 @@ const Term = ({
           date={startDate}
           onChange={(newDate) => changeHandler(newDate, "startDate")}
           label={null}
-          inputProps={{
+          textfieldProps={{
             sx: {
               height: "44px",
               "& .MuiFilledInput-input": { py: 0 },
@@ -108,7 +108,7 @@ const Term = ({
           date={endDate}
           onChange={(newDate) => changeHandler(newDate, "endDate")}
           label={null}
-          inputProps={{
+          textfieldProps={{
             sx: {
               height: "44px",
               "& .MuiFilledInput-input": { py: 0 },
