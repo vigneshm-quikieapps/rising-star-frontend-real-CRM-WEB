@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MenuItem, Box } from "@mui/material";
 import {
@@ -20,7 +20,11 @@ import deleteIcon from "../../assets/icons/icon-delete.png";
 
 import { ShortWeekNames } from "../../helper/constants";
 import { removeItemByIndex } from "../../utils";
-import { editSessionOfClass } from "../../redux/action/class-actions";
+import {
+  addSessionToClass,
+  deleteSessionFromClass,
+  editSessionOfClass,
+} from "../../redux/action/class-actions";
 
 const DeleteButton = (props) => (
   <IconButton {...props} sx={{ borderRadius: "50%" }}>
@@ -29,7 +33,7 @@ const DeleteButton = (props) => (
 );
 
 const Session = (props) => {
-  const { data, index, sessions, setSessionData, isEdit } = props;
+  const { data, index, sessions, setSessionData, isEdit, classId } = props;
   const [touched, setTouched] = useState(false);
   const dispatch = useDispatch();
   const [startingDate, setStartingDate] = useState(
@@ -104,9 +108,16 @@ const Session = (props) => {
   };
 
   const restoreDefaults = () => {
+    const {
+      selectedTerm: { startDate, endDate },
+    } = initialData.current;
+
     let newSessions = [...sessions];
     newSessions[index] = { ...initialData.current };
+
     setSessionData(newSessions);
+    setStartingDate(startDate);
+    setEndingDate(endDate);
     setTouched(false);
   };
 
@@ -114,7 +125,7 @@ const Session = (props) => {
     setTouched(false);
   };
 
-  const onEdit = () => {
+  const onEdit = (edit) => {
     const {
       id,
       name,
@@ -130,26 +141,46 @@ const Session = (props) => {
       facility,
     } = sessions[index];
 
-    let data = {
-      id,
-      name,
-      pattern: dayIndex.map((day) => ShortWeekNames[day]),
-      term,
-      endDate,
-      endTime,
-      startDate,
-      startTime,
-      coachId,
-      fullcapacity,
-      waitcapacity,
-      facility,
-    };
-    dispatch(editSessionOfClass({ callback: onEditSuccess, data }));
+    if (edit) {
+      let data = {
+        id,
+        name,
+        pattern: dayIndex.map((day) => ShortWeekNames[day]),
+        term,
+        endDate,
+        endTime,
+        startDate,
+        startTime,
+        coachId,
+        fullcapacity,
+        waitcapacity,
+        facility,
+      };
+      dispatch(editSessionOfClass({ callback: onEditSuccess, data }));
+    } else {
+      let data = {
+        classId,
+        name,
+        pattern: dayIndex.map((day) => ShortWeekNames[day]),
+        term,
+        endDate,
+        endTime,
+        startDate,
+        startTime,
+        coachId,
+        fullcapacity,
+        waitcapacity,
+        facility,
+      };
+      dispatch(addSessionToClass({ callback: onEditSuccess, data }));
+    }
   };
-
+  const isSessionEdit = sessions[index].id;
   const handleDelete = () => {
+    isSessionEdit && dispatch(deleteSessionFromClass(isSessionEdit));
     let newSessions = removeItemByIndex(sessions, index);
     setSessionData(newSessions);
+    setTouched(false);
   };
 
   return (
@@ -317,16 +348,18 @@ const Session = (props) => {
           margin: "15px 0 5px",
         }}
       >
-        {!touched ? <DeleteButton onClick={handleDelete} /> : null}
+        {!touched || !isSessionEdit ? (
+          <DeleteButton onClick={handleDelete} />
+        ) : null}
         {touched && isEdit && (
           <IconButton
             sx={{ borderRadius: "50%", marginLeft: "15px" }}
-            onClick={onEdit}
+            onClick={() => onEdit(isSessionEdit?.length)}
           >
             <DoneIcon color="success" />
           </IconButton>
         )}
-        {isEdit && touched && (
+        {isEdit && touched && isSessionEdit?.length && (
           <IconButton
             sx={{ borderRadius: "50%", marginLeft: "15px" }}
             onClick={restoreDefaults}

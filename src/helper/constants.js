@@ -146,3 +146,12 @@ export const icons = {
 };
 
 export const ShortWeekNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+export const ShortWeekNamesStartingWithSunday = [
+  "sun",
+  "mon",
+  "tue",
+  "wed",
+  "thu",
+  "fri",
+  "sat",
+];

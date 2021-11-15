@@ -8,7 +8,6 @@ import {
   Outputs,
   Accordion,
   Pagination,
-  Status,
   Card,
   DatePicker,
   Title,
@@ -23,8 +22,8 @@ import {
 
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import {
-  getClassSessionsByTermId,
   getAttendanceOfSessionByDate,
+  getClassSessionsByTermId,
 } from "../../redux/action/sessionAction";
 import { Box } from "@mui/system";
 import {
@@ -37,7 +36,10 @@ import {
 import toPascal from "../../utils/to-pascal";
 import moreIcon from "../../assets/icons/icon-more.png";
 import { useDefaultDate } from "../../hooks";
-import { attendanceHeaders } from "../../helper/constants";
+import {
+  attendanceHeaders,
+  ShortWeekNamesStartingWithSunday,
+} from "../../helper/constants";
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
 import phoneIcon from "../../assets/icons/icon-phone.png";
 import allergyIcon from "../../assets/icons/icon-allergy.png";
@@ -81,23 +83,26 @@ const Attendance = () => {
 
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
-  const [date, setDate] = useState(defaultDate);
+  const [date, setDate] = useState(null);
   const [attendanceList, setAttendanceList] = useState([]);
-  const [page, setPage] = useState(1);
+  const { currentPage, totalPages } = useSelector((state) => state.members);
+  const membersOfSession = useSelector(
+    (state) => state.members.membersOfSession
+  );
 
-  const totalPages = attendanceList.length
-    ? Math.ceil(attendanceList.length / 10)
-    : 1;
-
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
+  const handlePageChange = useCallback(
+    (_, value) => {
+      if (value !== currentPage)
+        dispatch(getMembersOfSession(selectedSession, { page: value }));
+    },
+    [dispatch, currentPage, selectedSession]
+  );
 
   const pagination = (
     <Pagination
       sx={{ my: "20px" }}
       count={totalPages}
-      page={page}
+      page={currentPage}
       onChange={handlePageChange}
     />
   );
@@ -122,6 +127,7 @@ const Attendance = () => {
   const onSave = (e) => {
     e.stopPropagation();
   };
+
   const attendanceRows = useMemo(() => {
     return attendanceList.length
       ? attendanceList.map((item, index) => {
@@ -138,39 +144,35 @@ const Attendance = () => {
             memberId,
           } = item;
 
-          const start = (page - 1) * 10;
-          if (index >= start && index <= start + 9) {
-            return {
-              id: index,
-              memberId,
-              items: [
-                name,
-                <PhoneIcon title={parentContact} />,
-                <PhoneIcon title={ecContact} />,
-                <VerifiedIcon title={allergies} />,
-                <VerifiedIcon title={condition} />,
-                // <Status status="green" title="No Info" />,
-                paymentStatus,
-                startDate,
-                <CheckBox
-                  checked={attended}
-                  onChange={() => {
-                    onChangeAttended(index);
-                  }}
-                />,
-                <TextField
-                  value={comments}
-                  onChange={(e) => {
-                    onChangeComment(e, index);
-                  }}
-                />,
-              ],
-            };
-          }
-          return null;
+          return {
+            id: index,
+            memberId,
+            items: [
+              name,
+              <PhoneIcon title={parentContact} />,
+              <PhoneIcon title={ecContact} />,
+              <VerifiedIcon title={allergies} />,
+              <VerifiedIcon title={condition} />,
+              // <Status status="green" title="No Info" />,
+              paymentStatus,
+              startDate,
+              <CheckBox
+                checked={attended}
+                onChange={() => {
+                  onChangeAttended(index);
+                }}
+              />,
+              <TextField
+                value={comments}
+                onChange={(e) => {
+                  onChangeComment(e, index);
+                }}
+              />,
+            ],
+          };
         })
       : [];
-  }, [attendanceList, onChangeComment, onChangeAttended, page]);
+  }, [attendanceList, onChangeComment, onChangeAttended]);
 
   const updatedDetail = useMemo(() => {
     let date = new Date(attendance?.updatedAt);
@@ -188,18 +190,53 @@ const Attendance = () => {
     const currentSession = classSessionsInTerm.find(
       (session) => session._id === selectedSession
     );
-    const { pattern, facility, coach, fullcapacity, fullcapacityfilled } =
-      currentSession;
-    const info = {
-      "Start Time": pattern[0].startTime.split("T")[0],
-      "End Time": pattern[0].endTime.split("T")[0],
-      Facility: toPascal(facility),
-      "Coach Name": toPascal(coach?.name),
-      Pattern: toPascal(pattern[0].day),
-      "Full class capacity": fullcapacity,
-      Enrolled: fullcapacityfilled,
-    };
-    return info;
+    if (currentSession) {
+      const {
+        pattern,
+        facility,
+        coach,
+        fullcapacity,
+        fullcapacityfilled,
+        startDate,
+        endDate,
+      } = currentSession;
+
+      let patternCombined = "";
+      pattern.forEach((item, index) => {
+        patternCombined += item.day;
+        if (index !== pattern.length - 1) {
+          patternCombined += ", ";
+        }
+      });
+      const { startTime, endTime } = pattern[0];
+
+      const info = {
+        "Start Time": new Date(startTime).toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        }),
+        "End Time": new Date(endTime).toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        }),
+        Facility: toPascal(facility),
+        "Coach Name": toPascal(coach?.name),
+        Pattern: toPascal(patternCombined),
+        "Full class capacity": fullcapacity,
+        Enrolled: fullcapacityfilled,
+      };
+
+      const dateInfo = {
+        startDate,
+        endDate,
+        pattern: pattern.map((item) =>
+          ShortWeekNamesStartingWithSunday.indexOf(item.day.toLowerCase())
+        ),
+      };
+      return [info, dateInfo];
+    }
   }, [selectedSession, classSessionsInTerm]);
 
   useEffect(() => {
@@ -220,45 +257,40 @@ const Attendance = () => {
   }, [classSessionsInTerm]);
 
   useEffect(() => {
-    let attendanceRowData = attendance?.records?.map((item) => {
+    let attendanceRowData = membersOfSession?.map((item) => {
       const {
-        member: {
-          name,
-          parent: { mobileNo },
-          contacts,
-        },
+        startDate,
+        member: { _id: memberId, name },
         memberConsent: {
           consent: { allergies, condition },
         },
-        attended,
-        comments,
-        memberId,
       } = item;
       return {
         name,
-        parentContact: mobileNo,
-        ecContact: contacts[0].contact,
+        parentContact: "no data",
+        ecContact: "no data",
         allergies,
         condition,
         paymentStatus: "No Info",
-        startDate: "No Info",
-        attended,
-        comments,
+        startDate: startDate.split("T")[0],
+        attended: "no data",
+        comments: "no data",
         memberId,
       };
     });
     setAttendanceList(attendanceRowData ? attendanceRowData : []);
-  }, [attendance]);
+  }, [membersOfSession]);
 
   useEffect(() => {
     selectedSession.length &&
-      dispatch(
-        getAttendanceOfSessionByDate({
-          sessionId: selectedSession,
-          date: date.toISOString().split("T")[0],
-        })
-      );
-  }, [selectedSession, date, dispatch]);
+      dispatch(getMembersOfSession(selectedSession, { page: 1 }));
+  }, [selectedSession, dispatch]);
+
+  const dateUpperBound = useMemo(() => {
+    const today = new Date();
+    const sessionEndDate = new Date(sessionInfo && sessionInfo[1].endDate);
+    return today >= sessionEndDate ? sessionEndDate : today;
+  }, [sessionInfo]);
 
   return (
     <Box>
@@ -314,13 +346,25 @@ const Attendance = () => {
           <DatePicker
             onChange={(e) => {
               setDate(e);
+              dispatch(
+                getAttendanceOfSessionByDate({
+                  sessionId: selectedSession,
+                  date: e.toISOString().split("T")[0],
+                })
+              );
             }}
+            minDate={new Date(sessionInfo && sessionInfo[1].startDate)}
+            maxDate={dateUpperBound}
+            shouldDisableDate={(date) =>
+              sessionInfo &&
+              sessionInfo[1].pattern.indexOf(date.getDay()) === -1
+            }
             label="Date"
             date={date}
           />
         </Box>
         <Box sx={{ mt: "20px" }}>
-          <Outputs items={sessionInfo} />
+          <Outputs items={sessionInfo && sessionInfo[0]} />
         </Box>
       </Card>
       <CardRow
@@ -351,7 +395,7 @@ const Attendance = () => {
         <AccordionDetails sx={{ p: 0 }}>
           <CustomTable
             headers={attendanceHeaders}
-            rows={attendanceRows?.length ? attendanceRows : []}
+            rows={date && attendanceRows?.length ? attendanceRows : []}
             pagination={pagination}
           />
         </AccordionDetails>

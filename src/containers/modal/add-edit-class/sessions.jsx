@@ -33,7 +33,7 @@ const paginationCustomStyle = {
 };
 
 const Sessions = (props) => {
-  const { classSessions, setClassSessions, isEdit } = props;
+  const { classSessions, setClassSessions, isEdit, classId } = props;
   const [page, setPage] = useState(1);
 
   const handleChange = (event, value) => {
@@ -111,6 +111,7 @@ const Sessions = (props) => {
                         index={index}
                         sessions={classSessions}
                         setSessionData={setClassSessions}
+                        classId={classId}
                       />
                     );
                   }

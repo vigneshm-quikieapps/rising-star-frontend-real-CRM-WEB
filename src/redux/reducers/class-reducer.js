@@ -68,7 +68,24 @@ export default function reducer(state = initialState, action) {
         }),
       };
     }
+    case classActionTypes.ADD_SESSION_TO_CLASS_SUCCEEDED: {
+      return {
+        ...state,
+        classSessions: [
+          { ...action.payload, term: action.payload.termData },
+          ...state.classSessions,
+        ],
+      };
+    }
 
+    case classActionTypes.DELETE_SESSION_FROM_CLASS_SUCCEEDED: {
+      return {
+        ...state,
+        classSessions: state.classSessions.filter(
+          (item) => item._id !== action.payload
+        ),
+      };
+    }
     default:
       return state;
   }

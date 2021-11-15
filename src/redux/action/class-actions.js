@@ -31,3 +31,17 @@ export const editSessionOfClass = (data) => {
     payload: data,
   };
 };
+
+export const addSessionToClass = (data) => {
+  return {
+    type: classActionTypes.ADD_SESSION_TO_CLASS,
+    payload: data,
+  };
+};
+
+export const deleteSessionFromClass = (id) => {
+  return {
+    type: classActionTypes.DELETE_SESSION_FROM_CLASS,
+    payload: id,
+  };
+};

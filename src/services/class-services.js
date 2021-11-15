@@ -72,3 +72,23 @@ export const updateSessionOfClass = async (data) => {
     throw error;
   }
 };
+
+export const addSessionToClass = async (data) => {
+  try {
+    const api = `sessions`;
+    const session = await axiosInstance.post(api, data);
+    return session.data.businessSession;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteSessionFromClass = async (id) => {
+  try {
+    const api = `sessions/${id}`;
+    const res = await axiosInstance.delete(api);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

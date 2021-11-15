@@ -7,6 +7,8 @@ import {
   getClassSessions,
   updateClass,
   updateSessionOfClass,
+  addSessionToClass,
+  deleteSessionFromClass,
 } from "../../services/class-services";
 import { setError, startLoading, stopLoading } from "../action/shared-actions";
 import { classActionTypes } from "../types";
@@ -151,6 +153,55 @@ export function* editSessionOfClass(action) {
   }
 }
 
+export function* watchAddSessionToClass() {
+  yield takeEvery(classActionTypes.ADD_SESSION_TO_CLASS, addSessionToAClass);
+}
+
+export function* addSessionToAClass(action) {
+  try {
+    yield put(startLoading());
+    const session = yield call(addSessionToClass, action.payload.data);
+    yield put({
+      type: classActionTypes.ADD_SESSION_TO_CLASS_SUCCEEDED,
+      payload: session,
+    });
+    yield call(action.payload.callback);
+    yield put(stopLoading());
+  } catch (error) {
+    console.log(error);
+    yield put(
+      setError(error, "Something went wrong while adding a session to a class")
+    );
+  }
+}
+
+export function* watchDeleteSessionFromClass() {
+  yield takeEvery(
+    classActionTypes.DELETE_SESSION_FROM_CLASS,
+    deleteSessionFromAClass
+  );
+}
+
+export function* deleteSessionFromAClass(action) {
+  try {
+    yield put(startLoading());
+    yield call(deleteSessionFromClass, action.payload);
+    yield put({
+      type: classActionTypes.DELETE_SESSION_FROM_CLASS_SUCCEEDED,
+      payload: action.payload,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    console.log(error);
+    yield put(
+      setError(
+        error,
+        "Something went wrong while deleting a session from a class"
+      )
+    );
+  }
+}
+
 export default function* classSagas() {
   yield all([
     classListSaga(),
@@ -160,5 +211,7 @@ export default function* classSagas() {
     watchGetSessionsOfClass(),
     watchEditClass(),
     watchEditSessionOfClass(),
+    watchAddSessionToClass(),
+    watchDeleteSessionFromClass(),
   ]);
 }

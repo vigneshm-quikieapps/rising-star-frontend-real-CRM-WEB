@@ -595,6 +595,7 @@ const AddEditClassModal = (props) => {
               />
 
               <Sessions
+                classId={classObj?._id}
                 isEdit={isEditMode}
                 setClassSessions={setClassSessions}
                 classSessions={classSessions}
