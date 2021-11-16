@@ -100,3 +100,12 @@ export const DayText = styled(Typography)({
   textAlign: "center",
   marginBottom: "10px",
 });
+
+export const DashboardCard = styled(Box)(({ theme }) => ({
+  width: "205px",
+  height: "219px",
+
+  padding: "20px",
+  borderRadius: "20px",
+  backgroundColor: theme.palette.highlight.main,
+}));
