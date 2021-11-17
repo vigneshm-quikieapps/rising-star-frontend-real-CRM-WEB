@@ -18,23 +18,44 @@ import {
   Legend,
 } from "recharts";
 
-const data = [
+const data1 = [
   {
     name: "Jan",
-    uv: 4000,
-    dv: 2400,
+    received: 4000,
+    "Not Received": 2400,
     amt: 2400,
   },
   {
     name: "Feb",
-    uv: 3000,
-    dv: 1398,
+    received: 3000,
+    "Not Received": 1398,
     amt: 2210,
   },
   {
     name: "Mar",
-    uv: 2000,
-    dv: 9800,
+    received: 2000,
+    "Not Received": 9800,
+    amt: 2290,
+  },
+];
+
+const data = [
+  {
+    name: "Jan",
+    active: 4000,
+    drops: 2400,
+    amt: 2400,
+  },
+  {
+    name: "Feb",
+    active: 3000,
+    drops: 1398,
+    amt: 2210,
+  },
+  {
+    name: "Mar",
+    active: 2000,
+    drops: 9800,
     amt: 2290,
   },
 ];
@@ -239,11 +260,11 @@ const Dashboard = () => {
             <Legend />
             <Line
               type="monotone"
-              dataKey="dv"
+              dataKey="drops"
               stroke="#f1383c"
               activeDot={{ r: 8 }}
             />
-            <Line type="monotone" dataKey="uv" stroke="#beb8d8" />
+            <Line type="monotone" dataKey="active" stroke="#beb8d8" />
           </LineChart>
         </Card>
         <Card sx={{ width: "auto" }}>
@@ -280,7 +301,7 @@ const Dashboard = () => {
           <LineChart
             width={500}
             height={300}
-            data={data}
+            data={data1}
             margin={{
               top: 5,
               right: 30,
@@ -295,11 +316,11 @@ const Dashboard = () => {
             <Legend />
             <Line
               type="monotone"
-              dataKey="dv"
+              dataKey="received"
               stroke="#f1383c"
               activeDot={{ r: 8 }}
             />
-            <Line type="monotone" dataKey="uv" stroke="#beb8d8" />
+            <Line type="monotone" dataKey="Not Received" stroke="#beb8d8" />
           </LineChart>
         </Card>
       </CardRow>
