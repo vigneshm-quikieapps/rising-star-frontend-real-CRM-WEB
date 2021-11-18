@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   TextField,
-  TableMui,
   Outputs,
   Accordion,
   Pagination,
@@ -36,7 +35,6 @@ import {
 } from "@mui/material";
 import toPascal from "../../utils/to-pascal";
 import moreIcon from "../../assets/icons/icon-more.png";
-import { useDefaultDate } from "../../hooks";
 import {
   attendanceHeaders,
   ShortWeekNamesStartingWithSunday,
@@ -44,7 +42,8 @@ import {
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
 import phoneIcon from "../../assets/icons/icon-phone.png";
 import allergyIcon from "../../assets/icons/icon-allergy.png";
-import { getMembersOfSession } from "../../redux/action/memberAction";
+
+import { Undo as RestoreDefaultsIcon } from "@mui/icons-material";
 
 const MoreIconButton = () => (
   <IconButton sx={{ mr: "10px" }}>
@@ -72,7 +71,6 @@ const PhoneIcon = ({ title = "test" }) => (
 const Attendance = () => {
   const dispatch = useDispatch();
   const { id: classId } = useParams();
-  const defaultDate = useDefaultDate();
 
   const classTerms = useSelector((state) => state.terms.termsOfClass);
   const classSessionsInTerm = useSelector(
@@ -87,6 +85,13 @@ const Attendance = () => {
   const [date, setDate] = useState(null);
   const [attendanceList, setAttendanceList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [touched, setTouched] = useState(false);
+
+  const restoreDefaults = (e) => {
+    e.stopPropagation();
+    setAttendanceList(attendanceRowData ? attendanceRowData : []);
+    setTouched(false);
+  };
 
   // const handlePageChange = useCallback(
   //   (_, value) => {
@@ -106,6 +111,7 @@ const Attendance = () => {
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
+
   const pagination = (
     <Pagination
       sx={{ my: "20px" }}
@@ -114,24 +120,27 @@ const Attendance = () => {
       onChange={handlePageChange}
     />
   );
-  const onChangeAttended = useCallback(
-    (i) => {
-      let updatedAttendance = [...attendanceList];
-      updatedAttendance[i].attended = !updatedAttendance[i].attended;
 
+  const changeHandler = useCallback(
+    (e, index, field) => {
+      let updatedAttendance = [...attendanceList];
+
+      switch (field) {
+        case "attended":
+          updatedAttendance[index].attended =
+            !updatedAttendance[index].attended;
+          break;
+        case "comments":
+          updatedAttendance[index].comments = e.target.value;
+          break;
+        default:
+      }
+      setTouched(true);
       setAttendanceList(updatedAttendance);
     },
     [attendanceList]
   );
 
-  const onChangeComment = useCallback(
-    (e, i) => {
-      let updatedAttendance = [...attendanceList];
-      updatedAttendance[i].comments = e.target.value;
-      setAttendanceList(updatedAttendance);
-    },
-    [attendanceList]
-  );
   const onSave = (e) => {
     e.stopPropagation();
     if (attendanceList.length) {
@@ -181,13 +190,13 @@ const Attendance = () => {
               <CheckBox
                 checked={attended}
                 onChange={() => {
-                  onChangeAttended(index);
+                  changeHandler(null, index, "attended");
                 }}
               />,
               <TextField
                 value={comments}
                 onChange={(e) => {
-                  onChangeComment(e, index);
+                  changeHandler(e, index, "comments");
                 }}
               />,
             ],
@@ -199,7 +208,7 @@ const Attendance = () => {
       return paginatedAttendanceRows.filter((item) => item !== null);
     }
     return [];
-  }, [attendanceList, currentPage, onChangeComment, onChangeAttended]);
+  }, [attendanceList, currentPage, changeHandler]);
 
   const updatedDetail = useMemo(() => {
     let date = new Date(attendance?.updatedAt);
@@ -266,25 +275,8 @@ const Attendance = () => {
     }
   }, [selectedSession, classSessionsInTerm]);
 
-  useEffect(() => {
-    dispatch(getTermsOfClass(classId));
-  }, [dispatch, classId]);
-
-  useEffect(() => {
-    classTerms.length && setSelectedTerm(classTerms[0]._id);
-  }, [classTerms]);
-
-  useEffect(() => {
-    selectedTerm && dispatch(getClassSessionsByTermId(classId, selectedTerm));
-  }, [dispatch, selectedTerm, classId]);
-
-  useEffect(() => {
-    classSessionsInTerm.length &&
-      setSelectedSession(classSessionsInTerm[0]._id);
-  }, [classSessionsInTerm]);
-
-  useEffect(() => {
-    let attendanceRowData = attendance?.records?.map((item) => {
+  const attendanceRowData = useCallback(() => {
+    return attendance?.records?.map((item) => {
       const {
         attended,
         memberId,
@@ -310,8 +302,28 @@ const Attendance = () => {
         memberId,
       };
     });
-    setAttendanceList(attendanceRowData ? attendanceRowData : []);
   }, [attendance?.records]);
+
+  useEffect(() => {
+    dispatch(getTermsOfClass(classId));
+  }, [dispatch, classId]);
+
+  useEffect(() => {
+    classTerms.length && setSelectedTerm(classTerms[0]._id);
+  }, [classTerms]);
+
+  useEffect(() => {
+    selectedTerm && dispatch(getClassSessionsByTermId(classId, selectedTerm));
+  }, [dispatch, selectedTerm, classId]);
+
+  useEffect(() => {
+    classSessionsInTerm.length &&
+      setSelectedSession(classSessionsInTerm[0]._id);
+  }, [classSessionsInTerm]);
+
+  useEffect(() => {
+    setAttendanceList(attendanceRowData ? attendanceRowData : []);
+  }, [attendanceRowData]);
 
   // useEffect(() => {
   //   selectedSession.length &&
@@ -418,9 +430,19 @@ const Attendance = () => {
             <Typography variant="h3" sx={{ fontSize: "20px", flex: 1 }}>
               Members
             </Typography>
-            <GradientButton sx={{ marginRight: "1%" }} onClick={onSave}>
-              Save
-            </GradientButton>
+            {touched && (
+              <>
+                <GradientButton sx={{ marginRight: "1%" }} onClick={onSave}>
+                  Save
+                </GradientButton>
+                <IconButton
+                  sx={{ borderRadius: "50%", margin: "0 10px" }}
+                  onClick={restoreDefaults}
+                >
+                  <RestoreDefaultsIcon />
+                </IconButton>
+              </>
+            )}
             <MoreIconButton />
           </Box>
         </AccordionSummary>
