@@ -89,7 +89,7 @@ const Attendance = () => {
 
   const restoreDefaults = (e) => {
     e.stopPropagation();
-    setAttendanceList(attendanceRowData ? attendanceRowData : []);
+    setAttendanceList(attendanceRowData() ? attendanceRowData() : []);
     setTouched(false);
   };
 
@@ -327,7 +327,7 @@ const Attendance = () => {
   }, [classSessionsInTerm]);
 
   useEffect(() => {
-    setAttendanceList(attendanceRowData ? attendanceRowData : []);
+    setAttendanceList(attendanceRowData() ? attendanceRowData() : []);
   }, [attendanceRowData]);
 
   // useEffect(() => {
@@ -356,6 +356,7 @@ const Attendance = () => {
             value={classTerms.length ? selectedTerm : ""}
             label="Term"
             onChange={(e) => {
+              setTouched(false);
               setSelectedTerm(e.target.value);
             }}
             variant="filled"
@@ -375,6 +376,7 @@ const Attendance = () => {
             label="Session"
             value={selectedSession}
             onChange={(e) => {
+              setTouched(false);
               setSelectedSession(e.target.value);
             }}
             variant="filled"
@@ -394,6 +396,7 @@ const Attendance = () => {
 
           <DatePicker
             onChange={(e) => {
+              setTouched(false);
               setDate(e);
               dispatch(
                 getAttendanceOfSessionByDate({
