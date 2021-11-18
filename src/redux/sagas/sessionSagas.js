@@ -3,6 +3,7 @@ import {
   axiosGetMembersEnrolledInASession,
   getClassSessionsByTermId,
   getAttendanceListOfSessionByDate,
+  addAttendance,
 } from "../../services/sessionServices";
 import { axiosGetSessionsByTermId } from "../../services/term-services";
 import { sessionActionTypes } from "../types";
@@ -121,11 +122,32 @@ export function* watchGetAttendanceOfSessionByDate() {
   );
 }
 
+export function* addAttendanceOnDate(action) {
+  try {
+    yield put(startLoading());
+    yield call(addAttendance, action.payload);
+    yield put({
+      type: sessionActionTypes.ADD_ATTENDANCE_SUCCEEDED,
+    });
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(
+      setError(error, "Something went wrong while adding attendance on a date.")
+    );
+  }
+}
+
+//watchingGeneratedFunction
+export function* watchAddAttendanceOnDate() {
+  yield takeEvery(sessionActionTypes.ADD_ATTENDANCE, addAttendanceOnDate);
+}
+
 export default function* sessionSagas() {
   yield all([
     watchGetMemberEnrolledInSession(),
     watchGetSessionsByTermId(),
     watchGetClassSessionsByTerm(),
     watchGetAttendanceOfSessionByDate(),
+    watchAddAttendanceOnDate(),
   ]);
 }

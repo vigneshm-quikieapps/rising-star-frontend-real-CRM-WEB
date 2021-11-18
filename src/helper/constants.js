@@ -155,3 +155,18 @@ export const ShortWeekNamesStartingWithSunday = [
   "fri",
   "sat",
 ];
+
+export const ShortMonthNames = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];

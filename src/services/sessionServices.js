@@ -29,3 +29,13 @@ export const getAttendanceListOfSessionByDate = async (params) => {
     throw error;
   }
 };
+
+export const addAttendance = async (params) => {
+  try {
+    const api = `attendance`;
+    const attendance = await axiosInstance.post(api, params);
+    return attendance.data;
+  } catch (error) {
+    throw error;
+  }
+};

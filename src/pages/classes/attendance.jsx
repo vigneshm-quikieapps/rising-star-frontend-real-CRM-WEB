@@ -22,6 +22,7 @@ import {
 
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import {
+  addAttendance,
   getAttendanceOfSessionByDate,
   getClassSessionsByTermId,
 } from "../../redux/action/sessionAction";
@@ -85,19 +86,26 @@ const Attendance = () => {
   const [selectedSession, setSelectedSession] = useState("");
   const [date, setDate] = useState(null);
   const [attendanceList, setAttendanceList] = useState([]);
-  const { currentPage, totalPages } = useSelector((state) => state.members);
-  const membersOfSession = useSelector(
-    (state) => state.members.membersOfSession
-  );
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const handlePageChange = useCallback(
-    (_, value) => {
-      if (value !== currentPage)
-        dispatch(getMembersOfSession(selectedSession, { page: value }));
-    },
-    [dispatch, currentPage, selectedSession]
-  );
+  // const handlePageChange = useCallback(
+  //   (_, value) => {
+  //     if (value !== currentPage)
+  //       dispatch(getMembersOfSession(selectedSession, { page: value }));
+  //   },
+  //   [dispatch, currentPage, selectedSession]
+  // );
 
+  const totalPages = useMemo(() => {
+    let allMembersAttendanceCount = attendance?.records?.length;
+    return allMembersAttendanceCount
+      ? Math.ceil(allMembersAttendanceCount / 10)
+      : 0;
+  }, [attendance?.records]);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
   const pagination = (
     <Pagination
       sx={{ my: "20px" }}
@@ -126,11 +134,25 @@ const Attendance = () => {
   );
   const onSave = (e) => {
     e.stopPropagation();
+    if (attendanceList.length) {
+      let attendanceData = {
+        sessionId: selectedSession,
+        date: date.toISOString().split("T")[0],
+        records: attendanceList.map(({ memberId, attended, comments }) => ({
+          memberId,
+          attended,
+          comments,
+        })),
+      };
+      dispatch(addAttendance(attendanceData));
+    }
   };
 
   const attendanceRows = useMemo(() => {
-    return attendanceList.length
-      ? attendanceList.map((item, index) => {
+    if (attendanceList.length) {
+      let paginatedAttendanceRows = attendanceList.map((item, index) => {
+        const start = (currentPage - 1) * 10;
+        if (index >= start && index <= start + 9) {
           const {
             name,
             parentContact,
@@ -170,9 +192,14 @@ const Attendance = () => {
               />,
             ],
           };
-        })
-      : [];
-  }, [attendanceList, onChangeComment, onChangeAttended]);
+        }
+        return null;
+      });
+
+      return paginatedAttendanceRows.filter((item) => item !== null);
+    }
+    return [];
+  }, [attendanceList, currentPage, onChangeComment, onChangeAttended]);
 
   const updatedDetail = useMemo(() => {
     let date = new Date(attendance?.updatedAt);
@@ -257,34 +284,39 @@ const Attendance = () => {
   }, [classSessionsInTerm]);
 
   useEffect(() => {
-    let attendanceRowData = membersOfSession?.map((item) => {
+    let attendanceRowData = attendance?.records?.map((item) => {
       const {
-        startDate,
-        member: { _id: memberId, name },
+        attended,
+        memberId,
+        member: {
+          name,
+          parent: { mobileNo: pContact },
+          contacts,
+        },
         memberConsent: {
           consent: { allergies, condition },
         },
       } = item;
       return {
         name,
-        parentContact: "no data",
-        ecContact: "no data",
+        parentContact: pContact,
+        ecContact: contacts[0].contact,
         allergies,
         condition,
         paymentStatus: "No Info",
-        startDate: startDate.split("T")[0],
-        attended: "no data",
+        startDate: "No Info",
+        attended,
         comments: "no data",
         memberId,
       };
     });
     setAttendanceList(attendanceRowData ? attendanceRowData : []);
-  }, [membersOfSession]);
+  }, [attendance?.records]);
 
-  useEffect(() => {
-    selectedSession.length &&
-      dispatch(getMembersOfSession(selectedSession, { page: 1 }));
-  }, [selectedSession, dispatch]);
+  // useEffect(() => {
+  //   selectedSession.length &&
+  //     dispatch(getMembersOfSession(selectedSession, { page: 1 }));
+  // }, [selectedSession, dispatch]);
 
   const dateUpperBound = useMemo(() => {
     const today = new Date();

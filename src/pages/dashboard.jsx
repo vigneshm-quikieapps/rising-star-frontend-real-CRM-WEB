@@ -1,13 +1,4 @@
-import { AccordionSummary, Box, MenuItem, Typography } from "@mui/material";
-import {
-  Accordion,
-  AccordionContainer,
-  Card,
-  CardRow,
-  DashboardCard,
-  TextField,
-} from "../components";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useState } from "react";
 import {
   LineChart,
   Line,
@@ -18,24 +9,34 @@ import {
   Legend,
 } from "recharts";
 
+import { AccordionSummary, Box, MenuItem, Typography } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+import {
+  Accordion,
+  AccordionContainer,
+  Card,
+  CardRow,
+  DashboardCard,
+  TextField,
+} from "../components";
+import DateRange from "../containers/popovers/date-range-selector";
+
 const data1 = [
   {
     name: "Jan",
     received: 4000,
     "Not Received": 2400,
-    amt: 2400,
   },
   {
     name: "Feb",
     received: 3000,
     "Not Received": 1398,
-    amt: 2210,
   },
   {
     name: "Mar",
     received: 2000,
     "Not Received": 9800,
-    amt: 2290,
   },
 ];
 
@@ -75,8 +76,27 @@ const Status = (props) => {
 };
 
 const Dashboard = () => {
+  const [anchorElPayment, setAnchorElPayment] = useState(null);
+  const [anchorElMember, setAnchorElMember] = useState(null);
+
+  const closePaymentDateRange = () => {
+    setAnchorElPayment(null);
+  };
+
+  const openPaymentDateRange = (event) => {
+    setAnchorElPayment(event.currentTarget);
+  };
+
+  const closeMemberDateRange = () => {
+    setAnchorElMember(null);
+  };
+
+  const openMemberDateRange = (event) => {
+    setAnchorElMember(event.currentTarget);
+  };
+
   return (
-    <Box>
+    <Box sx={{ marginBottom: "100px" }}>
       <Box>
         <Typography variant="h2" sx={{ fontSize: "28px", fontWeight: "bold" }}>
           Dashboard
@@ -231,12 +251,13 @@ const Dashboard = () => {
               </CardRow>
             </Box>
 
-            <Box>
+            <Box onClick={openPaymentDateRange}>
               <TextField
                 select
                 value={"Jan-mar"}
                 onChange={() => {}}
                 sx={{ width: "116px" }}
+                disabled
               >
                 <MenuItem value="Jan-mar">Jan-mar</MenuItem>
               </TextField>
@@ -268,7 +289,7 @@ const Dashboard = () => {
           </LineChart>
         </Card>
         <Card sx={{ width: "auto" }}>
-          <CardRow sx={{ marginBottom: "15px" }}>
+          <CardRow sx={{ marginBottom: "15px", width: "100%" }}>
             <Box>
               <Typography sx={{ fontWeight: "bold", fontSize: "16px" }}>
                 MEMBER
@@ -287,11 +308,12 @@ const Dashboard = () => {
               </CardRow>
             </Box>
 
-            <Box>
+            <Box onClick={openMemberDateRange}>
               <TextField
                 select
                 value={"Jan-mar"}
                 onChange={() => {}}
+                disabled
                 sx={{ width: "116px" }}
               >
                 <MenuItem value="Jan-mar">Jan-mar</MenuItem>
@@ -324,6 +346,24 @@ const Dashboard = () => {
           </LineChart>
         </Card>
       </CardRow>
+      <DateRange
+        onChange={(data) => {
+          console.log(data);
+        }}
+        title={"PAYMENT"}
+        anchorEl={anchorElPayment}
+        handleClose={closePaymentDateRange}
+        year={"2021"}
+      />
+      <DateRange
+        onChange={(startDate, endDate) => {
+          console.log(startDate, endDate);
+        }}
+        title={"MEMBER"}
+        anchorEl={anchorElMember}
+        handleClose={closeMemberDateRange}
+        year={"2021"}
+      />
     </Box>
   );
 };

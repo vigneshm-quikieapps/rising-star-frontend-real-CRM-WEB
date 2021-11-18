@@ -27,3 +27,10 @@ export const getAttendanceOfSessionByDate = (params) => {
     payload: params,
   };
 };
+
+export const addAttendance = (params) => {
+  return {
+    type: sessionActionTypes.ADD_ATTENDANCE,
+    payload: params,
+  };
+};

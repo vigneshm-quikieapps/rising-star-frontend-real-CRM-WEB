@@ -10,6 +10,7 @@ import {
   ImgIcon,
   CardRow,
   DayText,
+  Output,
 } from "../../components";
 
 import {
@@ -36,11 +37,6 @@ const Session = (props) => {
   const { data, index, sessions, setSessionData, isEdit, classId } = props;
   const [touched, setTouched] = useState(false);
   const dispatch = useDispatch();
-  const [startingDate, setStartingDate] = useState(
-    data.selectedTerm?.startDate
-  );
-  const [endingDate, setEndingDate] = useState(data.selectedTerm?.endDate);
-
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
 
@@ -52,27 +48,11 @@ const Session = (props) => {
     let updatedSession = { ...data };
 
     const value =
-      field === "startTime" ||
-      field === "endTime" ||
-      field === "startDate" ||
-      field === "endDate" ||
-      field === "dayIndex"
+      field === "startTime" || field === "endTime" || field === "dayIndex"
         ? e
         : e.target.value;
 
     switch (field) {
-      case "startDate":
-        setStartingDate(value);
-        break;
-      case "endDate":
-        setEndingDate(value);
-        break;
-      default:
-    }
-
-    switch (field) {
-      case "startDate":
-      case "endDate":
       case "startTime":
       case "endTime":
       case "coachId":
@@ -93,11 +73,8 @@ const Session = (props) => {
 
       case "selectedTerm":
         let selectedTerm = termsOfBusiness.find(({ _id }) => _id === value);
-        updatedSession["startDate"] = selectedTerm.startDate;
-        updatedSession["endDate"] = selectedTerm.endDate;
+
         updatedSession[field] = selectedTerm;
-        setStartingDate(selectedTerm.startDate);
-        setEndingDate(selectedTerm.endDate);
         break;
 
       default:
@@ -108,16 +85,10 @@ const Session = (props) => {
   };
 
   const restoreDefaults = () => {
-    const {
-      selectedTerm: { startDate, endDate },
-    } = initialData.current;
-
     let newSessions = [...sessions];
     newSessions[index] = { ...initialData.current };
 
     setSessionData(newSessions);
-    setStartingDate(startDate);
-    setEndingDate(endDate);
     setTouched(false);
   };
 
@@ -131,9 +102,7 @@ const Session = (props) => {
       name,
       dayIndex,
       selectedTerm: term,
-      endDate,
       endTime,
-      startDate,
       startTime,
       coachId,
       fullCapacity: fullcapacity,
@@ -147,9 +116,7 @@ const Session = (props) => {
         name,
         pattern: dayIndex.map((day) => ShortWeekNames[day]),
         term,
-        endDate,
         endTime,
-        startDate,
         startTime,
         coachId,
         fullcapacity,
@@ -163,9 +130,7 @@ const Session = (props) => {
         name,
         pattern: dayIndex.map((day) => ShortWeekNames[day]),
         term,
-        endDate,
         endTime,
-        startDate,
         startTime,
         coachId,
         fullcapacity,
@@ -175,7 +140,9 @@ const Session = (props) => {
       dispatch(addSessionToClass({ callback: onEditSuccess, data }));
     }
   };
+
   const isSessionEdit = sessions[index].id;
+
   const handleDelete = () => {
     isSessionEdit && dispatch(deleteSessionFromClass(isSessionEdit));
     let newSessions = removeItemByIndex(sessions, index);
@@ -223,18 +190,28 @@ const Session = (props) => {
           </TextField>
         </Box>
         <Box>
-          <DatePicker
+          <Output
+            title="Start Date"
+            description={data.selectedTerm?.startDate?.split("T")[0]}
+          />
+          {/* <DatePicker
+            disabled
             onChange={(e) => handleChange(e, "startDate")}
             label="Start Date"
             date={startingDate}
-          />
+          /> */}
         </Box>
         <Box>
-          <DatePicker
+          <Output
+            title="End Date"
+            description={data.selectedTerm?.endDate?.split("T")[0]}
+          />
+          {/* <DatePicker
+            disabled
             onChange={(e) => handleChange(e, "endDate")}
             label="End Date"
             date={endingDate}
-          />
+          /> */}
         </Box>
       </CardRow>
       <CardRow>

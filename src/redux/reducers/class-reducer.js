@@ -63,8 +63,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         classSessions: state.classSessions.map((session) => {
-          if (session._id === action.payload._id) return action.payload;
-          return { ...action.payload, term: action.payload.termData };
+          if (session._id === action.payload._id)
+            return { ...action.payload, term: action.payload.termData };
+          return { ...session };
         }),
       };
     }
