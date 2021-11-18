@@ -125,10 +125,11 @@ export function* watchGetAttendanceOfSessionByDate() {
 export function* addAttendanceOnDate(action) {
   try {
     yield put(startLoading());
-    yield call(addAttendance, action.payload);
+    yield call(addAttendance, action.payload.data);
     yield put({
       type: sessionActionTypes.ADD_ATTENDANCE_SUCCEEDED,
     });
+    yield call(action.payload.callback);
     yield put(stopLoading());
   } catch (error) {
     yield put(

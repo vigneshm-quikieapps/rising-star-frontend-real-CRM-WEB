@@ -153,12 +153,17 @@ const Attendance = () => {
           comments,
         })),
       };
-      dispatch(addAttendance(attendanceData));
+      dispatch(
+        addAttendance({
+          data: attendanceData,
+          callback: () => setTouched(false),
+        })
+      );
     }
   };
 
   const attendanceRows = useMemo(() => {
-    if (attendanceList.length) {
+    if (attendanceList?.length) {
       let paginatedAttendanceRows = attendanceList.map((item, index) => {
         const start = (currentPage - 1) * 10;
         if (index >= start && index <= start + 9) {
