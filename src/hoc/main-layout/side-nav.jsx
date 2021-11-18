@@ -129,14 +129,14 @@ const ExtractedItems = ({ items, nested }) => {
   return items.map((item) => {
     // const { id, urlPath, exact, disabled, title, icon } = item;
     if (!item.items) {
-      return <NavItem {...item} nested={nested} />;
+      return <NavItem key={item.id} {...item} nested={nested} />;
     } else {
       return <NestedList key={item.id} item={item} />;
     }
   });
 };
 
-const SideNav = ({ header, open, handleDrawerOpen, items, width }) => {
+const SideNav = ({ header, open, items, width }) => {
   return (
     <StyledDrawer
       variant="persistent"
