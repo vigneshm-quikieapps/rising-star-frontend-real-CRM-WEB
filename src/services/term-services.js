@@ -32,14 +32,9 @@ export const getTermsOfBusiness = async ({ businessId, params }) => {
   }
 };
 
-export const addTerm = async ({ businessId, label, startDate, endDate }) => {
+export const addTerm = async (data) => {
   try {
-    const response = await axiosInstance.post("terms", {
-      businessId,
-      label,
-      startDate,
-      endDate,
-    });
+    const response = await axiosInstance.post("terms", data);
     const newTerm = response.data.term;
     return newTerm;
   } catch (error) {
@@ -47,16 +42,10 @@ export const addTerm = async ({ businessId, label, startDate, endDate }) => {
   }
 };
 
-export const editTerm = async ({
-  _id,
-  businessId,
-  label,
-  startDate,
-  endDate,
-}) => {
+export const editTerm = async (data) => {
   try {
-    await axiosInstance.put(`terms/${_id}`, { label, startDate, endDate });
-    return { _id, businessId, label, startDate, endDate };
+    await axiosInstance.put(`terms/${data._id}`, data);
+    return data;
   } catch (error) {
     throw error;
   }
