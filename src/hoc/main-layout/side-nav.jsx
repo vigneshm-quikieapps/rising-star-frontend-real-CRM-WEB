@@ -13,7 +13,6 @@ import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
-import { useEffect } from "react";
 
 const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== "drawerWidth",
@@ -33,7 +32,13 @@ const StyledDrawer = styled(Drawer, {
     border: "none",
     "& .Mui-disabled": { opacity: 1 },
   },
-  "& .MuiListItemButton-root": { padding: theme.spacing(0.5) },
+  "& .MuiList-root": {
+    paddingRight: 0,
+  },
+  "& .MuiListItemButton-root": {
+    padding: theme.spacing(0.5),
+    paddingRight: theme.spacing(2),
+  },
   "& .MuiListItem-root": { padding: theme.spacing(0.5), color: "inherit" },
   "& .MuiListItemIcon-root": {
     color: "inherit",
@@ -44,10 +49,10 @@ const StyledDrawer = styled(Drawer, {
   },
 }));
 
-const CloseButton = styled("button")(({ theme }) => ({
+const Indicator = styled("button")(({ theme }) => ({
   position: "absolute",
   right: 0,
-  top: "50%",
+  top: "0",
   display: "block",
   width: 6,
   height: 40,
@@ -56,29 +61,51 @@ const CloseButton = styled("button")(({ theme }) => ({
   borderRadius: 4,
   padding: 0,
   margin: 0,
-  cursor: "pointer",
   zIndex: 1,
 }));
+
+const NavItem = ({ id, urlPath, nested, disabled, exact, icon, title }) => {
+  const match = useRouteMatch({
+    path: urlPath,
+    sensitive: true,
+    exact: exact,
+  });
+  return (
+    <ListItemButton
+      key={id}
+      component={NavLink}
+      to={urlPath}
+      activeClassName="activeNavLink"
+      sx={{ mb: nested ? 0 : 3, pr: 2 }}
+      disabled={disabled}
+      exact={exact}
+    >
+      {icon && <ListItemIcon>{icon}</ListItemIcon>}
+      {match && <Indicator />}
+      <ListItemText primary={title} />
+    </ListItemButton>
+  );
+};
 
 const NestedList = ({ item }) => {
   const match = useRouteMatch({
     path: item.urlPath,
     sensitive: true,
   });
-  const [open, setOpen] = useState(!!match);
+  const [open, setOpen] = useState(false);
 
-  useEffect(() => setOpen(!!match), [match]);
+  // useEffect(() => setOpen(!!match), [match]);
 
-  // const toggleOpen = (e) => {
-  //   e.preventDefault();
-  //   setOpen(!open);
-  // };
+  const toggleOpen = (e) => {
+    e.preventDefault();
+    setOpen(!open);
+  };
 
   return (
     <>
       <ListItemButton
         sx={{ mb: 1 }}
-        // onClick={toggleOpen}
+        onClick={toggleOpen}
         component={NavLink}
         to={item.urlPath || "#"}
         activeClassName="activeNavLink"
@@ -100,28 +127,16 @@ const NestedList = ({ item }) => {
 
 const ExtractedItems = ({ items, nested }) => {
   return items.map((item) => {
+    // const { id, urlPath, exact, disabled, title, icon } = item;
     if (!item.items) {
-      return (
-        <ListItemButton
-          key={item.id}
-          component={NavLink}
-          to={item.urlPath}
-          activeClassName="activeNavLink"
-          sx={{ mb: (theme) => (nested ? 0 : theme.spacing(3)) }}
-          disabled={item.disabled}
-          exact={item.exact}
-        >
-          {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-          <ListItemText primary={item.title} />
-        </ListItemButton>
-      );
+      return <NavItem key={item.id} {...item} nested={nested} />;
     } else {
       return <NestedList key={item.id} item={item} />;
     }
   });
 };
 
-const SideNav = ({ header, open, handleDrawerOpen, items, width }) => {
+const SideNav = ({ header, open, items, width }) => {
   return (
     <StyledDrawer
       variant="persistent"
@@ -137,7 +152,6 @@ const SideNav = ({ header, open, handleDrawerOpen, items, width }) => {
         }}
         component="nav"
       >
-        <CloseButton onClick={() => handleDrawerOpen(false)} />
         {<ExtractedItems items={items} />}
       </List>
     </StyledDrawer>

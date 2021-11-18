@@ -38,7 +38,13 @@ import {
 } from "../../components";
 import deleteIcon from "../../assets/icons/icon-delete.png";
 
-const tableHeaders = ["Term Label", "Start Date", "End Date", "Actions"];
+const tableHeaders = [
+  "Term Label",
+  "Start Date",
+  "End Date",
+  "TermFee",
+  "Actions",
+];
 
 const Term = ({
   _id,
@@ -46,6 +52,7 @@ const Term = ({
   label: initialLabel,
   startDate: initialStartDate,
   endDate: initialEndDate,
+  termFee: initialFee,
   onEdit,
   onDelete,
   add = false,
@@ -54,12 +61,17 @@ const Term = ({
   const [label, setLabel] = useState(initialLabel || "");
   const [startDate, setStartDate] = useState(new Date(initialStartDate));
   const [endDate, setEndDate] = useState(new Date(initialEndDate));
+  const [termFee, setTermFee] = useState(initialFee || "");
+
   const changeHandler = (e, field) => {
     setTouched(true);
-    const value = field === "label" ? e.target.value : e;
+    const value = ["label", "termFee"].indexOf(field) > -1 ? e.target.value : e;
     switch (field) {
       case "label": {
         return setLabel(value);
+      }
+      case "termFee": {
+        return setTermFee(value);
       }
       case "startDate": {
         return setStartDate(value);
@@ -75,6 +87,7 @@ const Term = ({
 
   const restoreDefaults = () => {
     setLabel(initialLabel);
+    setTermFee(initialFee);
     setStartDate(new Date(initialStartDate));
     setEndDate(new Date(initialEndDate));
     setTouched(false);
@@ -95,7 +108,7 @@ const Term = ({
           date={startDate}
           onChange={(newDate) => changeHandler(newDate, "startDate")}
           label={null}
-          inputProps={{
+          textfieldProps={{
             sx: {
               height: "44px",
               "& .MuiFilledInput-input": { py: 0 },
@@ -108,12 +121,20 @@ const Term = ({
           date={endDate}
           onChange={(newDate) => changeHandler(newDate, "endDate")}
           label={null}
-          inputProps={{
+          textfieldProps={{
             sx: {
               height: "44px",
               "& .MuiFilledInput-input": { py: 0 },
             },
           }}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          value={termFee}
+          onChange={(e) => changeHandler(e, "termFee")}
+          variant="filled"
+          sx={{ height: "44px", "& .MuiFilledInput-input": { py: 0 } }}
         />
       </TableCell>
       <TableCell>
@@ -135,10 +156,10 @@ const Term = ({
                   _id,
                   businessId,
                   label,
+                  termFee,
                   startDate: startDate.toISOString().split("T")[0],
                   endDate: endDate.toISOString().split("T")[0],
                 });
-                add && setLabel("");
                 setTouched(false);
               }}
             >
@@ -230,14 +251,16 @@ const Terms = () => {
                   endDate={new Date().toISOString()}
                 />
               )}
-              {termsOfBusiness.map(({ _id, label, startDate, endDate }) => (
-                <Term
-                  key={_id}
-                  {...{ _id, label, startDate, endDate }}
-                  onEdit={editTermHandler}
-                  onDelete={deleteTermHandler}
-                />
-              ))}
+              {termsOfBusiness.map(
+                ({ _id, label, startDate, endDate, termFee = "" }) => (
+                  <Term
+                    key={_id}
+                    {...{ _id, label, startDate, endDate, termFee }}
+                    onEdit={editTermHandler}
+                    onDelete={deleteTermHandler}
+                  />
+                )
+              )}
             </TableBody>
           </Table>
         </TableContainer>

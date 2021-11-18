@@ -189,7 +189,7 @@ const ClassPayments = () => {
               date={date}
               onChange={(newDate) => setDate(newDate)}
               views={["year", "month"]}
-              inputProps={{
+              textfieldProps={{
                 sx: {
                   width: "100%",
                 },
