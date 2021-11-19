@@ -82,6 +82,7 @@ const AddEditClassModal = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const defaultDate = useDefaultDate();
+  const [update, setUpdate] = useState(false);
   const [isWarnOpen, setIsWarnOpen] = useState(false);
   const [className, setClassName] = useState("");
   const [selectedBusinessId, setSelectedBusinessId] = useState("");
@@ -119,6 +120,7 @@ const AddEditClassModal = (props) => {
 
   const setClassSessions = (data) => {
     classSessionsRef.current = data;
+    setUpdate((prev) => !prev);
   };
 
   const areSessionsTouched = useRef([]);
@@ -270,6 +272,7 @@ const AddEditClassModal = (props) => {
       })
     );
   }, [sessionsOfClass]);
+
   const populateClassData = useCallback(() => {
     const {
       name,

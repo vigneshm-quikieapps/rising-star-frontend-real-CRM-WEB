@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MenuItem, Box } from "@mui/material";
 import {
@@ -45,17 +45,43 @@ const Session = (props) => {
   const dispatch = useDispatch();
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
+  // id: _id,
+  //       name,
+  //       dayIndex: pattern.map((item) => {
+  //         return ShortWeekNames.indexOf(item.day.toLowerCase());
+  //       }),
+  //       facility: facility,
+  //       fullCapacity: fullcapacity,
+  //       waitlistCapacity: waitcapacity,
+  //       coachId: coachId,
+  //       startDate,
+  //       endDate,
+  //       selectedTerm: term,
+  //       startTime: pattern[0].startTime,
+  //       endTime: pattern[0].endTime,
 
   const [touched, setTouched] = useState(false);
-  const [name, setName] = useState("");
-  const [facility, setFacility] = useState("");
-  const [fullCapacity, setFullCapacity] = useState("");
-  const [waitlistCapacity, setWaitlistCapacity] = useState("");
-  const [coachId, setCoachId] = useState("");
-  const [selectedTermId, setSelectedTermId] = useState("");
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
-  const [pattern, setPattern] = useState([]);
+  const [name, setName] = useState(initialSessionData.name);
+  const [facility, setFacility] = useState(initialSessionData.facility);
+  const [fullCapacity, setFullCapacity] = useState(
+    initialSessionData.fullCapacity
+  );
+  const [waitlistCapacity, setWaitlistCapacity] = useState(
+    initialSessionData.waitlistCapacity
+  );
+  const [coachId, setCoachId] = useState(initialSessionData.coachId);
+  const [selectedTermId, setSelectedTermId] = useState(
+    initialSessionData.selectedTerm._id
+  );
+  const [startTime, setStartTime] = useState(
+    new Date(initialSessionData.startTime)
+  );
+  const [endTime, setEndTime] = useState(new Date(initialSessionData.endTime));
+  const [pattern, setPattern] = useState(
+    ShortWeekNames.map((_, index) =>
+      initialSessionData.dayIndex.includes(index)
+    )
+  );
 
   const handleChange = (e, field) => {
     setTouched(true);
@@ -129,7 +155,19 @@ const Session = (props) => {
   };
 
   const restoreDefaults = () => {
-    classSessionsRef[index] = initialSessionData;
+    setName(initialSessionData.name);
+    setFacility(initialSessionData.facility);
+    setFullCapacity(initialSessionData.fullCapacity);
+    setWaitlistCapacity(initialSessionData.waitlistCapacity);
+    setCoachId(initialSessionData.coachId);
+    setSelectedTermId(initialSessionData.selectedTerm._id);
+    setStartTime(new Date(initialSessionData.startTime));
+    setEndTime(new Date(initialSessionData.endTime));
+    setPattern(
+      ShortWeekNames.map((_, index) =>
+        initialSessionData.dayIndex.includes(index)
+      )
+    );
     setTouched(false);
   };
 
@@ -139,7 +177,7 @@ const Session = (props) => {
 
   const onEdit = () => {
     let data = {
-      id: initialSessionData._id,
+      id: initialSessionData.id,
       name,
       pattern: pattern.reduce((prev, current, index) => {
         if (current) prev.push(ShortWeekNames[index]);

@@ -52,20 +52,20 @@ const Sessions = (props) => {
     if (isEdit) {
       return setShowAddSession(true);
     }
-    classSessionsRef.unshift({
-      name: "",
-      dayIndex: [],
-      facility: "",
-      fullCapacity: "",
-      waitlistCapacity: "",
-      coachId: "",
-      selectedTerm: { _id: "" },
-      startDate: new Date(),
-      endDate: new Date(),
-      startTime: new Date(),
-      endTime: new Date(),
-    });
-    setPage(1);
+    // classSessionsRef.unshift({
+    //   name: "",
+    //   dayIndex: [],
+    //   facility: "",
+    //   fullCapacity: "",
+    //   waitlistCapacity: "",
+    //   coachId: "",
+    //   selectedTerm: { _id: "" },
+    //   startDate: new Date(),
+    //   endDate: new Date(),
+    //   startTime: new Date(),
+    //   endTime: new Date(),
+    // });
+    // setPage(1);
   };
 
   const totalPages = Math.ceil(initialSessions.length / 3);
@@ -113,7 +113,7 @@ const Sessions = (props) => {
                   <Session
                     areSessionsTouched={touched}
                     isEdit={isEdit}
-                    data={{
+                    initialSessionData={{
                       name: "",
                       dayIndex: [],
                       facility: "",
