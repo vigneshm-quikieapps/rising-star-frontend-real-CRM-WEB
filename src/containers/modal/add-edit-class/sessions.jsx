@@ -33,16 +33,26 @@ const paginationCustomStyle = {
 };
 
 const Sessions = (props) => {
-  const { classSessions, setClassSessions, isEdit, classId } = props;
+  const {
+    classSessionsRef,
+    setClassSessions,
+    isEdit,
+    classId,
+    touched,
+    initialSessions,
+  } = props;
   const [page, setPage] = useState(1);
+  const [showAddSession, setShowAddSession] = useState(false);
 
   const handleChange = (event, value) => {
     setPage(value);
   };
 
   const addSessionRow = () => {
-    let newSessions = [...classSessions];
-    newSessions.unshift({
+    if (isEdit) {
+      return setShowAddSession(true);
+    }
+    classSessionsRef.unshift({
       name: "",
       dayIndex: [],
       facility: "",
@@ -56,10 +66,9 @@ const Sessions = (props) => {
       endTime: new Date(),
     });
     setPage(1);
-    setClassSessions(newSessions);
   };
 
-  const totalPages = Math.ceil(classSessions.length / 3);
+  const totalPages = Math.ceil(initialSessions.length / 3);
   return (
     <CardRow>
       <AccordionContainer>
@@ -87,7 +96,7 @@ const Sessions = (props) => {
               backgroundColor: "rgba(219, 216, 227, 0.5)",
             }}
           >
-            {classSessions.length ? (
+            {classSessionsRef.length ? (
               <>
                 <CardRow>
                   <Description
@@ -100,16 +109,40 @@ const Sessions = (props) => {
                     Sessions
                   </Description>
                 </CardRow>
-                {classSessions.map((session, index) => {
+                {showAddSession && (
+                  <Session
+                    areSessionsTouched={touched}
+                    isEdit={isEdit}
+                    data={{
+                      name: "",
+                      dayIndex: [],
+                      facility: "",
+                      fullCapacity: "",
+                      waitlistCapacity: "",
+                      coachId: "",
+                      selectedTerm: { _id: "" },
+                      startDate: new Date(),
+                      endDate: new Date(),
+                      startTime: new Date(),
+                      endTime: new Date(),
+                    }}
+                    // index={index}
+                    // sessions={classSessions}
+                    // setSessionData={setClassSessions}
+                    classId={classId}
+                  />
+                )}
+                {initialSessions.map((session, index) => {
                   const start = (page - 1) * 3;
                   if (index >= start && index <= start + 2) {
                     return (
                       <Session
+                        areSessionsTouched={touched}
                         isEdit={isEdit}
                         key={index}
-                        data={session}
+                        initialSessionData={session}
                         index={index}
-                        sessions={classSessions}
+                        classSessionsRef={classSessionsRef}
                         setSessionData={setClassSessions}
                         classId={classId}
                       />

@@ -1,9 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MenuItem, Box } from "@mui/material";
 import {
   TextField,
-  DatePicker,
   TimePicker,
   CheckBox,
   IconButton,
@@ -34,18 +33,33 @@ const DeleteButton = (props) => (
 );
 
 const Session = (props) => {
-  const { data, index, sessions, setSessionData, isEdit, classId } = props;
-  const [touched, setTouched] = useState(false);
+  const {
+    initialSessionData,
+    index,
+    classSessionsRef,
+    setSessionData,
+    isEdit,
+    classId,
+    areSessionsTouched,
+  } = props;
   const dispatch = useDispatch();
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
 
-  const initialData = useRef(data);
+  const [touched, setTouched] = useState(false);
+  const [name, setName] = useState("");
+  const [facility, setFacility] = useState("");
+  const [fullCapacity, setFullCapacity] = useState("");
+  const [waitlistCapacity, setWaitlistCapacity] = useState("");
+  const [coachId, setCoachId] = useState("");
+  const [selectedTermId, setSelectedTermId] = useState("");
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+  const [pattern, setPattern] = useState([]);
 
   const handleChange = (e, field) => {
     setTouched(true);
-    let newSessions = [...sessions];
-    let updatedSession = { ...data };
+    const updatedSession = classSessionsRef[index];
 
     const value =
       field === "startTime" || field === "endTime" || field === "dayIndex"
@@ -54,41 +68,68 @@ const Session = (props) => {
 
     switch (field) {
       case "startTime":
-      case "endTime":
-      case "coachId":
-      case "waitlistCapacity":
-      case "fullCapacity":
-      case "facility":
-      case "name":
+        setStartTime(value);
         updatedSession[field] = value;
         break;
-
+      case "endTime":
+        setEndTime(value);
+        updatedSession[field] = value;
+        break;
+      case "coachId":
+        setCoachId(value);
+        updatedSession[field] = value;
+        break;
+      case "waitlistCapacity":
+        setWaitlistCapacity(value);
+        updatedSession[field] = value;
+        break;
+      case "fullCapacity":
+        setFullCapacity(value);
+        updatedSession[field] = value;
+        break;
+      case "facility":
+        setFacility(value);
+        updatedSession[field] = value;
+        break;
+      case "name":
+        setName(value);
+        updatedSession[field] = value;
+        break;
       case "dayIndex":
-        let newIndex = [...data.dayIndex];
-        if (newIndex.includes(value))
-          newIndex = newIndex.filter((item) => item !== value);
-        else newIndex.push(value);
-        updatedSession[field] = newIndex;
+        // setPattern((pattern) => {
+        //   let updatedPattern = [...pattern];
+        //   updatedPattern[value] = true;
+        //   const reShapedPattern = updatedPattern.reduce(
+        //     (prev, current, index) => {
+        //       if (current) prev.push(ShortWeekNames[index]);
+        //       return prev;
+        //     },
+        //     []
+        //   );
+        //   updatedSession[field] = reShapedPattern;
+        //   return updatedPattern;
+        // });
+
+        setPattern((prevPattern) => {
+          let updatedPattern = [...prevPattern];
+          updatedPattern[value] = !updatedPattern[value];
+          return updatedPattern;
+        });
+
         break;
-
-      case "selectedTerm":
-        let selectedTerm = termsOfBusiness.find(({ _id }) => _id === value);
-
-        updatedSession[field] = selectedTerm;
+      case "selectedTermId":
+        updatedSession["selectedTerm"] = termsOfBusiness.find(
+          (term) => term._id === value
+        );
+        setSelectedTermId(value);
         break;
-
       default:
+        return;
     }
-
-    newSessions[index] = updatedSession;
-    setSessionData(newSessions);
   };
 
   const restoreDefaults = () => {
-    let newSessions = [...sessions];
-    newSessions[index] = { ...initialData.current };
-
-    setSessionData(newSessions);
+    classSessionsRef[index] = initialSessionData;
     setTouched(false);
   };
 
@@ -96,7 +137,27 @@ const Session = (props) => {
     setTouched(false);
   };
 
-  const onEdit = (edit) => {
+  const onEdit = () => {
+    let data = {
+      id: initialSessionData._id,
+      name,
+      pattern: pattern.reduce((prev, current, index) => {
+        if (current) prev.push(ShortWeekNames[index]);
+        return prev;
+      }, []),
+      term: termsOfBusiness.find((term) => term._id === selectedTermId),
+      endTime,
+      startTime,
+      coachId,
+      fullcapacity: fullCapacity,
+      waitcapacity: waitlistCapacity,
+      facility,
+    };
+
+    dispatch(editSessionOfClass({ callback: onEditSuccess, data }));
+  };
+
+  const onAdd = (edit) => {
     const {
       id,
       name,
@@ -108,7 +169,7 @@ const Session = (props) => {
       fullCapacity: fullcapacity,
       waitlistCapacity: waitcapacity,
       facility,
-    } = sessions[index];
+    } = classSessionsRef[index];
 
     if (edit) {
       let data = {
@@ -133,6 +194,8 @@ const Session = (props) => {
         endTime,
         startTime,
         coachId,
+        startDate: term.startDate,
+        endDate: term.endDate,
         fullcapacity,
         waitcapacity,
         facility,
@@ -141,15 +204,20 @@ const Session = (props) => {
     }
   };
 
-  const isSessionEdit = sessions[index].id;
+  const isSessionEdit = useMemo(
+    () => classSessionsRef[index].id,
+    [classSessionsRef, index]
+  );
 
   const handleDelete = () => {
     isSessionEdit && dispatch(deleteSessionFromClass(isSessionEdit));
-    let newSessions = removeItemByIndex(sessions, index);
+    let newSessions = removeItemByIndex(classSessionsRef, index);
     setSessionData(newSessions);
     setTouched(false);
   };
-
+  useEffect(() => {
+    areSessionsTouched.current[index] = touched;
+  }, [touched, areSessionsTouched, index]);
   return (
     <Box
       key={index}
@@ -171,9 +239,9 @@ const Session = (props) => {
           <TextField
             select
             label="Term"
-            value={termsOfBusiness.length ? data.selectedTerm?._id : ""}
+            value={selectedTermId}
             variant={"filled"}
-            onChange={(e) => handleChange(e, "selectedTerm")}
+            onChange={(e) => handleChange(e, "selectedTermId")}
             sx={{ width: "100%" }}
           >
             {termsOfBusiness.length ? (
@@ -192,7 +260,9 @@ const Session = (props) => {
         <Box>
           <Output
             title="Start Date"
-            description={data.selectedTerm?.startDate?.split("T")[0]}
+            description={
+              initialSessionData.selectedTerm?.startDate?.split("T")[0] || "---"
+            }
           />
           {/* <DatePicker
             disabled
@@ -204,7 +274,9 @@ const Session = (props) => {
         <Box>
           <Output
             title="End Date"
-            description={data.selectedTerm?.endDate?.split("T")[0]}
+            description={
+              initialSessionData.selectedTerm?.endDate?.split("T")[0] || "---"
+            }
           />
           {/* <DatePicker
             disabled
@@ -219,7 +291,7 @@ const Session = (props) => {
           variant="filled"
           label="Session Name"
           sx={{ width: "100%" }}
-          value={data.name}
+          value={name}
           onChange={(e) => handleChange(e, "name")}
         />
       </CardRow>
@@ -251,7 +323,7 @@ const Session = (props) => {
               >
                 <DayText sx={{ textTransform: "capitalize" }}> {day}</DayText>
                 <CheckBox
-                  checked={data.dayIndex.includes(i)}
+                  checked={pattern[i]}
                   onClick={() => {
                     handleChange(i, "dayIndex");
                   }}
@@ -263,12 +335,12 @@ const Session = (props) => {
 
         <TimePicker
           label="Start Time"
-          date={data.startTime}
+          date={startTime}
           onChange={(e) => handleChange(e, "startTime")}
         />
         <TimePicker
           label="End Time"
-          date={data.endTime}
+          date={endTime}
           onChange={(e) => handleChange(e, "endTime")}
         />
       </CardRow>
@@ -283,24 +355,24 @@ const Session = (props) => {
         <TextField
           variant="filled"
           label="Facility"
-          value={data.facility}
+          value={facility}
           onChange={(e) => handleChange(e, "facility")}
         />
         <TextField
           variant="filled"
-          value={data.fullCapacity}
+          value={fullCapacity}
           label="Full Class Capacity"
           onChange={(e) => handleChange(e, "fullCapacity")}
         />
         <TextField
-          value={data.waitlistCapacity}
+          value={waitlistCapacity}
           variant="filled"
           label="Waitlist Capacity"
           onChange={(e) => handleChange(e, "waitlistCapacity")}
         />
         <TextField
           select
-          value={allCoaches.length ? data.coachId : ""}
+          value={coachId}
           label="Coach Name"
           variant="filled"
           onChange={(e) => handleChange(e, "coachId")}

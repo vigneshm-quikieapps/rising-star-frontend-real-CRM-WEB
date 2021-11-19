@@ -6,13 +6,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 export default function DialogBox(props) {
-  const { open, handleClose, title, description, accept } = props;
+  const { open, onNo, title, description, onYes } = props;
 
   return (
     <div>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={onNo}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -23,9 +23,9 @@ export default function DialogBox(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={accept} autoFocus>
-            Agree
+          <Button onClick={onNo}>No</Button>
+          <Button onClick={onYes} autoFocus>
+            Yes
           </Button>
         </DialogActions>
       </Dialog>

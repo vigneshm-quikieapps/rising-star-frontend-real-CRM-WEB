@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -94,7 +100,7 @@ const AddEditClassModal = (props) => {
       payFrequency: "",
     },
   ]);
-  const [classSessions, setClassSessions] = useState([
+  const classSessionsRef = useRef([
     {
       id: "",
       name: "",
@@ -111,6 +117,12 @@ const AddEditClassModal = (props) => {
     },
   ]);
 
+  const setClassSessions = (data) => {
+    classSessionsRef.current = data;
+  };
+
+  const areSessionsTouched = useRef([]);
+
   const currentUserBusinesses = useSelector(
     (state) => state.businesses.businessList
   );
@@ -122,10 +134,6 @@ const AddEditClassModal = (props) => {
   );
   const isLoading = useSelector((state) => state.shared.loading);
   const sessionsOfClass = useSelector((state) => state.classes.classSessions);
-  const handleClose = () => {
-    setIsWarnOpen(false);
-    history.push("/classes");
-  };
 
   const handleAgeSelect = (e) => {
     const {
@@ -174,7 +182,7 @@ const AddEditClassModal = (props) => {
         }
       ),
 
-      sessions: classSessions.map((item) => {
+      sessions: classSessionsRef.current.map((item) => {
         const {
           name,
           coachId,
@@ -214,6 +222,9 @@ const AddEditClassModal = (props) => {
         addClass({ data: newClassObject, callback: redirectToClassList })
       );
     } else {
+      if (areSessionsTouched.current.includes(true)) {
+        return setIsWarnOpen(true);
+      }
       dispatch(
         editClass({
           data: newClassObject,
@@ -228,28 +239,8 @@ const AddEditClassModal = (props) => {
     history.push("/classes");
   };
 
-  const populateClassData = useCallback(() => {
-    const {
-      name,
-      businessId,
-      status,
-      registrationform,
-      categoryId,
-      evaluationSchemeId,
-      about,
-      charges,
-      enrolmentControls,
-    } = classObj;
-    let existingCharges = charges?.map(
-      ({ name, amount, mandatory, payFrequency }) => ({
-        name,
-        amount,
-        isMandatory: mandatory,
-        payFrequency,
-      })
-    );
-
-    let existingSessions = sessionsOfClass?.map(
+  const initialSessions = useMemo(() => {
+    return sessionsOfClass?.map(
       ({
         _id,
         name,
@@ -278,6 +269,27 @@ const AddEditClassModal = (props) => {
         endTime: pattern[0].endTime,
       })
     );
+  }, [sessionsOfClass]);
+  const populateClassData = useCallback(() => {
+    const {
+      name,
+      businessId,
+      status,
+      registrationform,
+      categoryId,
+      evaluationSchemeId,
+      about,
+      charges,
+      enrolmentControls,
+    } = classObj;
+    let existingCharges = charges?.map(
+      ({ name, amount, mandatory, payFrequency }) => ({
+        name,
+        amount,
+        isMandatory: mandatory,
+        payFrequency,
+      })
+    );
     setClassName(name);
     setSelectedBusinessId(businessId);
     setSelectedStatus(status);
@@ -288,10 +300,18 @@ const AddEditClassModal = (props) => {
     setClassCharges(existingCharges);
     setAges(enrolmentControls[0].values);
     setGenders(enrolmentControls[1].values);
-    setClassSessions(existingSessions);
-  }, [classObj, sessionsOfClass]);
+    setClassSessions(initialSessions);
+  }, [classObj, initialSessions]);
 
-  const handleWarningClose = () => {
+  const handleYes = () => {
+    setIsWarnOpen(false);
+    if (!areSessionsTouched.current.includes(true)) {
+      return handleAddClass(true);
+    }
+    history.push("/classes");
+  };
+
+  const handleNo = () => {
     setIsWarnOpen(false);
   };
   const handleWarn = () => {
@@ -321,7 +341,7 @@ const AddEditClassModal = (props) => {
       dispatch(getCoachesOfBusiness(selectedBusinessId));
     }
   }, [selectedBusinessId, dispatch]);
-
+  console.log(areSessionsTouched);
   return (
     <Box>
       <Modal
@@ -595,10 +615,12 @@ const AddEditClassModal = (props) => {
               />
 
               <Sessions
+                touched={areSessionsTouched}
                 classId={classObj?._id}
                 isEdit={isEditMode}
                 setClassSessions={setClassSessions}
-                classSessions={classSessions}
+                classSessionsRef={classSessionsRef.current}
+                initialSessions={initialSessions}
               />
 
               <CardRow sx={{ justifyContent: "flex-start" }}>
@@ -619,9 +641,15 @@ const AddEditClassModal = (props) => {
               <Warning
                 open={isWarnOpen}
                 title="Warning"
-                description="Are you sure, you want to close? data will be lost!"
-                handleClose={handleWarningClose}
-                accept={handleClose}
+                description={
+                  !isEditMode
+                    ? "Are you sure, you want to close? Data will be lost!"
+                    : areSessionsTouched.current.includes(true)
+                    ? "Are you sure, you want to save? There are unsaved data/sessions!"
+                    : "Are you sure, you want to close? Data will be lost!"
+                }
+                onNo={handleNo}
+                onYes={handleYes}
               />
             </Box>
           </Box>
