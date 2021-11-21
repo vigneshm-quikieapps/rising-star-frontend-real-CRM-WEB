@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import {
   Close as CloseIcon,
-  Expand as ExpandMoreIcon,
+  ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
 
 import {
@@ -335,7 +335,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
       dispatch(getCoachesOfBusiness(selectedBusinessId));
     }
   }, [selectedBusinessId, dispatch]);
-  console.log(areSessionsTouched);
+  
   return (
     <Box>
       <Modal
