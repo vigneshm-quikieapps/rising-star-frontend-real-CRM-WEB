@@ -127,10 +127,10 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
     },
   ]);
 
-  const setClassSessions = (data) => {
+  const setClassSessions = useCallback((data) => {
     classSessionsRef.current = data;
     setUpdate((prev) => !prev);
-  };
+  }, []);
 
   const handleAgeSelect = (e) => {
     const value = e.target.value;
@@ -292,7 +292,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
     setAges(enrolmentControls[0].values);
     setGenders(enrolmentControls[1].values);
     setClassSessions(initialSessions);
-  }, [classObj, initialSessions]);
+  }, [classObj, initialSessions, setClassSessions]);
 
   const handleYes = () => {
     setIsWarnOpen(false);
