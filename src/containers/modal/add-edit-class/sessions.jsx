@@ -1,4 +1,10 @@
+import { useState } from "react";
 import { AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import {
+  Add as AddIcon,
+  ExpandMore as ExpandMoreIcon,
+} from "@mui/icons-material";
+
 import {
   Accordion,
   GradientButton,
@@ -9,11 +15,7 @@ import {
   CardRow,
   Description,
 } from "../../../components/common";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddIcon from "@mui/icons-material/Add";
-
 import Session from "../../class-list/session";
-import { useState } from "react";
 
 const paginationCustomStyle = {
   "& ul": {
@@ -32,19 +34,18 @@ const paginationCustomStyle = {
   },
 };
 
-const Sessions = (props) => {
-  const {
-    classSessionsRef,
-    setClassSessions,
-    isEdit,
-    classId,
-    touched,
-    initialSessions,
-  } = props;
+const Sessions = ({
+  classSessionsRef,
+  setClassSessions,
+  isEdit,
+  classId,
+  touched,
+  initialSessions,
+}) => {
   const [page, setPage] = useState(1);
   const [showAddSession, setShowAddSession] = useState(false);
 
-  const handleChange = (event, value) => {
+  const handlePageChange = (_, value) => {
     setPage(value);
   };
 
@@ -69,15 +70,12 @@ const Sessions = (props) => {
   };
 
   const totalPages = Math.ceil(initialSessions.length / 3);
+
   return (
     <CardRow>
       <AccordionContainer>
         <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <CardRow sx={{ width: "100%", padding: "0 10px 0 0" }}>
               <Typography>Class Schedule</Typography>
               <GradientButton
@@ -162,7 +160,7 @@ const Sessions = (props) => {
                 sx={paginationCustomStyle}
                 count={totalPages}
                 page={page}
-                onChange={handleChange}
+                onChange={handlePageChange}
               />
             </CardRow>
           </AccordionDetails>

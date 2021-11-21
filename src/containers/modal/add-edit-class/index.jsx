@@ -335,7 +335,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
       dispatch(getCoachesOfBusiness(selectedBusinessId));
     }
   }, [selectedBusinessId, dispatch]);
-  
+
   return (
     <Box>
       <Modal
@@ -372,7 +372,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
               boxShadow: "0 3px 6px #8888",
             }}
           >
-            <HeadingText id="modal-modal-title" variant="h6" component="h2">
+            <HeadingText variant="h6" component="h2">
               Class Definition and Schedule
             </HeadingText>
             <CrossIconButton onClick={handleWarn} />
@@ -536,11 +536,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
               <CardRow>
                 <AccordionContainer>
                   <Accordion defaultExpanded>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                    >
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography>Enrolment Controls</Typography>
                     </AccordionSummary>
                     <AccordionDetails>

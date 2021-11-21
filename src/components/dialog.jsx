@@ -10,17 +10,10 @@ export default function DialogBox(props) {
 
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={onNo}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <Dialog open={open} onClose={onNo}>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {description}
-          </DialogContentText>
+          <DialogContentText>{description}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={onNo}>No</Button>
