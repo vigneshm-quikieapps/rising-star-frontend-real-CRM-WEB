@@ -5,8 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-
+import { styled } from "@mui/material/styles";
 import {
   AccordionDetails,
   AccordionSummary,
@@ -15,7 +16,10 @@ import {
   Typography,
   Modal,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import {
+  Close as CloseIcon,
+  Expand as ExpandMoreIcon,
+} from "@mui/icons-material";
 
 import {
   AccordionContainer,
@@ -30,15 +34,10 @@ import {
   Loader,
   Warning,
 } from "../../../components";
-
-import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
+import Charges from "./charges";
+import Sessions from "./sessions";
 import { getEvaluationSchemeList } from "../../../redux/action/evaluationActions";
 import { getTermsOfBusiness } from "../../../redux/action/terms-actions";
-import { ShortWeekNames } from "../../../helper/constants";
-import { useHistory } from "react-router";
-
 import {
   getCategoriesOfBusiness,
   getCoachesOfBusiness,
@@ -48,9 +47,7 @@ import {
   editClass,
   getSessionsOfClass,
 } from "../../../redux/action/class-actions";
-
-import Charges from "./charges";
-import Sessions from "./sessions";
+import { ShortWeekNames } from "../../../helper/constants";
 import { useDefaultDate } from "../../../hooks";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -73,12 +70,9 @@ const CrossIconButton = ({ onClick }) => (
 const genderArray = ["MALE", "FEMALE"];
 const ageArray = Array(15)
   .fill(1)
-  .map((_, index) => {
-    return index + 1;
-  });
+  .map((_, index) => index + 1);
 
-const AddEditClassModal = (props) => {
-  const { classObj, isEditMode } = props;
+const AddEditClassModal = ({ classObj, isEditMode }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const defaultDate = useDefaultDate();
@@ -101,6 +95,21 @@ const AddEditClassModal = (props) => {
       payFrequency: "",
     },
   ]);
+
+  const currentUserBusinesses = useSelector(
+    (state) => state.businesses.businessList
+  );
+  const categories = useSelector(
+    (state) => state.businesses.categoriesOfBusiness
+  );
+  const evaluationSchemeList = useSelector(
+    (state) => state.evaluation.evaluationList
+  );
+  const isLoading = useSelector((state) => state.shared.loading);
+  const sessionsOfClass = useSelector((state) => state.classes.classSessions);
+
+  const isSaving = useRef(false);
+  const areSessionsTouched = useRef([]);
   const classSessionsRef = useRef([
     {
       id: "",
@@ -123,35 +132,20 @@ const AddEditClassModal = (props) => {
     setUpdate((prev) => !prev);
   };
 
-  const areSessionsTouched = useRef([]);
-
-  const currentUserBusinesses = useSelector(
-    (state) => state.businesses.businessList
-  );
-  const categories = useSelector(
-    (state) => state.businesses.categoriesOfBusiness
-  );
-  const evaluationSchemeList = useSelector(
-    (state) => state.evaluation.evaluationList
-  );
-  const isLoading = useSelector((state) => state.shared.loading);
-  const sessionsOfClass = useSelector((state) => state.classes.classSessions);
-
   const handleAgeSelect = (e) => {
-    const {
-      target: { value },
-    } = e;
+    const value = e.target.value;
     setAges(typeof value === "string" ? value.split(",") : value);
   };
 
   const handleGenderSelect = (e) => {
-    const {
-      target: { value },
-    } = e;
+    const value = e.target.value;
     setGenders(typeof value === "string" ? value.split(",") : value);
   };
 
+  const redirectToClassList = () => history.push("/classes");
+
   const handleAddClass = (isEdit) => {
+    isSaving.current = true;
     let newClassObject = {
       name: className,
       status: selectedStatus,
@@ -172,7 +166,6 @@ const AddEditClassModal = (props) => {
           name: "GENDER",
         },
       ],
-
       charges: classCharges.map(
         ({ name, amount, isMandatory, payFrequency }) => {
           return {
@@ -183,7 +176,6 @@ const AddEditClassModal = (props) => {
           };
         }
       ),
-
       sessions: classSessionsRef.current.map((item) => {
         const {
           name,
@@ -235,10 +227,6 @@ const AddEditClassModal = (props) => {
         })
       );
     }
-  };
-
-  const redirectToClassList = () => {
-    history.push("/classes");
   };
 
   const initialSessions = useMemo(() => {
@@ -308,16 +296,19 @@ const AddEditClassModal = (props) => {
 
   const handleYes = () => {
     setIsWarnOpen(false);
-    if (!areSessionsTouched.current.includes(true)) {
+    if (isSaving.current) {
+      areSessionsTouched.current = [];
       return handleAddClass(true);
     }
     history.push("/classes");
   };
 
   const handleNo = () => {
+    isSaving.current = false;
     setIsWarnOpen(false);
   };
   const handleWarn = () => {
+    isSaving.current = false;
     setIsWarnOpen(true);
   };
 
@@ -647,8 +638,9 @@ const AddEditClassModal = (props) => {
                 description={
                   !isEditMode
                     ? "Are you sure, you want to close? Data will be lost!"
-                    : areSessionsTouched.current.includes(true)
-                    ? "Are you sure, you want to save? There are unsaved data/sessions!"
+                    : isSaving.current
+                    ? areSessionsTouched.current.includes(true) &&
+                      "Are you sure, you want to save? There are unsaved data/sessions!"
                     : "Are you sure, you want to close? Data will be lost!"
                 }
                 onNo={handleNo}
