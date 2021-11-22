@@ -283,12 +283,14 @@ const Attendance = () => {
   const attendanceRowData = useCallback(() => {
     return attendance?.records?.map((item) => {
       const {
+        comments,
         attended,
         memberId,
         member: {
           name,
           parent: { mobileNo: pContact },
           contacts,
+          enrolment: { startDate },
         },
         memberConsent: {
           consent: { allergies, condition },
@@ -301,9 +303,9 @@ const Attendance = () => {
         allergies,
         condition,
         paymentStatus: "No Info",
-        startDate: "No Info",
+        startDate: startDate.split("T")[0],
         attended,
-        comments: "no data",
+        comments,
         memberId,
       };
     });
