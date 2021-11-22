@@ -1,11 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useHistory } from "react-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useHistory, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import {
@@ -47,8 +41,6 @@ import {
   editClass,
   getSessionsOfClass,
 } from "../../../redux/action/class-actions";
-import { ShortWeekNames } from "../../../helper/constants";
-import { useDefaultDate } from "../../../hooks";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
@@ -75,8 +67,7 @@ const ageArray = Array(15)
 const AddEditClassModal = ({ classObj, isEditMode }) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const defaultDate = useDefaultDate();
-  const [update, setUpdate] = useState(false);
+  const { id: classId } = useParams();
   const [isWarnOpen, setIsWarnOpen] = useState(false);
   const [className, setClassName] = useState("");
   const [selectedBusinessId, setSelectedBusinessId] = useState("");
@@ -87,6 +78,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
   const [aboutClass, setAboutClass] = useState("");
   const [genders, setGenders] = useState([]);
   const [ages, setAges] = useState([1]);
+  const [classSessions, setClassSessions] = useState([]);
   const [classCharges, setClassCharges] = useState([
     {
       name: "",
@@ -110,27 +102,6 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
 
   const isSaving = useRef(false);
   const areSessionsTouched = useRef([]);
-  const classSessionsRef = useRef([
-    {
-      id: "",
-      name: "",
-      dayIndex: [],
-      facility: "",
-      fullCapacity: "",
-      waitlistCapacity: "",
-      coachId: "",
-      selectedTerm: { _id: "" },
-      startDate: defaultDate,
-      endDate: defaultDate,
-      startTime: defaultDate,
-      endTime: defaultDate,
-    },
-  ]);
-
-  const setClassSessions = useCallback((data) => {
-    classSessionsRef.current = data;
-    setUpdate((prev) => !prev);
-  }, []);
 
   const handleAgeSelect = (e) => {
     const value = e.target.value;
@@ -176,37 +147,12 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
           };
         }
       ),
-      sessions: classSessionsRef.current.map((item) => {
-        const {
-          name,
-          coachId,
-          fullCapacity,
-          waitlistCapacity,
-          facility,
-          dayIndex,
-          startTime,
-          endTime,
-          startDate,
-          endDate,
-          selectedTerm,
-        } = item;
+      sessions: classSessions.map((item) => {
+        const { fullCapacity, waitlistCapacity, ...data } = item;
         return {
-          name,
-          term: {
-            _id: selectedTerm._id,
-            label: selectedTerm.label,
-            startDate: selectedTerm?.startDate?.split("T")[0],
-            endDate: selectedTerm?.endDate?.split("T")[0],
-          },
-          startDate,
-          endDate,
-          startTime,
-          endTime,
-          pattern: dayIndex.map((day) => ShortWeekNames[day]),
-          coachId,
+          ...data,
           fullcapacity: fullCapacity,
           waitcapacity: waitlistCapacity,
-          facility,
         };
       }),
     };
@@ -228,38 +174,6 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
       );
     }
   };
-
-  const initialSessions = useMemo(() => {
-    return sessionsOfClass?.map(
-      ({
-        _id,
-        name,
-        facility,
-        fullcapacity,
-        waitcapacity,
-        coachId,
-        pattern,
-        termData: term,
-        startDate,
-        endDate,
-      }) => ({
-        id: _id,
-        name,
-        dayIndex: pattern.map((item) => {
-          return ShortWeekNames.indexOf(item.day.toLowerCase());
-        }),
-        facility: facility,
-        fullCapacity: fullcapacity,
-        waitlistCapacity: waitcapacity,
-        coachId: coachId,
-        startDate,
-        endDate,
-        selectedTerm: term,
-        startTime: pattern[0].startTime,
-        endTime: pattern[0].endTime,
-      })
-    );
-  }, [sessionsOfClass]);
 
   const populateClassData = useCallback(() => {
     const {
@@ -291,8 +205,22 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
     setClassCharges(existingCharges);
     setAges(enrolmentControls[0].values);
     setGenders(enrolmentControls[1].values);
-    setClassSessions(initialSessions);
-  }, [classObj, initialSessions, setClassSessions]);
+    setClassSessions(
+      sessionsOfClass.map(
+        ({ _id, fullcapacity, waitcapacity, pattern, ...data }) => {
+          return {
+            id: _id,
+            fullCapacity: fullcapacity,
+            waitlistCapacity: waitcapacity,
+            pattern: pattern.map((obj) => obj.day),
+            startTime: pattern[0].startTime,
+            endTime: pattern[0].endTime,
+            ...data,
+          };
+        }
+      )
+    );
+  }, [classObj, sessionsOfClass]);
 
   const handleYes = () => {
     setIsWarnOpen(false);
@@ -606,11 +534,10 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
 
               <Sessions
                 touched={areSessionsTouched}
-                classId={classObj?._id}
-                isEdit={isEditMode}
+                classId={classId}
+                // isEdit={isEditMode}
                 setClassSessions={setClassSessions}
-                classSessionsRef={classSessionsRef.current}
-                initialSessions={initialSessions}
+                sessionList={classSessions}
               />
 
               <CardRow sx={{ justifyContent: "flex-start" }}>

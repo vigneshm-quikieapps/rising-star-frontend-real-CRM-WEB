@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import {
   Add as AddIcon,
@@ -15,7 +16,11 @@ import {
   CardRow,
   Description,
 } from "../../../components/common";
-import Session from "../../class-list/session";
+import Session from "../../class-list/session2";
+import {
+  addSessionToClass,
+  editSessionOfClass,
+} from "../../../redux/action/class-actions";
 
 const paginationCustomStyle = {
   "& ul": {
@@ -34,42 +39,57 @@ const paginationCustomStyle = {
   },
 };
 
-const Sessions = ({
-  classSessionsRef,
-  setClassSessions,
-  isEdit,
-  classId,
-  touched,
-  initialSessions,
-}) => {
-  const [page, setPage] = useState(1);
-  const [showAddSession, setShowAddSession] = useState(false);
+const reshapeSessionData = ({
+  fullCapacity,
+  waitlistCapacity,
+  ...otherData
+}) => ({
+  fullcapacity: fullCapacity,
+  waitcapacity: waitlistCapacity,
+  ...otherData,
+});
 
+const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
+  const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const [showAddSession, setShowAddSession] = useState(classId ? false : true);
   const handlePageChange = (_, value) => {
     setPage(value);
   };
 
-  const addSessionRow = () => {
-    if (isEdit) {
-      return setShowAddSession(true);
+  const totalPages = Math.ceil(sessionList.length / 3);
+
+  const addSessionHandler = (data) => {
+    const sessionData = reshapeSessionData(data);
+    if (classId) {
+      return dispatch(
+        addSessionToClass({ classId, ...sessionData }, () => {
+          setShowAddSession(false);
+        })
+      );
     }
-    // classSessionsRef.unshift({
-    //   name: "",
-    //   dayIndex: [],
-    //   facility: "",
-    //   fullCapacity: "",
-    //   waitlistCapacity: "",
-    //   coachId: "",
-    //   selectedTerm: { _id: "" },
-    //   startDate: new Date(),
-    //   endDate: new Date(),
-    //   startTime: new Date(),
-    //   endTime: new Date(),
-    // });
-    // setPage(1);
+    setClassSessions((prevSessions) => {
+      return [sessionData, ...prevSessions];
+    });
+    setShowAddSession(false);
   };
 
-  const totalPages = Math.ceil(initialSessions.length / 3);
+  const editSessionHandler = (data) => {
+    const sessionData = reshapeSessionData(data);
+    if (data?.id) dispatch(editSessionOfClass(sessionData));
+    setClassSessions((prevSessions) => {
+      const updatedSessions = prevSessions.map(
+        (prevSessionData, sessionIndex) => {
+          const { index, ...dataWithoutIndex } = data;
+          if (sessionIndex === index) return dataWithoutIndex;
+          return prevSessionData;
+        }
+      );
+      return updatedSessions;
+    });
+  };
+
+  const deleteSessionHandler = () => {};
 
   return (
     <CardRow>
@@ -81,7 +101,7 @@ const Sessions = ({
               <GradientButton
                 onClick={(e) => {
                   e.stopPropagation();
-                  addSessionRow();
+                  setShowAddSession(true);
                 }}
               >
                 <AddIcon /> Add Session
@@ -94,63 +114,43 @@ const Sessions = ({
               backgroundColor: "rgba(219, 216, 227, 0.5)",
             }}
           >
-            {classSessionsRef.length ? (
-              <>
-                <CardRow>
-                  <Description
-                    sx={{
-                      fontSize: "16px",
-                      fontWeight: "bold",
-                      margin: "17px 0px 5px 15px",
-                    }}
-                  >
-                    Sessions
-                  </Description>
-                </CardRow>
-                {showAddSession && (
-                  <Session
-                    areSessionsTouched={touched}
-                    isEdit={isEdit}
-                    initialSessionData={{
-                      name: "",
-                      dayIndex: [],
-                      facility: "",
-                      fullCapacity: "",
-                      waitlistCapacity: "",
-                      coachId: "",
-                      selectedTerm: { _id: "" },
-                      startDate: new Date(),
-                      endDate: new Date(),
-                      startTime: new Date(),
-                      endTime: new Date(),
-                    }}
-                    // index={index}
-                    // sessions={classSessions}
-                    // setSessionData={setClassSessions}
-                    classId={classId}
-                  />
-                )}
-                {initialSessions.map((session, index) => {
-                  const start = (page - 1) * 3;
-                  if (index >= start && index <= start + 2) {
-                    return (
-                      <Session
-                        areSessionsTouched={touched}
-                        isEdit={isEdit}
-                        key={index}
-                        initialSessionData={session}
-                        index={index}
-                        classSessionsRef={classSessionsRef}
-                        setSessionData={setClassSessions}
-                        classId={classId}
-                      />
-                    );
-                  }
-                  return null;
-                })}
-              </>
-            ) : null}
-
+            <>
+              <CardRow>
+                <Description
+                  sx={{
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    margin: "17px 0px 5px 15px",
+                  }}
+                >
+                  Sessions
+                </Description>
+              </CardRow>
+              {showAddSession && (
+                <Session
+                  isNew
+                  initialData={{}}
+                  onAction={addSessionHandler}
+                  onDelete={() => setShowAddSession(false)}
+                />
+              )}
+              {sessionList.map((session, index) => {
+                const start = (page - 1) * 3;
+                if (index >= start && index <= start + 2) {
+                  return (
+                    <Session
+                      areSessionsTouched={touched}
+                      key={index}
+                      index={index}
+                      initialData={session}
+                      onAction={editSessionHandler}
+                      onDelete={deleteSessionHandler}
+                    />
+                  );
+                }
+                return null;
+              })}
+            </>
             <CardRow
               sx={{
                 justifyContent: "center",

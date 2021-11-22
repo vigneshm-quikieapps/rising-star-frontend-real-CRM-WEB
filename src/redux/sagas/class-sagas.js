@@ -160,7 +160,7 @@ export function* watchAddSessionToClass() {
 export function* addSessionToAClass(action) {
   try {
     yield put(startLoading());
-    const session = yield call(addSessionToClass, action.payload.data);
+    const session = yield call(addSessionToClass, action.payload.sessionData);
     yield put({
       type: classActionTypes.ADD_SESSION_TO_CLASS_SUCCEEDED,
       payload: session,

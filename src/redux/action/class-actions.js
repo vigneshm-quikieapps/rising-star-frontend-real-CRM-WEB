@@ -32,10 +32,10 @@ export const editSessionOfClass = (data) => {
   };
 };
 
-export const addSessionToClass = (data) => {
+export const addSessionToClass = (sessionData, callback) => {
   return {
     type: classActionTypes.ADD_SESSION_TO_CLASS,
-    payload: data,
+    payload: { sessionData, callback },
   };
 };
 

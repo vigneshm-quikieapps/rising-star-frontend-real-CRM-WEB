@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { Box, MenuItem, Typography } from "@mui/material";
 import {
   Done as DoneIcon,
+  Save as SaveIcon,
+  ClearRounded as CancelIcon,
   Undo as RestoreDefaultsIcon,
 } from "@mui/icons-material";
 
@@ -17,24 +19,22 @@ import {
   TimePicker,
 } from "../../components";
 import deleteIcon from "../../assets/icons/icon-delete.png";
-import { ShortWeekNames } from "../../helper/constants";
-import { date } from "yup";
+import { shortWeekNames } from "../../helper/constants";
 
 const RoundedIconButton = styled(IconButton)({ borderRadius: "50%" });
 
 const Pattern = ({ pattern, onChange }) => {
   const handleChange = (index) => {
     let updatedPattern = [...pattern];
-    if (updatedPattern.includes(ShortWeekNames[index])) {
+    if (updatedPattern.includes(shortWeekNames[index])) {
       updatedPattern = updatedPattern.filter(
-        (day) => day !== ShortWeekNames[index]
+        (day) => day !== shortWeekNames[index]
       );
     } else {
-      updatedPattern = [...updatedPattern, ShortWeekNames[index]];
+      updatedPattern = [...updatedPattern, shortWeekNames[index]];
     }
     onChange(updatedPattern);
   };
-
   return (
     <Box
       sx={{
@@ -43,7 +43,7 @@ const Pattern = ({ pattern, onChange }) => {
         justifyContent: "space-around",
       }}
     >
-      {ShortWeekNames.map((day, index) => (
+      {shortWeekNames.map((day, index) => (
         <Box
           key={index}
           sx={{
@@ -57,7 +57,7 @@ const Pattern = ({ pattern, onChange }) => {
             {day}
           </Typography>
           <CheckBox
-            checked={pattern.includes(ShortWeekNames[index])}
+            checked={pattern.includes(day)}
             onClick={() => handleChange(index)}
           />
         </Box>
@@ -66,40 +66,48 @@ const Pattern = ({ pattern, onChange }) => {
   );
 };
 
-const Session = ({
-  initialData: {
-    name = "",
-    facility = "",
-    fullCapacity = "",
-    waitlistCapacity = "",
-    coachId = "",
-    term = {},
-    pattern = [],
-    startDate = term?.startDate?.split("T")[0] || "- - -",
-    endDate = term?.endDate?.split("T")[0] || "- - -",
-    startTime = new Date(term?.startTime || Date.now()),
-    endTime = new Date(term?.endTime || Date.now()),
-  },
-  onDelete,
-  onAction,
-}) => {
+const Session = ({ index, initialData, onDelete, onAction, isNew }) => {
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const [touched, setTouched] = useState(false);
-  const initialState = {
-    name,
-    facility,
-    fullCapacity,
-    waitlistCapacity,
-    coachId,
-    term,
-    pattern,
-    startDate,
-    endDate,
-    startTime,
-    endTime,
-  };
+
+  const initialState = useMemo(() => {
+    const {
+      id,
+      name = "",
+      facility = "",
+      fullCapacity = "",
+      waitlistCapacity = "",
+      coachId = "",
+      term = {},
+      pattern = [],
+      startDate = term?.startDate?.split("T")[0] || "- - -",
+      endDate = term?.endDate?.split("T")[0] || "- - -",
+      startTime,
+      endTime,
+    } = initialData;
+    return {
+      index,
+      id,
+      name,
+      facility,
+      fullCapacity,
+      waitlistCapacity,
+      coachId,
+      term,
+      pattern,
+      startDate,
+      endDate,
+      startTime: new Date(startTime || Date.now()),
+      endTime: new Date(endTime || Date.now()),
+    };
+  }, [index, initialData]);
+
   const [state, setState] = useState(initialState);
+
+  useEffect(() => {
+    setState(initialState);
+  }, [initialState]);
 
   const changeHandler = useCallback(
     (e, property) => {
@@ -123,7 +131,7 @@ const Session = ({
     },
     [termsOfBusiness]
   );
-  const pattenChangeHandler = useCallback(
+  const patternChangeHandler = useCallback(
     (pattern) => changeHandler(pattern, "pattern"),
     [changeHandler]
   );
@@ -162,8 +170,11 @@ const Session = ({
             <MenuItem value="">No terms</MenuItem>
           )}
         </TextField>
-        <Output title="Start Date" description={state.startDate} />
-        <Output title="End Date" description={state.endDate} />
+        <Output
+          title="Start Date"
+          description={state.startDate.split("T")[0]}
+        />
+        <Output title="End Date" description={state.endDate.split("T")[0]} />
         <TextField
           variant="filled"
           label="Session Name"
@@ -171,7 +182,7 @@ const Session = ({
           value={state.name}
           onChange={(e) => changeHandler(e, "name")}
         />
-        <Pattern onChange={pattenChangeHandler} pattern={state.pattern} />
+        <Pattern onChange={patternChangeHandler} pattern={state.pattern} />
         <TimePicker
           label="Start Time"
           date={state.startTime}
@@ -230,13 +241,22 @@ const Session = ({
       >
         {!touched && (
           <RoundedIconButton onClick={onDelete}>
-            <ImgIcon>{deleteIcon}</ImgIcon>
+            {isNew ? (
+              <CancelIcon color="secondary" />
+            ) : (
+              <ImgIcon>{deleteIcon}</ImgIcon>
+            )}
           </RoundedIconButton>
         )}
         {touched && (
           <>
-            <RoundedIconButton onClick={() => onAction(state)}>
-              <DoneIcon color="success" />
+            <RoundedIconButton
+              onClick={() => {
+                setTouched(false);
+                onAction(state);
+              }}
+            >
+              {isNew ? <SaveIcon /> : <DoneIcon color="success" />}
             </RoundedIconButton>
             <RoundedIconButton onClick={restoreDefaults}>
               <RestoreDefaultsIcon color="text.secondary" />
