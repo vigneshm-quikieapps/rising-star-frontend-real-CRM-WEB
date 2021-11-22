@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Grid,
   styled,
@@ -25,6 +25,7 @@ const GridContainer = styled(Grid)({
 });
 
 const Login = () => {
+  const errors = useSelector((state) => state.shared.errors);
   const [visiblePass, setVisiblePass] = useState(false);
   const [credentials, setCredentials] = useState({
     mobileNo: "",
@@ -47,6 +48,8 @@ const Login = () => {
   const togglePassVisibility = () =>
     setVisiblePass((visibility) => !visibility);
 
+  const errorMsg = useMemo(() => {}, [errors]);
+
   return (
     <GridContainer
       container
@@ -58,9 +61,24 @@ const Login = () => {
         <Typography variant="h5" component="div">
           Login
         </Typography>
-        <Typography variant="subtitle2" component="div">
-          Business Admin
-        </Typography>
+
+        <>
+          <Typography variant="subtitle2" component="div">
+            Business Admin
+          </Typography>
+          {errors.length ? (
+            <Typography
+              component="pre"
+              sx={{
+                fontSize: 12,
+                color: (theme) => theme.palette.error.main,
+                marginBottom: "10px",
+              }}
+            >
+              {errors[errors.length - 1]}
+            </Typography>
+          ) : null}
+        </>
         <TextField
           label="Email"
           variant="outlined"

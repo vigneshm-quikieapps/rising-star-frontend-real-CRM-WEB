@@ -283,6 +283,7 @@ const Attendance = () => {
   const attendanceRowData = useCallback(() => {
     return attendance?.records?.map((item) => {
       const {
+        comments,
         attended,
         memberId,
         member: {
@@ -303,7 +304,7 @@ const Attendance = () => {
         paymentStatus: "No Info",
         startDate: "No Info",
         attended,
-        comments: "no data",
+        comments,
         memberId,
       };
     });
