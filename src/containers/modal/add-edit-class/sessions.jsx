@@ -16,7 +16,7 @@ import {
   CardRow,
   Description,
 } from "../../../components/common";
-import Session from "../../class-list/session2";
+import Session from "../../class-list/session";
 import {
   addSessionToClass,
   editSessionOfClass,

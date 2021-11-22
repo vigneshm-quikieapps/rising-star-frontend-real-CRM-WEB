@@ -1,419 +1,238 @@
-import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { MenuItem, Box } from "@mui/material";
-import {
-  TextField,
-  TimePicker,
-  CheckBox,
-  IconButton,
-  ImgIcon,
-  CardRow,
-  DayText,
-  Output,
-} from "../../components";
-
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { styled } from "@mui/material/styles";
+import { Box, MenuItem, Typography } from "@mui/material";
 import {
   Done as DoneIcon,
+  Save as SaveIcon,
+  ClearRounded as CancelIcon,
   Undo as RestoreDefaultsIcon,
 } from "@mui/icons-material";
-import deleteIcon from "../../assets/icons/icon-delete.png";
 
-import { shortWeekNames } from "../../helper/constants";
-import { removeItemByIndex } from "../../utils";
 import {
-  addSessionToClass,
-  deleteSessionFromClass,
-  editSessionOfClass,
-} from "../../redux/action/class-actions";
+  CheckBox,
+  Grid,
+  ImgIcon,
+  IconButton,
+  Output,
+  TextField,
+  TimePicker,
+} from "../../components";
+import deleteIcon from "../../assets/icons/icon-delete.png";
+import { shortWeekNames } from "../../helper/constants";
 
-const DeleteButton = (props) => (
-  <IconButton {...props} sx={{ borderRadius: "50%" }}>
-    <ImgIcon alt="delete">{deleteIcon}</ImgIcon>
-  </IconButton>
-);
+const RoundedIconButton = styled(IconButton)({ borderRadius: "50%" });
 
-const Session = (props) => {
-  const {
-    initialSessionData,
-    index,
-    classSessionsRef,
-    setSessionData,
-    isEdit,
-    classId,
-    areSessionsTouched,
-  } = props;
-  const dispatch = useDispatch();
-  const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
-  const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
-  // id: _id,
-  //       name,
-  //       dayIndex: pattern.map((item) => {
-  //         return shortWeekNames.indexOf(item.day.toLowerCase());
-  //       }),
-  //       facility: facility,
-  //       fullCapacity: fullcapacity,
-  //       waitlistCapacity: waitcapacity,
-  //       coachId: coachId,
-  //       startDate,
-  //       endDate,
-  //       selectedTerm: term,
-  //       startTime: pattern[0].startTime,
-  //       endTime: pattern[0].endTime,
-
-  const [touched, setTouched] = useState(false);
-  const [name, setName] = useState(initialSessionData.name);
-  const [facility, setFacility] = useState(initialSessionData.facility);
-  const [fullCapacity, setFullCapacity] = useState(
-    initialSessionData.fullCapacity
-  );
-  const [waitlistCapacity, setWaitlistCapacity] = useState(
-    initialSessionData.waitlistCapacity
-  );
-  const [coachId, setCoachId] = useState(initialSessionData.coachId);
-  const [selectedTermId, setSelectedTermId] = useState(
-    initialSessionData.selectedTerm._id
-  );
-  const [startTime, setStartTime] = useState(
-    new Date(initialSessionData.startTime)
-  );
-  const [endTime, setEndTime] = useState(new Date(initialSessionData.endTime));
-  const [pattern, setPattern] = useState(
-    shortWeekNames.map((_, index) =>
-      initialSessionData.dayIndex.includes(index)
-    )
-  );
-
-  const handleChange = (e, field) => {
-    setTouched(true);
-    const updatedSession = classSessionsRef[index];
-
-    const value =
-      field === "startTime" || field === "endTime" || field === "dayIndex"
-        ? e
-        : e.target.value;
-
-    switch (field) {
-      case "startTime":
-        setStartTime(value);
-        updatedSession[field] = value;
-        break;
-      case "endTime":
-        setEndTime(value);
-        updatedSession[field] = value;
-        break;
-      case "coachId":
-        setCoachId(value);
-        updatedSession[field] = value;
-        break;
-      case "waitlistCapacity":
-        setWaitlistCapacity(value);
-        updatedSession[field] = value;
-        break;
-      case "fullCapacity":
-        setFullCapacity(value);
-        updatedSession[field] = value;
-        break;
-      case "facility":
-        setFacility(value);
-        updatedSession[field] = value;
-        break;
-      case "name":
-        setName(value);
-        updatedSession[field] = value;
-        break;
-      case "dayIndex":
-        // setPattern((pattern) => {
-        //   let updatedPattern = [...pattern];
-        //   updatedPattern[value] = true;
-        //   const reShapedPattern = updatedPattern.reduce(
-        //     (prev, current, index) => {
-        //       if (current) prev.push(shortWeekNames[index]);
-        //       return prev;
-        //     },
-        //     []
-        //   );
-        //   updatedSession[field] = reShapedPattern;
-        //   return updatedPattern;
-        // });
-
-        setPattern((prevPattern) => {
-          let updatedPattern = [...prevPattern];
-          updatedPattern[value] = !updatedPattern[value];
-          return updatedPattern;
-        });
-
-        break;
-      case "selectedTermId":
-        updatedSession["selectedTerm"] = termsOfBusiness.find(
-          (term) => term._id === value
-        );
-        setSelectedTermId(value);
-        break;
-      default:
-        return;
-    }
-  };
-
-  const restoreDefaults = () => {
-    setName(initialSessionData.name);
-    setFacility(initialSessionData.facility);
-    setFullCapacity(initialSessionData.fullCapacity);
-    setWaitlistCapacity(initialSessionData.waitlistCapacity);
-    setCoachId(initialSessionData.coachId);
-    setSelectedTermId(initialSessionData.selectedTerm._id);
-    setStartTime(new Date(initialSessionData.startTime));
-    setEndTime(new Date(initialSessionData.endTime));
-    setPattern(
-      shortWeekNames.map((_, index) =>
-        initialSessionData.dayIndex.includes(index)
-      )
-    );
-    setTouched(false);
-  };
-
-  const onEditSuccess = () => {
-    setTouched(false);
-  };
-
-  const onEdit = () => {
-    let data = {
-      id: initialSessionData.id,
-      name,
-      pattern: pattern.reduce((prev, current, index) => {
-        if (current) prev.push(shortWeekNames[index]);
-        return prev;
-      }, []),
-      term: termsOfBusiness.find((term) => term._id === selectedTermId),
-      endTime,
-      startTime,
-      coachId,
-      fullcapacity: fullCapacity,
-      waitcapacity: waitlistCapacity,
-      facility,
-    };
-
-    dispatch(editSessionOfClass({ callback: onEditSuccess, data }));
-  };
-
-  const onAdd = (edit) => {
-    const {
-      id,
-      name,
-      dayIndex,
-      selectedTerm: term,
-      endTime,
-      startTime,
-      coachId,
-      fullCapacity: fullcapacity,
-      waitlistCapacity: waitcapacity,
-      facility,
-    } = classSessionsRef[index];
-
-    if (edit) {
-      let data = {
-        id,
-        name,
-        pattern: dayIndex.map((day) => shortWeekNames[day]),
-        term,
-        endTime,
-        startTime,
-        coachId,
-        fullcapacity,
-        waitcapacity,
-        facility,
-      };
-      dispatch(editSessionOfClass({ callback: onEditSuccess, data }));
+const Pattern = ({ pattern, onChange }) => {
+  const handleChange = (index) => {
+    let updatedPattern = [...pattern];
+    if (updatedPattern.includes(shortWeekNames[index])) {
+      updatedPattern = updatedPattern.filter(
+        (day) => day !== shortWeekNames[index]
+      );
     } else {
-      let data = {
-        classId,
-        name,
-        pattern: dayIndex.map((day) => shortWeekNames[day]),
-        term,
-        endTime,
-        startTime,
-        coachId,
-        startDate: term.startDate,
-        endDate: term.endDate,
-        fullcapacity,
-        waitcapacity,
-        facility,
-      };
-      dispatch(addSessionToClass({ callback: onEditSuccess, data }));
+      updatedPattern = [...updatedPattern, shortWeekNames[index]];
     }
+    onChange(updatedPattern);
   };
-
-  const isSessionEdit = useMemo(
-    () => classSessionsRef[index].id,
-    [classSessionsRef, index]
-  );
-
-  const handleDelete = () => {
-    isSessionEdit && dispatch(deleteSessionFromClass(isSessionEdit));
-    let newSessions = removeItemByIndex(classSessionsRef, index);
-    setSessionData(newSessions);
-    setTouched(false);
-  };
-  useEffect(() => {
-    areSessionsTouched.current[index] = touched;
-  }, [touched, areSessionsTouched, index]);
   return (
     <Box
-      key={index}
       sx={{
-        backgroundColor: "#dedce4",
-        padding: "15px 10px .5%",
-        margin: "10px 0",
+        gridColumn: "1 / span 2",
+        display: "flex",
+        justifyContent: "space-around",
       }}
     >
-      <CardRow
-        sx={{
-          display: "grid",
-          columnGap: "20px",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
-          margin: "15px auto",
-        }}
-      >
-        <Box sx={{ gridColumn: "1 / span 2" }}>
-          <TextField
-            select
-            label="Term"
-            value={selectedTermId}
-            variant={"filled"}
-            onChange={(e) => handleChange(e, "selectedTermId")}
-            sx={{ width: "100%" }}
-          >
-            {termsOfBusiness.length ? (
-              termsOfBusiness.map(({ _id, label }) => {
-                return (
-                  <MenuItem key={label} value={_id}>
-                    {label}
-                  </MenuItem>
-                );
-              })
-            ) : (
-              <MenuItem value="">No terms</MenuItem>
-            )}
-          </TextField>
-        </Box>
-        <Box>
-          <Output
-            title="Start Date"
-            description={
-              initialSessionData.selectedTerm?.startDate?.split("T")[0] || "---"
-            }
+      {shortWeekNames.map((day, index) => (
+        <Box
+          key={index}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexWrap: "nowrap",
+            alignItems: "center",
+          }}
+        >
+          <Typography sx={{ textTransform: "capitalize", fontSize: "14px" }}>
+            {day}
+          </Typography>
+          <CheckBox
+            checked={pattern.includes(day)}
+            onClick={() => handleChange(index)}
           />
-          {/* <DatePicker
-            disabled
-            onChange={(e) => handleChange(e, "startDate")}
-            label="Start Date"
-            date={startingDate}
-          /> */}
         </Box>
-        <Box>
-          <Output
-            title="End Date"
-            description={
-              initialSessionData.selectedTerm?.endDate?.split("T")[0] || "---"
-            }
-          />
-          {/* <DatePicker
-            disabled
-            onChange={(e) => handleChange(e, "endDate")}
-            label="End Date"
-            date={endingDate}
-          /> */}
-        </Box>
-      </CardRow>
-      <CardRow>
+      ))}
+    </Box>
+  );
+};
+
+const Session = ({
+  index,
+  initialData,
+  onDelete,
+  onAction,
+  isNew,
+  areSessionsTouched,
+}) => {
+  const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
+  const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
+  const [touched, setTouched] = useState(false);
+
+  const initialState = useMemo(() => {
+    const {
+      id,
+      name = "",
+      facility = "",
+      fullCapacity = "",
+      waitlistCapacity = "",
+      coachId = "",
+      term = {},
+      pattern = [],
+      startDate = term?.startDate?.split("T")[0] || "- - -",
+      endDate = term?.endDate?.split("T")[0] || "- - -",
+      startTime,
+      endTime,
+    } = initialData;
+    return {
+      index,
+      id,
+      name,
+      facility,
+      fullCapacity,
+      waitlistCapacity,
+      coachId,
+      term,
+      pattern,
+      startDate,
+      endDate,
+      startTime: new Date(startTime || Date.now()),
+      endTime: new Date(endTime || Date.now()),
+    };
+  }, [index, initialData]);
+
+  const [state, setState] = useState(initialState);
+
+  useEffect(() => {
+    !isNew && setState(initialState);
+  }, [isNew, initialState]);
+
+  useEffect(() => {
+    if (isNew) {
+      areSessionsTouched.current[0] = touched;
+      return;
+    }
+    areSessionsTouched.current[index + 1] = touched;
+    console.log(areSessionsTouched);
+  }, [isNew, touched, areSessionsTouched, index]);
+
+  const changeHandler = useCallback(
+    (e, property) => {
+      setTouched(true);
+      const value =
+        ["startTime", "endTime", "pattern"].indexOf(property) > -1
+          ? e
+          : e.target.value;
+      if (property === "termId") {
+        setState((prevState) => {
+          const term = termsOfBusiness.find(({ _id }) => _id === value);
+          return {
+            ...prevState,
+            term,
+            startDate: term.startDate.split("T")[0],
+            endDate: term.endDate.split("T")[0],
+          };
+        });
+      }
+      setState((prevState) => ({ ...prevState, [property]: value }));
+    },
+    [termsOfBusiness]
+  );
+  const patternChangeHandler = useCallback(
+    (pattern) => changeHandler(pattern, "pattern"),
+    [changeHandler]
+  );
+
+  const restoreDefaults = () => {
+    setState(initialState);
+    setTouched(false);
+  };
+
+  return (
+    <Box
+      sx={{
+        p: "20px",
+        backgroundColor: "#dedce4",
+        my: "20px",
+      }}
+    >
+      <Grid columnCount={4} rowGap="20px" columnGap="20px">
+        <TextField
+          select
+          label="Term"
+          value={state?.term?._id || ""}
+          variant={"filled"}
+          onChange={(e) => changeHandler(e, "termId")}
+          sx={{ gridColumn: "1 / span 2" }}
+        >
+          {termsOfBusiness.length ? (
+            termsOfBusiness.map(({ _id, label }) => {
+              return (
+                <MenuItem key={label} value={_id}>
+                  {label}
+                </MenuItem>
+              );
+            })
+          ) : (
+            <MenuItem value="">No terms</MenuItem>
+          )}
+        </TextField>
+        <Output
+          title="Start Date"
+          description={state.startDate.split("T")[0]}
+        />
+        <Output title="End Date" description={state.endDate.split("T")[0]} />
         <TextField
           variant="filled"
           label="Session Name"
-          sx={{ width: "100%" }}
-          value={name}
-          onChange={(e) => handleChange(e, "name")}
+          sx={{ gridColumn: "1 / span 4" }}
+          value={state.name}
+          onChange={(e) => changeHandler(e, "name")}
         />
-      </CardRow>
-
-      <CardRow
-        sx={{
-          display: "grid",
-          columnGap: "20px",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
-          margin: "15px auto",
-        }}
-      >
-        <CardRow
-          sx={{
-            gridColumn: "1 / span 2",
-            margin: "0",
-            justifyContent: "space-around",
-          }}
-        >
-          {shortWeekNames.map((day, i) => {
-            return (
-              <Box
-                key={i}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  flexWrap: "nowrap",
-                }}
-              >
-                <DayText sx={{ textTransform: "capitalize" }}> {day}</DayText>
-                <CheckBox
-                  checked={pattern[i]}
-                  onClick={() => {
-                    handleChange(i, "dayIndex");
-                  }}
-                />
-              </Box>
-            );
-          })}
-        </CardRow>
-
+        <Pattern onChange={patternChangeHandler} pattern={state.pattern} />
         <TimePicker
           label="Start Time"
-          date={startTime}
-          onChange={(e) => handleChange(e, "startTime")}
+          date={state.startTime}
+          onChange={(e) => changeHandler(e, "startTime")}
         />
         <TimePicker
           label="End Time"
-          date={endTime}
-          onChange={(e) => handleChange(e, "endTime")}
+          date={state.endTime}
+          onChange={(e) => changeHandler(e, "endTime")}
         />
-      </CardRow>
-
-      <CardRow
-        sx={{
-          display: "grid",
-          columnGap: "20px",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
-        }}
-      >
         <TextField
           variant="filled"
           label="Facility"
-          value={facility}
-          onChange={(e) => handleChange(e, "facility")}
+          value={state.facility}
+          onChange={(e) => changeHandler(e, "facility")}
         />
         <TextField
           variant="filled"
-          value={fullCapacity}
+          value={state.fullCapacity}
           label="Full Class Capacity"
-          onChange={(e) => handleChange(e, "fullCapacity")}
+          onChange={(e) => changeHandler(e, "fullCapacity")}
         />
         <TextField
-          value={waitlistCapacity}
+          value={state.waitlistCapacity}
           variant="filled"
           label="Waitlist Capacity"
-          onChange={(e) => handleChange(e, "waitlistCapacity")}
+          onChange={(e) => changeHandler(e, "waitlistCapacity")}
         />
         <TextField
           select
-          value={coachId}
+          value={state.coachId}
           label="Coach Name"
           variant="filled"
-          onChange={(e) => handleChange(e, "coachId")}
+          onChange={(e) => changeHandler(e, "coachId")}
         >
           {allCoaches.length ? (
             allCoaches.map((item, i) => {
@@ -424,37 +243,43 @@ const Session = (props) => {
               );
             })
           ) : (
-            <MenuItem value="">No coaches</MenuItem>
+            <MenuItem value="">No Coaches</MenuItem>
           )}
         </TextField>
-      </CardRow>
-
-      <CardRow
+      </Grid>
+      <Box
         sx={{
+          display: "flex",
           justifyContent: "center",
-          margin: "15px 0 5px",
+          gap: 2,
+          mt: "20px",
         }}
       >
-        {!touched || !isSessionEdit ? (
-          <DeleteButton onClick={handleDelete} />
-        ) : null}
-        {touched && isEdit && (
-          <IconButton
-            sx={{ borderRadius: "50%", marginLeft: "15px" }}
-            onClick={() => onEdit(isSessionEdit?.length)}
-          >
-            <DoneIcon color="success" />
-          </IconButton>
+        {!touched && (
+          <RoundedIconButton onClick={() => onDelete({ index, id: state.id })}>
+            {isNew ? (
+              <CancelIcon color="secondary" />
+            ) : (
+              <ImgIcon>{deleteIcon}</ImgIcon>
+            )}
+          </RoundedIconButton>
         )}
-        {isEdit && touched && isSessionEdit?.length && (
-          <IconButton
-            sx={{ borderRadius: "50%", marginLeft: "15px" }}
-            onClick={restoreDefaults}
-          >
-            <RestoreDefaultsIcon />
-          </IconButton>
+        {touched && (
+          <>
+            <RoundedIconButton
+              onClick={() => {
+                setTouched(false);
+                onAction(state);
+              }}
+            >
+              {isNew ? <SaveIcon /> : <DoneIcon color="success" />}
+            </RoundedIconButton>
+            <RoundedIconButton onClick={restoreDefaults}>
+              <RestoreDefaultsIcon color="text.secondary" />
+            </RoundedIconButton>
+          </>
         )}
-      </CardRow>
+      </Box>
     </Box>
   );
 };
