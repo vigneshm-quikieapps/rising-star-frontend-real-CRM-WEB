@@ -256,7 +256,12 @@ const Session = ({
         }}
       >
         {!touched && (
-          <RoundedIconButton onClick={() => onDelete({ index, id: state.id })}>
+          <RoundedIconButton
+            onClick={() => {
+              setTouched(false);
+              onDelete({ index, id: state.id });
+            }}
+          >
             {isNew ? (
               <CancelIcon color="secondary" />
             ) : (
@@ -269,6 +274,7 @@ const Session = ({
             <RoundedIconButton
               onClick={() => {
                 setTouched(false);
+                if (isNew) areSessionsTouched.current[0] = false;
                 onAction(state);
               }}
             >

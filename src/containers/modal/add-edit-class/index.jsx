@@ -157,14 +157,15 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
       }),
     };
 
+    if (areSessionsTouched.current.includes(true)) {
+      return setIsWarnOpen(true);
+    }
+
     if (!isEdit) {
       dispatch(
         addClass({ data: newClassObject, callback: redirectToClassList })
       );
     } else {
-      if (areSessionsTouched.current.includes(true)) {
-        return setIsWarnOpen(true);
-      }
       dispatch(
         editClass({
           data: newClassObject,
@@ -534,7 +535,6 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
               <Sessions
                 touched={areSessionsTouched}
                 classId={classId}
-                // isEdit={isEditMode}
                 setClassSessions={setClassSessions}
                 sessionList={classSessions}
               />
@@ -558,11 +558,9 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                 open={isWarnOpen}
                 title="Warning"
                 description={
-                  !isEditMode
-                    ? "Are you sure, you want to close? Data will be lost!"
-                    : isSaving.current
+                  isSaving.current
                     ? areSessionsTouched.current.includes(true) &&
-                      "Are you sure, you want to save? There are unsaved data/sessions!"
+                      "Are you sure, you want to save? There are unsaved sessions!"
                     : "Are you sure, you want to close? Data will be lost!"
                 }
                 onNo={handleNo}
