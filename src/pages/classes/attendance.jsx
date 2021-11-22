@@ -290,6 +290,7 @@ const Attendance = () => {
           name,
           parent: { mobileNo: pContact },
           contacts,
+          enrolment: { startDate },
         },
         memberConsent: {
           consent: { allergies, condition },
@@ -302,7 +303,7 @@ const Attendance = () => {
         allergies,
         condition,
         paymentStatus: "No Info",
-        startDate: "No Info",
+        startDate: startDate.split("T")[0],
         attended,
         comments,
         memberId,
