@@ -37,7 +37,7 @@ import toPascal from "../../utils/to-pascal";
 import moreIcon from "../../assets/icons/icon-more.png";
 import {
   attendanceHeaders,
-  ShortWeekNamesStartingWithSunday,
+  shortWeekNamesStartingWithSunday,
 } from "../../helper/constants";
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
 import phoneIcon from "../../assets/icons/icon-phone.png";
@@ -273,7 +273,7 @@ const Attendance = () => {
         startDate,
         endDate,
         pattern: pattern.map((item) =>
-          ShortWeekNamesStartingWithSunday.indexOf(item.day.toLowerCase())
+          shortWeekNamesStartingWithSunday.indexOf(item.day.toLowerCase())
         ),
       };
       return [info, dateInfo];

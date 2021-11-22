@@ -18,7 +18,7 @@ import {
 } from "@mui/icons-material";
 import deleteIcon from "../../assets/icons/icon-delete.png";
 
-import { ShortWeekNames } from "../../helper/constants";
+import { shortWeekNames } from "../../helper/constants";
 import { removeItemByIndex } from "../../utils";
 import {
   addSessionToClass,
@@ -48,7 +48,7 @@ const Session = (props) => {
   // id: _id,
   //       name,
   //       dayIndex: pattern.map((item) => {
-  //         return ShortWeekNames.indexOf(item.day.toLowerCase());
+  //         return shortWeekNames.indexOf(item.day.toLowerCase());
   //       }),
   //       facility: facility,
   //       fullCapacity: fullcapacity,
@@ -78,7 +78,7 @@ const Session = (props) => {
   );
   const [endTime, setEndTime] = useState(new Date(initialSessionData.endTime));
   const [pattern, setPattern] = useState(
-    ShortWeekNames.map((_, index) =>
+    shortWeekNames.map((_, index) =>
       initialSessionData.dayIndex.includes(index)
     )
   );
@@ -127,7 +127,7 @@ const Session = (props) => {
         //   updatedPattern[value] = true;
         //   const reShapedPattern = updatedPattern.reduce(
         //     (prev, current, index) => {
-        //       if (current) prev.push(ShortWeekNames[index]);
+        //       if (current) prev.push(shortWeekNames[index]);
         //       return prev;
         //     },
         //     []
@@ -164,7 +164,7 @@ const Session = (props) => {
     setStartTime(new Date(initialSessionData.startTime));
     setEndTime(new Date(initialSessionData.endTime));
     setPattern(
-      ShortWeekNames.map((_, index) =>
+      shortWeekNames.map((_, index) =>
         initialSessionData.dayIndex.includes(index)
       )
     );
@@ -180,7 +180,7 @@ const Session = (props) => {
       id: initialSessionData.id,
       name,
       pattern: pattern.reduce((prev, current, index) => {
-        if (current) prev.push(ShortWeekNames[index]);
+        if (current) prev.push(shortWeekNames[index]);
         return prev;
       }, []),
       term: termsOfBusiness.find((term) => term._id === selectedTermId),
@@ -213,7 +213,7 @@ const Session = (props) => {
       let data = {
         id,
         name,
-        pattern: dayIndex.map((day) => ShortWeekNames[day]),
+        pattern: dayIndex.map((day) => shortWeekNames[day]),
         term,
         endTime,
         startTime,
@@ -227,7 +227,7 @@ const Session = (props) => {
       let data = {
         classId,
         name,
-        pattern: dayIndex.map((day) => ShortWeekNames[day]),
+        pattern: dayIndex.map((day) => shortWeekNames[day]),
         term,
         endTime,
         startTime,
@@ -349,7 +349,7 @@ const Session = (props) => {
             justifyContent: "space-around",
           }}
         >
-          {ShortWeekNames.map((day, i) => {
+          {shortWeekNames.map((day, i) => {
             return (
               <Box
                 key={i}
