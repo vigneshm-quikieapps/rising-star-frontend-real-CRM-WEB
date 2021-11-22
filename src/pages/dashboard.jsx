@@ -108,11 +108,7 @@ const Dashboard = () => {
 
       <AccordionContainer>
         <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon id="collapse-button" />}
-            aria-controls="collapse-button"
-            id="panel1a-header"
-          >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <Typography>Zippy Totz</Typography>
               <Typography sx={{ opacity: 0.5, fontSize: "14px !important" }}>

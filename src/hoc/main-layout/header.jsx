@@ -109,11 +109,7 @@ const Header = ({
                   mx: "70px",
                 }}
               >
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                >
+                <IconButton color="inherit" onClick={handleDrawerOpen}>
                   <ImgIcon>{menuIcon}</ImgIcon>
                 </IconButton>
               </Box>

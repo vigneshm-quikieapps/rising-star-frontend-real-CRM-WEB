@@ -323,8 +323,25 @@ const Attendance = () => {
 
   useEffect(() => {
     classSessionsInTerm.length &&
-      setSelectedSession(classSessionsInTerm[0]._id);
+      setSelectedSession(
+        classSessionsInTerm[classSessionsInTerm.length - 1]._id
+      );
   }, [classSessionsInTerm]);
+
+  useEffect(() => {
+    setDate(new Date());
+  }, [selectedSession]);
+
+  useEffect(() => {
+    date &&
+      selectedSession.length &&
+      dispatch(
+        getAttendanceOfSessionByDate({
+          sessionId: selectedSession,
+          date: date.toISOString().split("T")[0],
+        })
+      );
+  }, [date, dispatch, selectedSession]);
 
   useEffect(() => {
     setAttendanceList(attendanceRowData() ? attendanceRowData() : []);
@@ -398,12 +415,6 @@ const Attendance = () => {
             onChange={(e) => {
               setTouched(false);
               setDate(e);
-              dispatch(
-                getAttendanceOfSessionByDate({
-                  sessionId: selectedSession,
-                  date: e.toISOString().split("T")[0],
-                })
-              );
             }}
             minDate={new Date(sessionInfo && sessionInfo[1].startDate)}
             maxDate={dateUpperBound}

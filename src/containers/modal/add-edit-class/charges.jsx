@@ -67,11 +67,7 @@ const Charges = (props) => {
     <CardRow>
       <AccordionContainer>
         <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon id="collapse-button" />}
-            aria-controls="collapse-button"
-            id="panel1a-header"
-          >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <CardRow
               sx={{
                 margin: "10px 0",
