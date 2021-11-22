@@ -55,6 +55,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
   const [page, setPage] = useState(1);
   const [showAddSession, setShowAddSession] = useState(classId ? false : true);
   const handlePageChange = (_, value) => {
+    setShowAddSession(false);
     setPage(value);
   };
 
