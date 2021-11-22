@@ -20,6 +20,7 @@ import Session from "../../class-list/session2";
 import {
   addSessionToClass,
   editSessionOfClass,
+  deleteSessionFromClass,
 } from "../../../redux/action/class-actions";
 
 const paginationCustomStyle = {
@@ -69,7 +70,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
       );
     }
     setClassSessions((prevSessions) => {
-      return [sessionData, ...prevSessions];
+      return [data, ...prevSessions];
     });
     setShowAddSession(false);
   };
@@ -89,7 +90,16 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
     });
   };
 
-  const deleteSessionHandler = () => {};
+  const deleteSessionHandler = ({ index, id }) => {
+    console.log(index, classId);
+    if (!id) {
+      setClassSessions((prevSessions) =>
+        prevSessions.filter((session, sessionIndex) => sessionIndex !== index)
+      );
+    } else {
+      dispatch(deleteSessionFromClass(id));
+    }
+  };
 
   return (
     <CardRow>
@@ -128,6 +138,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
               </CardRow>
               {showAddSession && (
                 <Session
+                  areSessionsTouched={touched}
                   isNew
                   initialData={{}}
                   onAction={addSessionHandler}

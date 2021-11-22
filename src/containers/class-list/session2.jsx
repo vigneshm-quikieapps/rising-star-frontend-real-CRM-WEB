@@ -66,7 +66,14 @@ const Pattern = ({ pattern, onChange }) => {
   );
 };
 
-const Session = ({ index, initialData, onDelete, onAction, isNew }) => {
+const Session = ({
+  index,
+  initialData,
+  onDelete,
+  onAction,
+  isNew,
+  areSessionsTouched,
+}) => {
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const [touched, setTouched] = useState(false);
@@ -106,8 +113,17 @@ const Session = ({ index, initialData, onDelete, onAction, isNew }) => {
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
-    setState(initialState);
-  }, [initialState]);
+    !isNew && setState(initialState);
+  }, [isNew, initialState]);
+
+  useEffect(() => {
+    if (isNew) {
+      areSessionsTouched.current[0] = touched;
+      return;
+    }
+    areSessionsTouched.current[index + 1] = touched;
+    console.log(areSessionsTouched);
+  }, [isNew, touched, areSessionsTouched, index]);
 
   const changeHandler = useCallback(
     (e, property) => {
@@ -240,7 +256,7 @@ const Session = ({ index, initialData, onDelete, onAction, isNew }) => {
         }}
       >
         {!touched && (
-          <RoundedIconButton onClick={onDelete}>
+          <RoundedIconButton onClick={() => onDelete({ index, id: state.id })}>
             {isNew ? (
               <CancelIcon color="secondary" />
             ) : (

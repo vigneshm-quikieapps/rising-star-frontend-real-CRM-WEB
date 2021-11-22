@@ -221,7 +221,6 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
       )
     );
   }, [classObj, sessionsOfClass]);
-
   const handleYes = () => {
     setIsWarnOpen(false);
     if (isSaving.current) {
