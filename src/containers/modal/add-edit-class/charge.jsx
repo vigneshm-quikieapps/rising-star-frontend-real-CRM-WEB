@@ -1,8 +1,8 @@
-import { MenuItem, TableCell, TableRow } from "@mui/material";
-import { CheckBox, TextField, IconButton, ImgIcon } from "../../components";
 import { styled } from "@mui/material/styles";
-import deleteIcon from "./../../assets/icons/icon-delete.png";
-import { removeItemByIndex } from "../../utils";
+import { MenuItem, TableCell, TableRow } from "@mui/material";
+import { CheckBox, TextField, IconButton, ImgIcon } from "../../../components";
+import deleteIcon from "../../../assets/icons/icon-delete.png";
+import { removeItemByIndex } from "../../../utils";
 
 const PayFrequencyOptions = [
   {

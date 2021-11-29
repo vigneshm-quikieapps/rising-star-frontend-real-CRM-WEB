@@ -16,7 +16,7 @@ import {
   CardRow,
   Description,
 } from "../../../components/common";
-import Session from "../../class-list/session";
+import Session from "./session";
 import {
   addSessionToClass,
   editSessionOfClass,
@@ -78,7 +78,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
 
   const editSessionHandler = (data) => {
     const sessionData = reshapeSessionData(data);
-    if (data?.id) dispatch(editSessionOfClass(sessionData, () => {}));
+    if (data?.id) return dispatch(editSessionOfClass(sessionData, () => {}));
     setClassSessions((prevSessions) => {
       const updatedSessions = prevSessions.map(
         (prevSessionData, sessionIndex) => {

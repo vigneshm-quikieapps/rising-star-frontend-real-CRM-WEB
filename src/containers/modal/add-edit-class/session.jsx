@@ -17,9 +17,9 @@ import {
   Output,
   TextField,
   TimePicker,
-} from "../../components";
-import deleteIcon from "../../assets/icons/icon-delete.png";
-import { shortWeekNames } from "../../helper/constants";
+} from "../../../components";
+import deleteIcon from "../../../assets/icons/icon-delete.png";
+import { shortWeekNames } from "../../../helper/constants";
 
 const RoundedIconButton = styled(IconButton)({ borderRadius: "50%" });
 
@@ -176,7 +176,7 @@ const Session = ({
           {termsOfBusiness.length ? (
             termsOfBusiness.map(({ _id, label }) => {
               return (
-                <MenuItem key={label} value={_id}>
+                <MenuItem key={_id} value={_id}>
                   {label}
                 </MenuItem>
               );

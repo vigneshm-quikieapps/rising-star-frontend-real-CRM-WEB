@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import {
   AccordionDetails,
   AccordionSummary,
@@ -9,6 +8,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import {
+  Add as AddIcon,
+  ExpandMore as ExpandMoreIcon,
+} from "@mui/icons-material";
 
 import {
   Accordion,
@@ -16,11 +19,8 @@ import {
   TableMui,
   Pagination as StyledPagination,
 } from "../../../components";
-import Charge from "../../class-list/charge";
 import { AccordionContainer, CardRow } from "../../../components/common";
-
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddIcon from "@mui/icons-material/Add";
+import Charge from "./charge";
 
 const paginationCustomStyle = {
   "& ul": {
