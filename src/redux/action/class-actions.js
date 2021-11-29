@@ -28,7 +28,7 @@ export const editClass = (data) => {
 export const editSessionOfClass = (data) => {
   return {
     type: classActionTypes.UPDATE_SESSION_OF_CLASS,
-    payload: data,
+    payload: { data },
   };
 };
 
