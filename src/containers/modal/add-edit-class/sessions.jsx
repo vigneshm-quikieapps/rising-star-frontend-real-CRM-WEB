@@ -78,7 +78,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
 
   const editSessionHandler = (data) => {
     const sessionData = reshapeSessionData(data);
-    if (data?.id) dispatch(editSessionOfClass(sessionData));
+    if (data?.id) dispatch(editSessionOfClass(sessionData, () => {}));
     setClassSessions((prevSessions) => {
       const updatedSessions = prevSessions.map(
         (prevSessionData, sessionIndex) => {
