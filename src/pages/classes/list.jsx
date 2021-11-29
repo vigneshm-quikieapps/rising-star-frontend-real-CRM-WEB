@@ -19,6 +19,7 @@ import {
   getClassList as getClassListAction,
   deleteClass,
 } from "../../redux/action/class-actions";
+import toPascal from "../../utils/to-pascal";
 
 const AdvancedSearch = ({
   open,
@@ -223,8 +224,8 @@ const Classes = () => {
         id: singleClass.id,
         onClick: () => handleRowClick(id),
         items: [
-          name,
-          businessName,
+          toPascal(name),
+          toPascal(businessName),
           <Status status={statusColors[status]} title={statusText[status]} />,
           <ActionButtons
             onEdit={(e) => handleEdit(e, id)}
