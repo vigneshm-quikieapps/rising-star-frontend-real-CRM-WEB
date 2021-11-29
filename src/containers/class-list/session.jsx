@@ -122,7 +122,6 @@ const Session = ({
       return;
     }
     areSessionsTouched.current[index + 1] = touched;
-    console.log(areSessionsTouched);
   }, [isNew, touched, areSessionsTouched, index]);
 
   const changeHandler = useCallback(

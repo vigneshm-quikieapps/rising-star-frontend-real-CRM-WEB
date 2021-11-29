@@ -92,7 +92,6 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
   };
 
   const deleteSessionHandler = ({ index, id }) => {
-    console.log(index, classId);
     if (!id) {
       setClassSessions((prevSessions) =>
         prevSessions.filter((session, sessionIndex) => sessionIndex !== index)

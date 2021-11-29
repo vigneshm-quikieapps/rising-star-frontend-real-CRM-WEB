@@ -126,7 +126,6 @@ export function* editClass(action) {
     yield call(action.payload.callback);
     yield put(stopLoading());
   } catch (error) {
-    console.log(error);
     yield put(setError(error, "Something went wrong while editing a class"));
   }
 }
@@ -146,7 +145,6 @@ export function* editSessionOfClass(action) {
     yield call(action.payload.callback);
     yield put(stopLoading());
   } catch (error) {
-    console.log(error);
     yield put(
       setError(error, "Something went wrong while editing a session of a class")
     );
@@ -168,7 +166,6 @@ export function* addSessionToAClass(action) {
     yield call(action.payload.callback);
     yield put(stopLoading());
   } catch (error) {
-    console.log(error);
     yield put(
       setError(error, "Something went wrong while adding a session to a class")
     );
@@ -192,7 +189,6 @@ export function* deleteSessionFromAClass(action) {
     });
     yield put(stopLoading());
   } catch (error) {
-    console.log(error);
     yield put(
       setError(
         error,
