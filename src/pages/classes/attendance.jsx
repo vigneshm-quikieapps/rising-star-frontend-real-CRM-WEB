@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,6 +8,7 @@ import {
   IconButton,
   MenuItem,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { Undo as RestoreDefaultsIcon } from "@mui/icons-material";
 
@@ -37,7 +38,7 @@ import {
   attendanceHeaders,
   shortWeekNamesStartingWithSunday,
 } from "../../helper/constants";
-import { toPascal, findDesiredDate } from "../../utils";
+import { toPascal, findDesiredDate, toLocaleIsoDate } from "../../utils";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import {
   addAttendance,
@@ -69,9 +70,11 @@ const PhoneIcon = ({ title = "test" }) => (
 );
 
 const Attendance = () => {
+  const mounted = useRef(false);
   const dispatch = useDispatch();
   const { id: classId } = useParams();
 
+  const currentClassId = useSelector((state) => state.terms.classId);
   const classTerms = useSelector((state) => state.terms.termsOfClass);
   const classSessionsInTerm = useSelector(
     (state) => state.sessions.sessionsOfClassInTerm
@@ -146,7 +149,7 @@ const Attendance = () => {
     if (attendanceList.length) {
       let attendanceData = {
         sessionId: selectedSession,
-        date: date.toISOString().split("T")[0],
+        date: toLocaleIsoDate(date),
         records: attendanceList.map(({ memberId, attended, comments }) => ({
           memberId,
           attended,
@@ -222,7 +225,7 @@ const Attendance = () => {
       updatedBy: invalid ? "N/A" : attendance?.updatedBy.name,
       updatedAt: invalid
         ? "N/A"
-        : `${date.toISOString().split("T")[0]} ${date.toLocaleTimeString()}`,
+        : `${toLocaleIsoDate(date)} ${date.toLocaleTimeString()}`,
     };
   }, [attendance]);
 
@@ -252,12 +255,12 @@ const Attendance = () => {
       const { startTime, endTime } = pattern[0];
 
       const info = {
-        "Start Time": new Date(startTime).toLocaleString("en-US", {
+        "Start Time": new Date(startTime).toLocaleString(undefined, {
           hour: "numeric",
           minute: "2-digit",
           hour12: true,
         }),
-        "End Time": new Date(endTime).toLocaleString("en-US", {
+        "End Time": new Date(endTime).toLocaleString(undefined, {
           hour: "numeric",
           minute: "2-digit",
           hour12: true,
@@ -316,58 +319,79 @@ const Attendance = () => {
   }, [dispatch, classId]);
 
   useEffect(() => {
-    classTerms.length && setSelectedTerm(classTerms[0]._id);
-  }, [classTerms]);
+    if (mounted.current) return;
+    if (classTerms.length && classId === currentClassId) {
+      setSelectedTerm(classTerms[0]._id);
+      dispatch(getClassSessionsByTermId(classId, classTerms[0]._id));
+    }
+  }, [dispatch, classId, classTerms, currentClassId]);
 
   useEffect(() => {
-    selectedTerm && dispatch(getClassSessionsByTermId(classId, selectedTerm));
-  }, [dispatch, selectedTerm, classId]);
-
-  useEffect(() => {
-    classSessionsInTerm.length &&
-      setSelectedSession(
-        classSessionsInTerm[classSessionsInTerm.length - 1]._id
-      );
-  }, [classSessionsInTerm]);
-
-  useEffect(() => {
-    if (!classSessionsInTerm.length || !selectedSession) return;
-    const currentSession = classSessionsInTerm.find(
-      ({ _id }) => _id === selectedSession
-    );
-    if (!currentSession) return;
-    let { startDate, endDate, pattern } = currentSession;
-    pattern = pattern.map(({ day }) => day);
-    const desiredDate = findDesiredDate(startDate, endDate, pattern);
-    setDate(desiredDate);
-  }, [selectedSession, classSessionsInTerm]);
-
-  useEffect(() => {
-    if (date && selectedSession) {
-      const currentSession = classSessionsInTerm.find(
-        ({ _id }) => _id === selectedSession
-      );
-      if (!currentSession) return;
-      let { startDate, endDate, pattern } = currentSession;
+    if (mounted.current) return;
+    if (
+      classSessionsInTerm.length &&
+      classSessionsInTerm[0].classId === classId
+    ) {
+      const currentSession =
+        classSessionsInTerm[classSessionsInTerm.length - 1];
+      let { _id, startDate, endDate, pattern } = currentSession;
       pattern = pattern.map(({ day }) => day);
       const desiredDate = findDesiredDate(startDate, endDate, pattern);
+      setSelectedSession(_id);
+      setDate(desiredDate);
       dispatch(
         getAttendanceOfSessionByDate({
-          sessionId: selectedSession,
-          date: desiredDate.toISOString().split("T")[0],
+          sessionId: _id,
+          date: toLocaleIsoDate(desiredDate),
         })
       );
+      mounted.current = true;
     }
-  }, [date, dispatch, selectedSession, classSessionsInTerm]);
+  }, [dispatch, classSessionsInTerm, classId]);
+
+  // const currentSession = useMemo(() => {
+  //   if (!classSessionsInTerm.length || !selectedSession) return;
+  //   return classSessionsInTerm.find(({ _id }) => _id === selectedSession);
+  // }, [selectedSession, classSessionsInTerm]);
 
   useEffect(() => {
     setAttendanceList(attendanceRowData() ? attendanceRowData() : []);
   }, [attendanceRowData]);
 
-  // useEffect(() => {
-  //   selectedSession.length &&
-  //     dispatch(getMembersOfSession(selectedSession, { page: 1 }));
-  // }, [selectedSession, dispatch]);
+  const sessionChangeHandler = (e) => {
+    const sessionId = e.target.value;
+    setTouched(false);
+    setSelectedSession(sessionId);
+    const currentSession = classSessionsInTerm.find(
+      ({ _id }) => _id === sessionId
+    );
+    let { startDate, endDate, pattern } = currentSession;
+    pattern = pattern.map(({ day }) => day);
+    const desiredDate = findDesiredDate(startDate, endDate, pattern);
+    setSelectedSession(sessionId);
+    setDate(desiredDate);
+    dispatch(
+      getAttendanceOfSessionByDate({
+        sessionId,
+        date: toLocaleIsoDate(desiredDate),
+      })
+    );
+  };
+
+  const dateChangeHandler = (e) => {
+    setTouched(false);
+    setDate(e);
+    const selectedDate = new Date(e.toDateString());
+    // let { startDate, endDate, pattern } = currentSession;
+    // pattern = pattern.map(({ day }) => day);
+    // const desiredDate = findDesiredDate(startDate, endDate, pattern);
+    dispatch(
+      getAttendanceOfSessionByDate({
+        sessionId: selectedSession,
+        date: toLocaleIsoDate(selectedDate),
+      })
+    );
+  };
 
   const dateUpperBound = useMemo(() => {
     const today = new Date();
@@ -375,7 +399,7 @@ const Attendance = () => {
     return today >= sessionEndDate ? sessionEndDate : today;
   }, [sessionInfo]);
 
-  return (
+  return mounted.current ? (
     <Box>
       <Card>
         <Box
@@ -409,10 +433,7 @@ const Attendance = () => {
             select
             label="Session"
             value={selectedSession}
-            onChange={(e) => {
-              setTouched(false);
-              setSelectedSession(e.target.value);
-            }}
+            onChange={sessionChangeHandler}
             variant="filled"
           >
             {classSessionsInTerm ? (
@@ -429,10 +450,7 @@ const Attendance = () => {
           </TextField>
 
           <DatePicker
-            onChange={(e) => {
-              setTouched(false);
-              setDate(e);
-            }}
+            onChange={dateChangeHandler}
             minDate={new Date(sessionInfo && sessionInfo[1].startDate)}
             maxDate={dateUpperBound}
             shouldDisableDate={(date) =>
@@ -490,6 +508,17 @@ const Attendance = () => {
           />
         </AccordionDetails>
       </Accordion>
+    </Box>
+  ) : (
+    <Box
+      sx={{
+        display: "flex",
+        height: "500px",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <CircularProgress />
     </Box>
   );
 };

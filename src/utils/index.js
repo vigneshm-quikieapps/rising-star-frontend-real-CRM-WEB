@@ -15,3 +15,4 @@ export { default as axios } from "./axios-instance";
 export { default as findDesiredDate } from "./find-date";
 export { default as toPascal } from "./to-pascal";
 export { default as transformError } from "./transformError";
+export { default as toLocaleIsoDate } from "./to-locale-iso-date";

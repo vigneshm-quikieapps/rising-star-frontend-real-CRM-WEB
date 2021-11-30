@@ -125,7 +125,7 @@ export function* getTermsOfClass(action) {
     const termsList = yield call(getTermsListOfClass, action.payload);
     yield put({
       type: termsActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED,
-      payload: termsList,
+      payload: { terms: termsList.terms, classId: action.payload },
     });
     yield put(stopLoading());
   } catch (error) {

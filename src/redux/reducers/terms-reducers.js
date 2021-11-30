@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   currentBusinessId: undefined,
   currentPage: 1,
   totalPages: 1,
+  classId: undefined,
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -75,10 +76,11 @@ export default function reducer(state = INITIAL_STATE, action) {
     }
 
     case termsActionTypes.GET_TERMS_OF_CLASS_SUCCEEDED: {
-      const { terms } = action.payload;
+      const { terms, classId } = action.payload;
       return {
         ...state,
         termsOfClass: terms,
+        classId,
       };
     }
 
