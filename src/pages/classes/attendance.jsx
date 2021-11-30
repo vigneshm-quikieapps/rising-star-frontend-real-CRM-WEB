@@ -1,6 +1,15 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  Box,
+  AccordionDetails,
+  AccordionSummary,
+  IconButton,
+  MenuItem,
+  Typography,
+} from "@mui/material";
+import { Undo as RestoreDefaultsIcon } from "@mui/icons-material";
 
 import {
   TextField,
@@ -18,32 +27,23 @@ import {
   Tooltip,
   GradientButton,
 } from "../../components";
-
+import {
+  arrowDownIcon,
+  moreIcon,
+  phoneIcon,
+  allergyIcon,
+} from "../../assets/icons";
+import {
+  attendanceHeaders,
+  shortWeekNamesStartingWithSunday,
+} from "../../helper/constants";
+import { toPascal, findDesiredDate } from "../../utils";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import {
   addAttendance,
   getAttendanceOfSessionByDate,
   getClassSessionsByTermId,
 } from "../../redux/action/sessionAction";
-import { Box } from "@mui/system";
-import {
-  AccordionDetails,
-  AccordionSummary,
-  IconButton,
-  MenuItem,
-  Typography,
-} from "@mui/material";
-import toPascal from "../../utils/to-pascal";
-import moreIcon from "../../assets/icons/icon-more.png";
-import {
-  attendanceHeaders,
-  shortWeekNamesStartingWithSunday,
-} from "../../helper/constants";
-import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
-import phoneIcon from "../../assets/icons/icon-phone.png";
-import allergyIcon from "../../assets/icons/icon-allergy.png";
-
-import { Undo as RestoreDefaultsIcon } from "@mui/icons-material";
 
 const MoreIconButton = () => (
   <IconButton sx={{ mr: "10px" }}>
@@ -79,6 +79,7 @@ const Attendance = () => {
   const attendance = useSelector(
     (state) => state.sessions.attendanceList?.attendance
   );
+  const loading = useSelector((state) => state.shared.loading);
 
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
@@ -331,19 +332,34 @@ const Attendance = () => {
   }, [classSessionsInTerm]);
 
   useEffect(() => {
-    setDate(new Date());
-  }, [selectedSession]);
+    if (!classSessionsInTerm.length || !selectedSession) return;
+    const currentSession = classSessionsInTerm.find(
+      ({ _id }) => _id === selectedSession
+    );
+    if (!currentSession) return;
+    let { startDate, endDate, pattern } = currentSession;
+    pattern = pattern.map(({ day }) => day);
+    const desiredDate = findDesiredDate(startDate, endDate, pattern);
+    setDate(desiredDate);
+  }, [selectedSession, classSessionsInTerm]);
 
   useEffect(() => {
-    date &&
-      selectedSession.length &&
+    if (date && selectedSession) {
+      const currentSession = classSessionsInTerm.find(
+        ({ _id }) => _id === selectedSession
+      );
+      if (!currentSession) return;
+      let { startDate, endDate, pattern } = currentSession;
+      pattern = pattern.map(({ day }) => day);
+      const desiredDate = findDesiredDate(startDate, endDate, pattern);
       dispatch(
         getAttendanceOfSessionByDate({
           sessionId: selectedSession,
-          date: date.toISOString().split("T")[0],
+          date: desiredDate.toISOString().split("T")[0],
         })
       );
-  }, [date, dispatch, selectedSession]);
+    }
+  }, [date, dispatch, selectedSession, classSessionsInTerm]);
 
   useEffect(() => {
     setAttendanceList(attendanceRowData() ? attendanceRowData() : []);

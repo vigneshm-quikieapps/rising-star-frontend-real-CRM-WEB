@@ -5,13 +5,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  GradientButton,
-  Accordion,
-  TextField,
-  Output,
-} from "../../components/index";
-import { icons } from "../../helper/constants";
+import { Accordion, TextField, Output } from "../../components/index";
+import { allergyIcon } from "../../assets/icons";
 
 import { getMemberConsentRecord } from "../../redux/action/memberAction";
 
@@ -50,9 +45,7 @@ const MemberConsent = () => {
   useEffect(() => {
     if (currentMember) {
       dispatch(
-        getMemberConsentRecord(
-          currentMember.membership[0].clubMembershipId
-        )
+        getMemberConsentRecord(currentMember.membership[0].clubMembershipId)
       );
     }
   }, [dispatch, currentMember]);
@@ -134,7 +127,7 @@ const MemberConsent = () => {
             }}
           >
             <img
-              src={icons.allergy}
+              src={allergyIcon}
               alt="allergy"
               style={{
                 width: "20px",

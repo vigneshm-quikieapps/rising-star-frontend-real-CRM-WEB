@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
-import { Link as MuiLink, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import { getBusinessList } from "../../redux/action/businesses-actions";

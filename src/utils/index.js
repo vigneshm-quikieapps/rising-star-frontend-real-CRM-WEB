@@ -10,3 +10,8 @@ export const removeItemByIndex = (array, index) => {
   }
   return arr;
 };
+
+export { default as axios } from "./axios-instance";
+export { default as findDesiredDate } from "./find-date";
+export { default as toPascal } from "./to-pascal";
+export { default as transformError } from "./transformError";

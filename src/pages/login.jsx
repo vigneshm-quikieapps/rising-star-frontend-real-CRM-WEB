@@ -11,7 +11,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import TextField from "../components/textfield";
 import Button from "../components/gradient-button";
-import { icons } from "../helper/constants";
+import { userIcon } from "../assets/icons";
+import loginPageImage from "../assets/images/illustration-login.png";
 import { logInStart } from "../redux/action/authAction";
 
 const GridContainer = styled(Grid)({
@@ -89,7 +90,7 @@ const Login = () => {
             endAdornment: (
               <InputAdornment position="start">
                 <img
-                  src={icons.user}
+                  src={userIcon}
                   alt="user"
                   height="20px"
                   width="20px"
@@ -140,7 +141,7 @@ const Login = () => {
           height: "100%",
         }}
       >
-        <img src={icons.loginPageImage} alt="loginPageImage" width="650px" />
+        <img src={loginPageImage} alt="loginPageImage" width="650px" />
       </Grid>
     </GridContainer>
   );
