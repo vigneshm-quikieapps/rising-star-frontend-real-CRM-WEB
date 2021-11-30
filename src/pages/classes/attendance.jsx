@@ -79,7 +79,6 @@ const Attendance = () => {
   const attendance = useSelector(
     (state) => state.sessions.attendanceList?.attendance
   );
-  const loading = useSelector((state) => state.shared.loading);
 
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
