@@ -1,7 +1,5 @@
 import { Box, Typography } from "@mui/material";
 
-import { AddButton } from "../../../../components";
-
 const MemberListHeading = ({ title, description, action }) => (
   <Box sx={{ display: "flex", px: "20px", pt: "20px" }}>
     <Box sx={{ flexGrow: 1 }}>
