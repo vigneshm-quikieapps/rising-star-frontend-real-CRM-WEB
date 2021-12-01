@@ -15,7 +15,6 @@ const MemberListHeading = ({ title, description, action }) => (
         {description}
       </Typography>
     </Box>
-    <AddButton onClick={action || (() => {})} />
   </Box>
 );
 
