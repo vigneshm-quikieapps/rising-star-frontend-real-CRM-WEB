@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 import AddEdit from "./add-edit";
@@ -15,6 +16,7 @@ const makePathArray = (match, ...paths) =>
 
 const Classes = () => {
   const match = useRouteMatch();
+
   return (
     <>
       <Route
@@ -24,7 +26,7 @@ const Classes = () => {
           "attendance",
           "definition",
           "enrolments",
-          "payments"
+          "payments",
         )}
         exact
       >

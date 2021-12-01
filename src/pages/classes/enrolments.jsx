@@ -27,6 +27,7 @@ import { enrollmentHeaders } from "../../helper/constants";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getMembersOfSession } from "../../redux/action/memberAction";
+import { setPageTitle } from "../../redux/action/shared-actions";
 import toPascal from "../../utils/to-pascal";
 
 const MoreIconButton = () => (
@@ -51,21 +52,23 @@ const ClassEnrollments = () => {
   const { id: classId } = useParams();
   const classTerms = useSelector((state) => state.terms.termsOfClass);
   const classSessionsInTerm = useSelector(
-    (state) => state.sessions.sessionsOfClassInTerm
+    (state) => state.sessions.sessionsOfClassInTerm,
   );
   const membersOfSession = useSelector(
-    (state) => state.members.membersOfSession
+    (state) => state.members.membersOfSession,
   );
   const { currentPage, totalPages } = useSelector((state) => state.members);
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
+
+  useEffect(() => dispatch(setPageTitle("Enrolments")), [dispatch]);
 
   const handlePageChange = useCallback(
     (_, value) => {
       if (value !== currentPage)
         dispatch(getMembersOfSession(selectedSession, { page: value }));
     },
-    [dispatch, currentPage, selectedSession]
+    [dispatch, currentPage, selectedSession],
   );
 
   const pagination = (
@@ -115,9 +118,9 @@ const ClassEnrollments = () => {
               droppedDate ? droppedDate : "N/A",
             ],
           };
-        }
+        },
       ),
-    [membersOfSession, history]
+    [membersOfSession, history],
   );
 
   const handleTermChange = (e) => {
@@ -134,7 +137,7 @@ const ClassEnrollments = () => {
 
   useEffect(
     () => classTerms.length && setSelectedTerm(classTerms[0]._id),
-    [classTerms]
+    [classTerms],
   );
 
   useEffect(() => {
@@ -153,7 +156,7 @@ const ClassEnrollments = () => {
   const sessionInfo = useMemo(() => {
     if (!selectedSession) return {};
     const currentSession = classSessionsInTerm.find(
-      (session) => session._id === selectedSession
+      (session) => session._id === selectedSession,
     );
     if (!currentSession) return {};
     const {

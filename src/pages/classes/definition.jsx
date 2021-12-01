@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 
 import { getSessionsOfClass } from "../../redux/action/class-actions";
+import { setPageTitle } from "../../redux/action/shared-actions";
 import toPascal from "../../utils/to-pascal";
 import { Accordion, Output, Outputs, ImgIcon } from "../../components";
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
@@ -40,6 +41,8 @@ const ClassDefinition = () => {
   const sessions = useSelector((state) => state.classes.classSessions);
   const { _id: classId, enrolmentControls = [], charges = [] } = theClass;
 
+  useEffect(() => dispatch(setPageTitle("Definition")), [dispatch]);
+
   const Charges = useCallback(
     () =>
       charges.map(({ _id, name, amount, mandatory, payFrequency }) => {
@@ -58,7 +61,7 @@ const ClassDefinition = () => {
           </OutputsContainer>
         );
       }),
-    [charges]
+    [charges],
   );
 
   const Sessions = useCallback(
@@ -100,7 +103,7 @@ const ClassDefinition = () => {
           </OutputsContainer>
         );
       }),
-    [sessions]
+    [sessions],
   );
 
   const enrolmentControlItems = useMemo(() => {

@@ -1,5 +1,5 @@
 import { sharedActionTypes } from "../types";
-const initialState = { errors: [], loading: false };
+const initialState = { errors: [], loading: false, pageTitle: "" };
 
 const sharedReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -22,6 +22,9 @@ const sharedReducer = (state = initialState, action) => {
     }
     case sharedActionTypes.STOP_LOADING: {
       return { ...state, loading: false };
+    }
+    case sharedActionTypes.SET_PAGE_TITLE: {
+      return { ...state, pageTitle: action.payload };
     }
     default:
       return state;

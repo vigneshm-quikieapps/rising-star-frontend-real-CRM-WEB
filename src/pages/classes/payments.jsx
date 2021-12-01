@@ -24,6 +24,7 @@ import {
 import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import { getPaymentDetailsOfSession } from "../../redux/action/billingActions";
+import { setPageTitle } from "../../redux/action/shared-actions";
 import toPascal from "../../utils/to-pascal";
 
 const InputsContainer = styled(Box)(({ theme }) => ({
@@ -67,7 +68,7 @@ const ClassPayments = () => {
   const dispatch = useDispatch();
   const termList = useSelector((state) => state.terms.termsOfClass);
   const sessionList = useSelector(
-    (state) => state.sessions.sessionsOfClassInTerm
+    (state) => state.sessions.sessionsOfClassInTerm,
   );
   const paymentList = useSelector((state) => state.billing.paymentList);
   const [selectedTerm, setSelectedTerm] = useState("");
@@ -75,6 +76,7 @@ const ClassPayments = () => {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
+    dispatch(setPageTitle("Payments"));
     dispatch(getTermsOfClass(id));
   }, [dispatch, id]);
 
@@ -92,12 +94,12 @@ const ClassPayments = () => {
 
   const items = useMemo(() => {
     const currentSession = sessionList.find(
-      (session) => session._id === selectedSession
+      (session) => session._id === selectedSession,
     );
     const days = currentSession?.pattern.map(({ day }) => day).join(", ");
     return {
       "Start Time": `${timeConverter(
-        currentSession?.pattern[0].startTime || ""
+        currentSession?.pattern[0].startTime || "",
       )}`,
       "End Time": `${timeConverter(currentSession?.pattern[0].endTime || "")}`,
       Facility: toPascal(currentSession?.facility) || "",
@@ -114,7 +116,7 @@ const ClassPayments = () => {
         getPaymentDetailsOfSession({
           sessionId: selectedSession,
           date: toISODate(date),
-        })
+        }),
       );
     }
   }, [dispatch, selectedSession, date]);

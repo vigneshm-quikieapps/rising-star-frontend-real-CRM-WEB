@@ -47,7 +47,7 @@ const AdvancedSearch = ({
       { field: "businessId", type: "BY_ID", value: business },
       { field: "status", type: statusOperator, value: status },
     ],
-    [name, nameOperator, status, statusOperator, business]
+    [name, nameOperator, status, statusOperator, business],
   );
 
   // Do not remove, used for pagination
@@ -170,7 +170,7 @@ const Classes = () => {
       e.stopPropagation();
       history.push(`/classes/add/${id}?edit=true`);
     },
-    [history]
+    [history],
   );
 
   const handleDelete = useCallback(
@@ -178,14 +178,14 @@ const Classes = () => {
       e.stopPropagation();
       dispatch(deleteClass(id));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const handleRowClick = useCallback(
     (id) => {
       history.push(`/classes/definition/${id}`);
     },
-    [history]
+    [history],
   );
 
   const searchValueChangeHandler = (e) => {
@@ -204,7 +204,7 @@ const Classes = () => {
         getClassListAction({
           page: value,
           filters: filters,
-        })
+        }),
       );
   };
 
@@ -216,7 +216,7 @@ const Classes = () => {
     };
     return classList.map((singleClass) => {
       const businessName = businesses.filter(
-        (business) => business._id === singleClass.businessId
+        (business) => business._id === singleClass.businessId,
       )[0]?.name;
       const id = singleClass._id;
       const { status, name } = singleClass;
@@ -256,7 +256,7 @@ const Classes = () => {
       dispatch(
         getClassListAction({
           filters: [{ field: "name", type: "STARTS_WITH", value: searchValue }],
-        })
+        }),
       );
     }, 500);
     return () => clearTimeout(searchTimer);

@@ -45,6 +45,7 @@ import {
   getAttendanceOfSessionByDate,
   getClassSessionsByTermId,
 } from "../../redux/action/sessionAction";
+import { setPageTitle } from "../../redux/action/shared-actions";
 
 const MoreIconButton = () => (
   <IconButton sx={{ mr: "10px" }}>
@@ -77,10 +78,10 @@ const Attendance = () => {
   const currentClassId = useSelector((state) => state.terms.classId);
   const classTerms = useSelector((state) => state.terms.termsOfClass);
   const classSessionsInTerm = useSelector(
-    (state) => state.sessions.sessionsOfClassInTerm
+    (state) => state.sessions.sessionsOfClassInTerm,
   );
   const attendance = useSelector(
-    (state) => state.sessions.attendanceList?.attendance
+    (state) => state.sessions.attendanceList?.attendance,
   );
 
   const [selectedTerm, setSelectedTerm] = useState("");
@@ -89,6 +90,8 @@ const Attendance = () => {
   const [attendanceList, setAttendanceList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [touched, setTouched] = useState(false);
+
+  useEffect(() => dispatch(setPageTitle("Attendance")), [dispatch]);
 
   const restoreDefaults = (e) => {
     e.stopPropagation();
@@ -141,7 +144,7 @@ const Attendance = () => {
       setTouched(true);
       setAttendanceList(updatedAttendance);
     },
-    [attendanceList]
+    [attendanceList],
   );
 
   const onSave = (e) => {
@@ -160,7 +163,7 @@ const Attendance = () => {
         addAttendance({
           data: attendanceData,
           callback: () => setTouched(false),
-        })
+        }),
       );
     }
   };
@@ -232,7 +235,7 @@ const Attendance = () => {
   const sessionInfo = useMemo(() => {
     if (!selectedSession) return;
     const currentSession = classSessionsInTerm.find(
-      (session) => session._id === selectedSession
+      (session) => session._id === selectedSession,
     );
     if (currentSession) {
       const {
@@ -276,7 +279,7 @@ const Attendance = () => {
         startDate,
         endDate,
         pattern: pattern.map((item) =>
-          shortWeekNamesStartingWithSunday.indexOf(item.day.toLowerCase())
+          shortWeekNamesStartingWithSunday.indexOf(item.day.toLowerCase()),
         ),
       };
       return [info, dateInfo];
@@ -343,7 +346,7 @@ const Attendance = () => {
         getAttendanceOfSessionByDate({
           sessionId: _id,
           date: toLocaleIsoDate(desiredDate),
-        })
+        }),
       );
       mounted.current = true;
     }
@@ -363,7 +366,7 @@ const Attendance = () => {
     setTouched(false);
     setSelectedSession(sessionId);
     const currentSession = classSessionsInTerm.find(
-      ({ _id }) => _id === sessionId
+      ({ _id }) => _id === sessionId,
     );
     let { startDate, endDate, pattern } = currentSession;
     pattern = pattern.map(({ day }) => day);
@@ -374,7 +377,7 @@ const Attendance = () => {
       getAttendanceOfSessionByDate({
         sessionId,
         date: toLocaleIsoDate(desiredDate),
-      })
+      }),
     );
   };
 
@@ -389,7 +392,7 @@ const Attendance = () => {
       getAttendanceOfSessionByDate({
         sessionId: selectedSession,
         date: toLocaleIsoDate(selectedDate),
-      })
+      }),
     );
   };
 

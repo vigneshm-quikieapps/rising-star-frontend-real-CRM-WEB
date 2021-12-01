@@ -1,8 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Box, Typography } from "@mui/material";
 
-import TabNav from "../../../components/tabular-navigation";
+import { TabNav, IconButton, ImgIcon } from "../../../components";
+import { backIcon } from "../../../assets/icons";
 
 const TopNav = () => {
+  const history = useHistory();
+  const title = useSelector((state) => state.shared.pageTitle);
   const { id: classId } = useParams();
   const pathTo = (path) => "/classes/" + path + "/" + classId;
 
@@ -32,7 +37,23 @@ const TopNav = () => {
       exact: false,
     },
   ];
-  return <TabNav items={items} />;
+
+  return (
+    <>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 1.5 }}>
+        <IconButton onClick={() => history.push("/classes")}>
+          <ImgIcon>{backIcon}</ImgIcon>
+        </IconButton>
+        <Typography
+          component="h1"
+          sx={{ fontWeight: "bold", fontSize: "20px", ml: 1 }}
+        >
+          {title || "Title"}
+        </Typography>
+      </Box>
+      <TabNav items={items} />
+    </>
+  );
 };
 
 export default TopNav;

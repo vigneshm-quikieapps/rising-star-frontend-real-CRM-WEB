@@ -13,3 +13,8 @@ export const clearErrors = () => ({ type: sharedActionTypes.CLEAR_ERRORS });
 export const startLoading = () => ({ type: sharedActionTypes.START_LOADING });
 
 export const stopLoading = () => ({ type: sharedActionTypes.STOP_LOADING });
+
+export const setPageTitle = (title) => ({
+  type: sharedActionTypes.SET_PAGE_TITLE,
+  payload: title,
+});

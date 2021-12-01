@@ -112,6 +112,7 @@ export const sharedActionTypes = {
   CLEAR_ERRORS: "CLEAR_ERRORS",
   START_LOADING: "START_LOADING",
   STOP_LOADING: "STOP_LOADING",
+  SET_PAGE_TITLE: "SET_PAGE_TITLE",
 };
 
 export const billingActionTypes = {
