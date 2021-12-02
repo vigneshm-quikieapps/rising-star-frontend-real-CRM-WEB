@@ -1,4 +1,6 @@
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
 import {
   MenuItem,
   styled,
@@ -8,17 +10,17 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "@mui/material";
-import React, { useState, useCallback } from "react";
-import Output from "../../components/output";
-import Textfield from "../../components/textfield";
-import Accordion from "../../components/accordion";
-import Checkbox from "../../components/styled-checkbox";
-import Button from "../../components/gradient-button";
-import Status from "../../components/status";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import {
+  Output,
+  TextField,
+  Accordion,
+  CheckBox,
+  GradientButton,
+  Status,
+} from "../../components";
+
 import {
   getMemberProgressRecord,
   updateMultipleStatusOnMemberProgressRecord,
@@ -147,16 +149,16 @@ const SkillsComponent = ({
         justifyContent: "space-between",
       }}
     >
-      <Textfield value={name} sx={{ width: "80%" }} />
+      <TextField value={name} sx={{ width: "80%" }} />
       <Box>
-        <Checkbox
+        <CheckBox
           sx={{
             margin: "0 1.3rem",
           }}
           checked={checkbox.attainedCheckBox}
           onChange={(e) => checkboxHandler("attained", skillId, e)}
         />
-        <Checkbox
+        <CheckBox
           sx={{
             margin: "0 1.3rem",
           }}
@@ -296,7 +298,7 @@ const MemberEvaluations = () => {
         </Grid>
         <Grid container sx={{ marginTop: "10px" }} spacing={2}>
           <Grid item xs={6}>
-            <Textfield
+            <TextField
               select
               variant="outlined"
               label="Business Name*"
@@ -309,10 +311,10 @@ const MemberEvaluations = () => {
                   {li.name}
                 </MenuItem>
               ))}
-            </Textfield>
+            </TextField>
           </Grid>
           <Grid item xs={6}>
-            <Textfield
+            <TextField
               select
               variant="outlined"
               label="Evaluation Scheme"
@@ -325,7 +327,7 @@ const MemberEvaluations = () => {
                   {li.name}
                 </MenuItem>
               ))}
-            </Textfield>
+            </TextField>
           </Grid>
         </Grid>
       </StyleBox>
@@ -404,12 +406,20 @@ const MemberEvaluations = () => {
           paddingLeft: 0,
         }}
       >
-        <Button sx={{ textTransform: "none" }} onClick={saveHandler}>
+        <GradientButton
+          sx={{ textTransform: "none" }}
+          onClick={saveHandler}
+          size="large"
+        >
           Save
-        </Button>
-        <Button invert sx={{ marginLeft: "10px", textTransform: "none" }}>
+        </GradientButton>
+        <GradientButton
+          invert
+          size="large"
+          sx={{ marginLeft: "10px", textTransform: "none" }}
+        >
           Cancel
-        </Button>
+        </GradientButton>
       </Box>
     </Box>
   );
