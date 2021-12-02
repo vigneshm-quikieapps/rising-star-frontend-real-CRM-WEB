@@ -28,6 +28,7 @@ import {
 } from "../../redux/action/enrolmentAction";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import toPascal from "../../utils/to-pascal";
+import { setPageTitle } from "../../redux/action/shared-actions";
 
 const statusMap = {
   ENROLLED: "Enrolled",
@@ -51,7 +52,7 @@ const Enrolment = () => {
   const businessList = useSelector((state) => state.businesses.businessList);
   const enrolmentList = useSelector((state) => state.members.enrolmentList);
   const sessionList = useSelector(
-    (state) => state.sessions.sessionsOfClassInTerm
+    (state) => state.sessions.sessionsOfClassInTerm,
   );
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
@@ -59,10 +60,12 @@ const Enrolment = () => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedDropReason, setSelectedDropReason] = useState("");
 
+  useEffect(() => dispatch(setPageTitle("Enrolments")), [dispatch]);
+
   const clubMembershipId = useMemo(() => {
     const list = member?.membership;
     const membership = list?.find(
-      (mShip) => mShip.businessId === selectedBusiness
+      (mShip) => mShip.businessId === selectedBusiness,
     );
     return membership?.clubMembershipId || "";
   }, [member, selectedBusiness]);
@@ -78,7 +81,7 @@ const Enrolment = () => {
         getMemberEnrolmentList({
           memberId: member._id,
           businessId: selectedBusiness,
-        })
+        }),
       );
   }, [dispatch, member, selectedBusiness]);
 
@@ -90,15 +93,15 @@ const Enrolment = () => {
       dispatch(
         getClassSessionsByTermId(
           enrolmentList[0].class._id,
-          enrolmentList[0].session.term._id
-        )
+          enrolmentList[0].session.term._id,
+        ),
       );
     }
   }, [dispatch, enrolmentList, selectedEnrolment]);
 
   const currentEnrolment = useMemo(() => {
     return enrolmentList.find(
-      (enrolment) => enrolment._id === selectedEnrolment
+      (enrolment) => enrolment._id === selectedEnrolment,
     );
   }, [enrolmentList, selectedEnrolment]);
 
@@ -110,7 +113,7 @@ const Enrolment = () => {
     // currentEnrolment.sessionId is not in the options of
     // session dropdown (select)
     const defaultSession = sessionList.find(
-      ({ _id }) => _id === currentEnrolment.sessionId
+      ({ _id }) => _id === currentEnrolment.sessionId,
     );
     setSelectedSession(defaultSession?._id || "");
     setSelectedStatus(currentEnrolment.enrolledStatus);
@@ -140,12 +143,12 @@ const Enrolment = () => {
     if (!session) return "";
     const days = session.pattern.map(({ day }) => day).join(", ");
     const startTime = new Date(
-      session.pattern[0].startTime
+      session.pattern[0].startTime,
     ).toLocaleTimeString();
     const endTime = new Date(session.pattern[0].endTime).toLocaleTimeString();
     return `${toPascal(days)}, ${startTime} to ${endTime}`.replace(
       /:00 /g,
-      " "
+      " ",
     );
   }, [selectedSession, sessionList]);
 
@@ -155,15 +158,15 @@ const Enrolment = () => {
     const enrolmentId = e.target.value;
     setSelectedEnrolment(enrolmentId);
     const enrolmentObject = enrolmentList.find(
-      (enrolment) => enrolment._id === enrolmentId
+      (enrolment) => enrolment._id === enrolmentId,
     );
     setSelectedStatus(enrolmentObject.enrolledStatus);
     setSelectedDropReason(enrolmentObject?.discontinuationReason || "");
     dispatch(
       getClassSessionsByTermId(
         enrolmentObject.class._id,
-        enrolmentObject.session.term._id
-      )
+        enrolmentObject.session.term._id,
+      ),
     );
   };
 
@@ -213,7 +216,7 @@ const Enrolment = () => {
     switch (currentEndpoint) {
       case endpointList.transfer: {
         dispatch(
-          transferEnrolment(selectedEnrolment, selectedSession, sessionList)
+          transferEnrolment(selectedEnrolment, selectedSession, sessionList),
         );
         break;
       }
@@ -278,16 +281,9 @@ const Enrolment = () => {
       </Card>
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Box
-            sx={{ display: "flex", flex: 1, alignItems: "center", mr: "10px" }}
-          >
-            <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
-              Enrolment Details
-            </Typography>
-            <GradientButton sx={{ fontWeight: "bold" }}>
-              Add a new enrolment
-            </GradientButton>
-          </Box>
+          <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
+            Enrolment Details
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid>

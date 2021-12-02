@@ -28,12 +28,7 @@ import {
   Tooltip,
   GradientButton,
 } from "../../components";
-import {
-  arrowDownIcon,
-  moreIcon,
-  phoneIcon,
-  allergyIcon,
-} from "../../assets/icons";
+import { arrowDownIcon, phoneIcon, allergyIcon } from "../../assets/icons";
 import {
   attendanceHeaders,
   shortWeekNamesStartingWithSunday,
@@ -47,11 +42,6 @@ import {
 } from "../../redux/action/sessionAction";
 import { setPageTitle } from "../../redux/action/shared-actions";
 
-const MoreIconButton = () => (
-  <IconButton sx={{ mr: "10px" }}>
-    <ImgIcon alt="more">{moreIcon}</ImgIcon>
-  </IconButton>
-);
 const ExpandIcon = () => <ImgIcon>{arrowDownIcon}</ImgIcon>;
 
 const VerifiedIcon = ({ title = "test" }) => (
@@ -500,7 +490,6 @@ const Attendance = () => {
                 </IconButton>
               </>
             )}
-            <MoreIconButton />
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0 }}>

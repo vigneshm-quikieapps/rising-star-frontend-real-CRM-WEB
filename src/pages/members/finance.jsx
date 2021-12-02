@@ -7,6 +7,7 @@ import { Card, HeadingText, SubHeadingText } from "../../components/common";
 import ClassList from "./components/class-list";
 
 import { getClassList } from "../../redux/action/class-actions";
+import { setPageTitle } from "../../redux/action/shared-actions";
 
 const MemberFinance = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,8 @@ const MemberFinance = () => {
   const [selectedClass, setSelectedClass] = useState("");
   const [showClassList, setShowClassList] = useState(false);
 
+  useEffect(() => dispatch(setPageTitle("Finance Record")), [dispatch]);
+
   const classSelectHandler = (id) => {
     setShowClassList(false);
     setSelectedClass(id);
@@ -25,7 +28,7 @@ const MemberFinance = () => {
   const clubMembershipId = useMemo(() => {
     const list = member?.membership;
     const membership = list?.find(
-      (mShip) => mShip.businessId === selectedBusiness
+      (mShip) => mShip.businessId === selectedBusiness,
     );
     return membership?.clubMembershipId || "";
   }, [member, selectedBusiness]);

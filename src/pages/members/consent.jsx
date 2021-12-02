@@ -9,6 +9,7 @@ import { Accordion, TextField, Output } from "../../components/index";
 import { allergyIcon } from "../../assets/icons";
 
 import { getMemberConsentRecord } from "../../redux/action/memberAction";
+import { setPageTitle } from "../../redux/action/shared-actions";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -38,6 +39,8 @@ const MemberConsent = () => {
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [expanded, setExpanded] = useState("panel1");
 
+  useEffect(() => dispatch(setPageTitle("Consent Record")), [dispatch]);
+
   useEffect(() => {
     setSelectedBusiness(businessList[0]?._id || "");
   }, [businessList]);
@@ -45,7 +48,7 @@ const MemberConsent = () => {
   useEffect(() => {
     if (currentMember) {
       dispatch(
-        getMemberConsentRecord(currentMember.membership[0].clubMembershipId)
+        getMemberConsentRecord(currentMember.membership[0].clubMembershipId),
       );
     }
   }, [dispatch, currentMember]);

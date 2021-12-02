@@ -24,6 +24,7 @@ import {
   updateMultipleStatusOnMemberProgressRecord,
 } from "../../redux/action/memberAction";
 import { getEvaluationSchemeList } from "../../redux/action/evaluationActions";
+import { setPageTitle } from "../../redux/action/shared-actions";
 
 const StyleBox = styled(Box)(({ theme }) => ({
   padding: "20px",
@@ -79,7 +80,7 @@ const SkillsComponent = ({
         levelId: levelId,
         status: statusConverter(
           checkbox.attainedCheckBox,
-          checkbox.inprogressCheckbox
+          checkbox.inprogressCheckbox,
         ),
       },
     }));
@@ -173,16 +174,18 @@ const MemberEvaluations = () => {
   const progressRecord = useSelector((state) => state.members.progressRecord);
   const currentMember = useSelector((state) => state.members.currentMember);
   const evalautionSchemeList = useSelector(
-    (state) => state.evaluation.evaluationList
+    (state) => state.evaluation.evaluationList,
   );
   const businessListofLoggedInUser = useSelector(
-    (state) => state.businesses.businessList
+    (state) => state.businesses.businessList,
   );
   const [businessId, setBusinessId] = useState("");
   const [evaluationSchemeId, setEvaluationSchemeId] = useState("");
   const [levels, setLevels] = useState([]);
   const [newSkills, setNewSkills] = useState({});
   const [expanded, setExpanded] = useState("panel1");
+
+  useEffect(() => dispatch(setPageTitle("Evaluations")), [dispatch]);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : true);
@@ -200,7 +203,7 @@ const MemberEvaluations = () => {
         resolve(data);
       });
     },
-    []
+    [],
   );
 
   useEffect(() => {

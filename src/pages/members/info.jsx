@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   AccordionSummary,
@@ -7,16 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 
-import { Accordion, IconButton, ImgIcon, Outputs } from "../../components";
-import moreIcon from "../../assets/icons/icon-more.png";
+import { Accordion, ImgIcon, Outputs } from "../../components";
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
 import toPascal from "../../utils/to-pascal";
-
-const MoreIconButton = () => (
-  <IconButton sx={{ position: "absolute", top: "10px", right: "10px" }}>
-    <ImgIcon alt="more">{moreIcon}</ImgIcon>
-  </IconButton>
-);
+import { setPageTitle } from "../../redux/action/shared-actions";
 
 const ExpandIcon = () => <ImgIcon>{arrowDownIcon}</ImgIcon>;
 
@@ -41,7 +35,10 @@ const extractContactInfo = (contact) => {
 };
 
 const MemberInfo = () => {
+  const dispatch = useDispatch();
   const currentMember = useSelector((state) => state.members.currentMember);
+
+  useEffect(() => dispatch(setPageTitle("Personal Info")), [dispatch]);
 
   const basicInfo = useMemo(() => {
     if (!currentMember) return {};
@@ -88,7 +85,6 @@ const MemberInfo = () => {
           p: "20px",
         }}
       >
-        <MoreIconButton />
         <Typography variant="h2" sx={{ fontSize: "28px", fontWeight: "bold" }}>
           {basicInfo["Full Name"]}
         </Typography>

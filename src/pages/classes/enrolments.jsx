@@ -15,12 +15,10 @@ import {
   TextField,
   Table as CustomTable,
   ImgIcon,
-  IconButton,
   Pagination,
   Tooltip,
   Outputs,
 } from "../../components";
-import moreIcon from "../../assets/icons/icon-more.png";
 import arrowDownIcon from "../../assets/icons/icon-arrow-down.png";
 import allergyIcon from "../../assets/icons/icon-allergy.png";
 import { enrollmentHeaders } from "../../helper/constants";
@@ -29,12 +27,6 @@ import { getTermsOfClass } from "../../redux/action/terms-actions";
 import { getMembersOfSession } from "../../redux/action/memberAction";
 import { setPageTitle } from "../../redux/action/shared-actions";
 import toPascal from "../../utils/to-pascal";
-
-const MoreIconButton = () => (
-  <IconButton sx={{ mr: "10px" }}>
-    <ImgIcon alt="more">{moreIcon}</ImgIcon>
-  </IconButton>
-);
 
 const ExpandIcon = () => <ImgIcon>{arrowDownIcon}</ImgIcon>;
 
@@ -242,12 +234,9 @@ const ClassEnrollments = () => {
       </Card>
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandIcon />}>
-          <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
-            <Typography variant="h3" sx={{ fontSize: "20px", flex: 1 }}>
-              Members
-            </Typography>
-            <MoreIconButton />
-          </Box>
+          <Typography variant="h3" sx={{ fontSize: "20px", flex: 1 }}>
+            Members
+          </Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0 }}>
           <CustomTable

@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useHistory } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
 
-import TabNav from "../../../components/tabular-navigation";
+import { TabNav, IconButton, ImgIcon } from "../../../components";
+import { backIcon } from "../../../assets/icons";
 import { getMemberById } from "../../../redux/action/memberAction";
 
 const TopNav = () => {
+  const history = useHistory();
+  const title = useSelector((state) => state.shared.pageTitle);
   const dispatch = useDispatch();
   const { id: memberId } = useParams();
   const pathTo = (path) => "/members/" + path + "/" + memberId;
@@ -47,7 +51,22 @@ const TopNav = () => {
     dispatch(getMemberById(memberId));
   }, [dispatch, memberId]);
 
-  return <TabNav items={items} />;
+  return (
+    <>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 1.5 }}>
+        <IconButton onClick={() => history.push("/members")}>
+          <ImgIcon>{backIcon}</ImgIcon>
+        </IconButton>
+        <Typography
+          component="h1"
+          sx={{ fontWeight: "bold", fontSize: "20px", ml: 1 }}
+        >
+          {title || "Title"}
+        </Typography>
+      </Box>
+      <TabNav items={items} />
+    </>
+  );
 };
 
 export default TopNav;
