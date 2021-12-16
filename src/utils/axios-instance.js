@@ -1,11 +1,8 @@
 import axios from "axios";
 
-import { API_URL } from "../helper/config";
-
 const axiosInstance = axios.create({
-  baseURL: API_URL,
-  ///
-  // withCredentials: true,
+  baseURL: process.env.REACT_APP_API_URL,
+  withCredentials: process.env.NODE_ENV === "production" ? true : false,
 });
 
 axiosInstance.interceptors.request.use(
@@ -20,7 +17,7 @@ axiosInstance.interceptors.request.use(
     console.error(error);
     // Do something with request error
     return Promise.reject(error);
-  }
+  },
 );
 
 axiosInstance.interceptors.response.use(
@@ -54,7 +51,7 @@ axiosInstance.interceptors.response.use(
       // Do something with response error
       return Promise.reject(error);
     }
-  }
+  },
 );
 
 export default axiosInstance;
