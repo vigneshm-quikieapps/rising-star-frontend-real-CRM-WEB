@@ -25,7 +25,9 @@ const Details = ({ title, details }) => (
   </Accordion>
 );
 
-const extractContactInfo = (contact) => {
+const extractContactInfo = (
+  contact = { name: "", relationship: "", contact: "" },
+) => {
   const { name, relationship, contact: mobileNo } = contact;
   return {
     Name: toPascal(name),
@@ -64,14 +66,18 @@ const MemberInfo = () => {
   const primaryContactInfo = useMemo(() => {
     if (!currentMember) return {};
     const { contacts } = currentMember;
-    const primaryContact = contacts.find(({ type }) => type === "PRIMARY");
+    const primaryContact = contacts.find(
+      ({ addressType }) => addressType === "PRIMARY",
+    );
     return extractContactInfo(primaryContact);
   }, [currentMember]);
 
   const secondaryContactInfo = useMemo(() => {
     if (!currentMember) return {};
     const { contacts } = currentMember;
-    const secondaryContact = contacts.find(({ type }) => type !== "PRIMARY");
+    const secondaryContact = contacts.find(
+      ({ addressType }) => addressType !== "PRIMARY",
+    );
     return extractContactInfo(secondaryContact);
   }, [currentMember]);
 
