@@ -1,5 +1,5 @@
 import { cloneElement, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -13,13 +13,9 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-import IconButton from "../../components/icon-button";
-import ImgIcon from "../../components/img-icon";
-import Notifications from "../../components/notifications";
-import menuIcon from "../../assets/icons/icon-menu.png";
-import homeIcon from "../../assets/icons/icon-home.png";
-import userIcon from "../../assets/icons/icon-user.png";
-import { logout } from "../../redux/action/authAction";
+import { useLogout } from "../../contexts/user-context";
+import { IconButton, ImgIcon, Notifications } from "../../components";
+import { menuIcon, homeIcon, userIcon } from "../../assets/icons";
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) =>
@@ -64,10 +60,11 @@ const Header = ({
   userName,
   ...otherProps
 }) => {
-  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const loading = useSelector((state) => state.shared.loading);
   const open = Boolean(anchorEl);
+
+  const { isLoading: logoutLoading, logout } = useLogout();
 
   const handleAvatarClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -77,7 +74,7 @@ const Header = ({
   };
 
   const handleLogout = () => {
-    dispatch(logout());
+    logout();
   };
 
   return (
@@ -90,7 +87,7 @@ const Header = ({
           color="background"
         >
           <Toolbar disableGutters>
-            {loading && (
+            {(loading || logoutLoading) && (
               <LinearProgress
                 sx={{ position: "absolute", width: "100%", left: 0, bottom: 0 }}
                 color="primary"

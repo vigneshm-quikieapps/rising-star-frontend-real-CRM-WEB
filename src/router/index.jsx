@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 // import ErrorBoundary from "../hoc/error-boundary";
 import {
@@ -14,7 +14,7 @@ import {
 import MainLayout from "../hoc/main-layout";
 
 const MainRouter = () => (
-  <BrowserRouter>
+  <>
     {/* /// enable it for production */}
     {/* <ErrorBoundary> */}
     <Switch>
@@ -46,7 +46,7 @@ const MainRouter = () => (
       </Route>
     </Switch>
     {/* </ErrorBoundary> */}
-  </BrowserRouter>
+  </>
 );
 
 export default MainRouter;

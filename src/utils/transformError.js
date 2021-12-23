@@ -1,6 +1,6 @@
-const transformError = (error, customMessage = "something went wrong") => {
-  console.log(error);
-  error = error?.response?.data;
+const transformError = (error, customMessage = "Something went wrong!") => {
+  if (typeof error === "string") return error;
+  error = error?.response?.data || error;
   let message = error?.message || customMessage;
   let errors = error?.errors;
   if (Array.isArray(errors) && errors.length > 0) {

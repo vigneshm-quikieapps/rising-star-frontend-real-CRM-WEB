@@ -22,4 +22,5 @@ export { default as Warning } from "./dialog";
 export { default as Grid } from "./grid";
 export { default as AddButton } from "./add-button";
 export { default as Popover } from "./popover";
+export { default as WarningDialog } from "./warning-dialog";
 export * from "./common";

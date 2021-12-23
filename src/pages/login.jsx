@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useHistory, useLocation } from "react-router";
+import { useDispatch } from "react-redux";
 import {
   Grid,
   styled,
@@ -9,11 +10,14 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-import TextField from "../components/textfield";
-import Button from "../components/gradient-button";
+import { useSetUser } from "../contexts/user-context";
+import { useSetError } from "../contexts/error-context";
+import { useLoginMutation } from "../services/mutations";
+import { transformError } from "../utils";
+import { clearErrors } from "../redux/action/shared-actions";
+import { TextField, GradientButton } from "../components";
 import { userIcon } from "../assets/icons";
 import loginPageImage from "../assets/images/illustration-login.png";
-import { logInStart } from "../redux/action/authAction";
 
 const GridContainer = styled(Grid)({
   height: "100vh",
@@ -26,14 +30,37 @@ const GridContainer = styled(Grid)({
 });
 
 const Login = () => {
-  const errors = useSelector((state) => state.shared.errors);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+  const setUser = useSetUser();
+  const setGlobalError = useSetError();
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState([]);
   const [visiblePass, setVisiblePass] = useState(false);
   const [credentials, setCredentials] = useState({
     mobileNo: "",
     password: "",
   });
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    setGlobalError(null);
+    dispatch(clearErrors());
+  }, [setGlobalError, dispatch]);
+
+  const from = location.state?.from?.pathname || "/";
+
+  const { mutate: login } = useLoginMutation({
+    onSuccess: ({ accessToken, user }) => {
+      setUser(user);
+      localStorage.setItem("accessToken", accessToken);
+      history.replace(from);
+    },
+    onError: (error) => {
+      setShowError(true);
+      setError(error);
+    },
+  });
 
   const handleChange = (e) =>
     setCredentials({
@@ -43,13 +70,11 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(logInStart(credentials));
+    login(credentials);
   };
 
   const togglePassVisibility = () =>
     setVisiblePass((visibility) => !visibility);
-
-  const errorMsg = useMemo(() => {}, [errors]);
 
   return (
     <GridContainer
@@ -67,18 +92,18 @@ const Login = () => {
           <Typography variant="subtitle2" component="div">
             Business Admin
           </Typography>
-          {errors.length ? (
+          {showError && (
             <Typography
               component="pre"
               sx={{
                 fontSize: 12,
-                color: (theme) => theme.palette.error.main,
+                color: "error.main",
                 marginBottom: "10px",
               }}
             >
-              {errors[errors.length - 1]}
+              {transformError(error)}
             </Typography>
-          ) : null}
+          )}
         </>
         <TextField
           label="Email"
@@ -119,7 +144,7 @@ const Login = () => {
           }}
           sx={{ marginBottom: 4, width: "100%" }}
         />
-        <Button
+        <GradientButton
           sx={{
             textTransform: "none",
             width: "25%",
@@ -128,7 +153,7 @@ const Login = () => {
           onClick={handleSubmit}
         >
           Login
-        </Button>
+        </GradientButton>
       </Grid>
       <Grid
         item
@@ -141,7 +166,11 @@ const Login = () => {
           height: "100%",
         }}
       >
-        <img src={loginPageImage} alt="loginPageImage" width="650px" />
+        <img
+          src={loginPageImage}
+          alt="loginPageImage"
+          style={{ maxWidth: "100%" }}
+        />
       </Grid>
     </GridContainer>
   );

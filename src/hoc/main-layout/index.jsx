@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { Redirect } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
+import { useUserInfo } from "../../contexts/user-context";
 import { getBusinessList } from "../../redux/action/businesses-actions";
 import Header from "./header";
 import Footer from "./footer";
@@ -52,10 +54,13 @@ const MainLayout = ({ children }) => {
   const dispatch = useDispatch();
   const [navOpen, setNavOpen] = useState(true);
   const toggleNav = () => setNavOpen((open) => !open);
+  const userInfo = useUserInfo();
 
   useEffect(() => {
     dispatch(getBusinessList());
   }, [dispatch]);
+
+  if (!userInfo) return <Redirect to="/login" />;
 
   return (
     <>
@@ -63,7 +68,7 @@ const MainLayout = ({ children }) => {
         drawerOpen={navOpen}
         drawerWidth={drawerWidth}
         userRole="Business Admin"
-        userName={localStorage.getItem("userName") || "Logged Out"}
+        userName={userInfo?.name || "Logged Out"}
         handleDrawerOpen={toggleNav}
       />
       <SideNav
