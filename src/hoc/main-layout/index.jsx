@@ -60,7 +60,7 @@ const MainLayout = ({ children }) => {
     dispatch(getBusinessList());
   }, [dispatch]);
 
-  if (!userInfo) return <Redirect to="/login" />;
+  if (!userInfo) return null;
 
   return (
     <>
