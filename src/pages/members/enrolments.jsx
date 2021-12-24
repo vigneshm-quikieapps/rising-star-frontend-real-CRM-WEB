@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import {
   Box,
   MenuItem,
@@ -17,6 +16,7 @@ import {
   Output,
   Accordion,
   GradientButton,
+  Pagination,
 } from "../../components";
 import { Card, HeadingText, SubHeadingText } from "../../components/common";
 import { getMemberEnrolmentList } from "../../redux/action/memberAction";
@@ -34,19 +34,11 @@ const statusMap = {
   ENROLLED: "Enrolled",
   DROPPED: "Dropped",
   SUSPEND: "Suspended",
-  RETURN_FROM_SUSPENSION: "Return From Suspension",
+  // RETURN_FROM_SUSPENSION: "Return From Suspension",
   WAITLISTED: "In Waitlist",
 };
 
-const endpointList = {
-  transfer: "transfer",
-  drop: "drop",
-  suspend: "suspend",
-  return: "return",
-};
-
 const Enrolment = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
   const businessList = useSelector((state) => state.businesses.businessList);
@@ -56,9 +48,6 @@ const Enrolment = () => {
   );
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
-  const [selectedSession, setSelectedSession] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedDropReason, setSelectedDropReason] = useState("");
 
   useEffect(() => dispatch(setPageTitle("Enrolments")), [dispatch]);
 
@@ -86,60 +75,36 @@ const Enrolment = () => {
   }, [dispatch, member, selectedBusiness]);
 
   useEffect(() => {
-    if (enrolmentList.length && !selectedEnrolment) {
+    if (enrolmentList.length) {
       setSelectedEnrolment(enrolmentList[0]._id);
-      setSelectedStatus(enrolmentList[0].enrolledStatus);
-      setSelectedDropReason(enrolmentList[0]?.discontinuationReason || "");
       dispatch(
         getClassSessionsByTermId(
           enrolmentList[0].class._id,
           enrolmentList[0].session.term._id,
         ),
       );
+    } else {
+      setSelectedEnrolment("");
     }
-  }, [dispatch, enrolmentList, selectedEnrolment]);
+  }, [dispatch, enrolmentList]);
 
-  const currentEnrolment = useMemo(() => {
-    return enrolmentList.find(
-      (enrolment) => enrolment._id === selectedEnrolment,
-    );
-  }, [enrolmentList, selectedEnrolment]);
+  const currentEnrolment = useMemo(
+    () => enrolmentList.find(({ _id }) => _id === selectedEnrolment),
+    [enrolmentList, selectedEnrolment],
+  );
 
-  useEffect(() => {
-    if (!sessionList.length || !currentEnrolment) return;
-    // When we select a new class (enrolment), request for getting the new
-    // sessionList is sent, but sessionList is not updated yet so we have to
-    // check if we have the currentEnrolment.sessionId in sessionList, otherwise
-    // currentEnrolment.sessionId is not in the options of
-    // session dropdown (select)
-    const defaultSession = sessionList.find(
-      ({ _id }) => _id === currentEnrolment.sessionId,
-    );
-    setSelectedSession(defaultSession?._id || "");
-    setSelectedStatus(currentEnrolment.enrolledStatus);
-    setSelectedDropReason(currentEnrolment?.discontinuationReason || "");
-  }, [sessionList, currentEnrolment]);
+  const calcDate = (date) =>
+    date ? new Date(date).toLocaleDateString() : " - - - ";
 
-  const initialSessionId = useMemo(() => {
-    if (!currentEnrolment) return "";
-    return currentEnrolment.sessionId;
-  }, [currentEnrolment]);
-
-  const enrolmentDate = useMemo(() => {
-    if (!currentEnrolment) return " - - - ";
-    const date = new Date(currentEnrolment.registeredDate);
-    return date.toLocaleString();
-  }, [currentEnrolment]);
-
-  const dropDate = useMemo(() => {
-    if (!currentEnrolment || !currentEnrolment?.droppedDate) return "N/A";
-    const date = new Date(currentEnrolment.droppedDate);
-    return date.toLocaleString();
-  }, [currentEnrolment]);
+  const enrolmentDate = calcDate(currentEnrolment?.registeredDate);
+  const startDate = calcDate(currentEnrolment?.startDate);
+  const lastActionDate = calcDate(currentEnrolment?.updatedAt);
 
   const pattern = useMemo(() => {
-    if (!selectedSession) return "";
-    const session = sessionList.find(({ _id }) => _id === selectedSession);
+    if (!currentEnrolment) return "";
+    const session = sessionList.find(
+      ({ _id }) => _id === currentEnrolment?.sessionId,
+    );
     if (!session) return "";
     const days = session.pattern.map(({ day }) => day).join(", ");
     const startTime = new Date(
@@ -150,7 +115,7 @@ const Enrolment = () => {
       /:00 /g,
       " ",
     );
-  }, [selectedSession, sessionList]);
+  }, [currentEnrolment, sessionList]);
 
   const businessChangeHandler = (e) => setSelectedBusiness(e.target.value);
 
@@ -160,81 +125,12 @@ const Enrolment = () => {
     const enrolmentObject = enrolmentList.find(
       (enrolment) => enrolment._id === enrolmentId,
     );
-    setSelectedStatus(enrolmentObject.enrolledStatus);
-    setSelectedDropReason(enrolmentObject?.discontinuationReason || "");
     dispatch(
       getClassSessionsByTermId(
         enrolmentObject.class._id,
         enrolmentObject.session.term._id,
       ),
     );
-  };
-
-  const sessionChangeHandler = (e) => {
-    const sessionId = e.target.value;
-    setSelectedSession(sessionId);
-    if (sessionId !== initialSessionId) {
-      setSelectedDropReason("");
-      setSelectedStatus("");
-    } else {
-      setSelectedStatus(currentEnrolment.enrolledStatus);
-      setSelectedDropReason(currentEnrolment?.discontinuationReason || "");
-    }
-  };
-
-  const statusChangeHandler = (e) => {
-    const status = e.target.value;
-    if (status !== statusMap.DROPPED) setSelectedDropReason("");
-    setSelectedStatus(e.target.value);
-  };
-
-  const dropReasonChangeHandler = (e) => setSelectedDropReason(e.target.value);
-
-  const currentEndpoint = useMemo(() => {
-    if (!currentEnrolment) return null;
-    if (
-      selectedSession &&
-      currentEnrolment.sessionId !== selectedSession &&
-      currentEnrolment.enrolledStatus !== "DROPPED"
-    )
-      return endpointList.transfer;
-    if (currentEnrolment.enrolledStatus === selectedStatus) return null;
-    switch (selectedStatus) {
-      case "DROPPED":
-        return endpointList.drop;
-      case "SUSPEND":
-        return endpointList.suspend;
-      case "RETURN_FROM_SUSPENSION":
-        return endpointList.return;
-      default:
-        return null;
-    }
-  }, [currentEnrolment, selectedSession, selectedStatus]);
-
-  const discardHandler = () => history.goBack();
-  const saveHandler = () => {
-    switch (currentEndpoint) {
-      case endpointList.transfer: {
-        dispatch(
-          transferEnrolment(selectedEnrolment, selectedSession, sessionList),
-        );
-        break;
-      }
-      case endpointList.drop: {
-        dispatch(memberEnrolmentDrop(selectedEnrolment));
-        break;
-      }
-      case endpointList.suspend: {
-        dispatch(memberEnrolmentSuspend(selectedEnrolment));
-        break;
-      }
-      case endpointList.return: {
-        dispatch(memberEnrolmentReturnFromSuspend(selectedEnrolment));
-        break;
-      }
-      default:
-        return;
-    }
   };
 
   if (!member)
@@ -264,13 +160,19 @@ const Enrolment = () => {
             value={selectedBusiness}
             onChange={businessChangeHandler}
           >
-            {businessList.map(({ _id, name }) => {
-              return (
-                <MenuItem key={_id} value={_id}>
-                  {name}
-                </MenuItem>
-              );
-            })}
+            {businessList
+              .filter(({ _id }) =>
+                member?.membership?.some(
+                  ({ businessId }) => businessId === _id,
+                ),
+              )
+              .map(({ _id, name }) => {
+                return (
+                  <MenuItem key={_id} value={_id}>
+                    {name}
+                  </MenuItem>
+                );
+              })}
           </TextField>
           <Box />
           <Output
@@ -281,92 +183,103 @@ const Enrolment = () => {
       </Card>
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
-            Enrolment Details
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+            <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
+              Enrolment Details
+            </Typography>
+            <GradientButton active sx={{ mr: 2 }}>
+              Add a new enrolment
+            </GradientButton>
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Grid>
-            <TextField
-              select
-              variant="filled"
-              label="Class Name"
-              value={selectedEnrolment}
-              onChange={enrolmentChangeHandler}
-            >
-              {enrolmentList.map(({ _id, class: { name } }) => (
-                <MenuItem key={_id} value={_id}>
-                  {toPascal(name)}
-                </MenuItem>
-              ))}
-            </TextField>
+          <Grid sx={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
             <Output
-              title="Term"
+              title="Class Name"
+              description={toPascal(currentEnrolment?.class?.name)}
+            />
+            <Output title="Last Action Date" description={lastActionDate} />
+            <Output
+              title="Drop/Cancel Reason"
               description={
-                currentEnrolment
-                  ? toPascal(currentEnrolment.session.term.label)
-                  : ""
+                currentEnrolment?.enrolledStatus === "DROPPED" &&
+                currentEnrolment?.discontinuationReason
               }
             />
+            <Output
+              title="Enrol Status"
+              description={statusMap[currentEnrolment?.enrolledStatus]}
+            />
+            <Output title="Enrol Date/Time" description={enrolmentDate} />
+            <Output title="Member Start Date" description={startDate} />
+            <Output
+              title="Term"
+              description={toPascal(currentEnrolment?.session?.term?.label)}
+            />
+            <Output
+              title="Term Start Date"
+              description={calcDate(currentEnrolment?.session?.term?.startDate)}
+            />
+            <Output
+              title="Term End Date"
+              description={calcDate(currentEnrolment?.session?.term?.endDate)}
+            />
+            <Output
+              title="Session"
+              description={toPascal(currentEnrolment?.session?.name)}
+            />
             <Output title="Timings" description={pattern} />
-            <TextField
-              select
-              variant="filled"
-              label="Session"
-              value={selectedSession}
-              onChange={sessionChangeHandler}
-            >
-              {sessionList.map(({ _id, name }) => {
-                return (
-                  <MenuItem key={_id} value={_id}>
-                    {toPascal(name)}
-                  </MenuItem>
-                );
-              })}
-            </TextField>
-            <TextField
-              select
-              variant="filled"
-              label="Enrolment Status"
-              value={selectedStatus}
-              onChange={statusChangeHandler}
-              disabled={
-                selectedSession !== initialSessionId ||
-                currentEnrolment?.enrolledStatus === "DROPPED"
-              }
-            >
-              {Object.entries(statusMap).map(([value, text]) => (
-                <MenuItem key={value} value={value}>
-                  {text}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              variant="filled"
-              label="Drop/Cancel Reason"
-              value={selectedDropReason}
-              onChange={dropReasonChangeHandler}
-              disabled={
-                selectedSession !== initialSessionId ||
-                selectedStatus !== "DROPPED" ||
-                currentEnrolment.enrolledStatus === "DROPPED"
-              }
-            >
-              <MenuItem value="DROPPED">Dropped</MenuItem>
-              <MenuItem value="CLASS_TRANSFER">Class transfer</MenuItem>
-            </TextField>
-            <Output title="Enroled DateTime" description={enrolmentDate} />
-            <Output title="Drop DateTime" description={dropDate} />
           </Grid>
         </AccordionDetails>
       </Accordion>
-      <GradientButton size="large" onClick={saveHandler}>
-        Save
-      </GradientButton>
-      <GradientButton size="large" invert onClick={discardHandler}>
-        Discard
-      </GradientButton>
+      <Box
+        sx={{
+          "& .MuiButton-root": {
+            width: "250px",
+            mr: 2,
+            "&:last-child": { mr: 0 },
+          },
+        }}
+      >
+        {["ENROLLED", "WAITLISTED"].indexOf(currentEnrolment?.enrolledStatus) >
+          -1 && (
+          <GradientButton sx={{ fontWeight: "bold" }} invert active>
+            Change Session
+          </GradientButton>
+        )}
+        {currentEnrolment?.enrolledStatus &&
+          currentEnrolment?.enrolledStatus !== "DROPPED" && (
+            <GradientButton sx={{ fontWeight: "bold" }} invert active>
+              Drop
+            </GradientButton>
+          )}
+        {currentEnrolment?.enrolledStatus === "ENROLLED" && (
+          <GradientButton sx={{ fontWeight: "bold" }} invert active>
+            Suspend
+          </GradientButton>
+        )}
+        {currentEnrolment?.enrolledStatus === "SUSPEND" && (
+          <GradientButton sx={{ fontWeight: "bold" }} invert active>
+            Return From Suspend
+          </GradientButton>
+        )}
+        {currentEnrolment?.enrolledStatus === "WAITLISTED" && (
+          <GradientButton sx={{ fontWeight: "bold" }} invert active>
+            Move To Main List
+          </GradientButton>
+        )}
+      </Box>
+      <Pagination
+        count={enrolmentList.length}
+        sx={{ mt: 2 }}
+        page={
+          enrolmentList.findIndex(({ _id }) => _id === currentEnrolment?._id) +
+          1
+        }
+        onChange={(_, page) => {
+          setSelectedEnrolment(enrolmentList[page - 1]._id);
+        }}
+      />
     </>
   );
 };
