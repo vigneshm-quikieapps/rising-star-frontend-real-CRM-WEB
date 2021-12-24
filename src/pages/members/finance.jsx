@@ -63,13 +63,19 @@ const MemberFinance = () => {
             onChange={businessChangeHandler}
             sx={{ gridColumn: "1" }}
           >
-            {businessList.map(({ _id, name }) => {
-              return (
-                <MenuItem key={_id} value={_id}>
-                  {name}
-                </MenuItem>
-              );
-            })}
+            {businessList
+              .filter(({ _id }) =>
+                member?.membership?.some(
+                  ({ businessId }) => businessId === _id,
+                ),
+              )
+              .map(({ _id, name }) => {
+                return (
+                  <MenuItem key={_id} value={_id}>
+                    {name}
+                  </MenuItem>
+                );
+              })}
           </TextField>
           <Button onClick={() => setShowClassList(true)}>
             {selectedClass ? "Select Another Class" : "Select a Class"}

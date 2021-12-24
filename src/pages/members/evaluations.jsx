@@ -306,11 +306,17 @@ const MemberEvaluations = () => {
               sx={{ width: "100%" }}
               onChange={businessChangeHandler}
             >
-              {businessListofLoggedInUser.map((li, index) => (
-                <MenuItem key={`B${index}`} value={`${li._id}`}>
-                  {li.name}
-                </MenuItem>
-              ))}
+              {businessListofLoggedInUser
+                .filter(({ _id }) =>
+                  currentMember?.membership?.some(
+                    ({ businessId }) => businessId === _id,
+                  ),
+                )
+                .map((li, index) => (
+                  <MenuItem key={`B${index}`} value={`${li._id}`}>
+                    {li.name}
+                  </MenuItem>
+                ))}
             </TextField>
           </Grid>
           <Grid item xs={6}>
