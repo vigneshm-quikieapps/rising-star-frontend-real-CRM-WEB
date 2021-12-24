@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Redirect } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { Typography } from "@mui/material";
