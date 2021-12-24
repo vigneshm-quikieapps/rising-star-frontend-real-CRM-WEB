@@ -47,11 +47,13 @@ const MemberConsent = () => {
 
   useEffect(() => {
     if (currentMember) {
-      dispatch(
-        getMemberConsentRecord(currentMember.membership[0].clubMembershipId),
+      const currentMembership = currentMember?.membership?.find(
+        ({ businessId }) => businessId === selectedBusiness,
       );
+      if (currentMembership)
+        dispatch(getMemberConsentRecord(currentMembership.clubMembershipId));
     }
-  }, [dispatch, currentMember]);
+  }, [dispatch, currentMember, selectedBusiness]);
 
   const businessChangeHandler = (e) => {
     setSelectedBusiness(e.target.value);
@@ -80,11 +82,17 @@ const MemberConsent = () => {
               value={selectedBusiness}
               onChange={businessChangeHandler}
             >
-              {businessList.map((li, index) => (
-                <MenuItem key={`B${index}`} value={`${li._id}`}>
-                  {li.name}
-                </MenuItem>
-              ))}
+              {businessList
+                .filter(({ _id }) =>
+                  currentMember?.membership?.some(
+                    ({ businessId }) => businessId === _id,
+                  ),
+                )
+                .map((li, index) => (
+                  <MenuItem key={index} value={li._id}>
+                    {li.name}
+                  </MenuItem>
+                ))}
             </TextField>
           </Grid>
           <Grid item xs={4}>
@@ -111,13 +119,13 @@ const MemberConsent = () => {
           <ConsentDisplayComponent
             questionText="Does your child have any allergies we should be aware of ?"
             field={true}
-            text={consentRecord[0]?.consent.allergies}
+            text={consentRecord[0]?.consent?.allergies}
             flexDirection="column"
           />
           <ConsentDisplayComponent
             questionText="Does your child have any conditions we should be aware of ?"
             field={true}
-            text={consentRecord[0]?.consent.condition}
+            text={consentRecord[0]?.consent?.condition}
             flexDirection="column"
           />
           <Box
@@ -150,21 +158,24 @@ const MemberConsent = () => {
                 opacity: "0.5",
               }}
             >
-              Zippy’s occasionally takes videos and photographs for promotional
-              and training purposes and during displays
+              {`${
+                (businessList.find(({ _id }) => _id === selectedBusiness) || {})
+                  ?.name || "Club"
+              } occasionally takes videos and photographs for promotional
+              and training purposes and during displays`}
             </Typography>
           </Box>
           <ConsentDisplayComponent
-            questionText="Does your child have any conditions we should be aware of ?"
+            questionText="Do you agree with the above statement about photography?"
             field={false}
             flexDirection="row"
-            text={consentRecord[0]?.consent.photographConsent}
+            text={consentRecord[0]?.consent?.photographConsent}
           />
           <ConsentDisplayComponent
             questionText={`Signed by (Parent / Carer) ?`}
             field={false}
             flexDirection="row"
-            text={consentRecord[0]?.consent.signedByParent}
+            text={consentRecord[0]?.consent?.signedByParent}
           />
         </AccordionDetails>
       </Accordion>
