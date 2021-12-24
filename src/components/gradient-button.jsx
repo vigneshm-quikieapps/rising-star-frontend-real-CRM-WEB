@@ -11,15 +11,18 @@ const borderRadiuses = {
 };
 
 const GradientButton = styled(Button, {
-  shouldForwardProp: (prop) => ["invert", "size"].indexOf(prop) === -1,
-})(({ theme, invert, size = "normal" }) => ({
+  shouldForwardProp: (prop) =>
+    ["invert", "size", "active"].indexOf(prop) === -1,
+})(({ theme, invert, size = "normal", active }) => ({
   backgroundImage: invert ? "#fff" : theme.palette.gradients.horizontalLinear,
   color: invert ? "#ff2c60" : "#fff",
   height: heights[size],
   padding: paddings[size],
   fontSize: sizes[size],
   fontWeight: fontWeights[size],
-  border: `1px solid ${theme.palette.highlight.main}`,
+  border: active
+    ? `1px solid  ${theme.palette.secondary.main}`
+    : `1px solid ${theme.palette.highlight.main}`,
   borderRadius: borderRadiuses[size](theme),
   textTransform: "none",
 }));
