@@ -6,6 +6,14 @@ import {
   setupIcon,
 } from "../assets/icons";
 
+export const enrolmentStatusMap = {
+  ENROLLED: "Enrolled",
+  DROPPED: "Dropped",
+  SUSPEND: "Suspended",
+  // RETURN_FROM_SUSPENSION: "Return From Suspension",
+  WAITLISTED: "In Waitlist",
+};
+
 export const classListHeaders = [
   "Class Name",
   "Business Name",
