@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 
+import { enrolmentStatusMap } from "../../helper/constants";
 import {
   TextField,
   Grid,
@@ -29,14 +30,6 @@ import {
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import toPascal from "../../utils/to-pascal";
 import { setPageTitle } from "../../redux/action/shared-actions";
-
-const statusMap = {
-  ENROLLED: "Enrolled",
-  DROPPED: "Dropped",
-  SUSPEND: "Suspended",
-  // RETURN_FROM_SUSPENSION: "Return From Suspension",
-  WAITLISTED: "In Waitlist",
-};
 
 const Enrolment = () => {
   const dispatch = useDispatch();
@@ -208,7 +201,7 @@ const Enrolment = () => {
             />
             <Output
               title="Enrol Status"
-              description={statusMap[currentEnrolment?.enrolledStatus]}
+              description={enrolmentStatusMap[currentEnrolment?.enrolledStatus]}
             />
             <Output title="Enrol Date/Time" description={enrolmentDate} />
             <Output title="Member Start Date" description={startDate} />
