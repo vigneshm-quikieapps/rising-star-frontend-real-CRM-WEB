@@ -13,6 +13,7 @@ const Accordion = styled(MuiAccordion)(({ theme }) => ({
   },
   "& .MuiAccordionSummary-root": {
     height: "68px",
+    alignItems: "center",
     "& .MuiTypography-root": {
       fontWeight: "bold",
       fontSize: "20px",
