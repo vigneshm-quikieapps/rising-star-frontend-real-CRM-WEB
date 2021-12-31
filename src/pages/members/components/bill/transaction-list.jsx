@@ -1,7 +1,16 @@
 import { useMemo } from "react";
-import { Typography } from "@mui/material";
+import {
+  Typography,
+  Toolbar,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@mui/material";
 
-import { Table } from "../../../../components";
+import { TableMui } from "../../../../components";
+import NewTransaction from "./new-transaction";
 import Transaction from "./transaction";
 
 const tableHeading = (
@@ -29,7 +38,38 @@ const TransactionList = ({ transactions = [] }) => {
       )),
     [transactions],
   );
-  return <Table heading={tableHeading} headers={tableHeaders} />;
+  return (
+    <>
+      <Toolbar>
+        <Typography
+          component="h3"
+          sx={{ fontSize: "20px", fontWeight: "bold" }}
+        >
+          Transaction Details
+        </Typography>
+      </Toolbar>
+      <TableContainer sx={{ px: "20px" }}>
+        <TableMui>
+          <TableHead>
+            <TableRow>
+              <TableCell>Reference</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Amount</TableCell>
+              <TableCell>Method</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Update Method</TableCell>
+              <TableCell>Batch Process Id</TableCell>
+              <TableCell>Process Date</TableCell>
+              <TableCell>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <NewTransaction />
+          </TableBody>
+        </TableMui>
+      </TableContainer>
+    </>
+  );
 };
 
 export default TransactionList;
