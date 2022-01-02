@@ -30,7 +30,7 @@ const tableHeaders = [
   "Action",
 ];
 
-const TransactionList = ({ transactions = [] }) => {
+const TransactionList = ({ billId, transactions = [] }) => {
   const tableRows = useMemo(
     () =>
       transactions.map((transactionData) => (
@@ -48,7 +48,7 @@ const TransactionList = ({ transactions = [] }) => {
           Transaction Details
         </Typography>
       </Toolbar>
-      <TableContainer sx={{ px: "20px" }}>
+      <TableContainer>
         <TableMui>
           <TableHead>
             <TableRow>
@@ -64,7 +64,7 @@ const TransactionList = ({ transactions = [] }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <NewTransaction />
+            <NewTransaction billId={billId} />
           </TableBody>
         </TableMui>
       </TableContainer>

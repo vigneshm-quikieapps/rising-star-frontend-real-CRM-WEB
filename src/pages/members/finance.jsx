@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -64,6 +64,17 @@ const MemberFinance = () => {
   const [showEnrolmentList, setShowEnrolmentList] = useState(false);
   const [selectedDiscountScheme, setSelectedDiscountScheme] = useState("");
   const setError = useSetError();
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    setFocus,
+    watch,
+    // for setting default values from back-end
+    reset: resetFormData,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(validationSchema) });
 
   useEffect(() => dispatch(setPageTitle("Finance Record")), [dispatch]);
 
@@ -163,9 +174,9 @@ const MemberFinance = () => {
 
   const businessChangeHandler = (e) => setSelectedBusiness(e.target.value);
 
-  const applyDiscountHandler = () => {
+  const applyDiscountHandler = useCallback(() => {
     applyDiscount(selectedDiscountScheme, selectedEnrolment);
-  };
+  }, [selectedDiscountScheme, selectedEnrolment]);
 
   const chargeRows = useMemo(
     () =>
@@ -197,7 +208,12 @@ const MemberFinance = () => {
         ],
       },
     ],
-    [discountSchemeItems, selectedDiscountScheme, discountPercentage],
+    [
+      discountSchemeItems,
+      selectedDiscountScheme,
+      discountPercentage,
+      applyDiscountHandler,
+    ],
   );
 
   return (
@@ -277,7 +293,6 @@ const MemberFinance = () => {
           />
         </AccordionDetails>
       </Accordion>
-
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
           <Typography>Discounts</Typography>
@@ -301,7 +316,9 @@ const MemberFinance = () => {
           <Typography>Class Billing</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0 }}>
-          <Bill />
+          {billsData?.docs?.map(({ _id, ...data }) => (
+            <Bill key={_id} billData={{ _id, ...data }} />
+          ))}
         </AccordionDetails>
       </Accordion>
     </>

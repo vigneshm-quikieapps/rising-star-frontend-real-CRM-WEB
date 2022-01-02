@@ -50,7 +50,7 @@ const Bill = ({ billData = {} }) => {
         </TextField>
         <GradientButton>Enter a Transaction</GradientButton>
       </Box>
-      <TransactionList />
+      <TransactionList billId={_id} />
     </>
   );
 };
