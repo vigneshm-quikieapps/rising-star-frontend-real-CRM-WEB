@@ -6,6 +6,8 @@ import { Box, TableRow, TableCell, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Check as CheckIcon, Close as CloseIcon } from "@mui/icons-material";
 
+import { useSetError } from "../../../../contexts/error-context";
+import { useAddTransaction } from "../../../../services/mutations";
 import {
   Input,
   TextField,
@@ -38,6 +40,7 @@ const validationSchema = yup
   .required();
 
 const NewTransaction = ({ billId, setShowNewTransition }) => {
+  const setError = useSetError();
   const {
     control,
     handleSubmit,
@@ -58,10 +61,23 @@ const NewTransaction = ({ billId, setShowNewTransition }) => {
     },
   });
 
+  const { mutate: addTransaction, isLoading } = useAddTransaction({
+    onError: (error) => setError(error),
+  });
+
   const date = getValues("paymentDate");
 
   const onSubmit = (data) => {
     console.log(data);
+    const updatedData = { ...data };
+    let { paymentDate } = updatedData;
+    updatedData.paymentDate = new Date(
+      paymentDate.getTime() - new Date().getTimezoneOffset() * 60000,
+    )
+      .toISOString()
+      .split("T")[0];
+    console.log(updatedData);
+    addTransaction(updatedData);
   };
 
   return (
