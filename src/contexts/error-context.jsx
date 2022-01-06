@@ -4,7 +4,6 @@ import {
   useState,
   useCallback,
   useMemo,
-  useEffect,
 } from "react";
 
 import { WarningDialog } from "../components";
