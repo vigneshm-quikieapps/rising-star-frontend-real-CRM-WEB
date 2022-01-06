@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { styled } from "@mui/material/styles";
 import {
   Typography,
   Toolbar,
@@ -18,6 +19,8 @@ const tableHeading = (
     Transaction Details
   </Typography>
 );
+
+const StyledTableCell = styled(TableCell)({ padding: "0 20px", lineHeight: 1 });
 const tableHeaders = [
   "Reference",
   "Type",
@@ -52,15 +55,15 @@ const TransactionList = ({ billId, transactions = [] }) => {
         <TableMui>
           <TableHead>
             <TableRow>
-              <TableCell>Reference</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Method</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Update Method</TableCell>
-              <TableCell>Batch Process Id</TableCell>
-              <TableCell>Process Date</TableCell>
-              <TableCell>Action</TableCell>
+              <StyledTableCell>Reference</StyledTableCell>
+              <StyledTableCell>Type</StyledTableCell>
+              <StyledTableCell>Amount</StyledTableCell>
+              <StyledTableCell>Method</StyledTableCell>
+              <StyledTableCell>Date</StyledTableCell>
+              <StyledTableCell>Update Method</StyledTableCell>
+              <StyledTableCell>Batch Process Id</StyledTableCell>
+              <StyledTableCell>Process Date</StyledTableCell>
+              <StyledTableCell>Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
