@@ -126,6 +126,7 @@ const MemberFinance = () => {
       },
     [data],
   );
+  console.log("fina data", data);
 
   const {
     class: { name: className, charges: classCharges },

@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import {
   Box,
   MenuItem,
@@ -41,8 +42,15 @@ const Enrolment = () => {
   );
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
+  const history = useHistory();
 
   useEffect(() => dispatch(setPageTitle("Enrolments")), [dispatch]);
+  const addNewEnrolment = useCallback(
+    (id) => {
+      history.push(`/members/newEnrollment/${id}`);
+    },
+    [history],
+  );
 
   const clubMembershipId = useMemo(() => {
     const list = member?.membership;
@@ -180,7 +188,7 @@ const Enrolment = () => {
             <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
               Enrolment Details
             </Typography>
-            <GradientButton active sx={{ mr: 2 }}>
+            <GradientButton active sx={{ mr: 2 }} onClick={addNewEnrolment}>
               Add a new enrolment
             </GradientButton>
           </Box>
