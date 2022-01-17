@@ -69,7 +69,6 @@ const MemberFinance = () => {
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
   const [showEnrolmentList, setShowEnrolmentList] = useState(false);
   const [selectedDiscountScheme, setSelectedDiscountScheme] = useState("");
-  // const [onSelectBillData, setOnSelectBillData] = useState("");
   const setError = useSetError();
 
   const {
@@ -153,8 +152,13 @@ const MemberFinance = () => {
   );
   console.log("billsData", billsData);
 
-  const [onSelectBillData, setOnSelectBillData] = useState(billsData);
-  console.log("billsData", onSelectBillData);
+  const [onSelectBillData, setOnSelectBillData] = useState(billsData?.docs);
+
+  useEffect(() => {
+    let x = new Date();
+    x.setDate(0); // 0 will result in the last day of the previous month
+    filterBillsByMonths(x.getFullYear(), x.getMonth());
+  }, [billsData]);
 
   const timings = useMemo(() => {
     if (!pattern.length) return " - - - ";
@@ -241,19 +245,25 @@ const MemberFinance = () => {
   };
 
   const filterBillsByMonths = (year, month) => {
+    console.log("changed1", onSelectBillData);
     let data = billsData?.docs?.filter((bill) => {
       let date = new Date(bill.dueDate);
       if (date.getMonth() == month && date.getFullYear() == year) {
         return bill;
       }
     });
+    console.log("data", data);
     setOnSelectBillData(data);
     // billsData.docs = data;
   };
+  const onSubmit = (year,month) => {
+    filterBillsByMonths(2022, 0);
+  };
+
   const [anchorElPayment, setAnchorElPayment] = useState(null);
 
   const closePaymentDateRange = () => {
-    console.log("closed")
+    console.log("closed");
     setAnchorElPayment(null);
   };
 
@@ -375,18 +385,16 @@ const MemberFinance = () => {
           })}
         </AccordionDetails>
       </Accordion>
-      <Box onClick={openPaymentDateRange}>
-        Payment
-      </Box>
+      <Box onClick={openPaymentDateRange}>Payment</Box>
       <DateRange
-          onChange={(startDate, endDate) => {
-            console.log(startDate, endDate);
-          }}
-          title={"View By month"}
-          anchorEl={anchorElPayment}
-          handleClose={closePaymentDateRange}
-          year={"2021"}
-        />
+        onChange={(startDate, endDate) => {
+          console.log(startDate, endDate);
+        }}
+        title={"View By month"}
+        anchorEl={anchorElPayment}
+        handleClose={closePaymentDateRange}
+        year={"2021"}
+      />
 
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
