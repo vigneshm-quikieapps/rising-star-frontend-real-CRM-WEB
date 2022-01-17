@@ -40,6 +40,7 @@ const ChangeSessionList = ({
   memberId,
   businessId,
   memberName,
+  sessionId,
 }) => {
   const [showError, setShowError] = useState(false);
   const [page, setPage] = useState(1);
@@ -49,10 +50,15 @@ const ChangeSessionList = ({
 
   //   console.log(open, onSelect, onClose, memberId, businessId, memberName);
 
-  const { isLoading, isError, error, data, isFetching, isPreviousData } =
+  let { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetSession(classId);
-  console.log("session", data);
-
+    
+  // filter out the already enrolled session
+    let data1 = [];
+  data1 = data?.docs?.filter(({ _id }) => _id != sessionId);
+  if (data1 != undefined && data1.length > 0) {
+    data.docs = data1;
+  }
   //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
 
   const pageChangeHandler = (_, value) => {

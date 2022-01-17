@@ -370,6 +370,7 @@ const Enrolment = () => {
         memberId={member?._id}
         businessId={selectedBusiness}
         memberName={member?.name}
+        sessionId={currentEnrolment?.sessionId}
       />
       <Warning
         open={isWarnDropOpen}
