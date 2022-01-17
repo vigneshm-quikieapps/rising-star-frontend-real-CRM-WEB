@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getDateForDashBoard } from "../services/billingServices";
+import { useSelector } from "react-redux";
+
 import {
   LineChart,
   Line,
@@ -21,26 +24,21 @@ import {
   TextField,
 } from "../components";
 import DateRange from "../containers/popovers/date-range-selector";
-
-const data1 = [
-  {
-    name: "Jan",
-    received: 4000,
-    "Not Received": 2400,
-  },
-  {
-    name: "Feb",
-    received: 3000,
-    "Not Received": 1398,
-  },
-  {
-    name: "Mar",
-    received: 2000,
-    "Not Received": 9800,
-  },
-];
-
-const data = [
+const monthLiterals = Object.freeze({
+  JAN: "January",
+  FEB: "Feburary",
+  MAR: "March",
+  APR: "April",
+  MAY: "May",
+  JUN: "June",
+  JUL: "July",
+  AUG: "August",
+  SEP: "September",
+  OCT: "October",
+  NOV: "November",
+  DEC: "December",
+});
+const memberData = [
   {
     name: "Jan",
     active: 4000,
@@ -78,7 +76,40 @@ const Status = (props) => {
 const Dashboard = () => {
   const [anchorElPayment, setAnchorElPayment] = useState(null);
   const [anchorElMember, setAnchorElMember] = useState(null);
+  const [paymentChartData, setPaymentChartData] = useState([]);
 
+  const [dateSelection, setDateSelection] = useState({
+    startDate: "",
+    endDate: "",
+  });
+
+  const [monthRange, setMonthRange] = useState({
+    startMonth: "",
+    endMonth: "",
+  });
+
+  const [paymentData, setPaymentData] = useState({
+    month: "",
+    paidBills: "",
+    unPaidBills: "",
+    totalPaidAmount: "",
+    totalUnPaidAmount: "",
+  });
+
+  const setLastMonthData = (payList) => {
+    var monthData = payList[payList.length - 1];
+    setPaymentData((paymentData) => ({
+      ...paymentData,
+      month: monthLiterals[monthData.name],
+      paidBills: monthData.paidBills,
+      unPaidBills: monthData.unPaidBills,
+      totalPaidAmount: monthData.received,
+      totalUnPaidAmount: monthData.notReceived,
+    }));
+  };
+
+  const businessesList = useSelector((state) => state.businesses.businessList);
+  const businessId = businessesList.length > 0 ? businessesList[0]._id : "";
   const closePaymentDateRange = () => {
     setAnchorElPayment(null);
   };
@@ -94,6 +125,52 @@ const Dashboard = () => {
   const openMemberDateRange = (event) => {
     setAnchorElMember(event.currentTarget);
   };
+  const getEndDate = (date) => {
+    let today = new Date();
+    let endDate = date
+      ? new Date(date.getFullYear(), date.getMonth() + 1, 0)
+      : new Date(today.getFullYear(), today.getMonth(), 0);
+    var temp = endDate.toLocaleDateString().split("/");
+    endDate = [temp[2], temp[0], temp[1]].join("-");
+    return endDate;
+  };
+
+  const getStartDate = (date) => {
+    let today = new Date();
+    let startDate = date
+      ? new Date(date.getFullYear(), date.getMonth())
+      : new Date(today.getFullYear(), today.getMonth() - 2);
+    var temp = startDate.toLocaleDateString().split("/");
+    startDate = [temp[2], temp[0], temp[1]].join("-");
+    return startDate;
+  };
+
+  useEffect(() => {
+    if (businessId) {
+      let endDate = dateSelection?.endDate || getEndDate();
+      let startDate = dateSelection?.startDate || getStartDate();
+      setMonthRange((monthRange) => ({
+        ...monthRange,
+        startMonth: new Date(startDate).toLocaleString("default", {
+          month: "short",
+        }),
+        endMonth: new Date(endDate).toLocaleString("default", {
+          month: "short",
+        }),
+      }));
+
+      getDateForDashBoard({
+        startDate: startDate,
+        endDate: endDate,
+        businessId: businessId,
+      }).then(function (data) {
+        if (data.length) {
+          setPaymentChartData(data);
+          setLastMonthData(data);
+        }
+      });
+    }
+  }, [businessId, dateSelection]);
 
   return (
     <Box sx={{ marginBottom: "100px" }}>
@@ -105,7 +182,6 @@ const Dashboard = () => {
           Manage your business here
         </Typography>
       </Box>
-
       <AccordionContainer>
         <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -124,7 +200,9 @@ const Dashboard = () => {
             <Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>
               PAYERS
             </Typography>
-            <Typography sx={{ fontSize: "14px" }}>January</Typography>
+            <Typography sx={{ fontSize: "14px" }}>
+              {paymentData.month}
+            </Typography>
           </Box>
 
           <Box sx={{ marginTop: "20px" }}>
@@ -132,7 +210,7 @@ const Dashboard = () => {
               variant="h2"
               sx={{ fontSize: "28px", fontWeight: "bold" }}
             >
-              600
+              {paymentData.paidBills}
             </Typography>
             <Typography sx={{ opacity: 0.5, fontSize: "12px" }}>
               Paid Members
@@ -144,7 +222,7 @@ const Dashboard = () => {
               variant="h2"
               sx={{ fontSize: "28px", fontWeight: "bold" }}
             >
-              1000
+              {paymentData.unPaidBills}
             </Typography>
             <Typography sx={{ opacity: 0.5, fontSize: "12px" }}>
               Not Paid Members
@@ -156,7 +234,9 @@ const Dashboard = () => {
             <Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>
               PAYMENT
             </Typography>
-            <Typography sx={{ fontSize: "14px" }}>January</Typography>
+            <Typography sx={{ fontSize: "14px" }}>
+              {paymentData.month}
+            </Typography>
           </Box>
 
           <Box sx={{ marginTop: "20px" }}>
@@ -164,7 +244,7 @@ const Dashboard = () => {
               variant="h2"
               sx={{ fontSize: "28px", fontWeight: "bold" }}
             >
-              £10,000
+              £{paymentData.totalPaidAmount}
             </Typography>
             <Typography sx={{ opacity: 0.5, fontSize: "12px" }}>
               Paid
@@ -176,7 +256,7 @@ const Dashboard = () => {
               variant="h2"
               sx={{ fontSize: "28px", fontWeight: "bold" }}
             >
-              £2,000
+              £{paymentData.totalUnPaidAmount}
             </Typography>
             <Typography sx={{ opacity: 0.5, fontSize: "12px" }}>
               Not Paid
@@ -226,7 +306,9 @@ const Dashboard = () => {
           </Box>
         </DashboardCard>
       </CardRow>
+
       <CardRow sx={{ marginTop: "10px" }}>
+        {/* payment section */}
         <Card sx={{ width: "auto" }}>
           <CardRow sx={{ marginBottom: "15px" }}>
             <Box>
@@ -250,19 +332,22 @@ const Dashboard = () => {
             <Box onClick={openPaymentDateRange}>
               <TextField
                 select
-                value={"Jan-mar"}
+                value={"jan-mar"}
                 onChange={() => {}}
                 sx={{ width: "116px" }}
                 disabled
               >
-                <MenuItem value="Jan-mar">Jan-mar</MenuItem>
+                <MenuItem value="jan-mar">
+                  {monthRange.startMonth}-{monthRange.endMonth}
+                </MenuItem>
               </TextField>
             </Box>
           </CardRow>
+
           <LineChart
             width={500}
             height={300}
-            data={data}
+            data={paymentChartData}
             margin={{
               top: 5,
               right: 30,
@@ -276,14 +361,23 @@ const Dashboard = () => {
             <Tooltip />
             <Legend />
             <Line
+              name="Received"
               type="monotone"
-              dataKey="drops"
+              dataKey="received"
               stroke="#f1383c"
               activeDot={{ r: 8 }}
             />
-            <Line type="monotone" dataKey="active" stroke="#beb8d8" />
+            <Line
+              name="Not Received"
+              type="monotone"
+              dataKey="notReceived"
+              stroke="#beb8d8"
+            />
           </LineChart>
         </Card>
+
+        {/* member section */}
+
         <Card sx={{ width: "auto" }}>
           <CardRow sx={{ marginBottom: "15px", width: "100%" }}>
             <Box>
@@ -319,7 +413,7 @@ const Dashboard = () => {
           <LineChart
             width={500}
             height={300}
-            data={data1}
+            data={memberData}
             margin={{
               top: 5,
               right: 30,
@@ -334,23 +428,30 @@ const Dashboard = () => {
             <Legend />
             <Line
               type="monotone"
-              dataKey="received"
+              dataKey="drops"
               stroke="#f1383c"
               activeDot={{ r: 8 }}
             />
-            <Line type="monotone" dataKey="Not Received" stroke="#beb8d8" />
+            <Line type="monotone" dataKey="active" stroke="#beb8d8" />
           </LineChart>
         </Card>
       </CardRow>
+
       <DateRange
-        onChange={(data) => {
-          console.log(data);
+        onChange={(fromDate, toDate) => {
+          closePaymentDateRange();
+          setDateSelection((dateSelection) => ({
+            ...dateSelection,
+            startDate: getStartDate(fromDate),
+            endDate: getEndDate(toDate),
+          }));
         }}
         title={"PAYMENT"}
         anchorEl={anchorElPayment}
         handleClose={closePaymentDateRange}
         year={"2021"}
       />
+
       <DateRange
         onChange={(startDate, endDate) => {
           console.log(startDate, endDate);
