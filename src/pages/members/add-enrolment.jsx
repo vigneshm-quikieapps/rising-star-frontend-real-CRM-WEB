@@ -30,11 +30,13 @@ import ClassList from "./components/class-lst";
 import SessionList from "./components/session-list";
 import { useGetEnrolment } from "../../services/queries";
 import { useSetError } from "../../contexts/error-context";
+import { regularEnrollment } from "../../services/enrolmentServices";
 
 const AddEnrolment = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
+  console.log("member38", member);
   const businessList = useSelector((state) => state.businesses.businessList);
   const enrolmentList = useSelector((state) => state.members.enrolmentList);
   const sessionList = useSelector(
@@ -147,11 +149,23 @@ const AddEnrolment = () => {
   const ClassSelectHandler = (id) => {
     setShowClassList(false);
     setSelectedEnrolment(id);
-    localStorage.setItem("Id", selectedEnrolment);
+    // localStorage.setItem("Id", selectedEnrolment);
   };
-  const SessionSelectHandler = (id) => {
+  const SessionSelectHandler = (
+    id,
+    name,
+    termStartDate,
+    termEndDate,
+    termName,
+  ) => {
     setShowSessionList(false);
+    console.log("id", name, termStartDate, termEndDate, termName);
     setSelectedSession(id);
+  };
+
+  const submitEnrolment = () => {
+    console.log("selectedSession",selectedSession,member._id)
+    regularEnrollment(selectedSession, member._id);
   };
 
   if (!member)
@@ -273,13 +287,16 @@ const AddEnrolment = () => {
       />
       <SessionList
         open={showSessionList}
+        classId={selectedEnrolment}
         onClose={() => setShowSessionList(false)}
         onSelect={SessionSelectHandler}
         memberId={member?._id}
         businessId={selectedBusiness}
         memberName={member?.name}
       />
-      <GradientButton>Submit for Enrolment</GradientButton>
+      <GradientButton onClick={submitEnrolment}>
+        Submit for Enrolment
+      </GradientButton>
       <Button sx={{ ml: 2 }}>Discard</Button>
     </>
   );

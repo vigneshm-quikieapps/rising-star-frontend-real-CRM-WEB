@@ -42,3 +42,16 @@ export const returnFromSuspend = async (id) => {
     throw error;
   }
 };
+
+export const regularEnrollment = async (sessionId, memberId) => {
+  try {
+    const api = `enrolments`;
+    const response = await axiosInstance.post(api, {
+      sessionId: sessionId,
+      memberId: memberId,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

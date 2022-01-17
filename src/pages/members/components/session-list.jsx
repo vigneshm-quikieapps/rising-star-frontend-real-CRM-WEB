@@ -33,6 +33,7 @@ const TableHeading = (
 
 const SessionList = ({
   open,
+  classId,
   onSelect,
   onClose,
   memberId,
@@ -46,7 +47,8 @@ const SessionList = ({
   //   console.log(open, onSelect, onClose, memberId, businessId, memberName);
 
   const { isLoading, isError, error, data, isFetching, isPreviousData } =
-    useGetSession(localStorage.getItem("ID"));
+    useGetSession(classId);
+  console.log("session", data);
 
   //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
 
@@ -60,22 +62,32 @@ const SessionList = ({
       data?.docs?.map(
         ({
           _id,
-          class: { name: className },
-          enrolledStatus,
-          session: {
-            name: sessionName,
-            term: { label: termName },
-          },
+          name,
+          facility,
+          startDate,
+          endDate,
+          term: { label: termName,startDate:termStateDate ,endDate:termEndDate},
+          status
+          // session: {
+          //   name: sessionName,
+          //   term: { label: termName },
+          // },
         }) => ({
           onClick: () => {
-            onSelect(_id, className);
+            onSelect(_id, name,termStateDate,termEndDate,termName);
             onClose();
           },
           items: [
-            toPascal(className),
-            toPascal(enrolmentStatusMap[enrolledStatus]),
+            toPascal(name),
+            toPascal(facility),
+            toPascal(startDate),
+            toPascal(endDate),
             toPascal(termName),
-            toPascal(sessionName),
+            toPascal(status),
+
+
+            // toPascal(termName),
+            // toPascal(sessionName),
           ],
         }),
       ) || []
@@ -140,7 +152,8 @@ const SessionList = ({
             headers={[
               "Session Name",
               "Timing",
-              "Start Date- End Date",
+              "Start Date",
+              "End Date",
               "Term Name",
               "Session Status",
             ]}
