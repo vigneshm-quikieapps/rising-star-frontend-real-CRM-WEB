@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import {
@@ -19,6 +19,7 @@ import {
   Accordion,
   GradientButton,
   Pagination,
+  Warning,
 } from "../../components";
 import { Card, HeadingText, SubHeadingText } from "../../components/common";
 import { getMemberEnrolmentList } from "../../redux/action/memberAction";
@@ -31,6 +32,10 @@ import {
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import toPascal from "../../utils/to-pascal";
 import { setPageTitle } from "../../redux/action/shared-actions";
+import { useGetEnrolment } from "../../services/queries";
+import SessionList from "./components/session-list";
+import { useSetError } from "../../contexts/error-context";
+import ChangeSessionList from "./components/change-sessionlist";
 
 const Enrolment = () => {
   const dispatch = useDispatch();
@@ -42,7 +47,17 @@ const Enrolment = () => {
   );
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
+  const [showSessionList, setShowSessionList] = useState(false);
+  const [selectedSessionName, setSelectedSessionName] = useState("");
+  const [selectedTermSDate, setSelectedTermSDate] = useState("");
+  const [selectedTermEDate, setSelectedTermEDate] = useState("");
+  const [selectedTermName, setSelectedTermName] = useState("");
+  const [selectedSession, setSelectedSession] = useState("");
+  const isSaving = useRef(false);
+  const setError = useSetError();
   const history = useHistory();
+  const [isWarnOpen, setIsWarnOpen] = useState(false);
+  const [isWarnDropOpen, setIsWarnDropOpen] = useState(false);
 
   useEffect(() => dispatch(setPageTitle("Enrolments")), [dispatch]);
   const addNewEnrolment = useCallback(
@@ -51,6 +66,12 @@ const Enrolment = () => {
     },
     [history],
   );
+  const { data, isLoading } = useGetEnrolment(selectedSession, {
+    refetchOnWindowFocus: false,
+    onError: (error) => {
+      setError(error);
+    },
+  });
 
   const clubMembershipId = useMemo(() => {
     const list = member?.membership;
@@ -93,6 +114,7 @@ const Enrolment = () => {
     () => enrolmentList.find(({ _id }) => _id === selectedEnrolment),
     [enrolmentList, selectedEnrolment],
   );
+  console.log("currentenrol", currentEnrolment);
 
   const calcDate = (date) =>
     date ? new Date(date).toLocaleDateString() : " - - - ";
@@ -132,6 +154,45 @@ const Enrolment = () => {
         enrolmentObject.session.term._id,
       ),
     );
+  };
+  const SessionSelectHandler = (
+    id,
+    name,
+    termStartDate,
+    termEndDate,
+    termName,
+  ) => {
+    setShowSessionList(false);
+    console.log("id", name, termStartDate, termEndDate, termName);
+    setSelectedSession(id);
+    setSelectedSessionName(name);
+    setSelectedTermSDate(termStartDate);
+    setSelectedTermEDate(termEndDate);
+    setSelectedTermName(termName);
+  };
+  const handleDropYes = () => {
+    setIsWarnDropOpen(false);
+  };
+
+  const handleDropNo = () => {
+    isSaving.current = false;
+    setIsWarnDropOpen(false);
+  };
+  const handleDropWarn = () => {
+    isSaving.current = false;
+    setIsWarnDropOpen(true);
+  };
+  const handleSuspendWarn = () => {
+    isSaving.current = false;
+    setIsWarnOpen(true);
+  };
+  const handleSuspendYes = () => {
+    setIsWarnOpen(false);
+  };
+
+  const handleSuspendNo = () => {
+    isSaving.current = false;
+    setIsWarnOpen(false);
   };
 
   if (!member)
@@ -244,18 +305,33 @@ const Enrolment = () => {
       >
         {["ENROLLED", "WAITLISTED"].indexOf(currentEnrolment?.enrolledStatus) >
           -1 && (
-          <GradientButton sx={{ fontWeight: "bold" }} invert active>
+          <GradientButton
+            sx={{ fontWeight: "bold" }}
+            invert
+            active
+            onClick={() => setShowSessionList(true)}
+          >
             Change Session
           </GradientButton>
         )}
         {currentEnrolment?.enrolledStatus &&
           currentEnrolment?.enrolledStatus !== "DROPPED" && (
-            <GradientButton sx={{ fontWeight: "bold" }} invert active>
+            <GradientButton
+              sx={{ fontWeight: "bold" }}
+              invert
+              active
+              onClick={handleDropWarn}
+            >
               Drop
             </GradientButton>
           )}
         {currentEnrolment?.enrolledStatus === "ENROLLED" && (
-          <GradientButton sx={{ fontWeight: "bold" }} invert active>
+          <GradientButton
+            sx={{ fontWeight: "bold" }}
+            invert
+            active
+            onClick={handleSuspendWarn}
+          >
             Suspend
           </GradientButton>
         )}
@@ -270,6 +346,37 @@ const Enrolment = () => {
           </GradientButton>
         )}
       </Box>
+      <ChangeSessionList
+        open={showSessionList}
+        classId={currentEnrolment?.class?._id}
+        onClose={() => setShowSessionList(false)}
+        onSelect={SessionSelectHandler}
+        memberId={member?._id}
+        businessId={selectedBusiness}
+        memberName={member?.name}
+      />
+      <Warning
+        open={isWarnDropOpen}
+        title="Warning"
+        description={
+          isSaving.current
+            ? "Are you sure, you want to save? There are unsaved sessions!"
+            : "Are you sure, you want to drop? Data will be lost!"
+        }
+        onNo={handleDropNo}
+        onYes={handleDropYes}
+      />
+      <Warning
+        open={isWarnOpen}
+        title="Warning"
+        description={
+          isSaving.current
+            ? "Are you sure, you want to save? There are unsaved sessions!"
+            : "Are you sure, you want to Suspend? Data will be lost!"
+        }
+        onNo={handleSuspendNo}
+        onYes={handleSuspendYes}
+      />
       <Pagination
         count={enrolmentList.length}
         sx={{ mt: 2 }}

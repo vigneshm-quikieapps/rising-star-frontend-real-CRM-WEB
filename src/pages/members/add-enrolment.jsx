@@ -54,6 +54,7 @@ const AddEnrolment = () => {
   const [showClassList, setShowClassList] = useState(false);
   const [showSessionList, setShowSessionList] = useState(false);
   const setError = useSetError();
+  const memID = member._id;
 
   const clubMembershipId = useMemo(() => {
     const list = member?.membership;
@@ -195,7 +196,9 @@ const AddEnrolment = () => {
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", mb: 1.5 }}>
-        <IconButton onClick={() => history.push("/members")}>
+        <IconButton
+          onClick={() => history.push(`/members/enrolments/${memID}`)}
+        >
           <ImgIcon>{backIcon}</ImgIcon>
         </IconButton>
         <Typography
@@ -318,7 +321,12 @@ const AddEnrolment = () => {
       <GradientButton onClick={submitEnrolment}>
         Submit for Enrolment
       </GradientButton>
-      <Button sx={{ ml: 2 }}>Discard</Button>
+      <Button
+        sx={{ ml: 2 }}
+        onClick={() => history.push(`/members/enrolments/${memID}`)}
+      >
+        Discard
+      </Button>
     </>
   );
 };
