@@ -48,6 +48,7 @@ const AddEnrolment = () => {
   const [selectedTermSDate, setSelectedTermSDate] = useState("");
   const [selectedTermEDate, setSelectedTermEDate] = useState("");
   const [selectedTermName, setSelectedTermName] = useState("");
+  const [selectedTimings, setSelectedTimings] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
   const [date, setDate] = useState(new Date("01-01-2022"));
@@ -164,6 +165,7 @@ const AddEnrolment = () => {
     termStartDate,
     termEndDate,
     termName,
+    timings
   ) => {
     setShowSessionList(false);
     console.log("id", name, termStartDate, termEndDate, termName);
@@ -172,6 +174,7 @@ const AddEnrolment = () => {
     setSelectedTermSDate(termStartDate);
     setSelectedTermEDate(termEndDate);
     setSelectedTermName(termName);
+    setSelectedTimings(timings)
   };
 
   const submitEnrolment = () => {
@@ -270,7 +273,7 @@ const AddEnrolment = () => {
             </GradientButton>
             {/* <Output title="Session Name" description={sessionName} /> */}
             <Output title="Session Name" description={selectedSessionName} />
-            <Output title="Timings" description={timings} />
+            <Output title="Timings" description={selectedTimings} />
             <Output />
             {/* <Output
               title="Term Start Date"
