@@ -49,6 +49,10 @@ const ClassEnrollments = () => {
   const membersOfSession = useSelector(
     (state) => state.members.membersOfSession,
   );
+  const membersOfSession1 = useSelector(
+    (state) => state.members.membersOfSession,
+  );
+  console.log("membersOfSession",membersOfSession1);
   const { currentPage, totalPages } = useSelector((state) => state.members);
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
@@ -97,19 +101,20 @@ const ClassEnrollments = () => {
           const condition = (
             <VerifiedIcon title={memberConsent?.consent?.condition} />
           );
-          return {
-            onClick: () => history.push(`/members/info/${_id}`),
-            items: [
-              toPascal(member.name),
-              allergy,
-              condition,
-              startDate ? startDate.split("T")[0] : "N/A",
-              enrolledDate,
-              toPascal(enrolledStatus),
-              toPascal(discontinuationReason),
-              droppedDate ? droppedDate : "N/A",
-            ],
-          };
+            return {
+              onClick: () => history.push(`/members/info/${_id}`),
+              items: [
+                toPascal(member.name),
+                allergy,
+                condition,
+                startDate ? startDate.split("T")[0] : "N/A",
+                enrolledDate,
+                toPascal(enrolledStatus),
+                toPascal(discontinuationReason),
+                droppedDate ? droppedDate : "N/A",
+              ],
+            };
+          
         },
       ),
     [membersOfSession, history],

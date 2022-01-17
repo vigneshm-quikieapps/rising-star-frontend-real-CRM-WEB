@@ -31,9 +31,13 @@ import {
   useGetEnrolment,
   useGetEnrolmentBills,
 } from "../../services/queries";
+import {
+  useUpdateTransaction
+} from "../../services/mutations";
 import { useSetError } from "../../contexts/error-context";
-
+import {updatePaymentDetailsOfMembers} from '../../redux/action/billingActions'
 import Bill from "./components/bill/bill";
+import UpdateTransaction from "./components/bill/update-transaction";
 
 const validationSchema = Yup.object()
   .shape({
@@ -58,6 +62,9 @@ const validationSchema = Yup.object()
 const MemberFinance = () => {
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
+  const updateBillData = useSelector(state => state.updateBilling)
+  // console.log("updatedBillData",updateBillData)
+  // console.log("state.members", member);
   const businessList = useSelector((state) => state.businesses.businessList);
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
@@ -137,12 +144,14 @@ const MemberFinance = () => {
     enrolledStatus: status,
     startDate,
   } = currentEnrolment;
+  console.log("currentEnrolment", currentEnrolment);
 
   const { data: billsData, isLoading: billsLoading } = useGetEnrolmentBills(
-    currentEnrolment?.classId,
+    currentEnrolment?._id,
     member?._id,
     { refetchOnWindowFocus: false, onError: (error) => setError(error) },
   );
+  console.log("billsData", billsData);
 
   const timings = useMemo(() => {
     if (!pattern.length) return " - - - ";
@@ -215,6 +224,17 @@ const MemberFinance = () => {
       applyDiscountHandler,
     ],
   );
+
+  const { mutate: updateTransaction, isLoading:billsUpdating } = useUpdateTransaction({
+    onError: (error) => setError(error),
+  });
+
+  const updateBillTransactions = () =>{
+    console.log("updatedBillData",updateBillData)
+    let body = updateBillData
+    console.log("body",body)
+    updateTransaction(body)
+  }
 
   return (
     <>
@@ -313,6 +333,19 @@ const MemberFinance = () => {
       </Accordion>
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
+          <Typography>Term Billing</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ p: 0 }}>
+          {billsData?.docs?.map(({ _id,termId, ...data }) => {
+            console.log("termId",termId)
+            if(termId){
+              return <Bill key={_id} billData={{ _id, ...data }} />
+           }
+          })}
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
           <Typography>Class Billing</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0 }}>
@@ -321,6 +354,12 @@ const MemberFinance = () => {
           ))}
         </AccordionDetails>
       </Accordion>
+      <GradientButton
+            sx={{ maxWidth: "fit-content" }}
+            onClick={() => updateBillTransactions()}
+          >
+            Save
+          </GradientButton>
     </>
   );
 };

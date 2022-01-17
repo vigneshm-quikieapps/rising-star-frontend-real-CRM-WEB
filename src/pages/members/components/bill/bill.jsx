@@ -1,4 +1,5 @@
 import { Box, MenuItem } from "@mui/material";
+import { useState, useEffect, useMemo, useCallback } from "react";
 
 import {
   TextField,
@@ -9,6 +10,7 @@ import {
 import TransactionList from "./transaction-list";
 
 const Bill = ({ billData = {} }) => {
+  console.log("billData12",billData)
   const {
     _id,
     name = "Bill",
@@ -18,9 +20,17 @@ const Bill = ({ billData = {} }) => {
     dueDate = new Date(),
     paid = false,
     items = [],
+    partialTransactions
   } = billData;
-
+  const [showNewTransaction, setShowNewTransaction] = useState(false);
   const paidAmount = items.reduce((prev, { amount }) => prev + amount, 0);
+
+  const enterNewTransaction = () =>{
+    setShowNewTransaction(true);
+  }
+  const hideNewTransaction = () =>{
+    setShowNewTransaction(false);
+  }
 
   return (
     <>
@@ -48,9 +58,12 @@ const Bill = ({ billData = {} }) => {
           <MenuItem value={true}>Paid</MenuItem>
           <MenuItem value={false}>Not Paid</MenuItem>
         </TextField>
-        <GradientButton>Enter a Transaction</GradientButton>
+        <GradientButton onClick={enterNewTransaction}>Enter a Transaction</GradientButton>
       </Box>
-      <TransactionList billId={_id} />
+      {showNewTransaction && <TransactionList billId={_id} hideNewTransaction={hideNewTransaction} newTransaction={true}/>}
+      {partialTransactions.map((transaction)=>(
+        <TransactionList billId={_id} transaction={transaction} update={true}/>
+      ))}
     </>
   );
 };
