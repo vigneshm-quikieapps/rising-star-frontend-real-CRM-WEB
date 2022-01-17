@@ -56,6 +56,18 @@ const SessionList = ({
     setPage(value);
   };
 
+  const timings = (pattern)=>{
+    const days = pattern.map(({ day }) => day).join(", ");
+    const startTime = new Date(
+      pattern[0].startTime,
+    ).toLocaleTimeString();
+    const endTime = new Date(pattern[0].endTime).toLocaleTimeString();
+    return `${toPascal(days)}, ${startTime} to ${endTime}`.replace(
+      /:00 /g,
+      " ",
+    );
+  }
+
   const tableRows = useMemo(() => {
     console.log("session", data);
     return (
@@ -63,7 +75,7 @@ const SessionList = ({
         ({
           _id,
           name,
-          facility,
+          pattern,
           startDate,
           endDate,
           term: { label: termName,startDate:termStateDate ,endDate:termEndDate},
@@ -74,12 +86,12 @@ const SessionList = ({
           // },
         }) => ({
           onClick: () => {
-            onSelect(_id, name,termStateDate,termEndDate,termName);
+            onSelect(_id, name,termStateDate,termEndDate,termName,timings(pattern));
             onClose();
           },
           items: [
             toPascal(name),
-            toPascal(facility),
+            timings(pattern),
             toPascal(startDate),
             toPascal(endDate),
             toPascal(termName),
