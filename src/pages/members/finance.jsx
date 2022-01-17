@@ -36,6 +36,7 @@ import { useSetError } from "../../contexts/error-context";
 import { updatePaymentDetailsOfMembers } from "../../redux/action/billingActions";
 import Bill from "./components/bill/bill";
 import UpdateTransaction from "./components/bill/update-transaction";
+import DateRange from "../../containers/popovers/date-range-selector";
 
 const validationSchema = Yup.object()
   .shape({
@@ -249,6 +250,16 @@ const MemberFinance = () => {
     setOnSelectBillData(data);
     // billsData.docs = data;
   };
+  const [anchorElPayment, setAnchorElPayment] = useState(null);
+
+  const closePaymentDateRange = () => {
+    console.log("closed")
+    setAnchorElPayment(null);
+  };
+
+  const openPaymentDateRange = (event) => {
+    setAnchorElPayment(event.currentTarget);
+  };
 
   return (
     <>
@@ -364,6 +375,19 @@ const MemberFinance = () => {
           })}
         </AccordionDetails>
       </Accordion>
+      <Box onClick={openPaymentDateRange}>
+        Payment
+      </Box>
+      <DateRange
+          onChange={(startDate, endDate) => {
+            console.log(startDate, endDate);
+          }}
+          title={"View By month"}
+          anchorEl={anchorElPayment}
+          handleClose={closePaymentDateRange}
+          year={"2021"}
+        />
+
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
           <Typography>Class Billing</Typography>
