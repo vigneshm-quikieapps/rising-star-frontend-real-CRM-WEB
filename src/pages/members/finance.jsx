@@ -31,11 +31,9 @@ import {
   useGetEnrolment,
   useGetEnrolmentBills,
 } from "../../services/queries";
-import {
-  useUpdateTransaction
-} from "../../services/mutations";
+import { useUpdateTransaction } from "../../services/mutations";
 import { useSetError } from "../../contexts/error-context";
-import {updatePaymentDetailsOfMembers} from '../../redux/action/billingActions'
+import { updatePaymentDetailsOfMembers } from "../../redux/action/billingActions";
 import Bill from "./components/bill/bill";
 import UpdateTransaction from "./components/bill/update-transaction";
 
@@ -62,7 +60,7 @@ const validationSchema = Yup.object()
 const MemberFinance = () => {
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
-  const updateBillData = useSelector(state => state.updateBilling)
+  const updateBillData = useSelector((state) => state.updateBilling);
   // console.log("updatedBillData",updateBillData)
   // console.log("state.members", member);
   const businessList = useSelector((state) => state.businesses.businessList);
@@ -70,6 +68,7 @@ const MemberFinance = () => {
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
   const [showEnrolmentList, setShowEnrolmentList] = useState(false);
   const [selectedDiscountScheme, setSelectedDiscountScheme] = useState("");
+  // const [onSelectBillData, setOnSelectBillData] = useState("");
   const setError = useSetError();
 
   const {
@@ -153,6 +152,9 @@ const MemberFinance = () => {
   );
   console.log("billsData", billsData);
 
+  const [onSelectBillData, setOnSelectBillData] = useState(billsData);
+  console.log("billsData", onSelectBillData);
+
   const timings = useMemo(() => {
     if (!pattern.length) return " - - - ";
     const days = pattern.map(({ day }) => day).join(", ");
@@ -225,16 +227,28 @@ const MemberFinance = () => {
     ],
   );
 
-  const { mutate: updateTransaction, isLoading:billsUpdating } = useUpdateTransaction({
-    onError: (error) => setError(error),
-  });
+  const { mutate: updateTransaction, isLoading: billsUpdating } =
+    useUpdateTransaction({
+      onError: (error) => setError(error),
+    });
 
-  const updateBillTransactions = () =>{
-    console.log("updatedBillData",updateBillData)
-    let body = updateBillData
-    console.log("body",body)
-    updateTransaction(body)
-  }
+  const updateBillTransactions = () => {
+    console.log("updatedBillData", updateBillData);
+    let body = updateBillData;
+    console.log("body", body);
+    updateTransaction(body);
+  };
+
+  const filterBillsByMonths = (year, month) => {
+    let data = billsData?.docs?.filter((bill) => {
+      let date = new Date(bill.dueDate);
+      if (date.getMonth() == month && date.getFullYear() == year) {
+        return bill;
+      }
+    });
+    setOnSelectBillData(data);
+    // billsData.docs = data;
+  };
 
   return (
     <>
@@ -336,11 +350,17 @@ const MemberFinance = () => {
           <Typography>Term Billing</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0 }}>
-          {billsData?.docs?.map(({ _id,termId, ...data }) => {
-            console.log("termId",termId)
-            if(termId){
-              return <Bill key={_id} billData={{ _id, ...data }} />
-           }
+          {billsData?.docs?.map(({ _id, termId, ...data }) => {
+            if (termId) {
+              return (
+                <Bill
+                  key={_id}
+                  billData={{ _id, ...data }}
+                  isTerm={true}
+                  termName={termName}
+                />
+              );
+            }
           })}
         </AccordionDetails>
       </Accordion>
@@ -349,17 +369,17 @@ const MemberFinance = () => {
           <Typography>Class Billing</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0 }}>
-          {billsData?.docs?.map(({ _id, ...data }) => (
+          {onSelectBillData?.map(({ _id, ...data }) => (
             <Bill key={_id} billData={{ _id, ...data }} />
           ))}
         </AccordionDetails>
       </Accordion>
       <GradientButton
-            sx={{ maxWidth: "fit-content" }}
-            onClick={() => updateBillTransactions()}
-          >
-            Save
-          </GradientButton>
+        sx={{ maxWidth: "fit-content" }}
+        onClick={() => updateBillTransactions()}
+      >
+        Save
+      </GradientButton>
     </>
   );
 };
