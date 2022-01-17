@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -9,6 +9,7 @@ import {
   CircularProgress,
   AccordionSummary,
   AccordionDetails,
+  Modal,
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import { Card, HeadingText, SubHeadingText } from "../../components/common";
@@ -20,6 +21,7 @@ import {
   GradientButton,
   DatePicker,
   Button,
+  Warning,
 } from "../../components";
 import { TextField, Output } from "../../components/index";
 import { backIcon } from "../../assets/icons";
@@ -51,11 +53,13 @@ const AddEnrolment = () => {
   const [selectedTimings, setSelectedTimings] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
-  const [date, setDate] = useState(new Date("01-01-2022"));
   const [showClassList, setShowClassList] = useState(false);
   const [showSessionList, setShowSessionList] = useState(false);
   const setError = useSetError();
+  const [isWarnDiscardOpen, setIsWarnDiscardOpen] = useState(false);
+  const [onSubmitEnrolmentOpen, setOnSubmitEnrolmentOpen] = useState(false);
   const memID = member._id;
+  const isSaving = useRef(false);
 
   const clubMembershipId = useMemo(() => {
     const list = member?.membership;
@@ -165,7 +169,7 @@ const AddEnrolment = () => {
     termStartDate,
     termEndDate,
     termName,
-    timings
+    timings,
   ) => {
     setShowSessionList(false);
     console.log("id", name, termStartDate, termEndDate, termName);
@@ -174,14 +178,37 @@ const AddEnrolment = () => {
     setSelectedTermSDate(termStartDate);
     setSelectedTermEDate(termEndDate);
     setSelectedTermName(termName);
-    setSelectedTimings(timings)
+    setSelectedTimings(timings);
   };
 
   const submitEnrolment = () => {
-    console.log("selectedSession", selectedSession, member._id);
+    // console.log("selectedSession", selectedSession, member._id);
+    setOnSubmitEnrolmentOpen(true);
+  };
+  const handleSubmitEnrolmentYes = () => {
     regularEnrollment(selectedSession, member._id);
+    setOnSubmitEnrolmentOpen(false);
+    history.push(`/members/enrolments/${memID}`);
   };
 
+  const handleSubmitEnrolmentNo = () => {
+    isSaving.current = false;
+    setOnSubmitEnrolmentOpen(false);
+  };
+
+  const handleDiscardEnrolmentYes = () => {
+    setIsWarnDiscardOpen(false);
+    history.push(`/members/enrolments/${memID}`);
+  };
+
+  const handleDiscardEnrolmentNo = () => {
+    isSaving.current = false;
+    setIsWarnDiscardOpen(false);
+  };
+  const handleDiscardEnrolmentWarn = () => {
+    isSaving.current = false;
+    setIsWarnDiscardOpen(true);
+  };
   if (!member)
     return (
       <Box
@@ -324,12 +351,27 @@ const AddEnrolment = () => {
       <GradientButton onClick={submitEnrolment}>
         Submit for Enrolment
       </GradientButton>
-      <Button
-        sx={{ ml: 2 }}
-        onClick={() => history.push(`/members/enrolments/${memID}`)}
-      >
+      <Button sx={{ ml: 2 }} onClick={handleDiscardEnrolmentWarn}>
         Discard
       </Button>
+      <Warning
+        open={isWarnDiscardOpen}
+        title="Warning"
+        description={
+          isSaving.current
+            ? "Are you sure, you want to save? There are unsaved sessions!"
+            : "Are you sure, you want to discard the changes?"
+        }
+        onNo={handleDiscardEnrolmentNo}
+        onYes={handleDiscardEnrolmentYes}
+      />
+      <Warning
+        open={onSubmitEnrolmentOpen}
+        titlt="Confirm"
+        description={"Are you sure you want to Submit"}
+        onNo={handleSubmitEnrolmentNo}
+        onYes={handleSubmitEnrolmentYes}
+      />
     </>
   );
 };

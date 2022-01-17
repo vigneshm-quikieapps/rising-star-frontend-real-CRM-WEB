@@ -7,6 +7,7 @@ export const transfer = async ({ enrolmentId, newSessionId }) => {
       enrolmentId,
       newSessionId,
     });
+    console.log("reponse", response);
     return response;
   } catch (error) {
     throw error;
