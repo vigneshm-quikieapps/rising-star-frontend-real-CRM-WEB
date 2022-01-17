@@ -36,6 +36,7 @@ import { useGetEnrolment } from "../../services/queries";
 import SessionList from "./components/session-list";
 import { useSetError } from "../../contexts/error-context";
 import ChangeSessionList from "./components/change-sessionlist";
+import { transfer,drop,suspend } from "../../services/enrolmentServices";
 
 const Enrolment = () => {
   const dispatch = useDispatch();
@@ -165,15 +166,11 @@ const Enrolment = () => {
   ) => {
     setShowSessionList(true);
     setIsConfirmOnSelectOpen(true);
-    console.log("id", name, termStartDate, termEndDate, termName);
     setSelectedSession(id);
-    setSelectedSessionName(name);
-    setSelectedTermSDate(termStartDate);
-    setSelectedTermEDate(termEndDate);
-    setSelectedTermName(termName);
   };
-  const handleDropYes = () => {
+  const handleDropYes = async() => {
     setIsWarnDropOpen(false);
+    // const response = await drop(currentEnrolment._id);
   };
 
   const handleDropNo = () => {
@@ -190,6 +187,7 @@ const Enrolment = () => {
   };
   const handleSuspendYes = () => {
     setIsWarnOpen(false);
+    // suspend(currentEnrolment._id);
   };
 
   const handleSuspendNo = () => {
@@ -198,10 +196,21 @@ const Enrolment = () => {
     setShowSessionList(false);
   };
 
-  const handleOnSelectYes = () => {
+  const handleOnSelectYes = async() => {
     isSaving.current = false;
     setIsConfirmOnSelectOpen(false);
     setShowSessionList(false);
+    const response = await transfer(currentEnrolment._id, selectedSession);
+    // console.log("response212,",response.message)
+    if(response.data.message=="Transfer successful"){
+      dispatch(
+        getMemberEnrolmentList({
+          memberId: member._id,
+          businessId: selectedBusiness,
+        }),
+      );
+    }
+    
   };
 
   const handleOnSelectNo = () => {

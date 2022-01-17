@@ -52,7 +52,7 @@ const ChangeSessionList = ({
 
   let { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetSession(classId);
-    
+
   // filter out the already enrolled session
     let data1 = [];
   data1 = data?.docs?.filter(({ _id }) => _id != sessionId);
@@ -105,7 +105,6 @@ const ChangeSessionList = ({
       ) || []
     );
   }, [data, onSelect, onClose]);
-  console.log("onselect", onSelect);
 
   const pagination = data?.totalPages && data.totalPages > 1 && (
     <Pagination
