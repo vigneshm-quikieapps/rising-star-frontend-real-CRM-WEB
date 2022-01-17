@@ -43,6 +43,11 @@ const AddEnrolment = () => {
     (state) => state.sessions.sessionsOfClassInTerm,
   );
   const [selectedBusiness, setSelectedBusiness] = useState("");
+  const [selectedClassName, setSelectedClassName] = useState("");
+  const [selectedSessionName, setSelectedSessionName] = useState("");
+  const [selectedTermSDate, setSelectedTermSDate] = useState("");
+  const [selectedTermEDate, setSelectedTermEDate] = useState("");
+  const [selectedTermName, setSelectedTermName] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
   const [date, setDate] = useState(new Date("01-01-2022"));
@@ -146,9 +151,10 @@ const AddEnrolment = () => {
   //     " ",
   //   );
   // }, [currentEnrolment, sessionList]);
-  const ClassSelectHandler = (id) => {
+  const ClassSelectHandler = (id, name) => {
     setShowClassList(false);
     setSelectedEnrolment(id);
+    setSelectedClassName(name);
     // localStorage.setItem("Id", selectedEnrolment);
   };
   const SessionSelectHandler = (
@@ -161,10 +167,14 @@ const AddEnrolment = () => {
     setShowSessionList(false);
     console.log("id", name, termStartDate, termEndDate, termName);
     setSelectedSession(id);
+    setSelectedSessionName(name);
+    setSelectedTermSDate(termStartDate);
+    setSelectedTermEDate(termEndDate);
+    setSelectedTermName(termName);
   };
 
   const submitEnrolment = () => {
-    console.log("selectedSession",selectedSession,member._id)
+    console.log("selectedSession", selectedSession, member._id);
     regularEnrollment(selectedSession, member._id);
   };
 
@@ -245,7 +255,8 @@ const AddEnrolment = () => {
             >
               Search for a Class
             </GradientButton>
-            <Output title="Class Name" description={className} />
+            {/* <Output title="Class Name" description={className} /> */}
+            <Output title="Class Name" description={selectedClassName} />
             <Output />
             <GradientButton
               active
@@ -254,19 +265,29 @@ const AddEnrolment = () => {
             >
               Search for a Session
             </GradientButton>
-            <Output title="Session Name" description={sessionName} />
+            {/* <Output title="Session Name" description={sessionName} /> */}
+            <Output title="Session Name" description={selectedSessionName} />
             <Output title="Timings" description={timings} />
             <Output />
-            <Output
+            {/* <Output
               title="Term Start Date"
               description={calcDate(currentEnrolment?.session?.term?.startDate)}
-            />
+            /> */}
             <Output
+              title="Term Start Date"
+              description={calcDate(selectedTermSDate)}
+            />
+            {/* <Output
               title="Term End Date"
               description={calcDate(currentEnrolment?.session?.term?.endDate)}
+            /> */}
+            <Output
+              title="Term End Date"
+              description={calcDate(selectedTermEDate)}
             />
             <Output />
-            <Output title="Term" description={termName} />
+            {/* <Output title="Term" description={termName} /> */}
+            <Output title="Term" description={selectedTermName} />
 
             <Output
               title="Member Start Date"
