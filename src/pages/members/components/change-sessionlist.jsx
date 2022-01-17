@@ -58,18 +58,6 @@ const ChangeSessionList = ({
   const pageChangeHandler = (_, value) => {
     setPage(value);
   };
-  const handleOnSelectYes = () => {
-    isSaving.current = false;
-    setIsWarnOpen(false);
-  };
-
-  const handleOnSelectNo = () => {
-    setIsWarnOpen(false);
-  };
-  const handleOnSelectWarn = () => {
-    isSaving.current = false;
-    setIsWarnOpen(true);
-  };
 
   const tableRows = useMemo(() => {
     console.log("session", data);
@@ -183,17 +171,6 @@ const ChangeSessionList = ({
           />
         )}
       </DialogContent>
-      <Warning
-        open={isWarnOpen}
-        title="Warning"
-        description={
-          isSaving.current
-            ? "Are you sure, you want to save? There are unsaved sessions!"
-            : "Are you sure, you want to Change the session?"
-        }
-        onNo={handleOnSelectNo}
-        onYes={handleOnSelectYes}
-      />
     </EnrolmentsModal>
   );
 };

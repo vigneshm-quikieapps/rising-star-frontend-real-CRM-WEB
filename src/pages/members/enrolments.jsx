@@ -58,6 +58,7 @@ const Enrolment = () => {
   const history = useHistory();
   const [isWarnOpen, setIsWarnOpen] = useState(false);
   const [isWarnDropOpen, setIsWarnDropOpen] = useState(false);
+  const [isConfirmOnSelectOpen, setIsConfirmOnSelectOpen] = useState(false);
 
   useEffect(() => dispatch(setPageTitle("Enrolments")), [dispatch]);
   const addNewEnrolment = useCallback(
@@ -162,7 +163,8 @@ const Enrolment = () => {
     termEndDate,
     termName,
   ) => {
-    setShowSessionList(false);
+    setShowSessionList(true);
+    setIsConfirmOnSelectOpen(true);
     console.log("id", name, termStartDate, termEndDate, termName);
     setSelectedSession(id);
     setSelectedSessionName(name);
@@ -193,8 +195,22 @@ const Enrolment = () => {
   const handleSuspendNo = () => {
     isSaving.current = false;
     setIsWarnOpen(false);
+    setShowSessionList(false);
   };
 
+  const handleOnSelectYes = () => {
+    isSaving.current = false;
+    setIsConfirmOnSelectOpen(false);
+    setShowSessionList(false);
+  };
+
+  const handleOnSelectNo = () => {
+    setIsConfirmOnSelectOpen(false);
+  };
+  const handleOnSelectWarn = () => {
+    isSaving.current = false;
+    setIsConfirmOnSelectOpen(true);
+  };
   if (!member)
     return (
       <Box
@@ -376,6 +392,17 @@ const Enrolment = () => {
         }
         onNo={handleSuspendNo}
         onYes={handleSuspendYes}
+      />
+      <Warning
+        open={isConfirmOnSelectOpen}
+        title="Warning"
+        description={
+          isSaving.current
+            ? "Are you sure, you want to save? There are unsaved sessions!"
+            : "Are you sure, you want to Change the session?"
+        }
+        onNo={handleOnSelectNo}
+        onYes={handleOnSelectYes}
       />
       <Pagination
         count={enrolmentList.length}
