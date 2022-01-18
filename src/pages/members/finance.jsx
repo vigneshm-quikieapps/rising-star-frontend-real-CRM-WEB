@@ -296,7 +296,6 @@ const MemberFinance = () => {
       }
     });
     setOnSelectBillData(data);
-    console.log("datat300", data);
     let inputString = "View by month " + months[month] + " " + year;
     setMonthFlag(inputString);
   };

@@ -83,7 +83,6 @@ const AddEnrolment = () => {
   });
   const { mutateAsync: addEnrolment } = useAddEnrolment({
     onSuccess: async (data) => {
-      console.log("85data", data);
       setEnrolmentMessage(data.data.message); // the response
     },
     onError: async (error) => setError(error),
@@ -176,7 +175,6 @@ const AddEnrolment = () => {
     };
     await addEnrolment(body);
     setOnSubmitEnrolmentOpen(true);
-    console.log("174");
   };
   // const handleSubmitEnrolmentYes = () => {
   //   regularEnrollment(selectedSession, member._id);
@@ -362,9 +360,7 @@ const AddEnrolment = () => {
         onYes={handleDiscardEnrolmentYes}
       />
 
-      {console.log("360", onSubmitEnrolmentOpen)}
       <Dialog open={onSubmitEnrolmentOpen}>
-        {console.log("359", enrolmentMessage)}
         <DialogContent>{enrolmentMessage}</DialogContent>
         <DialogActions>
           <Button onClick={handleOnClickSubmitEnrolment} autoFocus>
