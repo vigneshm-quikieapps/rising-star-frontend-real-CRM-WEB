@@ -56,21 +56,21 @@ export const useGetDiscountSchemes = (businessId, options) =>
     },
   );
 
-const getEnrolmentBills = (classId, memberId) =>
+const getEnrolmentBills = (enrolmentId, memberId) =>
   axios
     .post(
       "bills/of-a-member-in-a-class",
-      { classId, memberId },
+      { enrolmentId, memberId },
       { params: { limit: 100 } },
     )
     .then(({ data }) => data);
 
-export const useGetEnrolmentBills = (classId, memberId, options) =>
+export const useGetEnrolmentBills = (enrolmentId, memberId, options) =>
   useQuery(
-    ["bills", classId, memberId],
-    () => getEnrolmentBills(classId, memberId),
+    ["bills", enrolmentId, memberId],
+    () => getEnrolmentBills(enrolmentId, memberId),
     {
-      enabled: !!(classId && memberId),
+      enabled: !!(enrolmentId && memberId),
       ...options,
     },
   );

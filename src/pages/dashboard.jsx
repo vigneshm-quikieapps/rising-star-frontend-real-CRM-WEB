@@ -343,8 +343,8 @@ const Dashboard = () => {
         </Card>
       </CardRow>
       <DateRange
-        onChange={(data) => {
-          console.log(data);
+        onChange={(startDate, endDate)=> {
+          console.log(startDate, endDate);      
         }}
         title={"PAYMENT"}
         anchorEl={anchorElPayment}
