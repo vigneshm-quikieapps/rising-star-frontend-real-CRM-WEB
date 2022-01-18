@@ -74,3 +74,32 @@ export const useGetEnrolmentBills = (enrolmentId, memberId, options) =>
       ...options,
     },
   );
+
+const getClasses = (memberId, businessId, page, filters) =>
+  axios
+    .get(
+      `businesses/${businessId}/classes`,
+      { memberId, businessId },
+      { params: { page, filters } },
+    )
+    .then(({ data }) => data);
+
+export const useGetClasses = (memberId, businessId, page, filters, options) =>
+  useQuery(
+    ["member-enrolments", page, filters],
+    () => getClasses(memberId, businessId, page, filters),
+    {
+      keepPreviousData: true,
+      enabled: !!(memberId && businessId),
+      ...options,
+    },
+  );
+
+const getSession = (classId) =>
+  axios.get(`classes/${classId}/sessions`).then(({ data }) => data);
+
+export const useGetSession = (classId, options) =>
+  useQuery(["classes", classId], () => getSession(classId), {
+    enabled: !!classId,
+    ...options,
+  });

@@ -176,7 +176,6 @@ const MemberFinance = () => {
       },
     [data],
   );
-
   const {
     class: { name: className, charges: classCharges },
     session: {

@@ -15,3 +15,4 @@ export { default as MembersFinance } from "./members/finance";
 export { default as SetupTerm } from "./setup/term";
 export { default as SetupPaymentUpload } from "./setup/payment-upload";
 export { default as NoMatch } from "./404";
+export { default as AddEnrolment } from "./members/add-enrolment";

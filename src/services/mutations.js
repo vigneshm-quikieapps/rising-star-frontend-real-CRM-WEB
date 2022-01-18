@@ -15,6 +15,11 @@ const addTransaction = (data) => axios.post("bills/enter-transaction", data);
 export const useAddTransaction = (options) =>
   useMutation((data) => addTransaction(data), options);
 
+
+const addEnrolment = (data) => axios.post("enrolments", data);
+export const useAddEnrolment = (option) =>
+  useMutation((data) => addEnrolment(data), option);
+
 const deleteTransaction = (data) => axios.post("bills/delete-transaction", data);
 
 export const useDeleteTransaction = (options) =>
@@ -24,3 +29,4 @@ const updateTransactions = (data) => axios.post("bills/update-transactions", dat
 
 export const useUpdateTransaction = (options) =>
   useMutation((data) => updateTransactions(data), options);
+
