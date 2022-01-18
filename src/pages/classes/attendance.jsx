@@ -73,6 +73,7 @@ const Attendance = () => {
   const attendance = useSelector(
     (state) => state.sessions.attendanceList?.attendance,
   );
+  console.log("attendance",attendance);
 
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
