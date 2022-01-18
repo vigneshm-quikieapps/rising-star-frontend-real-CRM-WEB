@@ -268,7 +268,8 @@ const MemberFinance = () => {
       }
     });
     setOnSelectBillData(data);
-    setMonthFlag(months[month]);
+    let inputString = "View by month " + months[month] + " " + year;
+    setMonthFlag(inputString);
     // setSelectedMonth
   };
 
@@ -421,7 +422,7 @@ const MemberFinance = () => {
               style={{ height: "32px" }}
               onChange={() => {}}
               disabled
-              sx={{ width: "116px" }}
+              sx={{ width: "316px" }}
             >
               <MenuItem value="Jan-mar">{monthFlag}</MenuItem>
             </TextField>
