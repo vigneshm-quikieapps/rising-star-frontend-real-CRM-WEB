@@ -58,20 +58,50 @@ const validationSchema = Yup.object()
   })
   .required();
 
-var months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
   "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
+
+const monthPickerStyles = {
+  spanStyle: {
+    width: "75px",
+    height: "15px",
+    margin: " 2px 295px 0 0",
+    opacity: "0.5",
+    fontFamily: "Manrope",
+    fontSize: "15px",
+    fontWeight: "normal",
+    fontStretch: "normal",
+    fontStyle: "normal",
+    lineHeight: "1.18",
+    letterSpacing: "normal",
+    color: "#000",
+  },
+  divStyle: {
+    width: "205px",
+    height: "20px",
+    fontFamily: "Manrope",
+    fontSize: "16px",
+    marginBottom: "8px",
+    fontWeight: "bold",
+    fontStretch: "normal",
+    fontStyle: "normal",
+    lineHeight: "1.43",
+    letterSpacing: "normal",
+    color: "#000",
+  },
+};
 
 const MemberFinance = () => {
   const dispatch = useDispatch();
@@ -260,7 +290,6 @@ const MemberFinance = () => {
   };
 
   const filterBillsByMonths = (year, month) => {
-    console.log("changed1", onSelectBillData);
     let data = billsData?.docs?.filter((bill) => {
       let date = new Date(bill.dueDate);
       if (date.getMonth() == month && date.getFullYear() == year) {
@@ -270,7 +299,6 @@ const MemberFinance = () => {
     setOnSelectBillData(data);
     let inputString = "View by month " + months[month] + " " + year;
     setMonthFlag(inputString);
-    // setSelectedMonth
   };
 
   const [anchorElPayment, setAnchorElPayment] = useState(null);
@@ -415,20 +443,26 @@ const MemberFinance = () => {
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
           <Typography>Class Billing</Typography>
-          <Box onClick={openPaymentDateRange} style={{ marginLeft: "32px" }}>
+        </AccordionSummary>
+        <AccordionDetails sx={{ p: 0 }}>
+          <Box
+            onClick={openPaymentDateRange}
+            style={{ margin: "16px 0 16px 16px", width: "950px" }}
+          >
             <TextField
               select
               value={"Jan-mar"}
               style={{ height: "32px" }}
               onChange={() => {}}
               disabled
-              sx={{ width: "316px" }}
+              sx={{ width: "320px" }}
             >
-              <MenuItem value="Jan-mar">{monthFlag}</MenuItem>
+              <MenuItem value="Jan-mar">
+                <span style={monthPickerStyles.spanStyle}>month by</span>
+                <div style={monthPickerStyles.divStyle}>{monthFlag}</div>
+              </MenuItem>
             </TextField>
           </Box>
-        </AccordionSummary>
-        <AccordionDetails sx={{ p: 0 }}>
           {onSelectBillData?.map(({ _id, ...data }) => (
             <Bill key={_id} billData={{ _id, ...data }} />
           ))}
