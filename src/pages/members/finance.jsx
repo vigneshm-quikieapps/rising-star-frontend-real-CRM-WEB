@@ -58,6 +58,21 @@ const validationSchema = Yup.object()
   })
   .required();
 
+var months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 const MemberFinance = () => {
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
@@ -69,8 +84,8 @@ const MemberFinance = () => {
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
   const [showEnrolmentList, setShowEnrolmentList] = useState(false);
   const [selectedDiscountScheme, setSelectedDiscountScheme] = useState("");
-  // const [onSelectBillData, setOnSelectBillData] = useState("");
   const setError = useSetError();
+  const [monthFlag, setMonthFlag] = useState("");
 
   const {
     control,
@@ -151,10 +166,8 @@ const MemberFinance = () => {
     member?._id,
     { refetchOnWindowFocus: false, onError: (error) => setError(error) },
   );
-  console.log("billsData", billsData);
 
-  const [onSelectBillData, setOnSelectBillData] = useState(billsData);
-  console.log("billsData", onSelectBillData);
+  const [onSelectBillData, setOnSelectBillData] = useState();
 
   const timings = useMemo(() => {
     if (!pattern.length) return " - - - ";
@@ -179,6 +192,12 @@ const MemberFinance = () => {
     );
     return membership?.clubMembershipId || "";
   }, [member, selectedBusiness]);
+
+  useEffect(() => {
+    var makeDate = new Date();
+    var prev = new Date(makeDate.getFullYear(), makeDate.getMonth() - 1, 1);
+    filterBillsByMonths(prev.getFullYear(), prev.getMonth());
+  }, [billsData]);
 
   useEffect(() => {
     businessList.length && setSelectedBusiness(businessList[0]._id);
@@ -247,18 +266,22 @@ const MemberFinance = () => {
         return bill;
       }
     });
+
     setOnSelectBillData(data);
-    // billsData.docs = data;
+    setMonthFlag(months[month]);
+    // setSelectedMonth
   };
+
   const [anchorElPayment, setAnchorElPayment] = useState(null);
 
   const closePaymentDateRange = () => {
-    console.log("closed")
+    console.log("closed");
     setAnchorElPayment(null);
   };
 
   const openPaymentDateRange = (event) => {
     setAnchorElPayment(event.currentTarget);
+    event.stopPropagation();
   };
 
   return (
@@ -375,22 +398,34 @@ const MemberFinance = () => {
           })}
         </AccordionDetails>
       </Accordion>
-      <Box onClick={openPaymentDateRange}>
-        Payment
-      </Box>
+
       <DateRange
-          onChange={(startDate, endDate) => {
-            console.log(startDate, endDate);
-          }}
-          title={"View By month"}
-          anchorEl={anchorElPayment}
-          handleClose={closePaymentDateRange}
-          year={"2021"}
-        />
+        onChange={(startDate) => {
+          closePaymentDateRange();
+          filterBillsByMonths(startDate.getFullYear(), startDate.getMonth());
+        }}
+        title={"View By month"}
+        anchorEl={anchorElPayment}
+        handleClose={closePaymentDateRange}
+        year={"2021"}
+        isRangeRequired={false}
+      />
 
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
           <Typography>Class Billing</Typography>
+          <Box onClick={openPaymentDateRange} style={{ marginLeft: "32px" }}>
+            <TextField
+              select
+              value={"Jan-mar"}
+              style={{ height: "32px" }}
+              onChange={() => {}}
+              disabled
+              sx={{ width: "116px" }}
+            >
+              <MenuItem value="Jan-mar">{monthFlag}</MenuItem>
+            </TextField>
+          </Box>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0 }}>
           {onSelectBillData?.map(({ _id, ...data }) => (
