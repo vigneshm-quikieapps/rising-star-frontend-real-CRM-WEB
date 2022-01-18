@@ -277,16 +277,24 @@ const MemberFinance = () => {
     ],
   );
 
-  const { mutate: updateTransaction, isLoading: billsUpdating } =
+  let updateReduxState=false;
+  const { mutateAsync: updateTransaction, isLoading: billsUpdating } =
     useUpdateTransaction({
-      onError: (error) => setError(error),
+      onSuccess: async (data) => {
+        console.log("253", data);
+        updateReduxState=true
+      },
+      onError: async (error) => setError(error),
     });
 
-  const updateBillTransactions = () => {
+
+  const updateBillTransactions = async() => {
     console.log("updatedBillData", updateBillData);
     let body = updateBillData;
     console.log("body", body);
-    updateTransaction(body);
+    await updateTransaction(body);
+    console.log("263");
+    if (updateReduxState) dispatch(updatePaymentDetailsOfMembers([]));
   };
 
   const filterBillsByMonths = (year, month) => {
