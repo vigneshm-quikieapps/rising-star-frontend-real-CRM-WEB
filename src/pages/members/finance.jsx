@@ -273,17 +273,16 @@ const MemberFinance = () => {
     ],
   );
 
-  let updateReduxState=false;
+  let updateReduxState = false;
   const { mutateAsync: updateTransaction, isLoading: billsUpdating } =
     useUpdateTransaction({
       onSuccess: async (data) => {
-        updateReduxState=true
+        updateReduxState = true;
       },
       onError: async (error) => setError(error),
     });
 
-
-  const updateBillTransactions = async() => {
+  const updateBillTransactions = async () => {
     let body = updateBillData;
     await updateTransaction(body);
     if (updateReduxState) dispatch(updatePaymentDetailsOfMembers([]));
@@ -369,14 +368,16 @@ const MemberFinance = () => {
           />
         </Grid>
       </Card>
-      <EnrolmentList
-        open={showEnrolmentList}
-        onClose={() => setShowEnrolmentList(false)}
-        onSelect={enrolmentSelectHandler}
-        memberId={member?._id}
-        businessId={selectedBusiness}
-        memberName={member?.name}
-      />
+      {showEnrolmentList && (
+        <EnrolmentList
+          open={showEnrolmentList}
+          onClose={() => setShowEnrolmentList(false)}
+          onSelect={enrolmentSelectHandler}
+          memberId={member?._id}
+          businessId={selectedBusiness}
+          memberName={member?.name}
+        />
+      )}
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
           <Typography>Charges</Typography>
