@@ -10,6 +10,8 @@ import {
   AccordionSummary,
   AccordionDetails,
   Modal,
+  Dialog,
+  DialogContent,
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import { Card, HeadingText, SubHeadingText } from "../../components/common";
@@ -33,12 +35,13 @@ import SessionList from "./components/session-list";
 import { useGetEnrolment } from "../../services/queries";
 import { useSetError } from "../../contexts/error-context";
 import { regularEnrollment } from "../../services/enrolmentServices";
+import { useAddEnrolment } from "../../services/mutations";
+import DialogBox from "../../components/dialog";
 
 const AddEnrolment = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
-  console.log("member38", member);
   const businessList = useSelector((state) => state.businesses.businessList);
   const enrolmentList = useSelector((state) => state.members.enrolmentList);
   const sessionList = useSelector(
@@ -58,7 +61,9 @@ const AddEnrolment = () => {
   const setError = useSetError();
   const [isWarnDiscardOpen, setIsWarnDiscardOpen] = useState(false);
   const [onSubmitEnrolmentOpen, setOnSubmitEnrolmentOpen] = useState(false);
+  const [ddata, setData] = useState("");
   const memID = member._id;
+  const [enrolmentMessage, setEnrolmentMessage] = useState("");
   const isSaving = useRef(false);
 
   const clubMembershipId = useMemo(() => {
@@ -74,6 +79,12 @@ const AddEnrolment = () => {
     onError: (error) => {
       setError(error);
     },
+  });
+  const { mutateAsync: addEnrolment } = useAddEnrolment({
+    onSuccess: async (data) => {
+      setEnrolmentMessage(data.data.message); // the response
+    },
+    onError: async (error) => setError(error),
   });
 
   useEffect(() => {
@@ -128,35 +139,6 @@ const AddEnrolment = () => {
   // const startDate = calcDate(currentEnrolment?.startDate);
   const lastActionDate = calcDate(currentEnrolment?.updatedAt);
 
-  // useEffect(() => {
-  //   if (enrolmentList.length) {
-  //     setSelectedEnrolment(enrolmentList[0]._id);
-  //     dispatch(
-  //       getClassSessionsByTermId(
-  //         enrolmentList[0].class._id,
-  //         enrolmentList[0].session.term._id,
-  //       ),
-  //     );
-  //   } else {
-  //     setSelectedEnrolment("");
-  //   }
-  // }, [dispatch, enrolmentList]);
-  // const pattern = useMemo(() => {
-  //   if (!currentEnrolment) return "";
-  //   const session = sessionList.find(
-  //     ({ _id }) => _id === currentEnrolment?.sessionId,
-  //   );
-  //   if (!session) return "";
-  //   const days = session.pattern.map(({ day }) => day).join(", ");
-  //   const startTime = new Date(
-  //     session.pattern[0].startTime,
-  //   ).toLocaleTimeString();
-  //   const endTime = new Date(session.pattern[0].endTime).toLocaleTimeString();
-  //   return `${toPascal(days)}, ${startTime} to ${endTime}`.replace(
-  //     /:00 /g,
-  //     " ",
-  //   );
-  // }, [currentEnrolment, sessionList]);
   const ClassSelectHandler = (id, name) => {
     setShowClassList(false);
     setSelectedEnrolment(id);
@@ -172,7 +154,6 @@ const AddEnrolment = () => {
     timings,
   ) => {
     setShowSessionList(false);
-    console.log("id", name, termStartDate, termEndDate, termName);
     setSelectedSession(id);
     setSelectedSessionName(name);
     setSelectedTermSDate(termStartDate);
@@ -181,20 +162,25 @@ const AddEnrolment = () => {
     setSelectedTimings(timings);
   };
 
-  const submitEnrolment = () => {
-    // console.log("selectedSession", selectedSession, member._id);
+  const submitEnrolment = async () => {
+    // regularEnrollment(selectedSession, member._id);
     setOnSubmitEnrolmentOpen(true);
+    let body = {
+      sessionId: selectedSession,
+      memberId: member._id,
+    };
+    await addEnrolment(body);
   };
-  const handleSubmitEnrolmentYes = () => {
-    regularEnrollment(selectedSession, member._id);
-    setOnSubmitEnrolmentOpen(false);
-    history.push(`/members/enrolments/${memID}`);
-  };
+  // const handleSubmitEnrolmentYes = () => {
+  //   regularEnrollment(selectedSession, member._id);
+  //   setOnSubmitEnrolmentOpen(false);
+  //   history.push(`/members/enrolments/${memID}`);
+  // };
 
-  const handleSubmitEnrolmentNo = () => {
-    isSaving.current = false;
-    setOnSubmitEnrolmentOpen(false);
-  };
+  // const handleSubmitEnrolmentNo = () => {
+  //   isSaving.current = false;
+  //   setOnSubmitEnrolmentOpen(false);
+  // };
 
   const handleDiscardEnrolmentYes = () => {
     setIsWarnDiscardOpen(false);
@@ -256,6 +242,7 @@ const AddEnrolment = () => {
                 ),
               )
               .map(({ _id, name }) => {
+                localStorage.setItem("BusinessName", name);
                 return (
                   <MenuItem key={_id} value={_id}>
                     {name}
@@ -365,13 +352,11 @@ const AddEnrolment = () => {
         onNo={handleDiscardEnrolmentNo}
         onYes={handleDiscardEnrolmentYes}
       />
-      <Warning
-        open={onSubmitEnrolmentOpen}
-        titlt="Confirm"
-        description={"Are you sure you want to Submit"}
-        onNo={handleSubmitEnrolmentNo}
-        onYes={handleSubmitEnrolmentYes}
-      />
+      <DialogBox>
+        <Dialog open={onSubmitEnrolmentOpen}>
+          <DialogContent>{enrolmentMessage}</DialogContent>
+        </Dialog>
+      </DialogBox>
     </>
   );
 };

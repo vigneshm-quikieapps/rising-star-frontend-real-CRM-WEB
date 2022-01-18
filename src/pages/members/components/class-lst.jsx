@@ -41,28 +41,16 @@ const ClassList = ({
   const [page, setPage] = useState(1);
   const [contentRef, setContentRef] = useState();
 
-  // console.log("see", open, onSelect, onClose, memberId, businessId, memberName);
-
   const { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetClasses(memberId, businessId, page);
 
   //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
-  console.log(
-    "load",
-    isLoading,
-    isError,
-    error,
-    data,
-    isFetching,
-    isPreviousData,
-  );
 
   const pageChangeHandler = (_, value) => {
     setPage(value);
   };
 
   const tableRows = useMemo(() => {
-    console.log("data", data);
     return (
       data?.docs?.map(
         ({
@@ -105,7 +93,7 @@ const ClassList = ({
           }}
         >
           <>
-            <Output description={businessId} />
+            <Output description={localStorage.getItem("BusinessName")} />
           </>
         </DialogTitle>
       </ElevationScroll>

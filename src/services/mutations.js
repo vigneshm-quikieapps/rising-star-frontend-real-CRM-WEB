@@ -14,3 +14,7 @@ const addTransaction = (data) => axios.post("bills/enter-transaction", data);
 
 export const useAddTransaction = (options) =>
   useMutation((data) => addTransaction(data), options);
+
+const addEnrolment = (data) => axios.post("enrolments", data);
+export const useAddEnrolment = (option) =>
+  useMutation((data) => addEnrolment(data), option);

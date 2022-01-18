@@ -48,13 +48,11 @@ const ChangeSessionList = ({
   const isSaving = useRef(false);
   const [isWarnOpen, setIsWarnOpen] = useState(false);
 
-  //   console.log(open, onSelect, onClose, memberId, businessId, memberName);
-
   let { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetSession(classId);
 
   // filter out the already enrolled session
-    let data1 = [];
+  let data1 = [];
   data1 = data?.docs?.filter(({ _id }) => _id != sessionId);
   if (data1 != undefined && data1.length > 0) {
     data.docs = data1;
@@ -66,7 +64,6 @@ const ChangeSessionList = ({
   };
 
   const tableRows = useMemo(() => {
-    console.log("session", data);
     return (
       data?.docs?.map(
         ({

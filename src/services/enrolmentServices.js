@@ -1,13 +1,12 @@
 import axiosInstance from "../utils/axios-instance";
 
-export const transfer = async (enrolmentId, newSessionId ) => {
+export const transfer = async (enrolmentId, newSessionId) => {
   try {
     const api = `enrolments/transfer`;
     const response = await axiosInstance.post(api, {
-      enrolmentId:enrolmentId,
-      newSessionId:newSessionId,
+      enrolmentId: enrolmentId,
+      newSessionId: newSessionId,
     });
-    console.log("reponse", response);
     return response;
   } catch (error) {
     throw error;

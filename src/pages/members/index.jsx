@@ -49,7 +49,7 @@ const Members = () => {
         <Route path={`${match.path}/finance/:id`} component={Finance} exact />
         <Route path={`${match.path}/info/:id`} component={Info} exact />
         <Route path={match.path} component={MemberList} exact />
-        <Route path={"/members/newEnrollment/:id"} component={AddEnrolment} />
+        <Route path={`/members/newEnrollment/:id`} component={AddEnrolment} />
         <Route component={NotFound} />
       </Switch>
     </>

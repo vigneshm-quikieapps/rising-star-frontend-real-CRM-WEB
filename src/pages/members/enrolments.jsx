@@ -36,7 +36,7 @@ import { useGetEnrolment } from "../../services/queries";
 import SessionList from "./components/session-list";
 import { useSetError } from "../../contexts/error-context";
 import ChangeSessionList from "./components/change-sessionlist";
-import { transfer,drop,suspend } from "../../services/enrolmentServices";
+import { transfer, drop, suspend } from "../../services/enrolmentServices";
 
 const Enrolment = () => {
   const dispatch = useDispatch();
@@ -116,7 +116,6 @@ const Enrolment = () => {
     () => enrolmentList.find(({ _id }) => _id === selectedEnrolment),
     [enrolmentList, selectedEnrolment],
   );
-  console.log("currentenrol", currentEnrolment);
 
   const calcDate = (date) =>
     date ? new Date(date).toLocaleDateString() : " - - - ";
@@ -168,7 +167,7 @@ const Enrolment = () => {
     setIsConfirmOnSelectOpen(true);
     setSelectedSession(id);
   };
-  const handleDropYes = async() => {
+  const handleDropYes = async () => {
     setIsWarnDropOpen(false);
     // const response = await drop(currentEnrolment._id);
   };
@@ -196,13 +195,12 @@ const Enrolment = () => {
     setShowSessionList(false);
   };
 
-  const handleOnSelectYes = async() => {
+  const handleOnSelectYes = async () => {
     isSaving.current = false;
     setIsConfirmOnSelectOpen(false);
     setShowSessionList(false);
     const response = await transfer(currentEnrolment._id, selectedSession);
-    // console.log("response212,",response.message)
-    if(response.data.message=="Transfer successful"){
+    if (response.data.message == "Transfer successful") {
       dispatch(
         getMemberEnrolmentList({
           memberId: member._id,
@@ -210,7 +208,6 @@ const Enrolment = () => {
         }),
       );
     }
-    
   };
 
   const handleOnSelectNo = () => {
@@ -274,7 +271,11 @@ const Enrolment = () => {
             <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
               Enrolment Details
             </Typography>
-            <GradientButton active sx={{ mr: 2 }} onClick={addNewEnrolment}>
+            <GradientButton
+              active
+              sx={{ mr: 2 }}
+              onClick={() => addNewEnrolment(member._id)}
+            >
               Add a new enrolment
             </GradientButton>
           </Box>
