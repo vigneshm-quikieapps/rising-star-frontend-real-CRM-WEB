@@ -260,13 +260,13 @@ const MemberFinance = () => {
   };
 
   const filterBillsByMonths = (year, month) => {
+    console.log("changed1", onSelectBillData);
     let data = billsData?.docs?.filter((bill) => {
       let date = new Date(bill.dueDate);
       if (date.getMonth() == month && date.getFullYear() == year) {
         return bill;
       }
     });
-
     setOnSelectBillData(data);
     setMonthFlag(months[month]);
     // setSelectedMonth
