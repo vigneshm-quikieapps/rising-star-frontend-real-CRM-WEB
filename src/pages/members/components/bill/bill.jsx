@@ -10,7 +10,6 @@ import {
 import TransactionList from "./transaction-list";
 
 const Bill = ({ billData = {},isTerm=false,termName='' }) => {
-  console.log("billData12", billData);
   const {
     _id,
     name = "Bill",
@@ -48,7 +47,6 @@ const Bill = ({ billData = {},isTerm=false,termName='' }) => {
     10:'Nov',
     11:'Dec'
   }
-  console.log("duedatemonth",duemonth.getFullYear())
   let billName='Fee ' + monthObj[month] + ' ' + year;
 
   return (

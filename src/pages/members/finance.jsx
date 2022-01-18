@@ -107,8 +107,6 @@ const MemberFinance = () => {
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
   const updateBillData = useSelector((state) => state.updateBilling);
-  // console.log("updatedBillData",updateBillData)
-  // console.log("state.members", member);
   const businessList = useSelector((state) => state.businesses.businessList);
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
@@ -189,7 +187,6 @@ const MemberFinance = () => {
     enrolledStatus: status,
     startDate,
   } = currentEnrolment;
-  console.log("currentEnrolment", currentEnrolment);
 
   const { data: billsData, isLoading: billsLoading } = useGetEnrolmentBills(
     currentEnrolment?._id,
@@ -281,7 +278,6 @@ const MemberFinance = () => {
   const { mutateAsync: updateTransaction, isLoading: billsUpdating } =
     useUpdateTransaction({
       onSuccess: async (data) => {
-        console.log("253", data);
         updateReduxState=true
       },
       onError: async (error) => setError(error),
@@ -289,11 +285,8 @@ const MemberFinance = () => {
 
 
   const updateBillTransactions = async() => {
-    console.log("updatedBillData", updateBillData);
     let body = updateBillData;
-    console.log("body", body);
     await updateTransaction(body);
-    console.log("263");
     if (updateReduxState) dispatch(updatePaymentDetailsOfMembers([]));
   };
 
@@ -312,7 +305,6 @@ const MemberFinance = () => {
   const [anchorElPayment, setAnchorElPayment] = useState(null);
 
   const closePaymentDateRange = () => {
-    console.log("closed");
     setAnchorElPayment(null);
   };
 

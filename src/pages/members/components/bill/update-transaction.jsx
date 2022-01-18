@@ -63,7 +63,6 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
   defaultValues.amount = transaction && transaction.amount;
   defaultValues.paymentDate = transaction && transaction.paidAt;
   defaultValues.paymentMethod = transaction && transaction.method;
-  console.log("transaction", transaction);
 
   const setError = useSetError();
   const {
@@ -89,7 +88,6 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
   const date = getValues("paymentDate");
 
   const deleteOldTransaction = (transactionId) => {
-    console.log("transactionId", billId);
     let body = {
       billId: billId,
       transactionId: transactionId,
@@ -99,7 +97,6 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
     // const updatedData = { ...data };
     // let { paymentDate } = updatedData;
     // updatedData.paymentDate = new Date(
@@ -119,15 +116,11 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
   const updateBillData = useSelector((state) => state.updateBilling);
 
   const onBlurReference = (e) => {
-    console.log("event", e.target.value, billId);
-    console.log("updateBillData116", updateBillData);
     // let index = updateBillData.billData.indexOf((bill)=> bill.billId==billId);
-    // console.log("index", index);
     let index = -1;
     let transIndex = -1;
     for (let i = 0; i < updateBillData.billData.length; i++) {
       if (updateBillData.billData[i].billId == billId) {
-        console.log("index", i);
         index = i;
       }
     }
@@ -137,14 +130,12 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
         i < updateBillData.billData[index].transactions.length;
         i++
       ) {
-        console.log("131", updateBillData.billData[index].transactions[i]._id);
         if (
           updateBillData.billData[index].transactions[i]._id == transaction._id
         ) {
           transIndex = i;
         }
       }
-      console.log("transIndex", transIndex);
       if (transIndex > -1) {
         let transObject =
           updateBillData.billData[index].transactions[transIndex];
@@ -170,16 +161,13 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
       });
     }
     dispatch(updatePaymentDetailsOfMembers(updateBillData.billData));
-    console.log("updateBillData162", updateBillData);
   };
 
   const onBlurType = (e) => {
-    console.log("event", e.target.value, billId);
     let index = -1;
     let transIndex = -1;
     for (let i = 0; i < updateBillData.billData.length; i++) {
       if (updateBillData.billData[i].billId == billId) {
-        console.log("index", i);
         index = i;
       }
     }
@@ -189,14 +177,12 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
         i < updateBillData.billData[index].transactions.length;
         i++
       ) {
-        console.log("131", updateBillData.billData[index].transactions[i]._id);
         if (
           updateBillData.billData[index].transactions[i]._id == transaction._id
         ) {
           transIndex = i;
         }
       }
-      console.log("transIndex", transIndex);
       if (transIndex > -1) {
         let transObject =
           updateBillData.billData[index].transactions[transIndex];
@@ -225,12 +211,10 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
   }
 
   const onBlurAmount = (e) => {
-    console.log("event", e.target.value, billId);
     let index = -1;
     let transIndex = -1;
     for (let i = 0; i < updateBillData.billData.length; i++) {
       if (updateBillData.billData[i].billId == billId) {
-        console.log("index", i);
         index = i;
       }
     }
@@ -240,14 +224,12 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
         i < updateBillData.billData[index].transactions.length;
         i++
       ) {
-        console.log("131", updateBillData.billData[index].transactions[i]._id);
         if (
           updateBillData.billData[index].transactions[i]._id == transaction._id
         ) {
           transIndex = i;
         }
       }
-      console.log("transIndex", transIndex);
       if (transIndex > -1) {
         let transObject =
           updateBillData.billData[index].transactions[transIndex];
@@ -276,12 +258,10 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
   }
 
   const onBlurMethod = (e) => {
-    console.log("event", e.target.value, billId);
     let index = -1;
     let transIndex = -1;
     for (let i = 0; i < updateBillData.billData.length; i++) {
       if (updateBillData.billData[i].billId == billId) {
-        console.log("index", i);
         index = i;
       }
     }
@@ -291,14 +271,12 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
         i < updateBillData.billData[index].transactions.length;
         i++
       ) {
-        console.log("131", updateBillData.billData[index].transactions[i]._id);
         if (
           updateBillData.billData[index].transactions[i]._id == transaction._id
         ) {
           transIndex = i;
         }
       }
-      console.log("transIndex", transIndex);
       if (transIndex > -1) {
         let transObject =
           updateBillData.billData[index].transactions[transIndex];
@@ -327,13 +305,11 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
   }
 
   const onChangePaidDate = (newDate) =>{
-    console.log("event,",newDate)
     setValue("paymentDate", newDate)
     let index = -1;
     let transIndex = -1;
     for (let i = 0; i < updateBillData.billData.length; i++) {
       if (updateBillData.billData[i].billId == billId) {
-        console.log("index", i);
         index = i;
       }
     }
@@ -343,14 +319,12 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
         i < updateBillData.billData[index].transactions.length;
         i++
       ) {
-        console.log("131", updateBillData.billData[index].transactions[i]._id);
         if (
           updateBillData.billData[index].transactions[i]._id == transaction._id
         ) {
           transIndex = i;
         }
       }
-      console.log("transIndex", transIndex);
       if (transIndex > -1) {
         let transObject =
           updateBillData.billData[index].transactions[transIndex];
@@ -455,7 +429,6 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
       </TableCell>
     </TableRow>
   );
-  console.log("43u", transaction);
 };
 
 export default UpdateTransaction;

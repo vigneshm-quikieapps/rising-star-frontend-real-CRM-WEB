@@ -42,13 +42,11 @@ const TransactionList = ({
   hideNewTransaction,
   newTransaction,
 }) => {
-  console.log("transaction", transaction);
   // showUpdate
   const [showOldTransaction, setShowOldTransaction] = useState(update);
   const [showNewTransaction, setShowNewTransaction] = useState(newTransaction);
 
   const cancelNewTransaction = (value) => {
-    console.log("value", showNewTransaction);
     setShowNewTransaction(value);
     hideNewTransaction();
   };
