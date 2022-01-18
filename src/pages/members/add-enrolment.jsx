@@ -13,6 +13,7 @@ import {
   Dialog,
   DialogContent,
 } from "@mui/material";
+import DialogActions from "@mui/material/DialogActions";
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import { Card, HeadingText, SubHeadingText } from "../../components/common";
 import {
@@ -82,6 +83,7 @@ const AddEnrolment = () => {
   });
   const { mutateAsync: addEnrolment } = useAddEnrolment({
     onSuccess: async (data) => {
+      console.log("85data", data);
       setEnrolmentMessage(data.data.message); // the response
     },
     onError: async (error) => setError(error),
@@ -162,14 +164,19 @@ const AddEnrolment = () => {
     setSelectedTimings(timings);
   };
 
+  const handleOnClickSubmitEnrolment = () => {
+    setOnSubmitEnrolmentOpen(false);
+    history.push(`/members/enrolments/${memID}`);
+  };
+
   const submitEnrolment = async () => {
-    // regularEnrollment(selectedSession, member._id);
-    setOnSubmitEnrolmentOpen(true);
     let body = {
       sessionId: selectedSession,
       memberId: member._id,
     };
     await addEnrolment(body);
+    setOnSubmitEnrolmentOpen(true);
+    console.log("174");
   };
   // const handleSubmitEnrolmentYes = () => {
   //   regularEnrollment(selectedSession, member._id);
@@ -318,14 +325,16 @@ const AddEnrolment = () => {
           </Grid>
         </AccordionDetails>
       </Accordion>
-      <ClassList
-        open={showClassList}
-        onClose={() => setShowClassList(false)}
-        onSelect={ClassSelectHandler}
-        memberId={member?._id}
-        businessId={selectedBusiness}
-        memberName={member?.name}
-      />
+      {showClassList && (
+        <ClassList
+          open={showClassList}
+          onClose={() => setShowClassList(false)}
+          onSelect={ClassSelectHandler}
+          memberId={member?._id}
+          businessId={selectedBusiness}
+          memberName={member?.name}
+        />
+      )}
       <SessionList
         open={showSessionList}
         classId={selectedEnrolment}
@@ -352,11 +361,17 @@ const AddEnrolment = () => {
         onNo={handleDiscardEnrolmentNo}
         onYes={handleDiscardEnrolmentYes}
       />
-      <DialogBox>
-        <Dialog open={onSubmitEnrolmentOpen}>
-          <DialogContent>{enrolmentMessage}</DialogContent>
-        </Dialog>
-      </DialogBox>
+
+      {console.log("360", onSubmitEnrolmentOpen)}
+      <Dialog open={onSubmitEnrolmentOpen}>
+        {console.log("359", enrolmentMessage)}
+        <DialogContent>{enrolmentMessage}</DialogContent>
+        <DialogActions>
+          <Button onClick={handleOnClickSubmitEnrolment} autoFocus>
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
