@@ -12,6 +12,7 @@ import {
   Modal,
   Dialog,
   DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
@@ -28,6 +29,7 @@ import {
 } from "../../components";
 import { TextField, Output } from "../../components/index";
 import { backIcon } from "../../assets/icons";
+import informationIcon from "../../assets/icons/icon-delete.png";
 import { getMemberEnrolmentList } from "../../redux/action/memberAction";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import toPascal from "../../utils/to-pascal";
@@ -361,9 +363,15 @@ const AddEnrolment = () => {
       />
 
       <Dialog open={onSubmitEnrolmentOpen}>
+        <ImgIcon>{informationIcon}</ImgIcon>
+        <DialogTitle>Information</DialogTitle>
         <DialogContent>{enrolmentMessage}</DialogContent>
         <DialogActions>
-          <Button onClick={handleOnClickSubmitEnrolment} autoFocus>
+          <Button
+            sx={{ color: "#ff2c60" }}
+            onClick={handleOnClickSubmitEnrolment}
+            autoFocus
+          >
             Ok
           </Button>
         </DialogActions>
