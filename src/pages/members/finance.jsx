@@ -320,15 +320,14 @@ const MemberFinance = () => {
 
   const filterBillsByMonths = (year, month) => {
     let inputString = "View by month " + months[month] + " " + year;
-    console.log(billsData?.docs);
     let data = billsData?.docs?.filter((bill) => {
       let date = new Date(bill.dueDate);
       if (date.getMonth() == month && date.getFullYear() == year) {
         return bill;
       }
     });
-    console.log(data);
-    let newData = data?.length > 0 ? [data[0], data[1]] : null;
+    let newData = data?.length > 0 ? [data[0]] : [];
+    data?.length>1 && newData.push(data[1]);
     setOnSelectBillData(newData);
     setFilteredData(data);
     setMonthFlag(inputString);

@@ -75,7 +75,16 @@ const Bill = ({ billData = {},isTerm=false,termName='' }) => {
           <MenuItem value={true}>Paid</MenuItem>
           <MenuItem value={false}>Not Paid</MenuItem>
         </TextField>
-        <GradientButton onClick={enterNewTransaction}>
+        <GradientButton 
+          sx={{
+            color: "#fff",
+            height: "48px",
+            padding: "0px 25px",
+            fontSize: "16px",
+            fontWeight: "normal",
+            border: "1px solid",
+          }}
+          onClick={enterNewTransaction}>
           Enter a Transaction
         </GradientButton>
       </Box>
