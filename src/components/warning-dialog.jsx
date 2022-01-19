@@ -6,6 +6,9 @@ import {
   DialogContent,
   DialogContentText,
 } from "@mui/material";
+import ImgIcon from "./img-icon";
+import errorIcon from "../assets/icons/icon-error.png";
+import informationIcon from "../assets/icons/icon-delete.png";
 
 export default function DialogBox({
   open,
@@ -21,19 +24,34 @@ export default function DialogBox({
     <Dialog
       open={open}
       onClose={onReject}
-      sx={{ "& .MuiDialog-paper": { minWidth: "400px" } }}
+      sx={{
+        "& .MuiDialog-paper": {
+          minWidth: "380px",
+          padding: "40px 30px",
+          margin: "27px 300px 31px 200px",
+          alignItems: "center",
+        },
+      }}
     >
+      {title === "Information" ? (
+        <ImgIcon>{informationIcon}</ImgIcon>
+      ) : (
+        <ImgIcon>{errorIcon}</ImgIcon>
+      )}
+
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText component="pre">{description}</DialogContentText>
       </DialogContent>
       <DialogActions>
         {showReject && (
-          <Button onClick={onReject} autoFocus>
+          <Button sx={{ color: "#ff2c60" }} onClick={onReject} autoFocus>
             {rejectButtonTitle}
           </Button>
         )}
-        <Button onClick={onAccept}>{acceptButtonTitle}</Button>
+        <Button sx={{ color: "#ff2c60" }} onClick={onAccept}>
+          {acceptButtonTitle}
+        </Button>
       </DialogActions>
     </Dialog>
   );
