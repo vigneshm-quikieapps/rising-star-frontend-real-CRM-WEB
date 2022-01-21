@@ -54,7 +54,7 @@ const NewTransaction = ({ billId, newTransaction }) => {
     defaultValues: {
       billId,
       reference: "",
-      type: "WRITE_OFF",
+      type: "",
       amount: 0,
       paymentDate: new Date(),
       // .toISOString().split("T")[0],
