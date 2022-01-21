@@ -108,3 +108,11 @@ export const ShortMonthNames = [
   "Nov",
   "Dec",
 ];
+
+export const paymentListHeaders = [
+  "Process ID",
+  "Start Date/Time",
+  "End Date/Time",
+  "Status",
+  "Results",
+];
