@@ -118,6 +118,7 @@ const MemberFinance = () => {
   const [timeStamp, setTimeStamp] = useState({ year: null, month: null });
   const [page, setPage] = useState(1);
   const [filteredData, setFilteredData] = useState();
+  const [showSave, setShowSave] = useState(false);
 
   const {
     control,
@@ -277,6 +278,10 @@ const MemberFinance = () => {
     ],
   );
 
+  const setSaveStatus = (flag) => {
+    setShowSave(true);
+  };
+
   let updateReduxState = false;
   const { mutateAsync: updateTransaction, isLoading: billsUpdating } =
     useUpdateTransaction({
@@ -327,7 +332,7 @@ const MemberFinance = () => {
       }
     });
     let newData = data?.length > 0 ? [data[0]] : [];
-    data?.length>1 && newData.push(data[1]);
+    data?.length > 1 && newData.push(data[1]);
     setOnSelectBillData(newData);
     setFilteredData(data);
     setMonthFlag(inputString);
@@ -468,6 +473,7 @@ const MemberFinance = () => {
 
       <DateRange
         onChange={(startDate) => {
+          setShowSave(false);
           closePaymentDateRange();
           filterBillsByMonths(startDate.getFullYear(), startDate.getMonth());
         }}
@@ -502,7 +508,11 @@ const MemberFinance = () => {
             </TextField>
           </Box>
           {onSelectBillData?.map(({ _id, ...data }) => (
-            <Bill key={_id} billData={{ _id, ...data }} />
+            <Bill
+              key={_id}
+              billData={{ _id, ...data }}
+              showStatus={setSaveStatus}
+            />
           ))}
         </AccordionDetails>
         {onSelectBillData?.length > 0 && (
@@ -517,12 +527,17 @@ const MemberFinance = () => {
         )}
       </Accordion>
 
-      <GradientButton
-        sx={{ maxWidth: "fit-content" }}
-        onClick={() => updateBillTransactions()}
-      >
-        Save
-      </GradientButton>
+      {showSave && (
+        <GradientButton
+          sx={{ maxWidth: "fit-content" }}
+          onClick={() => {
+            setShowSave(false);
+            updateBillTransactions();
+          }}
+        >
+          Save
+        </GradientButton>
+      )}
     </>
   );
 };

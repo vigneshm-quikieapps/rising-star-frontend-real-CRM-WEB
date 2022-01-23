@@ -50,6 +50,7 @@ const UpdateTransaction = ({
   deleteTrans,
   transaction,
   billStatus,
+  showStatus,
 }) => {
   const dispatch = useDispatch();
 
@@ -99,6 +100,13 @@ const UpdateTransaction = ({
     };
     deleteTransaction(body);
     deleteTrans();
+  };
+  const [statusFlag, setStatusFlag] = useState(false);
+  const setSaveStatus = (flag) => {
+    if (flag !== statusFlag) {
+      setStatusFlag(true);
+      showStatus(true);
+    }
   };
 
   const onSubmit = (data) => {
@@ -364,6 +372,9 @@ const UpdateTransaction = ({
           control={control}
           name="reference"
           onBlur={onBlurReference}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
         />
       </TableCell>
       <TableCell>
@@ -374,6 +385,9 @@ const UpdateTransaction = ({
           select
           sx={{ width: "120px" }}
           onBlur={onBlurType}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
         >
           <MenuItem value="WRITE_OFF">Write off</MenuItem>
           <MenuItem value="WAIVER">Waiver</MenuItem>
@@ -389,6 +403,9 @@ const UpdateTransaction = ({
           name="amount"
           sx={{ width: "120px" }}
           onBlur={onBlurAmount}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
         />
       </TableCell>
       <TableCell>
@@ -399,6 +416,9 @@ const UpdateTransaction = ({
           select
           sx={{ width: "120px" }}
           onBlur={onBlurMethod}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
         >
           <MenuItem value="CASH">Cash</MenuItem>
           <MenuItem value="REC_BANK">Rec Bank</MenuItem>
@@ -413,6 +433,9 @@ const UpdateTransaction = ({
           date={date}
           onChange={(newDate) => onChangePaidDate(newDate)}
           textfieldProps={{ style: { width: "150px" } }}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
         />
       </TableCell>
       <TableCell>

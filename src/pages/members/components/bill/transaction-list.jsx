@@ -42,6 +42,7 @@ const TransactionList = ({
   hideNewTransaction,
   newTransaction,
   billStatus,
+  showStatus,
 }) => {
   // showUpdate
   const [showOldTransaction, setShowOldTransaction] = useState(update);
@@ -49,6 +50,7 @@ const TransactionList = ({
 
   const cancelNewTransaction = (value) => {
     setShowNewTransaction(value);
+    showStatus(true);
     hideNewTransaction();
   };
 
@@ -95,6 +97,7 @@ const TransactionList = ({
                 transaction={transaction}
                 deleteTrans={deleteOldTransaction}
                 billStatus={billStatus}
+                showStatus={showStatus}
               />
             )}
             {showNewTransaction && (
