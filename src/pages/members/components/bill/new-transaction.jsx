@@ -39,8 +39,9 @@ const validationSchema = yup
   })
   .required();
 
-const NewTransaction = ({ billId, setShowNewTransition }) => {
+const NewTransaction = ({ billId, newTransaction }) => {
   const setError = useSetError();
+  const [showCheckMark, setShowCheckMark] = useState(true);
   const {
     control,
     handleSubmit,
@@ -53,7 +54,7 @@ const NewTransaction = ({ billId, setShowNewTransition }) => {
     defaultValues: {
       billId,
       reference: "",
-      type: "WRITE_OFF",
+      type: "",
       amount: 0,
       paymentDate: new Date(),
       // .toISOString().split("T")[0],
@@ -78,6 +79,7 @@ const NewTransaction = ({ billId, setShowNewTransition }) => {
       .split("T")[0];
     console.log(updatedData);
     addTransaction(updatedData);
+    setShowCheckMark(false);
   };
 
   return (
@@ -134,14 +136,16 @@ const NewTransaction = ({ billId, setShowNewTransition }) => {
       </TableCell>
       <TableCell>
         <Box sx={{ width: "106px" }}>
-          <RoundIconButton
-            onClick={handleSubmit(onSubmit)}
-            sx={{ mr: "6px" }}
-            gradient
-          >
-            <CheckIcon />
-          </RoundIconButton>
-          <RoundIconButton onClick={() => setShowNewTransition(false)}>
+          {showCheckMark && (
+            <RoundIconButton
+              onClick={handleSubmit(onSubmit)}
+              sx={{ mr: "6px" }}
+              gradient
+            >
+              <CheckIcon />
+            </RoundIconButton>
+          )}
+          <RoundIconButton onClick={() => newTransaction(false)}>
             <CloseIcon />
           </RoundIconButton>
         </Box>

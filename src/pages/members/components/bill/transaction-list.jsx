@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Typography,
@@ -12,6 +12,7 @@ import {
 
 import { TableMui } from "../../../../components";
 import NewTransaction from "./new-transaction";
+import UpdateTransaction from "./update-transaction";
 import Transaction from "./transaction";
 
 const tableHeading = (
@@ -33,7 +34,30 @@ const tableHeaders = [
   "Action",
 ];
 
-const TransactionList = ({ billId, transactions = [] }) => {
+const TransactionList = ({
+  billId,
+  transactions = [],
+  transaction,
+  update,
+  hideNewTransaction,
+  newTransaction,
+  billStatus,
+  showStatus,
+}) => {
+  // showUpdate
+  const [showOldTransaction, setShowOldTransaction] = useState(update);
+  const [showNewTransaction, setShowNewTransaction] = useState(newTransaction);
+
+  const cancelNewTransaction = (value) => {
+    setShowNewTransaction(value);
+    showStatus(true);
+    hideNewTransaction();
+  };
+
+  const deleteOldTransaction = () => {
+    setShowOldTransaction(false);
+  };
+
   const tableRows = useMemo(
     () =>
       transactions.map((transactionData) => (
@@ -67,7 +91,29 @@ const TransactionList = ({ billId, transactions = [] }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <NewTransaction billId={billId} />
+            {showOldTransaction && (
+              <UpdateTransaction
+                billId={billId}
+                transaction={transaction}
+                deleteTrans={deleteOldTransaction}
+                billStatus={billStatus}
+                showStatus={showStatus}
+              />
+            )}
+            {showNewTransaction && (
+              <NewTransaction
+                billId={billId}
+                newTransaction={cancelNewTransaction}
+              />
+            )}
+            {/* {showNewTransaction == true ? (
+              <UpdateTransaction billId={billId} transaction={transaction} />
+            ) : (
+              <NewTransaction
+                billId={billId}
+                newTransaction={cancelNewTransaction}
+              />
+            )} */}
           </TableBody>
         </TableMui>
       </TableContainer>

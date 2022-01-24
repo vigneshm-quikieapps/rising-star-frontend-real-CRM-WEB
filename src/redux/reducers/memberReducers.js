@@ -54,6 +54,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, memberList, totalPages, currentPage };
     }
     case memberActionTypes.GET_MEMBER_BY_ID_SUCCEEDED:
+      console.log("action.payload",action)
       return { ...state, currentMember: action.payload };
     case memberActionTypes.GET_MEMBERS_ENROLLMENT_SUCCEEDED:
       return { ...state, enrolmentList: action.payload };

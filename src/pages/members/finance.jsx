@@ -21,6 +21,7 @@ import {
   Accordion,
   ImgIcon,
   Table,
+  Pagination,
 } from "../../components";
 import { Card, HeadingText, SubHeadingText } from "../../components/common";
 import { arrowDownIcon } from "../../assets/icons";
@@ -31,9 +32,12 @@ import {
   useGetEnrolment,
   useGetEnrolmentBills,
 } from "../../services/queries";
+import { useUpdateTransaction } from "../../services/mutations";
 import { useSetError } from "../../contexts/error-context";
-
+import { updatePaymentDetailsOfMembers } from "../../redux/action/billingActions";
 import Bill from "./components/bill/bill";
+import UpdateTransaction from "./components/bill/update-transaction";
+import DateRange from "../../containers/popovers/date-range-selector";
 
 const validationSchema = Yup.object()
   .shape({
@@ -55,15 +59,66 @@ const validationSchema = Yup.object()
   })
   .required();
 
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const monthPickerStyles = {
+  spanStyle: {
+    width: "75px",
+    height: "15px",
+    margin: " 2px 295px 0 0",
+    opacity: "0.5",
+    fontFamily: "Manrope",
+    fontSize: "15px",
+    fontWeight: "normal",
+    fontStretch: "normal",
+    fontStyle: "normal",
+    lineHeight: "1.18",
+    letterSpacing: "normal",
+    color: "#000",
+  },
+  divStyle: {
+    width: "205px",
+    height: "20px",
+    fontFamily: "Manrope",
+    fontSize: "16px",
+    marginBottom: "8px",
+    fontWeight: "bold",
+    fontStretch: "normal",
+    fontStyle: "normal",
+    lineHeight: "1.43",
+    letterSpacing: "normal",
+    color: "#000",
+  },
+};
+
 const MemberFinance = () => {
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
+  const updateBillData = useSelector((state) => state.updateBilling);
   const businessList = useSelector((state) => state.businesses.businessList);
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedEnrolment, setSelectedEnrolment] = useState("");
   const [showEnrolmentList, setShowEnrolmentList] = useState(false);
   const [selectedDiscountScheme, setSelectedDiscountScheme] = useState("");
   const setError = useSetError();
+  const [monthFlag, setMonthFlag] = useState("");
+  const [timeStamp, setTimeStamp] = useState({ year: null, month: null });
+  const [page, setPage] = useState(1);
+  const [filteredData, setFilteredData] = useState();
+  const [showSave, setShowSave] = useState(false);
 
   const {
     control,
@@ -126,7 +181,6 @@ const MemberFinance = () => {
       },
     [data],
   );
-
   const {
     class: { name: className, charges: classCharges },
     session: {
@@ -139,10 +193,12 @@ const MemberFinance = () => {
   } = currentEnrolment;
 
   const { data: billsData, isLoading: billsLoading } = useGetEnrolmentBills(
-    currentEnrolment?.classId,
+    currentEnrolment?._id,
     member?._id,
     { refetchOnWindowFocus: false, onError: (error) => setError(error) },
   );
+
+  const [onSelectBillData, setOnSelectBillData] = useState();
 
   const timings = useMemo(() => {
     if (!pattern.length) return " - - - ";
@@ -167,6 +223,12 @@ const MemberFinance = () => {
     );
     return membership?.clubMembershipId || "";
   }, [member, selectedBusiness]);
+
+  useEffect(() => {
+    var makeDate = new Date();
+    var prev = new Date(makeDate.getFullYear(), makeDate.getMonth() - 1, 1);
+    filterBillsByMonths(prev.getFullYear(), prev.getMonth());
+  }, [billsData]);
 
   useEffect(() => {
     businessList.length && setSelectedBusiness(businessList[0]._id);
@@ -215,6 +277,82 @@ const MemberFinance = () => {
       applyDiscountHandler,
     ],
   );
+
+  const setSaveStatus = (flag) => {
+    setShowSave(true);
+  };
+
+  let updateReduxState = false;
+  const { mutateAsync: updateTransaction, isLoading: billsUpdating } =
+    useUpdateTransaction({
+      onSuccess: async (data) => {
+        updateReduxState = true;
+      },
+      onError: async (error) => setError(error),
+    });
+
+  const updateBillTransactions = async () => {
+    let body = updateBillData;
+    await updateTransaction(body);
+    if (updateReduxState) dispatch(updatePaymentDetailsOfMembers([]));
+  };
+
+  const setCurrentBillPage = (page = 1) => {
+    let pageStartIndex = page * 2 - 2;
+    let pageLastIndex = pageStartIndex + 1;
+
+    let temp = [];
+    for (let index = pageStartIndex; index <= pageLastIndex; index++) {
+      if (data && data[index]) {
+        temp.push(data[index]);
+      }
+    }
+    setOnSelectBillData(temp);
+  };
+  const setBillPage = (page = 1) => {
+    let pageStartIndex = page * 2 - 2;
+    let pageLastIndex = pageStartIndex + 1;
+    let temp = [];
+    let data = filteredData;
+    for (let index = pageStartIndex; index <= pageLastIndex; index++) {
+      if (data && data[index]) {
+        temp.push(data[index]);
+      }
+    }
+    setOnSelectBillData(temp);
+    setPage(page);
+  };
+
+  const filterBillsByMonths = (year, month) => {
+    let inputString = "View by month " + months[month] + " " + year;
+    let data = billsData?.docs?.filter((bill) => {
+      let date = new Date(bill.dueDate);
+      if (date.getMonth() == month && date.getFullYear() == year) {
+        return bill;
+      }
+    });
+    let newData = data?.length > 0 ? [data[0]] : [];
+    data?.length > 1 && newData.push(data[1]);
+    setOnSelectBillData(newData);
+    setFilteredData(data);
+    setMonthFlag(inputString);
+    setTimeStamp((timeStamp) => ({
+      ...timeStamp,
+      year: year,
+      month: month,
+    }));
+  };
+
+  const [anchorElPayment, setAnchorElPayment] = useState(null);
+
+  const closePaymentDateRange = () => {
+    setAnchorElPayment(null);
+  };
+
+  const openPaymentDateRange = (event) => {
+    setAnchorElPayment(event.currentTarget);
+    event.stopPropagation();
+  };
 
   return (
     <>
@@ -273,14 +411,16 @@ const MemberFinance = () => {
           />
         </Grid>
       </Card>
-      <EnrolmentList
-        open={showEnrolmentList}
-        onClose={() => setShowEnrolmentList(false)}
-        onSelect={enrolmentSelectHandler}
-        memberId={member?._id}
-        businessId={selectedBusiness}
-        memberName={member?.name}
-      />
+      {showEnrolmentList && (
+        <EnrolmentList
+          open={showEnrolmentList}
+          onClose={() => setShowEnrolmentList(false)}
+          onSelect={enrolmentSelectHandler}
+          memberId={member?._id}
+          businessId={selectedBusiness}
+          memberName={member?.name}
+        />
+      )}
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
           <Typography>Charges</Typography>
@@ -313,14 +453,91 @@ const MemberFinance = () => {
       </Accordion>
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
+          <Typography>Term Billing</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ p: 0 }}>
+          {billsData?.docs?.map(({ _id, termId, ...data }) => {
+            if (termId) {
+              return (
+                <Bill
+                  key={_id}
+                  billData={{ _id, ...data }}
+                  isTerm={true}
+                  termName={termName}
+                />
+              );
+            }
+          })}
+        </AccordionDetails>
+      </Accordion>
+
+      <DateRange
+        onChange={(startDate) => {
+          setShowSave(false);
+          closePaymentDateRange();
+          filterBillsByMonths(startDate.getFullYear(), startDate.getMonth());
+        }}
+        title={"View By month"}
+        anchorEl={anchorElPayment}
+        handleClose={closePaymentDateRange}
+        year={"2021"}
+        isRangeRequired={false}
+      />
+
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ImgIcon>{arrowDownIcon}</ImgIcon>}>
           <Typography>Class Billing</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0 }}>
-          {billsData?.docs?.map(({ _id, ...data }) => (
-            <Bill key={_id} billData={{ _id, ...data }} />
+          <Box
+            onClick={openPaymentDateRange}
+            style={{ margin: "16px 0 16px 16px", width: "950px" }}
+          >
+            <TextField
+              select
+              value={"Jan-mar"}
+              style={{ height: "32px" }}
+              onChange={() => {}}
+              disabled
+              sx={{ width: "320px" }}
+            >
+              <MenuItem value="Jan-mar">
+                <span style={monthPickerStyles.spanStyle}>month by</span>
+                <div style={monthPickerStyles.divStyle}>{monthFlag}</div>
+              </MenuItem>
+            </TextField>
+          </Box>
+          {onSelectBillData?.map(({ _id, ...data }) => (
+            <Bill
+              key={_id}
+              billData={{ _id, ...data }}
+              showStatus={setSaveStatus}
+            />
           ))}
         </AccordionDetails>
+        {onSelectBillData?.length > 0 && (
+          <Pagination
+            count={Math.round(filteredData?.length / 2)}
+            sx={{ mt: 2 }}
+            page={page}
+            onChange={(_, page) => {
+              setBillPage(page);
+            }}
+          />
+        )}
       </Accordion>
+
+      {showSave && (
+        <GradientButton
+          sx={{ maxWidth: "fit-content" }}
+          onClick={() => {
+            setShowSave(false);
+            updateBillTransactions();
+          }}
+        >
+          Save
+        </GradientButton>
+      )}
     </>
   );
 };

@@ -35,7 +35,9 @@ export function* watchGetMemberList() {
 export function* getMember(action) {
   try {
     yield put(startLoading());
+    console.log("memberSAGA",action)
     const member = yield call(getMemberById, action.payload);
+    console.log("memberSAGA",member)
     yield put({
       type: memberActionTypes.GET_MEMBER_BY_ID_SUCCEEDED,
       payload: member,
