@@ -41,6 +41,8 @@ const TransactionList = ({
   update,
   hideNewTransaction,
   newTransaction,
+  billStatus,
+  showStatus,
 }) => {
   // showUpdate
   const [showOldTransaction, setShowOldTransaction] = useState(update);
@@ -48,12 +50,13 @@ const TransactionList = ({
 
   const cancelNewTransaction = (value) => {
     setShowNewTransaction(value);
+    showStatus(true);
     hideNewTransaction();
   };
 
-  const deleteOldTransaction=()=>{
-    setShowOldTransaction(false)
-  }
+  const deleteOldTransaction = () => {
+    setShowOldTransaction(false);
+  };
 
   const tableRows = useMemo(
     () =>
@@ -89,7 +92,13 @@ const TransactionList = ({
           </TableHead>
           <TableBody>
             {showOldTransaction && (
-              <UpdateTransaction billId={billId} transaction={transaction} deleteTrans={deleteOldTransaction}/>
+              <UpdateTransaction
+                billId={billId}
+                transaction={transaction}
+                deleteTrans={deleteOldTransaction}
+                billStatus={billStatus}
+                showStatus={showStatus}
+              />
             )}
             {showNewTransaction && (
               <NewTransaction

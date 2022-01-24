@@ -6,8 +6,7 @@ import { Box, TableRow, TableCell, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Check as CheckIcon, Close as CloseIcon } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import {updatePaymentDetailsOfMembers} from '../../../../redux/action/billingActions'
-
+import { updatePaymentDetailsOfMembers } from "../../../../redux/action/billingActions";
 
 import { useSetError } from "../../../../contexts/error-context";
 
@@ -46,17 +45,24 @@ const validationSchema = yup
   })
   .required();
 
-const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
+const UpdateTransaction = ({
+  billId,
+  deleteTrans,
+  transaction,
+  billStatus,
+  showStatus,
+}) => {
   const dispatch = useDispatch();
 
   let defaultValues = {
     billId,
     reference: "",
-    type: "WRITE_OFF",
+    type: "",
     amount: 0,
     paymentDate: new Date(),
     // .toISOString().split("T")[0],
-    paymentMethod: "CASH",
+    paymentMethod: "",
+    billStatus,
   };
   defaultValues.reference = transaction && transaction.reference;
   defaultValues.type = transaction && transaction.transactionType;
@@ -94,6 +100,13 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
     };
     deleteTransaction(body);
     deleteTrans();
+  };
+  const [statusFlag, setStatusFlag] = useState(false);
+  const setSaveStatus = (flag) => {
+    if (flag !== statusFlag) {
+      setStatusFlag(true);
+      showStatus(true);
+    }
   };
 
   const onSubmit = (data) => {
@@ -208,7 +221,7 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
       });
     }
     dispatch(updatePaymentDetailsOfMembers(updateBillData.billData));
-  }
+  };
 
   const onBlurAmount = (e) => {
     let index = -1;
@@ -255,7 +268,7 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
       });
     }
     dispatch(updatePaymentDetailsOfMembers(updateBillData.billData));
-  }
+  };
 
   const onBlurMethod = (e) => {
     let index = -1;
@@ -302,10 +315,10 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
       });
     }
     dispatch(updatePaymentDetailsOfMembers(updateBillData.billData));
-  }
+  };
 
-  const onChangePaidDate = (newDate) =>{
-    setValue("paymentDate", newDate)
+  const onChangePaidDate = (newDate) => {
+    setValue("paymentDate", newDate);
     let index = -1;
     let transIndex = -1;
     for (let i = 0; i < updateBillData.billData.length; i++) {
@@ -350,34 +363,62 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
       });
     }
     dispatch(updatePaymentDetailsOfMembers(updateBillData.billData));
-  }
-
+  };
   return (
     <TableRow>
       <TableCell>
         <Input
+          disabled={defaultValues.billStatus === "PAID"}
           control={control}
           name="reference"
-          // onChange={onChangeReference}
           onBlur={onBlurReference}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
         />
       </TableCell>
       <TableCell>
-        <Input control={control} name="type" select sx={{ width: "120px" }} onBlur={onBlurType}>
+        <Input
+          disabled={defaultValues.billStatus === "PAID"}
+          control={control}
+          name="type"
+          select
+          sx={{ width: "120px" }}
+          onBlur={onBlurType}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
+        >
           <MenuItem value="WRITE_OFF">Write off</MenuItem>
           <MenuItem value="WAIVER">Waiver</MenuItem>
+          {defaultValues.billStatus === "PAID" && (
+            <MenuItem value="PAYMENT">Payment</MenuItem>
+          )}
         </Input>
       </TableCell>
       <TableCell>
-        <Input control={control} name="amount" sx={{ width: "120px" }} onBlur={onBlurAmount} />
+        <Input
+          disabled={defaultValues.billStatus === "PAID"}
+          control={control}
+          name="amount"
+          sx={{ width: "120px" }}
+          onBlur={onBlurAmount}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
+        />
       </TableCell>
       <TableCell>
         <Input
+          disabled={defaultValues.billStatus === "PAID"}
           control={control}
           name="paymentMethod"
           select
           sx={{ width: "120px" }}
           onBlur={onBlurMethod}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
         >
           <MenuItem value="CASH">Cash</MenuItem>
           <MenuItem value="REC_BANK">Rec Bank</MenuItem>
@@ -388,13 +429,18 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
       </TableCell>
       <TableCell>
         <DatePicker
+          disabled={defaultValues.billStatus === "PAID"}
           date={date}
           onChange={(newDate) => onChangePaidDate(newDate)}
           textfieldProps={{ style: { width: "150px" } }}
+          onFocus={() => {
+            setSaveStatus(true);
+          }}
         />
       </TableCell>
       <TableCell>
         <TextField
+          disabled={defaultValues.billStatus === "PAID"}
           select
           defaultValue="MANUAL"
           sx={{ width: "120px" }}
@@ -421,6 +467,7 @@ const UpdateTransaction = ({ billId, deleteTrans, transaction }) => {
             </RoundIconButton> */}
 
           <RoundIconButton
+            disabled={defaultValues.billStatus === "PAID"}
             onClick={() => deleteOldTransaction(transaction._id)}
           >
             <CloseIcon />
