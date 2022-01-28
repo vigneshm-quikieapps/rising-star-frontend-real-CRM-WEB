@@ -44,13 +44,26 @@ import { setPageTitle } from "../../redux/action/shared-actions";
 
 const ExpandIcon = () => <ImgIcon>{arrowDownIcon}</ImgIcon>;
 
-const VerifiedIcon = ({ title = "test" }) => (
-  <Tooltip title={title}>
-    <Box sx={{ display: "inline-block" }}>
-      <ImgIcon>{allergyIcon}</ImgIcon>
-    </Box>
-  </Tooltip>
-);
+const VerifiedIcon = ({ title = "test", type }) => {
+  let temp;
+  if (title == "") {
+    temp = type == "allergies" ? "No Allergies" : "No Conditions";
+    return (
+      <Tooltip title={temp}>
+        <Box sx={{ display: "inline-block" }}>
+          <ImgIcon>{allergyIcon}</ImgIcon>
+        </Box>
+      </Tooltip>
+    );
+  }
+  return (
+    <Tooltip title={title}>
+      <Box sx={{ display: "inline-block" }}>
+        <ImgIcon>{allergyIcon}</ImgIcon>
+      </Box>
+    </Tooltip>
+  );
+};
 
 const PhoneIcon = ({ title = "test" }) => (
   <Tooltip title={title}>
@@ -73,7 +86,7 @@ const Attendance = () => {
   const attendance = useSelector(
     (state) => state.sessions.attendanceList?.attendance,
   );
-  console.log("attendance",attendance);
+  console.log("attendance", attendance);
 
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
@@ -184,8 +197,8 @@ const Attendance = () => {
               name,
               <PhoneIcon title={parentContact} />,
               <PhoneIcon title={ecContact} />,
-              <VerifiedIcon title={allergies} />,
-              <VerifiedIcon title={condition} />,
+              <VerifiedIcon title={allergies} type={"allergies"} />,
+              <VerifiedIcon title={condition} type={"conditions"} />,
               // <Status status="green" title="No Info" />,
               paymentStatus,
               startDate,
@@ -279,6 +292,13 @@ const Attendance = () => {
 
   const attendanceRowData = useCallback(() => {
     return attendance?.records?.map((item) => {
+      if (!item?.memberConsent.hasOwnProperty("consent")) {
+        item.memberConsent.consent = {
+          allergies: "",
+          condition: "",
+        };
+      }
+
       const {
         comments,
         attended,
@@ -293,6 +313,7 @@ const Attendance = () => {
           consent: { allergies, condition },
         },
       } = item;
+
       return {
         name,
         parentContact: pContact,
