@@ -16,13 +16,7 @@ import {
   Legend,
 } from "recharts";
 
-import {
-  AccordionSummary,
-  AccordionDetails,
-  Box,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { AccordionSummary, Box, MenuItem, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
@@ -98,9 +92,6 @@ const Dashboard = () => {
   });
   const [enrolmentData, setEnrolmentData] = useState();
 
-  const [activeBusiness, setActiveBusiness] = useState({});
-  const [businessId, setActiveBusinessId] = useState();
-
   const setLastMonthPaymentData = (payList) => {
     let monthData = payList[payList.length - 1];
     setPaymentData((paymentData) => ({
@@ -114,7 +105,7 @@ const Dashboard = () => {
   };
 
   const businessesList = useSelector((state) => state.businesses.businessList);
-  // const businessId = activeBusiness._id;
+  const businessId = businessesList.length > 0 ? businessesList[0]._id : "";
   const closePaymentDateRange = () => {
     setAnchorElPayment(null);
   };
@@ -130,7 +121,6 @@ const Dashboard = () => {
   const openMemberDateRange = (event) => {
     setAnchorElMember(event.currentTarget);
   };
-
   const getEndDate = (date) => {
     let today = new Date();
     let endDate = date
@@ -172,10 +162,6 @@ const Dashboard = () => {
       }));
     }
   };
-  useEffect(() => {
-    setActiveBusiness(businessesList.length > 0 ? businessesList[0] : "");
-    setActiveBusinessId(businessesList.length > 0 ? businessesList[0]._id : "");
-  }, [businessesList]);
 
   useEffect(() => {
     if (businessId) {
@@ -236,49 +222,15 @@ const Dashboard = () => {
         </Typography>
       </Box>
       <AccordionContainer>
-        <Accordion defaultExpanded={false}>
+        <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography>{activeBusiness.name}</Typography>
+              <Typography>Zippy Totz</Typography>
               <Typography sx={{ opacity: 0.5, fontSize: "14px !important" }}>
-                {activeBusiness.city}
+                Glasgow
               </Typography>
             </Box>
           </AccordionSummary>
-          <AccordionDetails>
-            {businessesList.map((data) => (
-              <DashboardCard
-                style={{
-                  display: "inline-block",
-                  marginRight: "35px",
-                  cursor: "pointer",
-                  height: "160px",
-                }}
-                onClick={() => {
-                  setActiveBusiness(data);
-                  setActiveBusinessId(data._id);
-                }}
-              >
-                <Box>
-                  <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
-                    {data.name}
-                  </Typography>
-                </Box>
-
-                <Box sx={{ marginTop: "20px" }}>
-                  <Typography variant="h2" sx={{ fontSize: "20px" }}>
-                    {data.city}
-                  </Typography>
-                </Box>
-
-                <Box sx={{ marginTop: "20px" }}>
-                  <Typography variant="h2" sx={{ fontSize: "20px" }}>
-                    {data.status}
-                  </Typography>
-                </Box>
-              </DashboardCard>
-            ))}
-          </AccordionDetails>
         </Accordion>
       </AccordionContainer>
       <CardRow sx={{ justifyContent: "space-between", flexWrap: "nowrap" }}>
@@ -433,7 +385,7 @@ const Dashboard = () => {
 
           <LineChart
             width={500}
-            height={300}
+            height={280}
             data={paymentChartData}
             margin={{
               top: 5,
@@ -448,7 +400,6 @@ const Dashboard = () => {
             <Tooltip />
             <Legend />
             <Line
-              // style={{ bottom: "-5px" }}
               name="Received"
               type="monotone"
               dataKey="received"
@@ -456,7 +407,6 @@ const Dashboard = () => {
               activeDot={{ r: 8 }}
             />
             <Line
-              // style={{ bottom: "-5px" }}
               name="Not Received"
               type="monotone"
               dataKey="notReceived"
@@ -503,7 +453,7 @@ const Dashboard = () => {
           </CardRow>
           <LineChart
             width={500}
-            height={300}
+            height={280}
             data={membersChartData}
             margin={{
               top: 5,
@@ -552,8 +502,8 @@ const Dashboard = () => {
       <DateRange
         onChange={(fromDate, toDate) => {
           closeMemberDateRange();
-          setMembersDateSelection((memberDateSelection) => ({
-            ...memberDateSelection,
+          setMembersDateSelection((paymentDateSelection) => ({
+            ...paymentDateSelection,
             startDate: getStartDate(fromDate),
             endDate: getEndDate(toDate),
           }));
