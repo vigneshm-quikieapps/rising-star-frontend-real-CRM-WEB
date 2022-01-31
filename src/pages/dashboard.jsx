@@ -14,6 +14,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from "recharts";
 
 import {
@@ -430,39 +431,40 @@ const Dashboard = () => {
               </TextField>
             </Box>
           </CardRow>
-
-          <LineChart
-            width={500}
-            height={300}
-            data={paymentChartData}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line
-              // style={{ bottom: "-5px" }}
-              name="Received"
-              type="monotone"
-              dataKey="received"
-              stroke="#f1383c"
-              activeDot={{ r: 8 }}
-            />
-            <Line
-              // style={{ bottom: "-5px" }}
-              name="Not Received"
-              type="monotone"
-              dataKey="notReceived"
-              stroke="#beb8d8"
-            />
-          </LineChart>
+          <ResponsiveContainer width={500} height={300}>
+            <LineChart
+              width={500}
+              height={270}
+              data={paymentChartData}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                // style={{ bottom: "-5px" }}
+                name="Received"
+                type="monotone"
+                dataKey="received"
+                stroke="#f1383c"
+                activeDot={{ r: 8 }}
+              />
+              <Line
+                // style={{ bottom: "-5px" }}
+                name="Not Received"
+                type="monotone"
+                dataKey="notReceived"
+                stroke="#beb8d8"
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </Card>
 
         {/* member section */}
@@ -501,36 +503,38 @@ const Dashboard = () => {
               </TextField>
             </Box>
           </CardRow>
-          <LineChart
-            width={500}
-            height={300}
-            data={membersChartData}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line
-              name="Drop"
-              type="monotone"
-              dataKey="newDropEnrolments"
-              stroke="#f1383c"
-              activeDot={{ r: 8 }}
-            />
-            <Line
-              name="Active"
-              type="monotone"
-              dataKey="newActiveEnrolments"
-              stroke="#beb8d8"
-            />
-          </LineChart>
+          <ResponsiveContainer width={500} height={300}>
+            <LineChart
+              width={500}
+              height={270}
+              data={membersChartData}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                name="Drop"
+                type="monotone"
+                dataKey="newDropEnrolments"
+                stroke="#f1383c"
+                activeDot={{ r: 8 }}
+              />
+              <Line
+                name="Active"
+                type="monotone"
+                dataKey="newActiveEnrolments"
+                stroke="#beb8d8"
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </Card>
       </CardRow>
 
