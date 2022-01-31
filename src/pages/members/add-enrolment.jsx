@@ -362,7 +362,17 @@ const AddEnrolment = () => {
         onYes={handleDiscardEnrolmentYes}
       />
 
-      <Dialog open={onSubmitEnrolmentOpen}>
+      <Dialog
+        open={onSubmitEnrolmentOpen}
+        sx={{
+          "& .MuiDialog-paper": {
+            minWidth: "380px",
+            padding: "40px 30px",
+            margin: "27px 300px 31px 200px",
+            alignItems: "center",
+          },
+        }}
+      >
         <ImgIcon>{informationIcon}</ImgIcon>
         <DialogTitle>Information</DialogTitle>
         <DialogContent>{enrolmentMessage}</DialogContent>
