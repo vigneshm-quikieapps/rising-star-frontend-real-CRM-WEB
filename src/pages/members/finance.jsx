@@ -21,6 +21,7 @@ import {
   Accordion,
   ImgIcon,
   Table,
+  Pagination,
 } from "../../components";
 import { Card, HeadingText, SubHeadingText } from "../../components/common";
 import { arrowDownIcon } from "../../assets/icons";
@@ -114,6 +115,10 @@ const MemberFinance = () => {
   const [selectedDiscountScheme, setSelectedDiscountScheme] = useState("");
   const setError = useSetError();
   const [monthFlag, setMonthFlag] = useState("");
+  const [timeStamp, setTimeStamp] = useState({ year: null, month: null });
+  const [page, setPage] = useState(1);
+  const [filteredData, setFilteredData] = useState();
+  const [showSave, setShowSave] = useState(false);
 
   const {
     control,
@@ -273,6 +278,10 @@ const MemberFinance = () => {
     ],
   );
 
+  const setSaveStatus = (flag) => {
+    setShowSave(true);
+  };
+
   let updateReduxState = false;
   const { mutateAsync: updateTransaction, isLoading: billsUpdating } =
     useUpdateTransaction({
@@ -288,16 +297,50 @@ const MemberFinance = () => {
     if (updateReduxState) dispatch(updatePaymentDetailsOfMembers([]));
   };
 
+  const setCurrentBillPage = (page = 1) => {
+    let pageStartIndex = page * 2 - 2;
+    let pageLastIndex = pageStartIndex + 1;
+
+    let temp = [];
+    for (let index = pageStartIndex; index <= pageLastIndex; index++) {
+      if (data && data[index]) {
+        temp.push(data[index]);
+      }
+    }
+    setOnSelectBillData(temp);
+  };
+  const setBillPage = (page = 1) => {
+    let pageStartIndex = page * 2 - 2;
+    let pageLastIndex = pageStartIndex + 1;
+    let temp = [];
+    let data = filteredData;
+    for (let index = pageStartIndex; index <= pageLastIndex; index++) {
+      if (data && data[index]) {
+        temp.push(data[index]);
+      }
+    }
+    setOnSelectBillData(temp);
+    setPage(page);
+  };
+
   const filterBillsByMonths = (year, month) => {
+    let inputString = "View by month " + months[month] + " " + year;
     let data = billsData?.docs?.filter((bill) => {
       let date = new Date(bill.dueDate);
       if (date.getMonth() == month && date.getFullYear() == year) {
         return bill;
       }
     });
-    setOnSelectBillData(data);
-    let inputString = "View by month " + months[month] + " " + year;
+    let newData = data?.length > 0 ? [data[0]] : [];
+    data?.length > 1 && newData.push(data[1]);
+    setOnSelectBillData(newData);
+    setFilteredData(data);
     setMonthFlag(inputString);
+    setTimeStamp((timeStamp) => ({
+      ...timeStamp,
+      year: year,
+      month: month,
+    }));
   };
 
   const [anchorElPayment, setAnchorElPayment] = useState(null);
@@ -430,6 +473,7 @@ const MemberFinance = () => {
 
       <DateRange
         onChange={(startDate) => {
+          setShowSave(false);
           closePaymentDateRange();
           filterBillsByMonths(startDate.getFullYear(), startDate.getMonth());
         }}
@@ -464,16 +508,36 @@ const MemberFinance = () => {
             </TextField>
           </Box>
           {onSelectBillData?.map(({ _id, ...data }) => (
-            <Bill key={_id} billData={{ _id, ...data }} />
+            <Bill
+              key={_id}
+              billData={{ _id, ...data }}
+              showStatus={setSaveStatus}
+            />
           ))}
         </AccordionDetails>
+        {onSelectBillData?.length > 0 && (
+          <Pagination
+            count={Math.round(filteredData?.length / 2)}
+            sx={{ mt: 2 }}
+            page={page}
+            onChange={(_, page) => {
+              setBillPage(page);
+            }}
+          />
+        )}
       </Accordion>
-      <GradientButton
-        sx={{ maxWidth: "fit-content" }}
-        onClick={() => updateBillTransactions()}
-      >
-        Save
-      </GradientButton>
+
+      {showSave && (
+        <GradientButton
+          sx={{ maxWidth: "fit-content" }}
+          onClick={() => {
+            setShowSave(false);
+            updateBillTransactions();
+          }}
+        >
+          Save
+        </GradientButton>
+      )}
     </>
   );
 };

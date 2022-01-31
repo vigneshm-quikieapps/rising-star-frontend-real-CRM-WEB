@@ -29,7 +29,7 @@ import {
 } from "../../components";
 import { TextField, Output } from "../../components/index";
 import { backIcon } from "../../assets/icons";
-import informationIcon from "../../assets/icons/icon-delete.png";
+import informationIcon from "../../assets/icons/icon-information.png";
 import { getMemberEnrolmentList } from "../../redux/action/memberAction";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import toPascal from "../../utils/to-pascal";
@@ -362,7 +362,17 @@ const AddEnrolment = () => {
         onYes={handleDiscardEnrolmentYes}
       />
 
-      <Dialog open={onSubmitEnrolmentOpen}>
+      <Dialog
+        open={onSubmitEnrolmentOpen}
+        sx={{
+          "& .MuiDialog-paper": {
+            minWidth: "380px",
+            padding: "40px 30px",
+            margin: "27px 300px 31px 200px",
+            alignItems: "center",
+          },
+        }}
+      >
         <ImgIcon>{informationIcon}</ImgIcon>
         <DialogTitle>Information</DialogTitle>
         <DialogContent>{enrolmentMessage}</DialogContent>

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import ImgIcon from "./img-icon";
 import errorIcon from "../assets/icons/icon-error.png";
-import informationIcon from "../assets/icons/icon-delete.png";
+import informationIcon from "../assets/icons/icon-information.png";
 
 export default function DialogBox({
   open,
