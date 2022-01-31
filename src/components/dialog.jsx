@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ImgIcon from "./img-icon";
-import warningIcon from "../assets/icons/icon-delete.png";
+import warningIcon from "../assets/icons/icon-warning.png";
 
 export default function DialogBox(props) {
   const { open, onNo, title, description, onYes } = props;

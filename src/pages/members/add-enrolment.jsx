@@ -29,7 +29,7 @@ import {
 } from "../../components";
 import { TextField, Output } from "../../components/index";
 import { backIcon } from "../../assets/icons";
-import informationIcon from "../../assets/icons/icon-delete.png";
+import informationIcon from "../../assets/icons/icon-information.png";
 import { getMemberEnrolmentList } from "../../redux/action/memberAction";
 import { getClassSessionsByTermId } from "../../redux/action/sessionAction";
 import toPascal from "../../utils/to-pascal";
