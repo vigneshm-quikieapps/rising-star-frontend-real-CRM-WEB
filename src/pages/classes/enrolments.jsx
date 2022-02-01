@@ -52,7 +52,7 @@ const ClassEnrollments = () => {
   const membersOfSession1 = useSelector(
     (state) => state.members.membersOfSession,
   );
-  console.log("membersOfSession", membersOfSession1);
+  // console.log("membersOfSession", membersOfSession1);
   const { currentPage, totalPages } = useSelector((state) => state.members);
   const [selectedTerm, setSelectedTerm] = useState("");
   const [selectedSession, setSelectedSession] = useState("");
@@ -184,7 +184,7 @@ const ClassEnrollments = () => {
     };
     return info;
   }, [selectedSession, classSessionsInTerm]);
-  console.log("bp");
+
   return (
     <Box>
       <Card>

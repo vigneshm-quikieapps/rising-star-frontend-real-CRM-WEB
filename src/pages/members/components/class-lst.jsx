@@ -57,23 +57,27 @@ const ClassList = ({
           _id,
           name,
           categoryId,
-          enrolmentControls: { name: Age, value: Gender },
+          enrolmentControls: [
+            { name: Age, values: AgeData },
+            { name: Gender, values: GenderData },
+          ],
         }) => ({
           onClick: () => {
             onSelect(_id, name);
             onClose();
           },
+
           items: [
             toPascal(name),
             toPascal(categoryId),
-            toPascal(Gender),
-            toPascal(Age),
+            AgeData.toString(),
+            GenderData.toString(),
           ],
         }),
       ) || []
     );
   }, [data, onSelect, onClose]);
-
+  // console.log("data", data);
   const pagination = data?.totalPages && data.totalPages > 1 && (
     <Pagination
       count={data.totalPages}
