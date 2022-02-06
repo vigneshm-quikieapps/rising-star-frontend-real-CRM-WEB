@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
   Dialog,
@@ -11,7 +11,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { useGetSession } from "../../services/queries";
+import { useGetXlsxFullList } from "../../services/queries";
 import { toPascal, transformError } from "../../utils";
 import {
   ElevationScroll,
@@ -33,13 +33,16 @@ const TableHeading = (
 );
 
 const PaymentFullList = ({ open, onClose, businessId, classId }) => {
+  const { id } = useParams();
+  console.log("id", id);
   const history = useHistory();
   const [showError, setShowError] = useState(false);
   const [page, setPage] = useState(1);
   const [contentRef, setContentRef] = useState();
 
   const { isLoading, isError, error, data, isFetching, isPreviousData } =
-    useGetSession(classId);
+    useGetXlsxFullList(localStorage.getItem("MID"));
+  console.log("data121", useGetXlsxFullList(id));
 
   //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
 
@@ -49,27 +52,31 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
 
   const tableRows = useMemo(() => {
     return (
-      data?.docs?.map(
+      data?.xlsx?.map(
         ({
-          _id,
-          name,
-          categoryId,
-          enrolmentControls: { name: Age, value: Gender },
+          uploadPaymentList: [{ memberName }, { membershipNumber }],
+          uploadPaymentList: [{ paymentMethod }, { uploadStatus }],
+          uploadPaymentList: [{ noDataFound }, { type }],
+          uploadPaymentList: [{ amount }],
         }) => ({
           onClick: () => {
             onClose();
           },
           items: [
-            toPascal(name),
-            toPascal(categoryId),
-            toPascal(Gender),
-            toPascal(Age),
+            toPascal(memberName),
+            toPascal(membershipNumber),
+            amount,
+            toPascal(type),
+            toPascal(paymentMethod),
+            toPascal(uploadStatus),
+            toPascal(noDataFound),
           ],
         }),
       ) || []
     );
   }, [data, onClose]);
-  console.log("paymentList", data);
+
+  console.log("paymentList", tableRows);
 
   const pagination = data?.totalPages && data.totalPages > 1 && (
     <Pagination

@@ -103,3 +103,19 @@ export const useGetSession = (classId, options) =>
     enabled: !!classId,
     ...options,
   });
+const getXlsx = () => axios.get(`xlsx`).then(({ data }) => data);
+
+export const useGetXlsx = (classId, options) =>
+  useQuery(["classes", classId], () => getXlsx(), {
+    enabled: true,
+    ...options,
+  });
+const getXlsxFullList = (id) =>
+  axios.get(`xlsx`, { params: { id } }).then(({ data }) => data);
+
+export const useGetXlsxFullList = (id, options) =>
+  useQuery([id], () => getXlsxFullList(), {
+    keepPreviousData: true,
+    enabled: true,
+    ...options,
+  });
