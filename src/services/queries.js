@@ -111,10 +111,9 @@ export const useGetXlsx = (classId, options) =>
     ...options,
   });
 const getXlsxFullList = (id) =>
-  axios.get(`xlsx`, { params: { id } }).then(({ data }) => data);
-
+  axios.get(`xlsx/${id}`, { params: { id } }).then(({ data }) => data);
 export const useGetXlsxFullList = (id, options) =>
-  useQuery([id], () => getXlsxFullList(), {
+  useQuery(["id", id], () => getXlsxFullList(id), {
     keepPreviousData: true,
     enabled: true,
     ...options,

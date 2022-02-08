@@ -33,8 +33,8 @@ const TableHeading = (
 );
 
 const PaymentFullList = ({ open, onClose, businessId, classId }) => {
-  const { id } = useParams();
-  console.log("id", id);
+  // const { id } = useParams();
+  // console.log("id", id);
   const history = useHistory();
   const [showError, setShowError] = useState(false);
   const [page, setPage] = useState(1);
@@ -42,7 +42,8 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
 
   const { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetXlsxFullList(localStorage.getItem("MID"));
-  console.log("data121", useGetXlsxFullList(id));
+  console.log("data121", useGetXlsxFullList(localStorage.getItem("MID")));
+  console.log("data234", data.xlsx);
 
   //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
 
@@ -52,12 +53,11 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
 
   const tableRows = useMemo(() => {
     return (
-      data?.xlsx?.map(
+      data?.map(
         ({
-          uploadPaymentList: [{ memberName }, { membershipNumber }],
-          uploadPaymentList: [{ paymentMethod }, { uploadStatus }],
-          uploadPaymentList: [{ noDataFound }, { type }],
-          uploadPaymentList: [{ amount }],
+          xlsx: {
+            uploadPaymentList: [{ memberName }, { membershipNumber }],
+          },
         }) => ({
           onClick: () => {
             onClose();
@@ -65,11 +65,11 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
           items: [
             toPascal(memberName),
             toPascal(membershipNumber),
-            amount,
-            toPascal(type),
-            toPascal(paymentMethod),
-            toPascal(uploadStatus),
-            toPascal(noDataFound),
+            "amount",
+            "amount",
+            "amount",
+            "amount",
+            "amount",
           ],
         }),
       ) || []

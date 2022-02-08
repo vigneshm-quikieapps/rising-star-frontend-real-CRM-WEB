@@ -49,7 +49,7 @@ export const useUpdateTransaction = (options) =>
 //   useMutation((data) => addPayment(data), option);
 const addPayment = (id, data) => {
   console.log("datamutate", data);
-  axios.post(`businesses/${id}/xlxsupload`, data);
+  // axios.post(`businesses/${id}/xlxsupload`, data);
 };
 export const useAddPayment = (option) =>
   useMutation((id, data) => addPayment(id, data), option);

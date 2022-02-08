@@ -2,16 +2,26 @@ import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { Box, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import {
   Button,
   DatePicker,
   GradientButton,
   Grid,
+  ImgIcon,
   Pagination,
   Status,
   TextField,
 } from "../../components";
+import informationIcon from "../../assets/icons/icon-delete.png";
 import PaymentList from "./payment-index";
 import { getClassList as getClassListAction } from "../../redux/action/class-actions";
 import toPascal from "../../utils/to-pascal";
@@ -31,6 +41,7 @@ const PaymentUpload = () => {
   const [selectedFile, setSelectedFile] = useState("");
   const [readerFile, setReaderFile] = useState("");
   const [paymentListOpen, setPaymentListOpen] = useState(false);
+  const [paymentUploadMessage, setPaymentUploadMessage] = useState(false);
   const setError = useSetError();
 
   const classesState = useSelector((state) => state.classes);
@@ -61,6 +72,10 @@ const PaymentUpload = () => {
         }),
       );
   };
+  const handleChange = (newValue) => {
+    setValue(newValue);
+  };
+  console.log("value", value);
   const pagination = (
     <Pagination
       sx={{ py: 2 }}
@@ -73,33 +88,13 @@ const PaymentUpload = () => {
 
   //List
 
-  // const items = useMemo(() => {
-  //   console.log("data111", data);
-  //   return data?.xlxs?.map(
-  //     ({ batchProcessId, createdAt, updatedAt, status }) => {
-  //       return {
-  //         items: [
-  //           toPascal(batchProcessId),
-  //           toPascal(createdAt),
-  //           toPascal(updatedAt),
-  //           toPascal(status),
-  //           <Button onClick={() => setPaymentListOpen(true)}>View</Button>,
-  //         ],
-  //       };
-  //     },
-  //   );
-  // }, [data]);
-  // const handleOpenPaymentList = (id) => {
-  //   setPaymentListOpen(true);
-  //   localStorage.setItem("MID", id);
-  // };
   const handleOpenPaymentList = useCallback((id) => {
     setPaymentListOpen(true);
     localStorage.setItem("MID", id);
   }, []);
   const tableRows = useMemo(
     () =>
-      data?.xlsx?.map(
+      data?.docs?.map(
         ({ _id, batchProcessId, createdAt, updatedAt, status }) => ({
           items: [
             toPascal(batchProcessId),
@@ -116,30 +111,21 @@ const PaymentUpload = () => {
   const onChangeFile = (e) => {
     setSelectedFile(e.target.files[0]);
     console.log("payment_file", e.target.files[0]);
-    let reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-
-    // reader.onload = (e) => {
-    //   console.log("new", e.target.result);
-    //   setReaderFile(e.target.result);
-    // };
   };
   const { mutateAsync: addPayment } = useAddPayment({
     onError: async (error) => setError(error),
   });
   const handlePaymentSubmit = async () => {
-    // let formData = new FormData();
-    // formData.append("classId", selectedClass);
-    // formData.append("billDate", "2021 - 11 - 01");
-    // formData.append("payment", readerFile);
     // let body = {
-    //   classId: selectedClass,
     //   billDate: "2021-11-01",
-    //   payment: readerFile,
+    //   classId: selectedClass,
+    //   businessId: selectedBusiness,
+    //   payment: selectedFile,
     // };
     // await addPayment(selectedBusiness, body);
     // console.log("selectedBusiness, body", selectedBusiness, body);
-    paymentData(selectedBusiness, selectedClass, "2021-11-01", selectedFile);
+    paymentData(value, selectedClass, selectedBusiness, selectedFile);
+    setPaymentUploadMessage(true);
   };
 
   return (
@@ -194,14 +180,11 @@ const PaymentUpload = () => {
       </Grid>
       <Box sx={{ mb: 3 }}>
         <DatePicker
-          inputFormat="MM-yyyy"
-          views={["year", "month"]}
           label="Month/Year"
-          minDate={new Date("2012-03-01")}
-          maxDate={new Date("2023-06-01")}
+          inputFormat="yyyy/MM/dd"
           value={value}
-          onChange={setValue}
-          renderInput={(params) => <TextField {...params} helperText={null} />}
+          onChange={handleChange}
+          renderInput={(params) => <TextField {...params} />}
         />
       </Box>
       <Grid sx={{ mb: 3 }}>

@@ -1,15 +1,21 @@
 import axiosInstance from "../utils/axios-instance";
-export const paymentData = async (id, classId, billDate, payment) => {
-  console.log("id, classId, billDate, payment", id, classId, billDate, payment);
+export const paymentData = async (billDate, classId, businessId, payment) => {
+  console.log(
+    "classId, billDate, payment",
+    billDate,
+    classId,
+    businessId,
+    payment,
+  );
+  const data = new FormData();
+  data.append("billDate", billDate);
+  data.append("classId", classId);
+  data.append("businessId", businessId);
+  data.append("payment", payment);
   try {
-    const api = `businesses/${id}/xlxsupload`;
-    const response = await axiosInstance.post(api, {
-      classId: classId,
-      billDate: billDate,
-      payment: payment,
-    });
+    const api = `businesses/${businessId}/xlxsupload`;
+    const response = await axiosInstance.post(api, data);
     return response;
-    console.log("respomse", payment);
   } catch (error) {
     throw error;
   }
