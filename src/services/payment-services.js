@@ -20,3 +20,12 @@ export const paymentData = async (billDate, classId, businessId, payment) => {
     throw error;
   }
 };
+export async function getXlsx() {
+  try {
+    const response = await axiosInstance.get(`xlsx`);
+    const xlsx = response.data.docs;
+    return xlsx;
+  } catch (error) {
+    throw error;
+  }
+}

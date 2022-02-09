@@ -39,7 +39,6 @@ const PaymentUpload = () => {
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
-  const [readerFile, setReaderFile] = useState("");
   const [paymentListOpen, setPaymentListOpen] = useState(false);
   const [paymentUploadMessage, setPaymentUploadMessage] = useState(false);
   const setError = useSetError();
@@ -107,7 +106,7 @@ const PaymentUpload = () => {
       ),
     [data, handleOpenPaymentList],
   );
-  console.log(tableRows);
+  console.log("MDatata", data);
   const onChangeFile = (e) => {
     setSelectedFile(e.target.files[0]);
     console.log("payment_file", e.target.files[0]);
@@ -116,16 +115,19 @@ const PaymentUpload = () => {
     onError: async (error) => setError(error),
   });
   const handlePaymentSubmit = async () => {
-    // let body = {
-    //   billDate: "2021-11-01",
-    //   classId: selectedClass,
-    //   businessId: selectedBusiness,
-    //   payment: selectedFile,
-    // };
-    // await addPayment(selectedBusiness, body);
-    // console.log("selectedBusiness, body", selectedBusiness, body);
-    paymentData(value, selectedClass, selectedBusiness, selectedFile);
+    const message = await paymentData(
+      value,
+      selectedClass,
+      selectedBusiness,
+      selectedFile,
+    );
+    console.log("message", message);
     setPaymentUploadMessage(true);
+  };
+  const handleDeleteFunction = () => {
+    document.getElementById("file-upload").value = "";
+    setValue("");
+    console.log("value,file", value, selectedFile);
   };
 
   return (
@@ -171,7 +173,7 @@ const PaymentUpload = () => {
           {classList.map(({ _id, name }) => {
             return (
               <MenuItem key={_id} value={_id}>
-                {_id}
+                {name}
               </MenuItem>
             );
           })}
@@ -196,7 +198,7 @@ const PaymentUpload = () => {
             onChangeFile(e);
           }}
         ></TextField>
-        <GradientButton>Delete</GradientButton>
+        <GradientButton onClick={handleDeleteFunction}>Delete</GradientButton>
       </Grid>
       <PaymentList list={tableRows} pagination={pagination} />
       {paymentListOpen && (
@@ -207,6 +209,30 @@ const PaymentUpload = () => {
           classId={selectedClass}
         />
       )}
+      <Dialog
+        open={paymentUploadMessage}
+        sx={{
+          "& .MuiDialog-paper": {
+            minWidth: "380px",
+            padding: "40px 30px",
+            margin: "27px 300px 31px 200px",
+            alignItems: "center",
+          },
+        }}
+      >
+        <ImgIcon>{informationIcon}</ImgIcon>
+        <DialogTitle>Information</DialogTitle>
+        <DialogContent>Successfully Uploaded</DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setPaymentUploadMessage(false)}
+            sx={{ color: "#ff2c60" }}
+            autoFocus
+          >
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

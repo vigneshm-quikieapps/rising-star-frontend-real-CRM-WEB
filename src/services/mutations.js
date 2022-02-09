@@ -47,9 +47,14 @@ export const useUpdateTransaction = (options) =>
 // };
 // export const useAddPayment = (option) =>
 //   useMutation((data) => addPayment(data), option);
-const addPayment = (id, data) => {
-  console.log("datamutate", data);
-  // axios.post(`businesses/${id}/xlxsupload`, data);
+const addPayment = (billDate, classId, businessId, payment) => {
+  console.log("formconsole", billDate, classId, businessId, payment);
+  const data = new FormData();
+  data.append("billDate", billDate);
+  data.append("classId", classId);
+  data.append("businessId", businessId);
+  data.append("payment", payment);
+  axios.post(`businesses/${businessId}/xlxsupload`, data);
 };
 export const useAddPayment = (option) =>
   useMutation((id, data) => addPayment(id, data), option);
