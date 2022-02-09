@@ -41,6 +41,7 @@ const PaymentUpload = () => {
   const [selectedFile, setSelectedFile] = useState("");
   const [paymentListOpen, setPaymentListOpen] = useState(false);
   const [paymentUploadMessage, setPaymentUploadMessage] = useState(false);
+  const [uploadXlsxMessage, setUploadXlsxMessage] = useState("");
   const setError = useSetError();
 
   const classesState = useSelector((state) => state.classes);
@@ -72,7 +73,7 @@ const PaymentUpload = () => {
       );
   };
   const handleChange = (newValue) => {
-    setValue(newValue);
+    setValue(newValue.toISOString().split("T")[0]);
   };
   console.log("value", value);
   const pagination = (
@@ -121,7 +122,14 @@ const PaymentUpload = () => {
       selectedBusiness,
       selectedFile,
     );
+    if (message.data.message) {
+      setUploadXlsxMessage(message.data.message);
+    } else {
+      setUploadXlsxMessage("BillDate or Payment Xlsx File is missing");
+    }
     console.log("message", message);
+    console.log("message1", uploadXlsxMessage);
+
     setPaymentUploadMessage(true);
   };
   const handleDeleteFunction = () => {
@@ -222,7 +230,7 @@ const PaymentUpload = () => {
       >
         <ImgIcon>{informationIcon}</ImgIcon>
         <DialogTitle>Information</DialogTitle>
-        <DialogContent>Successfully Uploaded</DialogContent>
+        <DialogContent>{uploadXlsxMessage}</DialogContent>
         <DialogActions>
           <Button
             onClick={() => setPaymentUploadMessage(false)}

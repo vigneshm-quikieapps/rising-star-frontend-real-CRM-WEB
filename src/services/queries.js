@@ -110,6 +110,8 @@ export const useGetXlsx = (classId, options) =>
     enabled: true,
     ...options,
   });
+
+  
 const getXlsxFullList = (id) =>
   axios.get(`xlsx/${id}`, { params: { id } }).then(({ data }) => data);
 export const useGetXlsxFullList = (id, options) =>
@@ -118,3 +120,13 @@ export const useGetXlsxFullList = (id, options) =>
     enabled: true,
     ...options,
   });
+
+export async function getData(id) {
+  try {
+    const api = `xlsx/${id}`;
+    const response = await axios.get(api);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

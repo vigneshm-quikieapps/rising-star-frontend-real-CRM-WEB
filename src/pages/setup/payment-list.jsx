@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
@@ -11,7 +11,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { useGetXlsxFullList } from "../../services/queries";
+import { getData,useGetXlsxFullList } from "../../services/queries";
 import { toPascal, transformError } from "../../utils";
 import {
   ElevationScroll,
@@ -37,50 +37,108 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
   // console.log("id", id);
   const history = useHistory();
   const [showError, setShowError] = useState(false);
+  const [payListData,setPayListData]=useState([]);
   const [page, setPage] = useState(1);
+  const [totalPage,setTotalPage]=useState(1)
   const [contentRef, setContentRef] = useState();
+  // const [isLoading,setisLoading]=useState(true);
+  // const [isError,setisError]=useState(false)
+  // const [error,setError]=useState("")
+  // const [isFetching,setisFetching]=useState(true)
+  // const [isPreviousData,setisPreviousData]=useState(true)
+  const [payData,setPayData]=useState({})
+  const { isLoading, isError, error, _data, isFetching, isPreviousData } =
+  useGetXlsxFullList(localStorage.getItem("MID"))
+  
 
-  const { isLoading, isError, error, data, isFetching, isPreviousData } =
-    useGetXlsxFullList(localStorage.getItem("MID"));
-  console.log("data121", useGetXlsxFullList(localStorage.getItem("MID")));
-  console.log("data234", data.xlsx);
+  useEffect(()=>{
+    async function data(){
+      const data=await getData(localStorage.getItem("MID"))
+      if(data){
+        // setisLoading(false)
+        setPayData(data.data)
+        setPayListData((data?.data?.xlsx?.uploadPaymentList.slice(0,10)))
+        setTotalPage(Math.ceil(data?.data?.xlsx?.uploadPaymentList?.length/10))
+  }
+
+}
+data()
+console.log(data)
+    // setisLoading(isLoading)
+    // setisError(isError)
+    // setError(error)
+    // setisFetching(isFetching)
+    // setisPreviousData(isPreviousData)
+  },[])
+  // console.log("data121", useGetXlsxFullList(localStorage.getItem("MID")));
+  // console.log("data234", data?.xlsx?.uploadPaymentList);
 
   //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
 
   const pageChangeHandler = (_, value) => {
+    setPayListData((payData?.xlsx?.uploadPaymentList.slice((value - 1) * 10, value * 10)))
     setPage(value);
   };
-
+  // console.log("data",payData)
+  // console.log(payListData)
   const tableRows = useMemo(() => {
+    // setPayListData((data?.xlsx?.uploadPaymentList.slice(0,data?.xlsx?.uploadPaymentList?.length)))
+    // setTotalPage(Math.ceil(data?.xlsx?.uploadPaymentList?.length/10))
     return (
-      data?.map(
-        ({
-          xlsx: {
-            uploadPaymentList: [{ memberName }, { membershipNumber }],
-          },
-        }) => ({
-          onClick: () => {
-            onClose();
-          },
-          items: [
-            toPascal(memberName),
-            toPascal(membershipNumber),
-            "amount",
-            "amount",
-            "amount",
-            "amount",
-            "amount",
-          ],
-        }),
-      ) || []
+        payListData?.map(({
+          memberName,
+          membershipNumber,
+          amount,
+          type,
+          paymentMethod,
+          uploadStatus,
+          noDataFound
+        })=>({
+              onClick: () => {
+                onClose();
+              },
+              items: [
+                toPascal(memberName),
+                toPascal(membershipNumber),
+                amount,
+                toPascal(type),
+                toPascal(paymentMethod),
+                toPascal(uploadStatus),
+                toPascal(noDataFound),
+              ],})
+        )||[]
+
+      // data?.xlsx?.uploadPaymentList?.map(
+      //   (data
+      //   //   {
+      //   //   xlsx: {
+      //   //     uploadPaymentList: [{ memberName }, { membershipNumber }],
+      //   //   },
+      //   // }
+      //   ) => ({
+      //     onClick: () => {
+      //       onClose();
+      //     },
+      //     items: [
+      //       toPascal(data?.memberName),
+      //       toPascal(data?.membershipNumber),
+      //       data?.amount,
+      //       toPascal(data?.type),
+      //       toPascal(data?.paymentMethod),
+      //       toPascal(data?.uploadStatus),
+      //       toPascal(data?.noDataFound),
+      //     ],
+      //   }),
+      // ) || []
     );
-  }, [data, onClose]);
+  }, [payListData,onClose]);
 
-  console.log("paymentList", tableRows);
+  // console.log("paymentList", tableRows);
 
-  const pagination = data?.totalPages && data.totalPages > 1 && (
+  const pagination = payData?.xlsx?.uploadPaymentList?.length > 1 && (
     <Pagination
-      count={data.totalPages}
+      count={totalPage}
+      page={page}
       disabled={isPreviousData}
       onChange={pageChangeHandler}
     />
