@@ -125,7 +125,9 @@ const PaymentUpload = () => {
     if (message.data.message) {
       setUploadXlsxMessage(message.data.message);
     } else {
-      setUploadXlsxMessage("BillDate or Payment Xlsx File is missing");
+      if (message.data.errors.length > 1) {
+        setUploadXlsxMessage("BillDate or Payment File is missing");
+      } else setUploadXlsxMessage(`${message.data.errors[0].Payment}`);
     }
     console.log("message", message);
     console.log("message1", uploadXlsxMessage);
