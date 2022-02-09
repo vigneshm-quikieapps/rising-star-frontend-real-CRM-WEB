@@ -35,7 +35,7 @@ const PaymentUpload = () => {
   const businessList = useSelector((state) => state.businesses.businessList);
   const dispatch = useDispatch();
   const [value, setValue] = useState("");
-  console.log("businessList", businessList);
+  // console.log("businessList", businessList);
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
@@ -46,10 +46,14 @@ const PaymentUpload = () => {
 
   const classesState = useSelector((state) => state.classes);
   const { classList, totalPages, currentPage } = classesState;
-  console.log("classList", classList);
+  // console.log("classList", classList);
+
   const { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetXlsx();
-
+const handleDelete=()=>{
+    document.getElementById("file-upload").value="";
+   setValue("");
+}
   useEffect(() => {
     businessList.length && setSelectedBusiness(businessList[0]._id);
   }, [businessList]);
@@ -75,7 +79,7 @@ const PaymentUpload = () => {
   const handleChange = (newValue) => {
     setValue(newValue);
   };
-  console.log("value", value);
+  // console.log("value", value);
   const pagination = (
     <Pagination
       sx={{ py: 2 }}
@@ -107,10 +111,10 @@ const PaymentUpload = () => {
       ),
     [data, handleOpenPaymentList],
   );
-  console.log(tableRows);
+  // console.log(tableRows);
   const onChangeFile = (e) => {
     setSelectedFile(e.target.files[0]);
-    console.log("payment_file", e.target.files[0]);
+    // console.log("payment_file", e.target.files[0]);
   };
   const { mutateAsync: addPayment } = useAddPayment({
     onError: async (error) => setError(error),
@@ -180,6 +184,7 @@ const PaymentUpload = () => {
       </Grid>
       <Box sx={{ mb: 3 }}>
         <DatePicker
+          id="date-Picker"
           label="Month/Year"
           inputFormat="yyyy/MM/dd"
           value={value}
@@ -196,7 +201,7 @@ const PaymentUpload = () => {
             onChangeFile(e);
           }}
         ></TextField>
-        <GradientButton>Delete</GradientButton>
+        <GradientButton onClick={handleDelete}>Delete</GradientButton>
       </Grid>
       <PaymentList list={tableRows} pagination={pagination} />
       {paymentListOpen && (
