@@ -68,6 +68,7 @@ const AddEnrolment = () => {
   const memID = member._id;
   const [enrolmentMessage, setEnrolmentMessage] = useState("");
   const isSaving = useRef(false);
+  const today = new Date();
 
   const clubMembershipId = useMemo(() => {
     const list = member?.membership;

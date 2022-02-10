@@ -14,14 +14,14 @@ const INITIAL_STATE = {
 const enrolmentChangeHandler = (state, action, type) => {
   const { enrolmentId, newSessionId, sessionList } = action.payload;
   const enrolmentIndex = state.enrolmentList.findIndex(
-    ({ _id }) => _id === enrolmentId
+    ({ _id }) => _id === enrolmentId,
   );
   const updatedEnrolment = { ...state.enrolmentList[enrolmentIndex] };
   switch (type) {
     case "transfer": {
       updatedEnrolment.sessionId = newSessionId;
       const sessionIndex = sessionList.findIndex(
-        ({ _id }) => _id === newSessionId
+        ({ _id }) => _id === newSessionId,
       );
       const newSession = { ...sessionList[sessionIndex] };
       updatedEnrolment.session = newSession;
@@ -54,7 +54,6 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, memberList, totalPages, currentPage };
     }
     case memberActionTypes.GET_MEMBER_BY_ID_SUCCEEDED:
-      console.log("action.payload",action)
       return { ...state, currentMember: action.payload };
     case memberActionTypes.GET_MEMBERS_ENROLLMENT_SUCCEEDED:
       return { ...state, enrolmentList: action.payload };

@@ -1,12 +1,5 @@
 import axiosInstance from "../utils/axios-instance";
 export const paymentData = async (billDate, classId, businessId, payment) => {
-  console.log(
-    "classId, billDate, payment",
-    billDate,
-    classId,
-    businessId,
-    payment,
-  );
   const data = new FormData();
   data.append("billDate", billDate);
   data.append("classId", classId);

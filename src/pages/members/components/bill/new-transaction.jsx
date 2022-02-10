@@ -69,7 +69,6 @@ const NewTransaction = ({ billId, newTransaction }) => {
   const date = getValues("paymentDate");
 
   const onSubmit = (data) => {
-    console.log(data);
     const updatedData = { ...data };
     let { paymentDate } = updatedData;
     updatedData.paymentDate = new Date(
@@ -77,7 +76,6 @@ const NewTransaction = ({ billId, newTransaction }) => {
     )
       .toISOString()
       .split("T")[0];
-    console.log(updatedData);
     addTransaction(updatedData);
     setShowCheckMark(false);
   };

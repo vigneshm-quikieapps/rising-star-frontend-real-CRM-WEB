@@ -49,14 +49,14 @@ const ClassList = ({
   const pageChangeHandler = (_, value) => {
     setPage(value);
   };
-
+  console.log("data", data);
   const tableRows = useMemo(() => {
     return (
       data?.docs?.map(
         ({
           _id,
           name,
-          categoryId,
+          categoryId: { name: catName },
           enrolmentControls: [
             { name: Age, values: AgeData },
             { name: Gender, values: GenderData },
@@ -69,7 +69,7 @@ const ClassList = ({
 
           items: [
             toPascal(name),
-            toPascal(categoryId),
+            toPascal(catName),
             AgeData.toString(),
             GenderData.toString(),
           ],

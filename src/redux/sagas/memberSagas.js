@@ -23,7 +23,7 @@ export function* getMemberList(action) {
     yield put(stopLoading());
   } catch (error) {
     yield put(
-      setError(error, "Something went wrong while getting the member list")
+      setError(error, "Something went wrong while getting the member list"),
     );
   }
 }
@@ -35,9 +35,7 @@ export function* watchGetMemberList() {
 export function* getMember(action) {
   try {
     yield put(startLoading());
-    console.log("memberSAGA",action)
     const member = yield call(getMemberById, action.payload);
-    console.log("memberSAGA",member)
     yield put({
       type: memberActionTypes.GET_MEMBER_BY_ID_SUCCEEDED,
       payload: member,
@@ -65,8 +63,8 @@ export function* getAllErolmentOfAMember(action) {
     yield put(
       setError(
         error,
-        "Something went wrong while getting the member enrolment list"
-      )
+        "Something went wrong while getting the member enrolment list",
+      ),
     );
   }
 }
@@ -75,7 +73,7 @@ export function* getAllErolmentOfAMember(action) {
 export function* watchgetAllErolmentOfAMember() {
   yield takeEvery(
     memberActionTypes.GET_MEMBERS_ENROLLMENT,
-    getAllErolmentOfAMember
+    getAllErolmentOfAMember,
   );
 }
 
@@ -84,7 +82,7 @@ export function* getProgresRecordOfAMember(action) {
     yield put(startLoading());
     const progressRecord = yield call(
       fetchgetProgresRecordOfAMember,
-      action.payload
+      action.payload,
     );
     yield put({
       type: memberActionTypes.GET_MEMBER_PROGRESS_RECORD_SUCCEEDED,
@@ -95,8 +93,8 @@ export function* getProgresRecordOfAMember(action) {
     yield put(
       setError(
         error,
-        "Something went wrong while getting the member progress record"
-      )
+        "Something went wrong while getting the member progress record",
+      ),
     );
   }
 }
@@ -105,7 +103,7 @@ export function* getProgresRecordOfAMember(action) {
 export function* watchgetProgresRecordOfAMember() {
   yield takeEvery(
     memberActionTypes.GET_MEMBER_PROGRESS_RECORD,
-    getProgresRecordOfAMember
+    getProgresRecordOfAMember,
   );
 }
 
@@ -121,8 +119,8 @@ export function* updateMulitpleStatusOnProgressRecordOfMember(action) {
     yield put(
       setError(
         error,
-        "Something went wrong while updating the multiple status on progress record"
-      )
+        "Something went wrong while updating the multiple status on progress record",
+      ),
     );
   }
 }
@@ -130,7 +128,7 @@ export function* updateMulitpleStatusOnProgressRecordOfMember(action) {
 export function* watchupdateMulitpleStatusOnProgressRecordOfMember() {
   yield takeEvery(
     memberActionTypes.UPDATE_MULTIPLE_STATUS_MEMBER_PROGRESS_RECORD,
-    updateMulitpleStatusOnProgressRecordOfMember
+    updateMulitpleStatusOnProgressRecordOfMember,
   );
 }
 
@@ -139,7 +137,7 @@ export function* getConsentRecordOfAMember(action) {
     yield put(startLoading());
     const consentRecord = yield call(
       axiosGetConsentByClubmembership,
-      action.payload
+      action.payload,
     );
     yield put({
       type: memberActionTypes.CONSENT_RECORD_OF_MEMBER_SUCCEEDED,
@@ -150,8 +148,8 @@ export function* getConsentRecordOfAMember(action) {
     yield put(
       setError(
         error,
-        "Something went wrong while getting the member consent record"
-      )
+        "Something went wrong while getting the member consent record",
+      ),
     );
   }
 }
@@ -160,7 +158,7 @@ export function* getConsentRecordOfAMember(action) {
 export function* watchgetConsentRecordOfAMember() {
   yield takeEvery(
     memberActionTypes.CONSENT_RECORD_OF_MEMBER,
-    getConsentRecordOfAMember
+    getConsentRecordOfAMember,
   );
 }
 
@@ -177,8 +175,8 @@ export function* getMembersOfSession(action) {
     yield put(
       setError(
         error,
-        "Something went wrong while getting the members of a session"
-      )
+        "Something went wrong while getting the members of a session",
+      ),
     );
   }
 }
@@ -187,7 +185,7 @@ export function* getMembersOfSession(action) {
 export function* watchGetMembersOfSession() {
   yield takeEvery(
     memberActionTypes.GET_MEMBERS_OF_SESSION,
-    getMembersOfSession
+    getMembersOfSession,
   );
 }
 

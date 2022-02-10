@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 
-import { enrolmentStatusMap } from "../../../helper/constants";
 import { useGetSession } from "../../../services/queries";
 import { toPascal, transformError } from "../../../utils";
 import {
@@ -44,32 +43,24 @@ const SessionList = ({
   const [page, setPage] = useState(1);
   const [contentRef, setContentRef] = useState();
 
-  //   console.log(open, onSelect, onClose, memberId, businessId, memberName);
-
   const { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetSession(classId);
-  console.log("session", data);
-
-  //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
 
   const pageChangeHandler = (_, value) => {
     setPage(value);
   };
 
-  const timings = (pattern)=>{
+  const timings = (pattern) => {
     const days = pattern.map(({ day }) => day).join(", ");
-    const startTime = new Date(
-      pattern[0].startTime,
-    ).toLocaleTimeString();
+    const startTime = new Date(pattern[0].startTime).toLocaleTimeString();
     const endTime = new Date(pattern[0].endTime).toLocaleTimeString();
     return `${toPascal(days)}, ${startTime} to ${endTime}`.replace(
       /:00 /g,
       " ",
     );
-  }
+  };
 
   const tableRows = useMemo(() => {
-    console.log("session", data);
     return (
       data?.docs?.map(
         ({
@@ -78,15 +69,26 @@ const SessionList = ({
           pattern,
           startDate,
           endDate,
-          term: { label: termName,startDate:termStateDate ,endDate:termEndDate},
-          status
+          term: {
+            label: termName,
+            startDate: termStateDate,
+            endDate: termEndDate,
+          },
+          status,
           // session: {
           //   name: sessionName,
           //   term: { label: termName },
           // },
         }) => ({
           onClick: () => {
-            onSelect(_id, name,termStateDate,termEndDate,termName,timings(pattern));
+            onSelect(
+              _id,
+              name,
+              termStateDate,
+              termEndDate,
+              termName,
+              timings(pattern),
+            );
             onClose();
           },
           items: [
@@ -97,7 +99,6 @@ const SessionList = ({
             toPascal(termName),
             toPascal(status),
 
-
             // toPascal(termName),
             // toPascal(sessionName),
           ],
@@ -105,6 +106,7 @@ const SessionList = ({
       ) || []
     );
   }, [data, onSelect, onClose]);
+  console.log("session", data);
 
   const pagination = data?.totalPages && data.totalPages > 1 && (
     <Pagination

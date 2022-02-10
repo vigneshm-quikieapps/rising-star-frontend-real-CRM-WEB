@@ -75,10 +75,10 @@ const ClassEnrollments = () => {
       onChange={handlePageChange}
     />
   );
-
+  let temp = membersOfSession.filter((data) => data.member !== null);
   const tableRows = useMemo(
     () =>
-      membersOfSession.map(
+      temp.map(
         ({
           _id,
           droppedDate,

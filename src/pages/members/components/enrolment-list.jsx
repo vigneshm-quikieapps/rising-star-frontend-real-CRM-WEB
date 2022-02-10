@@ -43,12 +43,8 @@ const EnrolmentList = ({
   const [page, setPage] = useState(1);
   const [contentRef, setContentRef] = useState();
 
-  //   console.log(open, onSelect, onClose, memberId, businessId, memberName);
-
   const { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetMemberEnrolments(memberId, businessId, page);
-
-  //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
 
   const pageChangeHandler = (_, value) => {
     setPage(value);

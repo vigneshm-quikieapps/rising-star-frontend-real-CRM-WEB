@@ -117,7 +117,6 @@ const UpdateTransaction = ({
     // )
     //   .toISOString()
     //   .split("T")[0];
-    // console.log(updatedData);
     // addTransaction(updatedData);
   };
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 
 import {
   Box,
@@ -18,24 +17,22 @@ import {
   Grid,
   ImgIcon,
   Pagination,
-  Status,
   TextField,
 } from "../../components";
-import informationIcon from "../../assets/icons/icon-delete.png";
+import informationIcon from "../../assets/icons/icon-information.png";
 import PaymentList from "./payment-index";
 import { getClassList as getClassListAction } from "../../redux/action/class-actions";
 import toPascal from "../../utils/to-pascal";
 import PaymentFullList from "./payment-list";
 import { useAddPayment } from "../../services/mutations";
 import { useSetError } from "../../contexts/error-context";
-import { paymentData } from "../../services/payment-services";
-import { useGetXlsx, useGetXlsxFullList } from "../../services/queries";
+import { getXlsx, paymentData } from "../../services/payment-services";
+import { useGetXlsx } from "../../services/queries";
 
 const PaymentUpload = () => {
   const businessList = useSelector((state) => state.businesses.businessList);
   const dispatch = useDispatch();
   const [value, setValue] = useState("");
-  console.log("businessList", businessList);
   const [selectedBusiness, setSelectedBusiness] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
@@ -46,7 +43,6 @@ const PaymentUpload = () => {
 
   const classesState = useSelector((state) => state.classes);
   const { classList, totalPages, currentPage } = classesState;
-  console.log("classList", classList);
   const { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetXlsx();
 
@@ -75,7 +71,6 @@ const PaymentUpload = () => {
   const handleChange = (newValue) => {
     setValue(newValue.toISOString().split("T")[0]);
   };
-  console.log("value", value);
   const pagination = (
     <Pagination
       sx={{ py: 2 }}
@@ -107,10 +102,8 @@ const PaymentUpload = () => {
       ),
     [data, handleOpenPaymentList],
   );
-  console.log("MDatata", data);
   const onChangeFile = (e) => {
     setSelectedFile(e.target.files[0]);
-    console.log("payment_file", e.target.files[0]);
   };
   const { mutateAsync: addPayment } = useAddPayment({
     onError: async (error) => setError(error),
@@ -129,16 +122,21 @@ const PaymentUpload = () => {
         setUploadXlsxMessage("BillDate or Payment File is missing");
       } else setUploadXlsxMessage(`${message.data.errors[0].Payment}`);
     }
-    console.log("message", message);
-    console.log("message1", uploadXlsxMessage);
 
     setPaymentUploadMessage(true);
   };
   const handleDeleteFunction = () => {
     document.getElementById("file-upload").value = "";
     setValue("");
-    console.log("value,file", value, selectedFile);
   };
+  const handleOk = () => {
+    setPaymentUploadMessage(false);
+    document.getElementById("file-upload").value = "";
+    setValue("");
+  };
+  const refreshHandle = getXlsx();
+
+  console.log("refreshHandle", refreshHandle);
 
   return (
     <>
@@ -210,7 +208,11 @@ const PaymentUpload = () => {
         ></TextField>
         <GradientButton onClick={handleDeleteFunction}>Delete</GradientButton>
       </Grid>
-      <PaymentList list={tableRows} pagination={pagination} />
+      <PaymentList
+        list={tableRows}
+        pagination={pagination}
+        Refresh={refreshHandle}
+      />
       {paymentListOpen && (
         <PaymentFullList
           open={paymentListOpen}
@@ -234,11 +236,7 @@ const PaymentUpload = () => {
         <DialogTitle>Information</DialogTitle>
         <DialogContent>{uploadXlsxMessage}</DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => setPaymentUploadMessage(false)}
-            sx={{ color: "#ff2c60" }}
-            autoFocus
-          >
+          <Button onClick={handleOk} sx={{ color: "#ff2c60" }} autoFocus>
             Ok
           </Button>
         </DialogActions>

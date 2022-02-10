@@ -14,7 +14,6 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   function (error) {
-    console.error(error);
     // Do something with request error
     return Promise.reject(error);
   },
@@ -25,7 +24,6 @@ export const setupInterceptors = (logout) => {
       return response;
     },
     (error) => {
-      // console.error(error);
       if (error?.response?.status === 401) {
         if (error.config.url === "refresh-token") {
           logout();

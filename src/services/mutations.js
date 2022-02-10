@@ -31,24 +31,7 @@ const updateTransactions = (data) =>
 export const useUpdateTransaction = (options) =>
   useMutation((data) => updateTransactions(data), options);
 
-// const addPayment = (formData) => {
-//   console.log("classId,billDate,payment,selectedBusiness", formData);
-//   axios.post(
-//     `businesses/${selectedBusiness}/xlxsupload`,
-//     classId,
-//     billDate,
-//     payment,
-//     selectedBusiness,
-//   );
-// };
-// const addPayment = (id, data) => {
-//   console.log("classId,billDate,payment,selectedBusiness", data);
-//   axios.post(`businesses/${id}/xlxsupload`, data);
-// };
-// export const useAddPayment = (option) =>
-//   useMutation((data) => addPayment(data), option);
 const addPayment = (billDate, classId, businessId, payment) => {
-  console.log("formconsole", billDate, classId, businessId, payment);
   const data = new FormData();
   data.append("billDate", billDate);
   data.append("classId", classId);
