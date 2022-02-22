@@ -353,7 +353,7 @@ const MemberEvaluations = () => {
               <AccordionDetails sx={{ padding: 0, paddingBottom: "10px" }}>
                 <Box sx={{ padding: " 5px 17px" }}>
                   <Output title="Status" />
-                  <Status status={status.color} title={status.status} />
+                  {status}
                 </Box>
                 <Box
                   sx={{

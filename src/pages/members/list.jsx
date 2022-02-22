@@ -184,7 +184,7 @@ const Members = () => {
     (id) => {
       history.push(`/members/info/${id}`);
     },
-    [history]
+    [history],
   );
 
   const searchValueChangeHandler = (e) => {
@@ -203,7 +203,7 @@ const Members = () => {
         getMemberListAction({
           page: value,
           filters: filters,
-        })
+        }),
       );
   };
 
@@ -249,7 +249,7 @@ const Members = () => {
       dispatch(
         getMemberListAction({
           filters: [{ field: "name", type: "STARTS_WITH", value: searchValue }],
-        })
+        }),
       );
     }, 500);
     return () => clearTimeout(searchTimer);

@@ -28,7 +28,7 @@ const Pattern = ({ pattern, onChange }) => {
     let updatedPattern = [...pattern];
     if (updatedPattern.includes(shortWeekNames[index])) {
       updatedPattern = updatedPattern.filter(
-        (day) => day !== shortWeekNames[index]
+        (day) => day !== shortWeekNames[index],
       );
     } else {
       updatedPattern = [...updatedPattern, shortWeekNames[index]];
@@ -75,6 +75,7 @@ const Session = ({
   areSessionsTouched,
 }) => {
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
+  console.log("allCoaches", allCoaches);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const [touched, setTouched] = useState(false);
 
@@ -144,11 +145,11 @@ const Session = ({
       }
       setState((prevState) => ({ ...prevState, [property]: value }));
     },
-    [termsOfBusiness]
+    [termsOfBusiness],
   );
   const patternChangeHandler = useCallback(
     (pattern) => changeHandler(pattern, "pattern"),
-    [changeHandler]
+    [changeHandler],
   );
 
   const restoreDefaults = () => {
