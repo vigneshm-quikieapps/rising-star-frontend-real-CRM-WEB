@@ -339,6 +339,7 @@ const MemberEvaluations = () => {
       </StyleBox>
       {levels &&
         levels.map((data, index) => {
+          console.log("data", data);
           const status = levelStatusIndicator(data.status);
           return (
             <Accordion
@@ -353,7 +354,7 @@ const MemberEvaluations = () => {
               <AccordionDetails sx={{ padding: 0, paddingBottom: "10px" }}>
                 <Box sx={{ padding: " 5px 17px" }}>
                   <Output title="Status" />
-                  {status}
+                  <Status status={status.color} title={status.status} />
                 </Box>
                 <Box
                   sx={{
