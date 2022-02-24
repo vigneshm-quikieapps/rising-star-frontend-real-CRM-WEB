@@ -10,7 +10,12 @@ import {
 } from "../../../../components";
 import TransactionList from "./transaction-list";
 
-const Bill = ({ billData = {}, isTerm = false, termName = "", showStatus }) => {
+const Bill = ({
+  billData = {},
+  isTerm = false,
+  termName = "",
+  //  showStatus
+}) => {
   const {
     _id,
     name = "Bill",
@@ -119,7 +124,8 @@ const Bill = ({ billData = {}, isTerm = false, termName = "", showStatus }) => {
           hideNewTransaction={hideNewTransaction}
           newTransaction={true}
           billStatus={billStatus}
-          showStatus={showStatus}
+          subtotal={subtotal}
+          // showStatus={showStatus}
         />
       )}
       {partialTransactions.map((transaction) => (
@@ -128,7 +134,8 @@ const Bill = ({ billData = {}, isTerm = false, termName = "", showStatus }) => {
           transaction={transaction}
           update={true}
           billStatus={billStatus}
-          showStatus={showStatus}
+          subtotal={subtotal}
+          // showStatus={showStatus}
         />
       ))}
     </>

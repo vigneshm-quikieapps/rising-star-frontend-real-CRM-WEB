@@ -39,7 +39,7 @@ const validationSchema = yup
   })
   .required();
 
-const NewTransaction = ({ billId, newTransaction }) => {
+const NewTransaction = ({ billId, newTransaction, subtotal }) => {
   const setError = useSetError();
   const [showCheckMark, setShowCheckMark] = useState(true);
   const {
@@ -55,7 +55,7 @@ const NewTransaction = ({ billId, newTransaction }) => {
       billId,
       reference: "",
       type: "",
-      amount: 0,
+      amount: subtotal,
       paymentDate: new Date(),
       // .toISOString().split("T")[0],
       paymentMethod: "CASH",
@@ -100,7 +100,12 @@ const NewTransaction = ({ billId, newTransaction }) => {
         </Input>
       </TableCell>
       <TableCell>
-        <Input control={control} name="amount" sx={{ width: "120px" }} />
+        <Input
+          control={control}
+          name="amount"
+          sx={{ width: "120px" }}
+          disabled
+        />
       </TableCell>
       <TableCell>
         <Input

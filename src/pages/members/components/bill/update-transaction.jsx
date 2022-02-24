@@ -50,7 +50,8 @@ const UpdateTransaction = ({
   deleteTrans,
   transaction,
   billStatus,
-  showStatus,
+  subtotal,
+  // showStatus,
 }) => {
   const dispatch = useDispatch();
 
@@ -58,7 +59,7 @@ const UpdateTransaction = ({
     billId,
     reference: "",
     type: "",
-    amount: 0,
+    amount: "",
     paymentDate: new Date(),
     // .toISOString().split("T")[0],
     paymentMethod: "",
@@ -66,7 +67,7 @@ const UpdateTransaction = ({
   };
   defaultValues.reference = transaction && transaction.reference;
   defaultValues.type = transaction && transaction.transactionType;
-  defaultValues.amount = transaction && transaction.amount;
+  defaultValues.amount = subtotal;
   defaultValues.paymentDate = transaction && transaction.paidAt;
   defaultValues.paymentMethod = transaction && transaction.method;
 
@@ -105,7 +106,7 @@ const UpdateTransaction = ({
   const setSaveStatus = (flag) => {
     if (flag !== statusFlag) {
       setStatusFlag(true);
-      showStatus(true);
+      // showStatus(true);
     }
   };
 

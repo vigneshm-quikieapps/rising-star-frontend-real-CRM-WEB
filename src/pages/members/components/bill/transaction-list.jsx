@@ -42,7 +42,8 @@ const TransactionList = ({
   hideNewTransaction,
   newTransaction,
   billStatus,
-  showStatus,
+  subtotal,
+  // showStatus,
 }) => {
   // showUpdate
   const [showOldTransaction, setShowOldTransaction] = useState(update);
@@ -50,7 +51,7 @@ const TransactionList = ({
 
   const cancelNewTransaction = (value) => {
     setShowNewTransaction(value);
-    showStatus(true);
+    setShowOldTransaction(value);
     hideNewTransaction();
   };
 
@@ -67,33 +68,35 @@ const TransactionList = ({
   );
   return (
     <>
-      {setShowOldTransaction && (
-        <Toolbar>
-          <Typography
-            component="h3"
-            sx={{ fontSize: "20px", fontWeight: "bold" }}
-          >
-            Transaction Details
-          </Typography>
-        </Toolbar>
-      )}
+      {showOldTransaction ||
+        (showNewTransaction && (
+          <Toolbar>
+            <Typography
+              component="h3"
+              sx={{ fontSize: "20px", fontWeight: "bold" }}
+            >
+              Transaction Details
+            </Typography>
+          </Toolbar>
+        ))}
       <TableContainer>
         <TableMui>
-          {setShowOldTransaction && (
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>Reference</StyledTableCell>
-                <StyledTableCell>Type</StyledTableCell>
-                <StyledTableCell>Amount</StyledTableCell>
-                <StyledTableCell>Method</StyledTableCell>
-                <StyledTableCell>Date</StyledTableCell>
-                <StyledTableCell>Update Method</StyledTableCell>
-                <StyledTableCell>Batch Process Id</StyledTableCell>
-                <StyledTableCell>Process Date</StyledTableCell>
-                <StyledTableCell>Action</StyledTableCell>
-              </TableRow>
-            </TableHead>
-          )}
+          {showOldTransaction ||
+            (showNewTransaction && (
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Reference</StyledTableCell>
+                  <StyledTableCell>Type</StyledTableCell>
+                  <StyledTableCell>Amount</StyledTableCell>
+                  <StyledTableCell>Method</StyledTableCell>
+                  <StyledTableCell>Date</StyledTableCell>
+                  <StyledTableCell>Update Method</StyledTableCell>
+                  <StyledTableCell>Batch Process Id</StyledTableCell>
+                  <StyledTableCell>Process Date</StyledTableCell>
+                  <StyledTableCell>Action</StyledTableCell>
+                </TableRow>
+              </TableHead>
+            ))}
           <TableBody>
             {showOldTransaction && (
               <UpdateTransaction
@@ -101,13 +104,15 @@ const TransactionList = ({
                 transaction={transaction}
                 deleteTrans={deleteOldTransaction}
                 billStatus={billStatus}
-                showStatus={showStatus}
+                subtotal={subtotal}
+                // showStatus={showStatus}
               />
             )}
             {showNewTransaction && (
               <NewTransaction
                 billId={billId}
                 newTransaction={cancelNewTransaction}
+                subtotal={subtotal}
               />
             )}
             {/* {showNewTransaction == true ? (
