@@ -538,17 +538,17 @@ const MemberFinance = () => {
         )}
       </Accordion>
 
-      {showSave && (
-        <GradientButton
-          sx={{ maxWidth: "fit-content" }}
-          onClick={() => {
-            setShowSave(false);
-            updateBillTransactions();
-          }}
-        >
-          Save
-        </GradientButton>
-      )}
+      {/* {showSave && ( */}
+      <GradientButton
+        sx={{ maxWidth: "fit-content" }}
+        onClick={() => {
+          setShowSave(false);
+          updateBillTransactions();
+        }}
+      >
+        Save
+      </GradientButton>
+      {/* )} */}
     </>
   );
 };
