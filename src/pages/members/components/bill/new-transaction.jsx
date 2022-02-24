@@ -63,6 +63,7 @@ const NewTransaction = ({ billId, newTransaction, subtotal }) => {
   });
 
   const [message, setMessage] = useState();
+  const [status, setStatus] = useState(true);
   const { mutateAsync: addTransaction, isLoading } = useAddTransaction({
     onSuccess: async (data) => {
       setMessage(data.data.message); // the response
@@ -73,18 +74,23 @@ const NewTransaction = ({ billId, newTransaction, subtotal }) => {
   const date = getValues("paymentDate");
 
   const onSubmit = (data) => {
-    const updatedData = { ...data };
-    let { paymentDate } = updatedData;
-    updatedData.paymentDate = new Date(
-      paymentDate.getTime() - new Date().getTimezoneOffset() * 60000,
-    )
-      .toISOString()
-      .split("T")[0];
-    addTransaction(updatedData);
-    if (message === "transaction recorded") {
-      setShowCheckMark(false);
-    } else {
-      setShowCheckMark(true);
+    if (status) {
+      const updatedData = { ...data };
+      let { paymentDate } = updatedData;
+      updatedData.paymentDate = new Date(
+        paymentDate.getTime() - new Date().getTimezoneOffset() * 60000,
+      )
+        .toISOString()
+        .split("T")[0];
+      addTransaction(updatedData);
+      setStatus(false);
+    }
+    if (!status) {
+      if (message === "transaction recorded") {
+        setShowCheckMark(false);
+      } else {
+        setShowCheckMark(true);
+      }
     }
   };
 

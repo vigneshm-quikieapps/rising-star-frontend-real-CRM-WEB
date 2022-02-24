@@ -103,12 +103,12 @@ const UpdateTransaction = ({
     deleteTrans();
   };
   const [statusFlag, setStatusFlag] = useState(false);
-  const setSaveStatus = (flag) => {
-    if (flag !== statusFlag) {
-      setStatusFlag(true);
-      // showStatus(true);
-    }
-  };
+  // const setSaveStatus = (flag) => {
+  //   if (flag !== statusFlag) {
+  //     setStatusFlag(true);
+  //     // showStatus(true);
+  //   }
+  // };
 
   const onSubmit = (data) => {
     // const updatedData = { ...data };
@@ -373,7 +373,7 @@ const UpdateTransaction = ({
           name="reference"
           onBlur={onBlurReference}
           onFocus={() => {
-            setSaveStatus(true);
+            // setSaveStatus(true);
           }}
         />
       </TableCell>
@@ -386,7 +386,7 @@ const UpdateTransaction = ({
           sx={{ width: "120px" }}
           onBlur={onBlurType}
           onFocus={() => {
-            setSaveStatus(true);
+            // setSaveStatus(true);
           }}
         >
           <MenuItem value="WRITE_OFF">Write off</MenuItem>
@@ -404,7 +404,7 @@ const UpdateTransaction = ({
           sx={{ width: "120px" }}
           onBlur={onBlurAmount}
           onFocus={() => {
-            setSaveStatus(true);
+            // setSaveStatus(true);
           }}
         />
       </TableCell>
@@ -417,7 +417,7 @@ const UpdateTransaction = ({
           sx={{ width: "120px" }}
           onBlur={onBlurMethod}
           onFocus={() => {
-            setSaveStatus(true);
+            // setSaveStatus(true);
           }}
         >
           <MenuItem value="CASH">Cash</MenuItem>
@@ -434,7 +434,7 @@ const UpdateTransaction = ({
           onChange={(newDate) => onChangePaidDate(newDate)}
           textfieldProps={{ style: { width: "150px" } }}
           onFocus={() => {
-            setSaveStatus(true);
+            // setSaveStatus(true);
           }}
         />
       </TableCell>
