@@ -62,8 +62,12 @@ const NewTransaction = ({ billId, newTransaction }) => {
     },
   });
 
-  const { mutate: addTransaction, isLoading } = useAddTransaction({
-    onError: (error) => setError(error),
+  const [message, setMessage] = useState();
+  const { mutateAsync: addTransaction, isLoading } = useAddTransaction({
+    onSuccess: async (data) => {
+      setMessage(data.data.message); // the response
+    },
+    onError: async (error) => setError(error),
   });
 
   const date = getValues("paymentDate");
@@ -77,7 +81,11 @@ const NewTransaction = ({ billId, newTransaction }) => {
       .toISOString()
       .split("T")[0];
     addTransaction(updatedData);
-    setShowCheckMark(false);
+    if (message === "transaction recorded") {
+      setShowCheckMark(false);
+    } else {
+      setShowCheckMark(true);
+    }
   };
 
   return (

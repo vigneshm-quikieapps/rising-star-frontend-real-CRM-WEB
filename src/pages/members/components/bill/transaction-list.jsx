@@ -67,29 +67,33 @@ const TransactionList = ({
   );
   return (
     <>
-      <Toolbar>
-        <Typography
-          component="h3"
-          sx={{ fontSize: "20px", fontWeight: "bold" }}
-        >
-          Transaction Details
-        </Typography>
-      </Toolbar>
+      {setShowOldTransaction && (
+        <Toolbar>
+          <Typography
+            component="h3"
+            sx={{ fontSize: "20px", fontWeight: "bold" }}
+          >
+            Transaction Details
+          </Typography>
+        </Toolbar>
+      )}
       <TableContainer>
         <TableMui>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Reference</StyledTableCell>
-              <StyledTableCell>Type</StyledTableCell>
-              <StyledTableCell>Amount</StyledTableCell>
-              <StyledTableCell>Method</StyledTableCell>
-              <StyledTableCell>Date</StyledTableCell>
-              <StyledTableCell>Update Method</StyledTableCell>
-              <StyledTableCell>Batch Process Id</StyledTableCell>
-              <StyledTableCell>Process Date</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
+          {setShowOldTransaction && (
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Reference</StyledTableCell>
+                <StyledTableCell>Type</StyledTableCell>
+                <StyledTableCell>Amount</StyledTableCell>
+                <StyledTableCell>Method</StyledTableCell>
+                <StyledTableCell>Date</StyledTableCell>
+                <StyledTableCell>Update Method</StyledTableCell>
+                <StyledTableCell>Batch Process Id</StyledTableCell>
+                <StyledTableCell>Process Date</StyledTableCell>
+                <StyledTableCell>Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+          )}
           <TableBody>
             {showOldTransaction && (
               <UpdateTransaction
