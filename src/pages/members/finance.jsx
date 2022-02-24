@@ -522,7 +522,7 @@ const MemberFinance = () => {
             <Bill
               key={_id}
               billData={{ _id, ...data }}
-              // showStatus={setSaveStatus}
+              showStatus={setSaveStatus}
             />
           ))}
         </AccordionDetails>
