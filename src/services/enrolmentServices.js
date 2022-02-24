@@ -55,3 +55,20 @@ export const regularEnrollment = async (sessionId, memberId) => {
     throw error;
   }
 };
+
+export const billMemberOfClass = async (enrolmentId, memberId) => {
+  try {
+    const api = `bills/of-a-member-in-a-class`;
+    const response = await axiosInstance.post(
+      api,
+      {
+        enrolmentId: enrolmentId,
+        memberId: memberId,
+      },
+      { params: { limit: 100 } },
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

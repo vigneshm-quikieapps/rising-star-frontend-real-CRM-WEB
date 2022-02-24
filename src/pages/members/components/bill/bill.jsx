@@ -31,6 +31,7 @@ const Bill = ({
 
   const [showNewTransaction, setShowNewTransaction] = useState(false);
   const paidAmount = items.reduce((prev, { amount }) => prev + amount, 0);
+
   // const paidAmount = partialTransactions.reduce((prev, { amount }) => prev + amount, 0);
 
   const enterNewTransaction = () => {
@@ -62,7 +63,9 @@ const Bill = ({
     SUSPENDED: "Suspended",
   };
   let billName = "Fee " + monthObj[month] + " " + year;
-
+  useEffect(() => {
+    console.log(billData);
+  });
   return (
     <>
       <Box

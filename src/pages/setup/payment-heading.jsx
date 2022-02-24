@@ -1,10 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import { GradientButton } from "../../components";
 import { getXlsx } from "../../services/payment-services";
-const handleRefresh = () => {
-  getXlsx();
-};
-console.log("handle", handleRefresh);
+// const handleRefresh = () => {
+//   getXlsx();
+// };
+// console.log("handle", handleRefresh);
 const PaymentListHeading = ({ title, description, action }) => (
   <Box sx={{ display: "flex", px: "20px", pt: "20px" }}>
     <Box sx={{ flexGrow: 1 }}>
@@ -18,15 +18,7 @@ const PaymentListHeading = ({ title, description, action }) => (
         {description}
       </Typography>
     </Box>
-    <GradientButton
-      onClick={
-        action || {
-          handleRefresh,
-        }
-      }
-    >
-      Refresh
-    </GradientButton>
+    <GradientButton onClick={action || getXlsx()}>Refresh</GradientButton>
   </Box>
 );
 

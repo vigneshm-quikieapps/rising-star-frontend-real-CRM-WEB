@@ -39,6 +39,7 @@ import Bill from "./components/bill/bill";
 import UpdateTransaction from "./components/bill/update-transaction";
 import DateRange from "../../containers/popovers/date-range-selector";
 import { useAddDiscount } from "../../services/mutations";
+import { billMemberOfClass } from "../../services/enrolmentServices";
 
 const validationSchema = Yup.object()
   .shape({
@@ -108,6 +109,7 @@ const monthPickerStyles = {
 const MemberFinance = () => {
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
+  console.log("member", member);
   const updateBillData = useSelector((state) => state.updateBilling);
   const businessList = useSelector((state) => state.businesses.businessList);
   const [selectedBusiness, setSelectedBusiness] = useState("");
@@ -120,7 +122,7 @@ const MemberFinance = () => {
   const [page, setPage] = useState(1);
   const [filteredData, setFilteredData] = useState();
   const [showSave, setShowSave] = useState(false);
-
+  // const [billsData, setBillsData] = useState("");
   const {
     control,
     handleSubmit,
@@ -206,8 +208,19 @@ const MemberFinance = () => {
   const { data: billsData, isLoading: billsLoading } = useGetEnrolmentBills(
     currentEnrolment?._id,
     member?._id,
-    { refetchOnWindowFocus: false, onError: (error) => setError(error) },
+    {
+      refetchOnWindowFocus: false,
+      onError: (error) => setError(error),
+    },
   );
+  // useEffect(() => {
+  //   setBillsData(billData);
+  // }, [billData]);
+
+  const billOfClass = (selectedEnrolment, memId) => {
+    billMemberOfClass(selectedEnrolment, memId);
+    console.log("bill", billsData);
+  };
 
   const [onSelectBillData, setOnSelectBillData] = useState();
 
@@ -544,6 +557,7 @@ const MemberFinance = () => {
         onClick={() => {
           setShowSave(false);
           updateBillTransactions();
+          billOfClass(selectedEnrolment, member?._id);
         }}
       >
         Save
