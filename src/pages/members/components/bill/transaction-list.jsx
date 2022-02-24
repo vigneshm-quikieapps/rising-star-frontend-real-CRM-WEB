@@ -48,15 +48,16 @@ const TransactionList = ({
   // showUpdate
   const [showOldTransaction, setShowOldTransaction] = useState(update);
   const [showNewTransaction, setShowNewTransaction] = useState(newTransaction);
-
+  const [showHeaders, setShowHeaders] = useState(update || newTransaction);
   const cancelNewTransaction = (value) => {
     setShowNewTransaction(value);
-    setShowOldTransaction(value);
+    setShowHeaders(value);
     hideNewTransaction();
   };
 
   const deleteOldTransaction = () => {
     setShowOldTransaction(false);
+    setShowHeaders(false);
   };
 
   const tableRows = useMemo(
@@ -68,35 +69,33 @@ const TransactionList = ({
   );
   return (
     <>
-      {showOldTransaction ||
-        (showNewTransaction && (
-          <Toolbar>
-            <Typography
-              component="h3"
-              sx={{ fontSize: "20px", fontWeight: "bold" }}
-            >
-              Transaction Details
-            </Typography>
-          </Toolbar>
-        ))}
+      {showHeaders && (
+        <Toolbar>
+          <Typography
+            component="h3"
+            sx={{ fontSize: "20px", fontWeight: "bold" }}
+          >
+            Transaction Details
+          </Typography>
+        </Toolbar>
+      )}
       <TableContainer>
         <TableMui>
-          {showOldTransaction ||
-            (showNewTransaction && (
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Reference</StyledTableCell>
-                  <StyledTableCell>Type</StyledTableCell>
-                  <StyledTableCell>Amount</StyledTableCell>
-                  <StyledTableCell>Method</StyledTableCell>
-                  <StyledTableCell>Date</StyledTableCell>
-                  <StyledTableCell>Update Method</StyledTableCell>
-                  <StyledTableCell>Batch Process Id</StyledTableCell>
-                  <StyledTableCell>Process Date</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
-                </TableRow>
-              </TableHead>
-            ))}
+          {showHeaders && (
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Reference</StyledTableCell>
+                <StyledTableCell>Type</StyledTableCell>
+                <StyledTableCell>Amount</StyledTableCell>
+                <StyledTableCell>Method</StyledTableCell>
+                <StyledTableCell>Date</StyledTableCell>
+                <StyledTableCell>Update Method</StyledTableCell>
+                <StyledTableCell>Batch Process Id</StyledTableCell>
+                <StyledTableCell>Process Date</StyledTableCell>
+                <StyledTableCell>Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+          )}
           <TableBody>
             {showOldTransaction && (
               <UpdateTransaction
