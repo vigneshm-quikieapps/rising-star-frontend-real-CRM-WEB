@@ -38,6 +38,7 @@ import { updatePaymentDetailsOfMembers } from "../../redux/action/billingActions
 import Bill from "./components/bill/bill";
 import UpdateTransaction from "./components/bill/update-transaction";
 import DateRange from "../../containers/popovers/date-range-selector";
+import { useAddDiscount } from "../../services/mutations";
 
 const validationSchema = Yup.object()
   .shape({
@@ -144,8 +145,18 @@ const MemberFinance = () => {
     useGetDiscountSchemes(selectedBusiness, {
       onError: (error) => setError(error),
     });
+  const { mutate: addDiscount } = useAddDiscount({
+    onError: (error) => setError(error),
+  });
 
-  const applyDiscount = () => {};
+  const applyDiscount = async () => {
+    let body = {
+      discountId: selectedDiscountScheme,
+      enrolmentId: selectedEnrolment,
+    };
+    await addDiscount(body);
+    console.log("discpunt", body);
+  };
 
   const discountSchemeChangeHandler = (e) =>
     setSelectedDiscountScheme(e.target.value);

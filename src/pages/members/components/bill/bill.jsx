@@ -96,7 +96,7 @@ const Bill = ({ billData = {}, isTerm = false, termName = "", showStatus }) => {
           <MenuItem value={"NOT_PAID"}>Not Paid</MenuItem>
           <MenuItem value={"SUSPENDED"}>Suspended</MenuItem> */}
         </TextField>
-        {billStatus !== "PAID" && (
+        {billStatus !== "PAID" && billStatus !== "SUSPENDED" && (
           <GradientButton
             sx={{
               color: "#fff",

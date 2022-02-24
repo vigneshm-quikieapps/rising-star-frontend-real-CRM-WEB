@@ -41,3 +41,8 @@ const addPayment = (billDate, classId, businessId, payment) => {
 };
 export const useAddPayment = (option) =>
   useMutation((id, data) => addPayment(id, data), option);
+
+const addDiscount = (data) => axios.post("discounts/apply", data);
+
+export const useAddDiscount = (options) =>
+  useMutation((data) => addDiscount(data), options);

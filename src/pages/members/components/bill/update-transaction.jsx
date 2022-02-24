@@ -397,7 +397,7 @@ const UpdateTransaction = ({
       </TableCell>
       <TableCell>
         <Input
-          disabled={defaultValues.billStatus === "PAID"}
+          disabled={defaultValues.billStatus === "PAID" || "SUSPENDED"}
           control={control}
           name="amount"
           sx={{ width: "120px" }}
@@ -409,7 +409,7 @@ const UpdateTransaction = ({
       </TableCell>
       <TableCell>
         <Input
-          disabled={defaultValues.billStatus === "PAID"}
+          disabled={defaultValues.billStatus === "PAID" || "SUSPENDED"}
           control={control}
           name="paymentMethod"
           select
@@ -439,7 +439,7 @@ const UpdateTransaction = ({
       </TableCell>
       <TableCell>
         <TextField
-          disabled={defaultValues.billStatus === "PAID"}
+          disabled={defaultValues.billStatus === "PAID" || "SUSPENDED"}
           select
           defaultValue="MANUAL"
           sx={{ width: "120px" }}
