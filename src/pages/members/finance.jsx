@@ -40,6 +40,7 @@ import UpdateTransaction from "./components/bill/update-transaction";
 import DateRange from "../../containers/popovers/date-range-selector";
 import { useAddDiscount } from "../../services/mutations";
 import { billMemberOfClass } from "../../services/enrolmentServices";
+import { DataSaverOn } from "@mui/icons-material";
 
 const validationSchema = Yup.object()
   .shape({
@@ -109,7 +110,6 @@ const monthPickerStyles = {
 const MemberFinance = () => {
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
-  console.log("member", member);
   const updateBillData = useSelector((state) => state.updateBilling);
   const businessList = useSelector((state) => state.businesses.businessList);
   const [selectedBusiness, setSelectedBusiness] = useState("");
@@ -122,7 +122,7 @@ const MemberFinance = () => {
   const [page, setPage] = useState(1);
   const [filteredData, setFilteredData] = useState();
   const [showSave, setShowSave] = useState(false);
-  // const [billsData, setBillsData] = useState("");
+  const [billsData, setBillsData] = useState();
   const {
     control,
     handleSubmit,
@@ -204,15 +204,22 @@ const MemberFinance = () => {
     enrolledStatus: status,
     startDate,
   } = currentEnrolment;
+  useEffect(() => {
+    if (currentEnrolment?._id && member?._id) {
+      billMemberOfClass(currentEnrolment?._id, member?._id).then((data) =>
+        setBillsData(data.data),
+      );
+    }
+  }, [currentEnrolment?._id, member?._id]);
 
-  const { data: billsData, isLoading: billsLoading } = useGetEnrolmentBills(
-    currentEnrolment?._id,
-    member?._id,
-    {
-      refetchOnWindowFocus: false,
-      onError: (error) => setError(error),
-    },
-  );
+  // const { data: billsData, isLoading: billsLoading } = useGetEnrolmentBills(
+  //   currentEnrolment?._id,
+  //   member?._id,
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     onError: (error) => setError(error),
+  //   },
+  // );
   // useEffect(() => {
   //   setBillsData(billData);
   // }, [billData]);
@@ -221,7 +228,7 @@ const MemberFinance = () => {
     billMemberOfClass(selectedEnrolment, memId);
     console.log("bill", billsData);
   };
-
+  const reloadPage = () => {};
   const [onSelectBillData, setOnSelectBillData] = useState();
 
   const timings = useMemo(() => {

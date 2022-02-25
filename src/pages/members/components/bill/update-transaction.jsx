@@ -28,9 +28,10 @@ const validationSchema = yup
   .shape({
     billId: yup.string().required(),
     reference: yup.string(),
-    type: yup.string().oneOf(["WRITE_OFF", "WAIVER"]),
+    type: yup.string(),
+    // ["WRITE_OFF", "WAIVER"]
     amount: yup.number().required(),
-    paymentDate: yup.date().required(),
+    paymentDate: yup.string().required(),
     paymentMethod: yup
       .string()
       .oneOf([
@@ -42,6 +43,8 @@ const validationSchema = yup
         "MANUAL",
       ])
       .required(),
+    batchProcessId: yup.string(),
+    processDate: yup.string(),
   })
   .required();
 
@@ -54,7 +57,7 @@ const UpdateTransaction = ({
   // showStatus,
 }) => {
   const dispatch = useDispatch();
-
+  const member = useSelector((state) => state.members.currentMember || {});
   let defaultValues = {
     billId,
     reference: "",
@@ -64,12 +67,16 @@ const UpdateTransaction = ({
     // .toISOString().split("T")[0],
     paymentMethod: "",
     billStatus,
+    batchProcessId: "",
+    processDate: "",
   };
   defaultValues.reference = transaction && transaction.reference;
   defaultValues.type = transaction && transaction.transactionType;
   defaultValues.amount = subtotal;
   defaultValues.paymentDate = transaction && transaction.paidAt;
   defaultValues.paymentMethod = transaction && transaction.method;
+  defaultValues.batchProcessId = transaction && transaction.batchProcessId;
+  defaultValues.processDate = transaction && transaction.processDate;
 
   const setError = useSetError();
   const {
@@ -121,11 +128,11 @@ const UpdateTransaction = ({
     // addTransaction(updatedData);
   };
 
-  const [reference, setReference] = useState(transaction.reference);
-  const [type, setType] = useState(transaction.transactionType);
-  const [amount, setAmount] = useState(transaction.amount);
-  const [paymentDate, setPaymentDate] = useState(transaction.paidAt);
-  const [paymentMethod, setPaymentMethod] = useState(transaction.method);
+  // const [reference, setReference] = useState(transaction.reference);
+  // const [type, setType] = useState(transaction.transactionType);
+  // const [amount, setAmount] = useState(transaction.amount);
+  // const [paymentDate, setPaymentDate] = useState(transaction.paidAt);
+  // const [paymentMethod, setPaymentMethod] = useState(transaction.method);
   const updateBillData = useSelector((state) => state.updateBilling);
 
   const onBlurReference = (e) => {
@@ -370,6 +377,7 @@ const UpdateTransaction = ({
         <Input
           disabled={defaultValues.billStatus === "PAID"}
           control={control}
+          defaultValue={member?.name}
           name="reference"
           onBlur={onBlurReference}
           onFocus={() => {
@@ -378,23 +386,35 @@ const UpdateTransaction = ({
         />
       </TableCell>
       <TableCell>
-        <Input
-          disabled={defaultValues.billStatus === "PAID"}
-          control={control}
-          name="type"
-          select
-          sx={{ width: "120px" }}
-          onBlur={onBlurType}
-          onFocus={() => {
-            // setSaveStatus(true);
-          }}
-        >
-          <MenuItem value="WRITE_OFF">Write off</MenuItem>
-          <MenuItem value="WAIVER">Waiver</MenuItem>
-          {defaultValues.billStatus === "PAID" && (
-            <MenuItem value="PAYMENT">Payment</MenuItem>
-          )}
-        </Input>
+        {defaultValues.billStatus === "PAID" ? (
+          <Input
+            disabled={true}
+            control={control}
+            name="type"
+            sx={{ width: "120px" }}
+            onBlur={onBlurType}
+            onFocus={() => {
+              // setSaveStatus(true);
+            }}
+          ></Input>
+        ) : (
+          <Input
+            control={control}
+            name="type"
+            select
+            sx={{ width: "120px" }}
+            onBlur={onBlurType}
+            onFocus={() => {
+              // setSaveStatus(true);
+            }}
+          >
+            <MenuItem value="WRITE_OFF">Write off</MenuItem>
+            <MenuItem value="WAIVER">Waiver</MenuItem>
+            {defaultValues.billStatus === "PAID" && (
+              <MenuItem value="PAYMENT">Payment</MenuItem>
+            )}
+          </Input>
+        )}
       </TableCell>
       <TableCell>
         <Input
@@ -441,7 +461,6 @@ const UpdateTransaction = ({
       <TableCell>
         <TextField
           disabled={defaultValues.billStatus === "PAID" || "SUSPENDED"}
-          select
           defaultValue="MANUAL"
           sx={{ width: "120px" }}
           //   InputProps={{ readOnly: true }}
@@ -451,10 +470,26 @@ const UpdateTransaction = ({
         </TextField>
       </TableCell>
       <TableCell>
-        <Typography>N/A</Typography>
+        {/* <TextField
+          disabled={defaultValues.billStatus === "PAID" || "SUSPENDED"}
+          control={control}
+          name="batchProcessId"
+          sx={{ width: "120px" }}
+        ></TextField> */}
+        <Typography>
+          {(transaction && transaction.batchProcessId) || "N/A"}
+        </Typography>
       </TableCell>
       <TableCell>
-        <Typography>N/A</Typography>
+        {/* <TextField
+          disabled={defaultValues.billStatus === "PAID" || "SUSPENDED"}
+          control={control}
+          name="processDate"
+          sx={{ width: "120px" }}
+        ></TextField> */}
+        <Typography>
+          {(transaction && transaction.processDate.slice(0, 10)) || "N/A"}
+        </Typography>
       </TableCell>
       <TableCell>
         <Box sx={{ width: "106px" }}>
