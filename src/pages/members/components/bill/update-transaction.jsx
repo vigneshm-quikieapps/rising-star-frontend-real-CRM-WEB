@@ -374,6 +374,7 @@ const UpdateTransaction = ({
   return (
     <TableRow>
       <TableCell>
+        {/* <Typography>{member?.name}</Typography> */}
         <Input
           disabled={defaultValues.billStatus === "PAID"}
           control={control}

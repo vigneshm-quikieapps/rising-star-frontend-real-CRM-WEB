@@ -122,7 +122,7 @@ const MemberFinance = () => {
   const [page, setPage] = useState(1);
   const [filteredData, setFilteredData] = useState();
   const [showSave, setShowSave] = useState(false);
-  const [billsData, setBillsData] = useState();
+  // const [billsData, setBillsData] = useState();
   const {
     control,
     handleSubmit,
@@ -204,22 +204,22 @@ const MemberFinance = () => {
     enrolledStatus: status,
     startDate,
   } = currentEnrolment;
-  useEffect(() => {
-    if (currentEnrolment?._id && member?._id) {
-      billMemberOfClass(currentEnrolment?._id, member?._id).then((data) =>
-        setBillsData(data.data),
-      );
-    }
-  }, [currentEnrolment?._id, member?._id]);
+  // useEffect(() => {
+  //   if (currentEnrolment?._id && member?._id) {
+  //     billMemberOfClass(currentEnrolment?._id, member?._id).then((data) =>
+  //       // setBillsData(data.data),
+  //     );
+  //   }
+  // }, [currentEnrolment?._id, member?._id]);
 
-  // const { data: billsData, isLoading: billsLoading } = useGetEnrolmentBills(
-  //   currentEnrolment?._id,
-  //   member?._id,
-  //   {
-  //     refetchOnWindowFocus: false,
-  //     onError: (error) => setError(error),
-  //   },
-  // );
+  const { data: billsData, isLoading: billsLoading } = useGetEnrolmentBills(
+    currentEnrolment?._id,
+    member?._id,
+    {
+      refetchOnWindowFocus: true,
+      onError: (error) => setError(error),
+    },
+  );
   // useEffect(() => {
   //   setBillsData(billData);
   // }, [billData]);
@@ -564,7 +564,7 @@ const MemberFinance = () => {
         onClick={() => {
           setShowSave(false);
           updateBillTransactions();
-          billOfClass(selectedEnrolment, member?._id);
+          // billOfClass(selectedEnrolment, member?._id);
         }}
       >
         Save

@@ -107,9 +107,10 @@ const Bill = ({
         {billStatus !== "PAID" && billStatus !== "SUSPENDED" && (
           <GradientButton
             sx={{
+              width: "170px",
               color: "#fff",
               height: "48px",
-              padding: "0px 25px",
+              padding: "0px 0px",
               fontSize: "16px",
               fontWeight: "normal",
               border: "1px solid",

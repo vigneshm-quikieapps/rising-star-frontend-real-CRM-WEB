@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Box, TableRow, TableCell, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Check as CheckIcon, Close as CloseIcon } from "@mui/icons-material";
@@ -40,6 +42,8 @@ const validationSchema = yup
   .required();
 
 const NewTransaction = ({ billId, newTransaction, subtotal }) => {
+  const member = useSelector((state) => state.members.currentMember || {});
+
   const setError = useSetError();
   const [showCheckMark, setShowCheckMark] = useState(true);
   const {
@@ -67,6 +71,7 @@ const NewTransaction = ({ billId, newTransaction, subtotal }) => {
   const { mutateAsync: addTransaction, isLoading } = useAddTransaction({
     onSuccess: async (data) => {
       setMessage(data.data.message); // the response
+      newTransaction(false);
     },
     onError: async (error) => setError(error),
   });
@@ -74,24 +79,25 @@ const NewTransaction = ({ billId, newTransaction, subtotal }) => {
   const date = getValues("paymentDate");
 
   const onSubmit = (data) => {
-    if (status) {
-      const updatedData = { ...data };
-      let { paymentDate } = updatedData;
-      updatedData.paymentDate = new Date(
-        paymentDate.getTime() - new Date().getTimezoneOffset() * 60000,
-      )
-        .toISOString()
-        .split("T")[0];
-      addTransaction(updatedData);
-      setStatus(false);
-    }
-    if (!status) {
-      if (message === "transaction recorded") {
-        setShowCheckMark(false);
-      } else {
-        setShowCheckMark(true);
-      }
-    }
+    // if (status) {
+    const updatedData = { ...data };
+    let { paymentDate } = updatedData;
+    updatedData.paymentDate = new Date(
+      paymentDate.getTime() - new Date().getTimezoneOffset() * 60000,
+    )
+      .toISOString()
+      .split("T")[0];
+    addTransaction(updatedData);
+    newTransaction(false);
+    // setStatus(false);
+    // }
+    // if (!status) {
+    //   if (message === "transaction recorded") {
+    //     setShowCheckMark(false);
+    //   } else {
+    //     setShowCheckMark(true);
+    //   }
+    // }
   };
 
   return (
