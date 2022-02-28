@@ -89,13 +89,13 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
   ]);
 
   const currentUserBusinesses = useSelector(
-    (state) => state.businesses.businessList
+    (state) => state.businesses.businessList,
   );
   const categories = useSelector(
-    (state) => state.businesses.categoriesOfBusiness
+    (state) => state.businesses.categoriesOfBusiness,
   );
   const evaluationSchemeList = useSelector(
-    (state) => state.evaluation.evaluationList
+    (state) => state.evaluation.evaluationList,
   );
   const isLoading = useSelector((state) => state.shared.loading);
   const sessionsOfClass = useSelector((state) => state.classes.classSessions);
@@ -145,7 +145,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
             mandatory: isMandatory,
             payFrequency,
           };
-        }
+        },
       ),
       sessions: classSessions.map((item) => {
         const { fullCapacity, waitlistCapacity, ...data } = item;
@@ -163,7 +163,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
 
     if (!isEdit) {
       dispatch(
-        addClass({ data: newClassObject, callback: redirectToClassList })
+        addClass({ data: newClassObject, callback: redirectToClassList }),
       );
     } else {
       dispatch(
@@ -171,7 +171,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
           data: newClassObject,
           id: classObj._id,
           callback: redirectToClassList,
-        })
+        }),
       );
     }
   };
@@ -194,7 +194,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
         amount,
         isMandatory: mandatory,
         payFrequency,
-      })
+      }),
     );
     setClassName(name);
     setSelectedBusinessId(businessId);
@@ -218,8 +218,8 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
             endTime: pattern[0].endTime,
             ...data,
           };
-        }
-      )
+        },
+      ),
     );
   }, [classObj, sessionsOfClass]);
   const handleYes = () => {
@@ -374,8 +374,8 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                     setSelectedStatus(e.target.value);
                   }}
                 >
-                  <MenuItem value="ACTIVE">ACTIVE</MenuItem>
-                  <MenuItem value="INACTIVE">INACTIVE</MenuItem>
+                  <MenuItem value="ACTIVE">Active</MenuItem>
+                  <MenuItem value="INACTIVE">Inactive</MenuItem>
                 </StyledTextField>
               </CardRow>
 
@@ -390,7 +390,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                     setSelectedConsentForm(e.target.value);
                   }}
                 >
-                  <MenuItem value="STANDARD">STANDARD</MenuItem>
+                  <MenuItem value="STANDARD">Standard</MenuItem>
                 </StyledTextField>
 
                 <StyledTextField
@@ -513,7 +513,9 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                             genderArray.map((item) => {
                               return (
                                 <MenuItem key={item} value={item}>
-                                  {item}
+                                  {item
+                                    .slice(0, 1)
+                                    .concat(item.slice(1).toLocaleLowerCase())}
                                 </MenuItem>
                               );
                             })

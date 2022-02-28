@@ -42,6 +42,10 @@ import {
 } from "../../redux/action/sessionAction";
 import { setPageTitle } from "../../redux/action/shared-actions";
 
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
 const ExpandIcon = () => <ImgIcon>{arrowDownIcon}</ImgIcon>;
 
 const VerifiedIcon = ({ title = "test", type }) => {
@@ -200,7 +204,7 @@ const Attendance = () => {
               <VerifiedIcon title={condition} type={"conditions"} />,
               // <Status status="green" title="No Info" />,
               paymentStatus,
-              startDate,
+              reformatDate(startDate),
               <CheckBox
                 checked={attended}
                 onChange={() => {
@@ -489,7 +493,10 @@ const Attendance = () => {
         <Title>Last Updated by</Title>
         <Description>{updatedDetail.updatedBy}</Description>
         <Title sx={{ marginLeft: "30px" }}>Last Updated at</Title>
-        <Description>{updatedDetail.updatedAt}</Description>
+        <Description>
+          {reformatDate(updatedDetail.updatedAt.split(" ")[0])}{" "}
+          {updatedDetail.updatedAt.split(" ")[1]}
+        </Description>
       </CardRow>
 
       <Accordion defaultExpanded>

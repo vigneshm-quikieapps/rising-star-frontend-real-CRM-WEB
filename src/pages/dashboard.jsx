@@ -274,7 +274,7 @@ const Dashboard = () => {
 
                 <Box sx={{ marginTop: "20px" }}>
                   <Typography variant="h2" sx={{ fontSize: "20px" }}>
-                    {data.status}
+                    {data.status === "ACTIVE" ? "Active" : "Inactive"}
                   </Typography>
                 </Box>
               </DashboardCard>

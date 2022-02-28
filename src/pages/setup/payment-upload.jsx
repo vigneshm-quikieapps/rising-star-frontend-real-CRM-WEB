@@ -20,6 +20,7 @@ import {
   TextField,
 } from "../../components";
 import informationIcon from "../../assets/icons/icon-information.png";
+import errorIcon from "../../assets/icons/icon-error.png";
 import PaymentList from "./payment-index";
 import { getClassList as getClassListAction } from "../../redux/action/class-actions";
 import toPascal from "../../utils/to-pascal";
@@ -28,6 +29,11 @@ import { useAddPayment } from "../../services/mutations";
 import { useSetError } from "../../contexts/error-context";
 import { getXlsx, paymentData } from "../../services/payment-services";
 import { useGetXlsx } from "../../services/queries";
+
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
 
 const PaymentUpload = () => {
   const businessList = useSelector((state) => state.businesses.businessList);
@@ -39,6 +45,8 @@ const PaymentUpload = () => {
   const [paymentListOpen, setPaymentListOpen] = useState(false);
   const [paymentUploadMessage, setPaymentUploadMessage] = useState(false);
   const [uploadXlsxMessage, setUploadXlsxMessage] = useState("");
+  const [title, setTitle] = useState("");
+  const [icon, setIcon] = useState();
   const setError = useSetError();
 
   const classesState = useSelector((state) => state.classes);
@@ -93,8 +101,8 @@ const PaymentUpload = () => {
         ({ _id, batchProcessId, createdAt, updatedAt, status }) => ({
           items: [
             toPascal(batchProcessId),
-            toPascal(createdAt),
-            toPascal(updatedAt),
+            reformatDate(createdAt.split("T")[0]),
+            reformatDate(updatedAt.split("T")[0]),
             toPascal(status),
             <Button onClick={() => handleOpenPaymentList(_id)}>View</Button>,
           ],
@@ -117,10 +125,18 @@ const PaymentUpload = () => {
     );
     if (message.data.message) {
       setUploadXlsxMessage(message.data.message);
+      setTitle("Information");
+      setIcon(informationIcon);
     } else {
       if (message.data.errors.length > 1) {
         setUploadXlsxMessage("BillDate or Payment File is missing");
-      } else setUploadXlsxMessage(`${message.data.errors[0].Payment}`);
+        setTitle("Error");
+        setIcon(errorIcon);
+      } else {
+        setUploadXlsxMessage(`${message.data.errors[0].Payment}`);
+        setTitle("Error");
+        setIcon(errorIcon);
+      }
     }
 
     setPaymentUploadMessage(true);
@@ -191,21 +207,51 @@ const PaymentUpload = () => {
       <Box sx={{ mb: 3 }}>
         <DatePicker
           label="Month/Year"
-          inputFormat="yyyy/MM/dd"
+          inputFormat="mm/yyyy"
           value={value}
           onChange={handleChange}
           renderInput={(params) => <TextField {...params} />}
         />
       </Box>
       <Grid sx={{ mb: 3 }}>
-        <TextField
+        <label
+          for="file-upload"
+          style={{
+            background:
+              "linear-gradient(90deg, rgb(283, 14, 116) 20%, rgb(253, 127, 76) 90%);",
+            border: 0,
+            borderRadius: 10,
+            color: "white",
+            height: "47px",
+            width: "275px",
+            paddingLeft: "22%",
+            paddingTop: "3%",
+          }}
+        >
+          Custom Upload
+        </label>
+
+        <input
           id="file-upload"
+          style={{ display: "none" }}
           type="file"
-          name="selectedFile"
           onChange={(e) => {
             onChangeFile(e);
           }}
-        ></TextField>
+        />
+        {/* <TextField
+          id="file-upload"
+          type="file"
+          name="selectedFile"
+
+          onChange={(e) => {
+            onChangeFile(e);
+          }}
+        >
+          <GradientButton onClick={handleDeleteFunction}>
+            Select File
+          </GradientButton>
+        </TextField> */}
         <GradientButton onClick={handleDeleteFunction}>Delete</GradientButton>
       </Grid>
       <PaymentList
@@ -232,8 +278,8 @@ const PaymentUpload = () => {
           },
         }}
       >
-        <ImgIcon>{informationIcon}</ImgIcon>
-        <DialogTitle>Information</DialogTitle>
+        <ImgIcon>{icon}</ImgIcon>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>{uploadXlsxMessage}</DialogContent>
         <DialogActions>
           <Button onClick={handleOk} sx={{ color: "#ff2c60" }} autoFocus>

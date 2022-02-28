@@ -37,7 +37,10 @@ const VerifiedIcon = ({ title = "test" }) => (
     </Box>
   </Tooltip>
 );
-
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
 const ClassEnrollments = () => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -91,7 +94,7 @@ const ClassEnrollments = () => {
         }) => {
           let date = new Date(registeredDate);
           let enrolledDate = registeredDate
-            ? date.toISOString().split("T")[0] +
+            ? reformatDate(date.toISOString().split("T")[0]) +
               " / " +
               date.toLocaleTimeString()
             : "N/A";
@@ -107,7 +110,7 @@ const ClassEnrollments = () => {
               toPascal(member?.name),
               allergy,
               condition,
-              startDate ? startDate.split("T")[0] : "N/A",
+              startDate ? reformatDate(startDate.split("T")[0]) : "N/A",
               enrolledDate,
               toPascal(enrolledStatus),
               toPascal(discontinuationReason),
@@ -169,8 +172,8 @@ const ClassEnrollments = () => {
     } = currentSession;
     const days = pattern.map(({ day }) => day).join(", ");
     const info = {
-      "Start Date": startDate.split("T")[0],
-      "End Date": endDate.split("T")[0],
+      "Start Date": reformatDate(startDate.split("T")[0]),
+      "End Date": reformatDate(endDate.split("T")[0]),
       "Start Time": new Date(pattern[0].startTime).toLocaleTimeString(),
       "End Time": new Date(pattern[0].endTime).toLocaleTimeString(),
       Pattern: toPascal(days),

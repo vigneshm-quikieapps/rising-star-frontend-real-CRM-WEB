@@ -30,6 +30,11 @@ const TableHeading = (
   </Typography>
 );
 
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
+
 const SessionList = ({
   open,
   classId,
@@ -94,8 +99,8 @@ const SessionList = ({
           items: [
             toPascal(name),
             timings(pattern),
-            toPascal(startDate),
-            toPascal(endDate),
+            reformatDate(startDate.split("T")[0]),
+            reformatDate(endDate.split("T")[0]),
             toPascal(termName),
             toPascal(status),
 

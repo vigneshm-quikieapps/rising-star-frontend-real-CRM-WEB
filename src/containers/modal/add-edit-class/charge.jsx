@@ -3,7 +3,7 @@ import { MenuItem, TableCell, TableRow } from "@mui/material";
 import { CheckBox, TextField, IconButton, ImgIcon } from "../../../components";
 import deleteIcon from "../../../assets/icons/icon-delete.png";
 import { removeItemByIndex } from "../../../utils";
-
+import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 const PayFrequencyOptions = [
   {
     value: "MONTHLY",
@@ -89,12 +89,24 @@ const Charge = (props) => {
       </TableCell>
 
       <TableCell>
-        <StyledTextField
+        {/* <StyledTextField
           value={data.amount}
           sx={{ width: "45%" }}
           placeholder={"Amount"}
+          currencySymbol="£"
+          outputFormat="string"
           onChange={handleAmountChange}
-        ></StyledTextField>
+        ></StyledTextField> */}
+
+        <CurrencyTextField
+          sx={{}}
+          variant="filled"
+          label="Amount"
+          value={data.amount}
+          currencySymbol="£"
+          outputFormat="string"
+          onChange={handleAmountChange}
+        />
       </TableCell>
 
       <TableCell>

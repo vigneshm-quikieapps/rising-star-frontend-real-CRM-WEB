@@ -63,7 +63,10 @@ const ClassDefinition = () => {
       }),
     [charges],
   );
-
+  const reformatDate = (dateStr) => {
+    let dArr = dateStr.split("-"); // ex input "2010-01-18"
+    return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+  };
   const Sessions = useCallback(
     () =>
       sessions.map((session) => {
@@ -82,8 +85,8 @@ const ClassDefinition = () => {
         } = session;
         const days = session.pattern.map(({ day }) => day).join(", ");
         const outputItems = {
-          "Start Date": startDate.split("T")[0],
-          "End Date": endDate.split("T")[0],
+          "Start Date": reformatDate(startDate.split("T")[0]),
+          "End Date": reformatDate(endDate.split("T")[0]),
           "Trail Session Allowed": trailAllowed ? "Yes" : "No",
           "Session Name": toPascal(name),
           Pattern: toPascal(days),

@@ -63,9 +63,7 @@ const Bill = ({
     SUSPENDED: "Suspended",
   };
   let billName = "Fee " + monthObj[month] + " " + year;
-  useEffect(() => {
-    console.log(billData);
-  });
+
   return (
     <>
       <Box

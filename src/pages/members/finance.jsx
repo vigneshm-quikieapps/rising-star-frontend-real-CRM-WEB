@@ -9,9 +9,11 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
+  LinearProgress,
 } from "@mui/material";
 
 import { enrolmentStatusMap } from "../../helper/constants";
+import { useGetMemberEnrolments } from "../../services/queries";
 import { toPascal } from "../../utils";
 import {
   Grid,
@@ -113,7 +115,7 @@ const MemberFinance = () => {
   const updateBillData = useSelector((state) => state.updateBilling);
   const businessList = useSelector((state) => state.businesses.businessList);
   const [selectedBusiness, setSelectedBusiness] = useState("");
-  const [selectedEnrolment, setSelectedEnrolment] = useState("");
+
   const [showEnrolmentList, setShowEnrolmentList] = useState(false);
   const [selectedDiscountScheme, setSelectedDiscountScheme] = useState("");
   const setError = useSetError();
@@ -122,7 +124,10 @@ const MemberFinance = () => {
   const [page, setPage] = useState(1);
   const [filteredData, setFilteredData] = useState();
   const [showSave, setShowSave] = useState(false);
+
+  const [selectedEnrolment, setSelectedEnrolment] = useState("");
   // const [billsData, setBillsData] = useState();
+
   const {
     control,
     handleSubmit,
@@ -136,12 +141,25 @@ const MemberFinance = () => {
 
   useEffect(() => dispatch(setPageTitle("Finance Record")), [dispatch]);
 
-  const { data, isLoading } = useGetEnrolment(selectedEnrolment, {
-    refetchOnWindowFocus: false,
-    onError: (error) => {
-      setError(error);
+  const {
+    data: initialLoadData,
+    isLoading: initialDataIsLoading,
+    isFetching,
+  } = useGetMemberEnrolments(member?._id, selectedBusiness, 1);
+
+  // useEffect(() => {
+  //   setSelectedEnrolment(initialLoadData?.docs[0]?._id);
+  // }, []);
+
+  const { data, isLoading } = useGetEnrolment(
+    selectedEnrolment || initialLoadData?.docs[0]?._id,
+    {
+      refetchOnWindowFocus: false,
+      onError: (error) => {
+        setError(error);
+      },
     },
-  });
+  );
 
   const { data: discountSchemesData, isLoading: isDiscountSchemesLoading } =
     useGetDiscountSchemes(selectedBusiness, {
@@ -387,6 +405,13 @@ const MemberFinance = () => {
 
   return (
     <>
+      {isDiscountSchemesLoading ||
+        (isFetching && (
+          <LinearProgress
+            sx={{ position: "absolute", top: 0, right: 0, width: "100%" }}
+          />
+        ))}
+
       <Card>
         <HeadingText>{member?.name}</HeadingText>
         <SubHeadingText>Student/Member</SubHeadingText>
@@ -558,18 +583,15 @@ const MemberFinance = () => {
         )}
       </Accordion>
 
-      {/* {showSave && ( */}
       <GradientButton
         sx={{ maxWidth: "fit-content" }}
         onClick={() => {
           setShowSave(false);
           updateBillTransactions();
-          // billOfClass(selectedEnrolment, member?._id);
         }}
       >
         Save
       </GradientButton>
-      {/* )} */}
     </>
   );
 };

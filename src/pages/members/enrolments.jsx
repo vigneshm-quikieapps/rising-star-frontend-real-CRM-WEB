@@ -38,6 +38,11 @@ import { useSetError } from "../../contexts/error-context";
 import ChangeSessionList from "./components/change-sessionlist";
 import { transfer, drop, suspend } from "../../services/enrolmentServices";
 
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
+
 const Enrolment = () => {
   const dispatch = useDispatch();
   const member = useSelector((state) => state.members.currentMember || {});
@@ -118,7 +123,7 @@ const Enrolment = () => {
   );
 
   const calcDate = (date) =>
-    date ? new Date(date).toLocaleDateString() : " - - - ";
+    date ? reformatDate(new Date(date).toISOString().split("T")[0]) : " - - - ";
 
   const enrolmentDate = calcDate(currentEnrolment?.registeredDate);
   const startDate = calcDate(currentEnrolment?.startDate);

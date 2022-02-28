@@ -22,7 +22,10 @@ import deleteIcon from "../../../assets/icons/icon-delete.png";
 import { shortWeekNames } from "../../../helper/constants";
 
 const RoundedIconButton = styled(IconButton)({ borderRadius: "50%" });
-
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
 const Pattern = ({ pattern, onChange }) => {
   const handleChange = (index) => {
     let updatedPattern = [...pattern];
@@ -138,8 +141,8 @@ const Session = ({
           return {
             ...prevState,
             term,
-            startDate: term.startDate.split("T")[0],
-            endDate: term.endDate.split("T")[0],
+            startDate: reformatDate(term.startDate.split("T")[0]),
+            endDate: reformatDate(term.endDate.split("T")[0]),
           };
         });
       }
@@ -188,9 +191,12 @@ const Session = ({
         </TextField>
         <Output
           title="Start Date"
-          description={state.startDate.split("T")[0]}
+          description={reformatDate(state.startDate.split("T")[0])}
         />
-        <Output title="End Date" description={state.endDate.split("T")[0]} />
+        <Output
+          title="End Date"
+          description={reformatDate(state.endDate.split("T")[0])}
+        />
         <TextField
           variant="filled"
           label="Session Name"
