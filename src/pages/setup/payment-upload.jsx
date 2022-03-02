@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   Box,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -29,6 +30,7 @@ import { useAddPayment } from "../../services/mutations";
 import { useSetError } from "../../contexts/error-context";
 import { getXlsx, paymentData } from "../../services/payment-services";
 import { useGetXlsx } from "../../services/queries";
+import { transformError } from "../../utils";
 
 const reformatDate = (dateStr) => {
   let dArr = dateStr.split("-"); // ex input "2010-01-18"
@@ -207,29 +209,26 @@ const PaymentUpload = () => {
       <Box sx={{ mb: 3 }}>
         <DatePicker
           label="Month/Year"
-          inputFormat="mm/yyyy"
+          inputFormat="MM/yyyy"
           value={value}
           onChange={handleChange}
           renderInput={(params) => <TextField {...params} />}
         />
       </Box>
       <Grid sx={{ mb: 3 }}>
-        <label
+        <GradientButton
           for="file-upload"
           style={{
-            background:
-              "linear-gradient(90deg, rgb(283, 14, 116) 20%, rgb(253, 127, 76) 90%);",
+            // background:
+            //   "linear-gradient(90deg, rgb(283, 14, 116) 20%, rgb(253, 127, 76) 90%)",
             border: 0,
             borderRadius: 10,
             color: "white",
             height: "47px",
-            width: "275px",
-            paddingLeft: "22%",
-            paddingTop: "3%",
           }}
         >
-          Custom Upload
-        </label>
+          Upload File
+        </GradientButton>
 
         <input
           id="file-upload"
@@ -254,11 +253,30 @@ const PaymentUpload = () => {
         </TextField> */}
         <GradientButton onClick={handleDeleteFunction}>Delete</GradientButton>
       </Grid>
-      <PaymentList
-        list={tableRows}
-        pagination={pagination}
-        Refresh={refreshHandle}
-      />
+      {isError ? (
+        <Typography color="error" component="pre">
+          {"Something went wrong: " + transformError(error)}
+        </Typography>
+      ) : isLoading ? (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "200px",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <PaymentList
+          list={tableRows}
+          pagination={pagination}
+          Refresh={refreshHandle}
+          isLoading={isLoading}
+          isFetching={isFetching}
+        />
+      )}
       {paymentListOpen && (
         <PaymentFullList
           open={paymentListOpen}
