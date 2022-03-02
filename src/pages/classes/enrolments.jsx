@@ -114,7 +114,7 @@ const ClassEnrollments = () => {
               enrolledDate,
               toPascal(enrolledStatus),
               toPascal(discontinuationReason),
-              droppedDate ? droppedDate : "N/A",
+              droppedDate ? reformatDate(droppedDate.split("T")[0]) : "N/A",
             ],
           };
         },

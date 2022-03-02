@@ -6,6 +6,8 @@ import {
   DialogContent,
   Typography,
   IconButton,
+  CircularProgress,
+  LinearProgress,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 
@@ -27,7 +29,7 @@ const EnrolmentsModal = styled(Dialog)(({ theme }) => ({
 }));
 
 const reformatDate = (dateStr) => {
-  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  let dArr = dateStr?.split("-"); // ex input "2010-01-18"
   return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
 };
 
@@ -53,15 +55,15 @@ const ChangeSessionList = ({
   const isSaving = useRef(false);
   const [isWarnOpen, setIsWarnOpen] = useState(false);
 
-  let { isLoading, isError, error, data, isFetching, isPreviousData } =
+  const { isLoading, isError, error, data, isFetching, isPreviousData } =
     useGetSession(classId);
 
   // filter out the already enrolled session
-  let data1 = [];
-  data1 = data?.docs?.filter(({ _id }) => _id != sessionId);
-  if (data1 != undefined && data1.length > 0) {
-    data.docs = data1;
-  }
+  // let data1 = [];
+  // data1 = data?.docs?.filter(({ _id }) => _id != sessionId);
+  // if (data1 != undefined && data1.length > 0) {
+  //   data.docs = data1;
+  // }
   //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
 
   const pageChangeHandler = (_, value) => {
@@ -71,42 +73,52 @@ const ChangeSessionList = ({
   const tableRows = useMemo(() => {
     return (
       data?.docs?.map(
-        ({
-          _id,
-          name,
-          facility,
-          startDate,
-          endDate,
-          term: {
-            label: termName,
-            startDate: termStateDate,
-            endDate: termEndDate,
-          },
-          status,
-          // session: {
-          //   name: sessionName,
-          //   term: { label: termName },
-          // },
-        }) => ({
-          onClick: () => {
-            onSelect(_id, name, termStateDate, termEndDate, termName);
-            onClose();
-          },
-          items: [
-            toPascal(name),
-            toPascal(facility),
-            reformatDate(startDate.split("T")[0]),
-            reformatDate(endDate.split("T")[0]),
-            toPascal(termName),
-            toPascal(status),
+        (
+          data,
+          //   {
+          //   _id,
+          //   name,
+          //   facility,
+          //   startDate,
+          //   endDate,
+          //   termData: {
+          //     label: termName,
+          //     startDate: termStartDate,
+          //     endDate: termEndDate,
+          //   },
+          //   status,
+          //   // session: {
+          //   //   name: sessionName,
+          //   //   term: { label: termName },
+          //   // },
+          // }
+        ) =>
+          data?.termData?.label && {
+            onClick: () => {
+              onSelect(
+                data?._id,
+                data?.name,
+                data?.termData?.termStartDate,
+                data?.termData?.termEndDate,
+                data?.termData?.termName,
+              );
+              onClose();
+            },
+            items: [
+              toPascal(data?.name) || "",
+              toPascal(data?.facility) || "",
+              reformatDate(data?.termData?.startDate?.split("T")[0]) || "- - -",
+              reformatDate(data?.termData?.endDate?.split("T")[0]) || "- - -",
+              toPascal(data?.termData?.label) || "",
+              toPascal(data?.status) || "",
 
-            // toPascal(termName),
-            // toPascal(sessionName),
-          ],
-        }),
+              // toPascal(termName),
+              // toPascal(sessionName),
+            ],
+          },
       ) || []
     );
-  }, [data, onSelect, onClose]);
+  }, [classId, data, onSelect, onClose]);
 
   const pagination = data?.totalPages && data.totalPages > 1 && (
     <Pagination
