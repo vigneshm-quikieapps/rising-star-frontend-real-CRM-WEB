@@ -45,11 +45,18 @@ export default function DialogBox({
       </DialogContent>
       <DialogActions>
         {showReject && (
-          <Button sx={{ color: "#ff2c60" }} onClick={onReject} autoFocus>
+          <Button
+            sx={{ color: "#ff2c60", border: "solid 1px #f2f1f6" }}
+            onClick={onReject}
+            autoFocus
+          >
             {rejectButtonTitle}
           </Button>
         )}
-        <Button sx={{ color: "#ff2c60" }} onClick={onAccept}>
+        <Button
+          sx={{ color: "#ff2c60", border: "solid 1px #f2f1f6" }}
+          onClick={onAccept}
+        >
           {acceptButtonTitle}
         </Button>
       </DialogActions>

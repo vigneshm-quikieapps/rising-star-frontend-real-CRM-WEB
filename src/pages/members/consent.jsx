@@ -130,11 +130,8 @@ const MemberConsent = () => {
           />
           <Box
             sx={{
-              padding: "0 10px",
               display: "flex",
               justifyContent: "flex-start",
-              alignItems: "center",
-              flexDirection: "row",
             }}
           >
             <img
@@ -148,29 +145,26 @@ const MemberConsent = () => {
                 opacity: "0.5",
               }}
             />
-
             <Typography
-              variant="caption"
-              display="block"
-              sx={{
-                letterSpacing: "0.5px",
-                fontWeight: "bold",
-                opacity: "0.5",
-              }}
+              width="100%"
+              fontSize="1rem"
+              lineHeight="0.5"
+              fontFamily="'Manrope','sans-serif'"
             >
               {`${
                 (businessList.find(({ _id }) => _id === selectedBusiness) || {})
                   ?.name || "Club"
               } occasionally takes videos and photographs for promotional
-              and training purposes and during displays`}
+              and training purposes and during displays,`}
+              <ConsentDisplayComponent
+                questionText="Do you agree with the above statement about photography?"
+                field={false}
+                flexDirection="row"
+                text={consentRecord[0]?.consent?.photographConsent}
+              />
             </Typography>
           </Box>
-          <ConsentDisplayComponent
-            questionText="Do you agree with the above statement about photography?"
-            field={false}
-            flexDirection="row"
-            text={consentRecord[0]?.consent?.photographConsent}
-          />
+
           <ConsentDisplayComponent
             questionText={`Signed by (Parent / Carer) ?`}
             field={false}
@@ -214,12 +208,20 @@ const ConsentDisplayComponent = ({
         variant="subtitle2"
         component="div"
         sx={{
+          display: "flex",
+          justifyContent: "space-between !important",
+          width: "100%",
           fontSize: "1rem",
           margin: "15px",
           marginLeft: 0,
         }}
       >
         {questionText}
+        {field && (
+          <Typography sx={{ alignSelf: "center" }}>
+            {text ? "Yes" : "No"}
+          </Typography>
+        )}
       </Typography>
 
       {field ? (

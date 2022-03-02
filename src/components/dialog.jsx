@@ -30,10 +30,17 @@ export default function DialogBox(props) {
           <DialogContentText>{description}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button sx={{ color: "#ff2c60" }} onClick={onNo}>
+          <Button
+            sx={{ color: "#ff2c60", border: "solid 1px #f2f1f6" }}
+            onClick={onNo}
+          >
             No
           </Button>
-          <Button sx={{ color: "#ff2c60" }} onClick={onYes} autoFocus>
+          <Button
+            sx={{ color: "#ff2c60", border: "solid 1px #f2f1f6" }}
+            onClick={onYes}
+            autoFocus
+          >
             Yes
           </Button>
         </DialogActions>

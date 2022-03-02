@@ -160,7 +160,7 @@ const PaymentUpload = () => {
     <>
       <Box sx={{ display: "flex", flexDirection: "column", mb: 2 }}>
         <Typography variant="h1" sx={{ fontSize: "28px", fontWeight: "bold" }}>
-          PaymentUpload
+          Payment Upload
         </Typography>
         <Typography
           sx={{
@@ -168,7 +168,7 @@ const PaymentUpload = () => {
             color: (theme) => theme.palette.text.secondary,
           }}
         >
-          Manage all payment here
+          Manage upload of bank payments here
         </Typography>
       </Box>
       <Grid sx={{ mb: 3 }}>
@@ -216,19 +216,20 @@ const PaymentUpload = () => {
         />
       </Box>
       <Grid sx={{ mb: 3 }}>
-        <GradientButton
+        <label
           for="file-upload"
           style={{
-            // background:
-            //   "linear-gradient(90deg, rgb(283, 14, 116) 20%, rgb(253, 127, 76) 90%)",
+            background:
+              "linear-gradient(90deg, rgb(283, 14, 116) 20%, rgb(253, 127, 76) 90%)",
             border: 0,
             borderRadius: 10,
             color: "white",
             height: "47px",
+            padding: "12px 139px",
           }}
         >
           Upload File
-        </GradientButton>
+        </label>
 
         <input
           id="file-upload"

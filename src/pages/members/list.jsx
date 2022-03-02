@@ -103,7 +103,7 @@ const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
         }}
       >
         <TextField
-          placeholder="Search member by name"
+          placeholder="Search by member name"
           sx={{
             gridArea: "basicInput",
             bgcolor: (theme) => theme.palette.highlight.main,

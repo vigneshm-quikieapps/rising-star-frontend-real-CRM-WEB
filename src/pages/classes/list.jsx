@@ -70,7 +70,7 @@ const AdvancedSearch = ({
         }}
       >
         <TextField
-          placeholder="search class by name"
+          placeholder="Search by class name"
           sx={{
             width: "calc(100% - 220px)",
             mr: "20px",

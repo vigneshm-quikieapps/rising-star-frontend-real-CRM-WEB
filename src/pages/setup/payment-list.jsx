@@ -11,7 +11,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { getData,useGetXlsxFullList } from "../../services/queries";
+import { getData, useGetXlsxFullList } from "../../services/queries";
 import { toPascal, transformError } from "../../utils";
 import {
   ElevationScroll,
@@ -37,46 +37,48 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
   // console.log("id", id);
   const history = useHistory();
   const [showError, setShowError] = useState(false);
-  const [payListData,setPayListData]=useState([]);
+  const [payListData, setPayListData] = useState([]);
   const [page, setPage] = useState(1);
-  const [totalPage,setTotalPage]=useState(1)
+  const [totalPage, setTotalPage] = useState(1);
   const [contentRef, setContentRef] = useState();
   // const [isLoading,setisLoading]=useState(true);
   // const [isError,setisError]=useState(false)
   // const [error,setError]=useState("")
   // const [isFetching,setisFetching]=useState(true)
   // const [isPreviousData,setisPreviousData]=useState(true)
-  const [payData,setPayData]=useState({})
+  const [payData, setPayData] = useState({});
   const { isLoading, isError, error, _data, isFetching, isPreviousData } =
-  useGetXlsxFullList(localStorage.getItem("MID"))
-  
+    useGetXlsxFullList(localStorage.getItem("MID"));
 
-  useEffect(()=>{
-    async function data(){
-      const data=await getData(localStorage.getItem("MID"))
-      if(data){
+  useEffect(() => {
+    async function data() {
+      const data = await getData(localStorage.getItem("MID"));
+      if (data) {
         // setisLoading(false)
-        setPayData(data.data)
-        setPayListData((data?.data?.xlsx?.uploadPaymentList.slice(0,10)))
-        setTotalPage(Math.ceil(data?.data?.xlsx?.uploadPaymentList?.length/10))
-  }
-
-}
-data()
-console.log(data)
+        setPayData(data.data);
+        setPayListData(data?.data?.xlsx?.uploadPaymentList.slice(0, 10));
+        setTotalPage(
+          Math.ceil(data?.data?.xlsx?.uploadPaymentList?.length / 10),
+        );
+      }
+    }
+    data();
+    console.log(data);
     // setisLoading(isLoading)
     // setisError(isError)
     // setError(error)
     // setisFetching(isFetching)
     // setisPreviousData(isPreviousData)
-  },[])
+  }, []);
   // console.log("data121", useGetXlsxFullList(localStorage.getItem("MID")));
   // console.log("data234", data?.xlsx?.uploadPaymentList);
 
   //   const searchChangeHandler = (e) => setSearchValue(e.target.value);
 
   const pageChangeHandler = (_, value) => {
-    setPayListData((payData?.xlsx?.uploadPaymentList.slice((value - 1) * 10, value * 10)))
+    setPayListData(
+      payData?.xlsx?.uploadPaymentList.slice((value - 1) * 10, value * 10),
+    );
     setPage(value);
   };
   // console.log("data",payData)
@@ -85,28 +87,30 @@ console.log(data)
     // setPayListData((data?.xlsx?.uploadPaymentList.slice(0,data?.xlsx?.uploadPaymentList?.length)))
     // setTotalPage(Math.ceil(data?.xlsx?.uploadPaymentList?.length/10))
     return (
-        payListData?.map(({
+      payListData?.map(
+        ({
           memberName,
           membershipNumber,
           amount,
           type,
           paymentMethod,
           uploadStatus,
-          noDataFound
-        })=>({
-              onClick: () => {
-                onClose();
-              },
-              items: [
-                toPascal(memberName),
-                toPascal(membershipNumber),
-                amount,
-                toPascal(type),
-                toPascal(paymentMethod),
-                toPascal(uploadStatus),
-                toPascal(noDataFound),
-              ],})
-        )||[]
+          noDataFound,
+        }) => ({
+          onClick: () => {
+            onClose();
+          },
+          items: [
+            toPascal(memberName),
+            toPascal(membershipNumber),
+            amount,
+            toPascal(type),
+            toPascal(paymentMethod),
+            toPascal(uploadStatus),
+            toPascal(noDataFound),
+          ],
+        }),
+      ) || []
 
       // data?.xlsx?.uploadPaymentList?.map(
       //   (data
@@ -131,7 +135,7 @@ console.log(data)
       //   }),
       // ) || []
     );
-  }, [payListData,onClose]);
+  }, [payListData, onClose]);
 
   // console.log("paymentList", tableRows);
 
@@ -160,7 +164,7 @@ console.log(data)
                 variant="h1"
                 sx={{ fontSize: "28px", fontWeight: "bold" }}
               >
-                PaymentUpload
+                Payment Upload
               </Typography>
               <Typography
                 sx={{
@@ -203,7 +207,7 @@ console.log(data)
             heading={TableHeading}
             headers={[
               "Member Name",
-              "Member ID",
+              "Club Membership Number",
               "Amount",
               "Type",
               "Payment Method",
