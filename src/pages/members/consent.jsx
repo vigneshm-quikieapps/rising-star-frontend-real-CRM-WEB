@@ -230,7 +230,13 @@ const ConsentDisplayComponent = ({
           multiline
           disabled
           placeholder="Further details..."
-          value={text}
+          value={
+            text
+              ? text
+              : questionText.includes("allergies")
+              ? "No Allergies"
+              : "No Conditions"
+          }
           sx={{
             width: "100%",
             "& .MuiInputBase-root": {
