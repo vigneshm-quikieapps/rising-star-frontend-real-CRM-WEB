@@ -96,7 +96,10 @@ const ClassEnrollments = () => {
           let enrolledDate = registeredDate
             ? reformatDate(date.toISOString().split("T")[0]) +
               " / " +
-              date.toLocaleTimeString()
+              date.toLocaleTimeString(navigator.language, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
             : "N/A";
           const allergy = (
             <VerifiedIcon title={memberConsent?.consent?.allergies} />
@@ -174,8 +177,20 @@ const ClassEnrollments = () => {
     const info = {
       "Start Date": reformatDate(startDate.split("T")[0]),
       "End Date": reformatDate(endDate.split("T")[0]),
-      "Start Time": new Date(pattern[0].startTime).toLocaleTimeString(),
-      "End Time": new Date(pattern[0].endTime).toLocaleTimeString(),
+      "Start Time": new Date(pattern[0].startTime).toLocaleTimeString(
+        navigator.language,
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+        },
+      ),
+      "End Time": new Date(pattern[0].endTime).toLocaleTimeString(
+        navigator.language,
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+        },
+      ),
       Pattern: toPascal(days),
       Facility: toPascal(facility),
       "Session Enrolment Status": toPascal(status),

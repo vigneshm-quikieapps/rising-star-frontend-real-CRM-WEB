@@ -141,8 +141,8 @@ const Session = ({
           return {
             ...prevState,
             term,
-            startDate: reformatDate(term.startDate.split("T")[0]),
-            endDate: reformatDate(term.endDate.split("T")[0]),
+            startDate: term.startDate.split("T")[0],
+            endDate: term.endDate.split("T")[0],
           };
         });
       }

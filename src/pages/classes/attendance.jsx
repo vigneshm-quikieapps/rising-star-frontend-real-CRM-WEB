@@ -204,7 +204,7 @@ const Attendance = () => {
               <VerifiedIcon title={condition} type={"conditions"} />,
               // <Status status="green" title="No Info" />,
               paymentStatus,
-              reformatDate(startDate),
+              startDate,
               <CheckBox
                 checked={attended}
                 onChange={() => {
