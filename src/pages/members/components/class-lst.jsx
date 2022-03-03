@@ -71,7 +71,7 @@ const ClassList = ({
             toPascal(name),
             toPascal(catName),
             AgeData.toString(),
-            GenderData.toString(),
+            toPascal(GenderData.toString()),
           ],
         }),
       ) || []

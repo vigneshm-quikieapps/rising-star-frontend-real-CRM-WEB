@@ -202,7 +202,7 @@ const ClassEnrollments = () => {
       ),
       Pattern: toPascal(days),
       Facility: toPascal(facility),
-      "Session Enrolment Status": toPascal(status),
+      "Session Enrolment Status": toPascal(status).replaceAll("_", " "),
       "Coach Name": toPascal(coach?.name),
       "Full class capacity": fullcapacity,
       Enrolled: fullcapacityfilled,
