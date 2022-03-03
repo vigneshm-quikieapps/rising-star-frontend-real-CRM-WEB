@@ -1,5 +1,11 @@
 import { styled } from "@mui/material/styles";
-import { InputAdornment, MenuItem, TableCell, TableRow } from "@mui/material";
+import {
+  InputAdornment,
+  MenuItem,
+  OutlinedInput,
+  TableCell,
+  TableRow,
+} from "@mui/material";
 import { CheckBox, TextField, IconButton, ImgIcon } from "../../../components";
 import deleteIcon from "../../../assets/icons/icon-delete.png";
 import { removeItemByIndex } from "../../../utils";
@@ -91,9 +97,13 @@ const Charge = (props) => {
       <TableCell>
         <StyledTextField
           value={data.amount}
-          sx={{ width: "45%" }}
+          sx={{
+            width: "45%",
+          }}
           placeholder={"Amount"}
-          startAdornment={<InputAdornment position="start">£</InputAdornment>}
+          InputProps={{
+            startAdornment: <InputAdornment position="start">£</InputAdornment>,
+          }}
           onChange={handleAmountChange}
         ></StyledTextField>
       </TableCell>

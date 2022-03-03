@@ -274,7 +274,7 @@ const Classes = () => {
             color: (theme) => theme.palette.text.secondary,
           }}
         >
-          Manage your business here
+          Manage your classes here
         </Typography>
       </Box>
       <Box sx={{ display: showAdvancedSearch ? "none" : "flex", mb: 1 }}>

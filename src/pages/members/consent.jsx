@@ -145,12 +145,7 @@ const MemberConsent = () => {
                 opacity: "0.5",
               }}
             />
-            <Typography
-              width="100%"
-              fontSize="1rem"
-              lineHeight="0.5"
-              fontWeight="500"
-            >
+            <Typography width="100%" fontSize="1rem" fontWeight="500">
               {`${
                 (businessList.find(({ _id }) => _id === selectedBusiness) || {})
                   ?.name || "Club"
