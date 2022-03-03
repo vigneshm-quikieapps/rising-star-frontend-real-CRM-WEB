@@ -225,7 +225,8 @@ const PaymentUpload = () => {
             borderRadius: 10,
             color: "white",
             height: "47px",
-            padding: "12px 139px",
+            textAlign: "center",
+            paddingTop: "10px",
           }}
         >
           Upload File

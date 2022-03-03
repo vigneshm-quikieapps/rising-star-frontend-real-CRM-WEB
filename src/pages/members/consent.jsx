@@ -149,7 +149,7 @@ const MemberConsent = () => {
               width="100%"
               fontSize="1rem"
               lineHeight="0.5"
-              fontFamily="'Manrope','sans-serif'"
+              fontWeight="500"
             >
               {`${
                 (businessList.find(({ _id }) => _id === selectedBusiness) || {})

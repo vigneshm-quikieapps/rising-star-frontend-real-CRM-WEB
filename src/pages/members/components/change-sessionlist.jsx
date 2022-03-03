@@ -8,8 +8,6 @@ import {
   IconButton,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
-
-import { enrolmentStatusMap } from "../../../helper/constants";
 import { useGetSession } from "../../../services/queries";
 import { toPascal, transformError } from "../../../utils";
 import {
@@ -67,6 +65,15 @@ const ChangeSessionList = ({
   const pageChangeHandler = (_, value) => {
     setPage(value);
   };
+  const timings = (pattern) => {
+    const days = pattern.map(({ day }) => day).join(", ");
+    const startTime = new Date(pattern[0].startTime).toLocaleTimeString();
+    const endTime = new Date(pattern[0].endTime).toLocaleTimeString();
+    return `${toPascal(days)}, ${startTime} to ${endTime}`.replace(
+      /:00 /g,
+      " ",
+    );
+  };
 
   const tableRows = useMemo(() => {
     return (
@@ -74,10 +81,10 @@ const ChangeSessionList = ({
         ({
           _id,
           name,
-          facility,
+          pattern,
           startDate,
           endDate,
-          term: {
+          termData: {
             label: termName,
             startDate: termStateDate,
             endDate: termEndDate,
@@ -89,12 +96,19 @@ const ChangeSessionList = ({
           // },
         }) => ({
           onClick: () => {
-            onSelect(_id, name, termStateDate, termEndDate, termName);
+            onSelect(
+              _id,
+              name,
+              termStateDate,
+              termEndDate,
+              termName,
+              timings(pattern),
+            );
             onClose();
           },
           items: [
             toPascal(name),
-            toPascal(facility),
+            timings(pattern),
             reformatDate(startDate.split("T")[0]),
             reformatDate(endDate.split("T")[0]),
             toPascal(termName),
@@ -152,7 +166,7 @@ const ChangeSessionList = ({
         ref={(e) => setContentRef(e)}
         sx={{ minWidth: "400px", pt: 0 }}
       >
-        {isError ? (
+        {isError || isLoading ? (
           <WarningDialog
             open={showError}
             title="Error"
