@@ -90,8 +90,14 @@ const ClassDefinition = () => {
           "Trail Session Allowed": trailAllowed ? "Yes" : "No",
           "Session Name": toPascal(name),
           Pattern: toPascal(days),
-          "Start Time": new Date(startTime).toLocaleTimeString(),
-          "End Time": new Date(endTime).toLocaleTimeString(),
+          "Start Time": new Date(startTime).toLocaleTimeString(
+            navigator.language,
+            { hour: "2-digit", minute: "2-digit" },
+          ),
+          "End Time": new Date(endTime).toLocaleTimeString(navigator.language, {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
           "Coach Name": toPascal(coachName),
           "Full Class Capacity": fullcapacity,
           "Waitlist Capacity": waitcapacity,
