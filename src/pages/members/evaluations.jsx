@@ -245,6 +245,16 @@ const MemberEvaluations = () => {
       skills: convertStatusToArray(newSkills),
     };
     dispatch(updateMultipleStatusOnMemberProgressRecord(data));
+    params(id, currentMember, businessId, evaluationSchemeId).then((res) => {
+      if (
+        res.memberId &&
+        res.clubMembershipId &&
+        res.businessId &&
+        res.evaluationSchemeId
+      ) {
+        dispatch(getMemberProgressRecord(res));
+      }
+    });
   };
 
   const levelStatusIndicator = (status) => {

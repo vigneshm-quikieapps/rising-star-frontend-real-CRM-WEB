@@ -235,7 +235,7 @@ const MemberFinance = () => {
     member?._id,
     {
       refetchOnWindowFocus: true,
-      refetchInterval: 50,
+      refetchInterval: 1000,
       onError: (error) => setError(error),
     },
   );
