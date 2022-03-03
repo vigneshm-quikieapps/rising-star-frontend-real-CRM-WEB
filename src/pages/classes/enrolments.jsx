@@ -30,13 +30,16 @@ import toPascal from "../../utils/to-pascal";
 
 const ExpandIcon = () => <ImgIcon>{arrowDownIcon}</ImgIcon>;
 
-const VerifiedIcon = ({ title = "test" }) => (
-  <Tooltip title={title}>
-    <Box sx={{ display: "inline-block" }}>
-      <ImgIcon>{allergyIcon}</ImgIcon>
-    </Box>
-  </Tooltip>
-);
+const VerifiedIcon = ({ title, type }) => {
+  return (
+    <Tooltip title={title || `No ${type}`}>
+      <Box sx={{ display: "inline-block" }}>
+        <ImgIcon>{allergyIcon}</ImgIcon>
+      </Box>
+    </Tooltip>
+  );
+};
+
 const reformatDate = (dateStr) => {
   let dArr = dateStr.split("-"); // ex input "2010-01-18"
   return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
@@ -102,10 +105,16 @@ const ClassEnrollments = () => {
               })
             : "N/A";
           const allergy = (
-            <VerifiedIcon title={memberConsent?.consent?.allergies} />
+            <VerifiedIcon
+              title={memberConsent?.consent?.allergies}
+              type={"allergies"}
+            />
           );
           const condition = (
-            <VerifiedIcon title={memberConsent?.consent?.condition} />
+            <VerifiedIcon
+              title={memberConsent?.consent?.condition}
+              type={"conditions"}
+            />
           );
           return {
             onClick: () => history.push(`/members/info/${_id}`),
@@ -193,7 +202,7 @@ const ClassEnrollments = () => {
       ),
       Pattern: toPascal(days),
       Facility: toPascal(facility),
-      "Session Enrolment Status": toPascal(status),
+      "Session Enrolment Status": toPascal(status).replaceAll("_", " "),
       "Coach Name": toPascal(coach?.name),
       "Full class capacity": fullcapacity,
       Enrolled: fullcapacityfilled,

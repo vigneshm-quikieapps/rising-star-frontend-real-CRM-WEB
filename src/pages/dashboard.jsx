@@ -247,38 +247,40 @@ const Dashboard = () => {
             </Box>
           </AccordionSummary>
           <AccordionDetails>
-            {businessesList.map((data) => (
-              <DashboardCard
-                style={{
-                  display: "inline-block",
-                  marginRight: "35px",
-                  cursor: "pointer",
-                  height: "160px",
-                }}
-                onClick={() => {
-                  setActiveBusiness(data);
-                  setActiveBusinessId(data._id);
-                }}
-              >
-                <Box>
-                  <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
-                    {data.name}
-                  </Typography>
-                </Box>
+            <Box sx={{ display: "flex", width: "auto", flexDirection: "row" }}>
+              {businessesList.map((data) => (
+                <DashboardCard
+                  style={{
+                    display: "inline-block",
+                    marginRight: "35px",
+                    cursor: "pointer",
+                    height: "auto",
+                  }}
+                  onClick={() => {
+                    setActiveBusiness(data);
+                    setActiveBusinessId(data._id);
+                  }}
+                >
+                  <Box>
+                    <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
+                      {data.name}
+                    </Typography>
+                  </Box>
 
-                <Box sx={{ marginTop: "20px" }}>
-                  <Typography variant="h2" sx={{ fontSize: "20px" }}>
-                    {data.city}
-                  </Typography>
-                </Box>
+                  <Box sx={{ marginTop: "20px" }}>
+                    <Typography variant="h2" sx={{ fontSize: "20px" }}>
+                      {data.city}
+                    </Typography>
+                  </Box>
 
-                <Box sx={{ marginTop: "20px" }}>
-                  <Typography variant="h2" sx={{ fontSize: "20px" }}>
-                    {data.status === "ACTIVE" ? "Active" : "Inactive"}
-                  </Typography>
-                </Box>
-              </DashboardCard>
-            ))}
+                  <Box sx={{ marginTop: "20px" }}>
+                    <Typography variant="h2" sx={{ fontSize: "20px" }}>
+                      {data.status === "ACTIVE" ? "Active" : "Inactive"}
+                    </Typography>
+                  </Box>
+                </DashboardCard>
+              ))}
+            </Box>
           </AccordionDetails>
         </Accordion>
       </AccordionContainer>
