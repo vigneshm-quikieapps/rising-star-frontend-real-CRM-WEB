@@ -105,7 +105,7 @@ const PaymentUpload = () => {
             toPascal(batchProcessId),
             reformatDate(createdAt.split("T")[0]),
             reformatDate(updatedAt.split("T")[0]),
-            toPascal(status),
+            toPascal(status).replaceAll("_", " "),
             <Button onClick={() => handleOpenPaymentList(_id)}>View</Button>,
           ],
         }),
@@ -127,8 +127,13 @@ const PaymentUpload = () => {
     );
     if (message.data.message) {
       setUploadXlsxMessage(message.data.message);
-      setTitle("Information");
-      setIcon(informationIcon);
+      if (message.data.message === "Payment upload successfull") {
+        setTitle("Information");
+        setIcon(informationIcon);
+      } else {
+        setTitle("Error");
+        setIcon(errorIcon);
+      }
     } else {
       if (message.data.errors.length > 1) {
         setUploadXlsxMessage("BillDate or Payment File is missing");
