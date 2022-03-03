@@ -222,11 +222,11 @@ const PaymentUpload = () => {
             background:
               "linear-gradient(90deg, rgb(283, 14, 116) 20%, rgb(253, 127, 76) 90%)",
             border: 0,
-            borderRadius: 10,
             color: "white",
             height: "47px",
             textAlign: "center",
             paddingTop: "10px",
+            borderRadius: "8px",
           }}
         >
           Upload File

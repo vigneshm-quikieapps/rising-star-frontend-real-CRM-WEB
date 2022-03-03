@@ -166,7 +166,7 @@ const MemberConsent = () => {
           </Box>
 
           <ConsentDisplayComponent
-            questionText={`Signed by (Parent / Carer) ?`}
+            questionText={`Signed by ${currentMember?.userId?.name} ?`}
             field={false}
             flexDirection="row"
             text={consentRecord[0]?.consent?.signedByParent}
@@ -230,7 +230,13 @@ const ConsentDisplayComponent = ({
           multiline
           disabled
           placeholder="Further details..."
-          value={text}
+          value={
+            text
+              ? text
+              : questionText.includes("allergies")
+              ? "No Allergies"
+              : "No Conditions"
+          }
           sx={{
             width: "100%",
             "& .MuiInputBase-root": {
