@@ -102,7 +102,7 @@ const SessionList = ({
             reformatDate(startDate.split("T")[0]),
             reformatDate(endDate.split("T")[0]),
             toPascal(termName),
-            toPascal(status),
+            toPascal(status).replaceAll("_", " "),
 
             // toPascal(termName),
             // toPascal(sessionName),
