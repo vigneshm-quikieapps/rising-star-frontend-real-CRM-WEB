@@ -54,6 +54,7 @@ const UpdateTransaction = ({
   transaction,
   billStatus,
   subtotal,
+  total,
   // showStatus,
 }) => {
   const dispatch = useDispatch();
@@ -72,7 +73,7 @@ const UpdateTransaction = ({
   };
   defaultValues.reference = transaction && transaction.reference;
   defaultValues.type = transaction && transaction.transactionType;
-  defaultValues.amount = subtotal;
+  defaultValues.amount = total;
   defaultValues.paymentDate = transaction && transaction.paidAt;
   defaultValues.paymentMethod = transaction && transaction.method;
   defaultValues.batchProcessId = transaction && transaction.batchProcessId;
@@ -465,7 +466,6 @@ const UpdateTransaction = ({
           defaultValue="MANUAL"
           sx={{ width: "120px" }}
           //   InputProps={{ readOnly: true }}
-          disabled
         >
           <MenuItem value="MANUAL">Manual</MenuItem>
         </TextField>

@@ -43,6 +43,7 @@ const TransactionList = ({
   newTransaction,
   billStatus,
   subtotal,
+  total,
   // showStatus,
 }) => {
   // showUpdate
@@ -104,6 +105,8 @@ const TransactionList = ({
                 deleteTrans={deleteOldTransaction}
                 billStatus={billStatus}
                 subtotal={subtotal}
+                total={total}
+
                 // showStatus={showStatus}
               />
             )}
@@ -112,6 +115,7 @@ const TransactionList = ({
                 billId={billId}
                 newTransaction={cancelNewTransaction}
                 subtotal={subtotal}
+                total={total}
               />
             )}
             {/* {showNewTransaction == true ? (

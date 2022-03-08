@@ -106,6 +106,10 @@ const Attendance = () => {
     setTouched(false);
   };
 
+  const handleTermChange = (e) => {
+    setSelectedTerm(e.target.value);
+  };
+
   // const handlePageChange = useCallback(
   //   (_, value) => {
   //     if (value !== currentPage)
@@ -337,6 +341,10 @@ const Attendance = () => {
   }, [dispatch, classId]);
 
   useEffect(() => {
+    if (selectedTerm) dispatch(getClassSessionsByTermId(classId, selectedTerm));
+  }, [dispatch, classId, selectedTerm]);
+
+  useEffect(() => {
     if (mounted.current) return;
     if (classTerms.length && classId === currentClassId) {
       setSelectedTerm(classTerms[0]._id);
@@ -416,7 +424,7 @@ const Attendance = () => {
     const sessionEndDate = new Date(sessionInfo && sessionInfo[1].endDate);
     return today >= sessionEndDate ? sessionEndDate : today;
   }, [sessionInfo]);
-
+  console.log("classSessionsInTerm", classSessionsInTerm);
   return mounted.current ? (
     <Box>
       <Card>
@@ -433,7 +441,7 @@ const Attendance = () => {
             label="Term"
             onChange={(e) => {
               setTouched(false);
-              setSelectedTerm(e.target.value);
+              handleTermChange(e);
             }}
             variant="filled"
           >

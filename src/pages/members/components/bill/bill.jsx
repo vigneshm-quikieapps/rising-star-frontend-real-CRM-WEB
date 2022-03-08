@@ -80,9 +80,9 @@ const Bill = ({
         ) : (
           <Output title="Bill Name" description={billName} />
         )}
-        <Output title="Fee" description={`\u00A3${total}`} />
+        <Output title="Fee" description={`\u00A3${subtotal}`} />
         <Output title="Discount" description={`\u00A3${discount}`} />
-        <Output title="Due" description={`\u00A3${subtotal}`} />
+        <Output title="Due" description={`\u00A3${total}`} />
         <Box sx={{ width: "200px" }}>
           <DatePicker date={dueDate} />
         </Box>
@@ -127,6 +127,7 @@ const Bill = ({
           newTransaction={true}
           billStatus={billStatus}
           subtotal={subtotal}
+          total={total}
           // showStatus={showStatus}
         />
       )}
@@ -137,6 +138,8 @@ const Bill = ({
           update={true}
           billStatus={billStatus}
           subtotal={subtotal}
+          total={total}
+
           // showStatus={showStatus}
         />
       ))}

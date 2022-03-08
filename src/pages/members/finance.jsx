@@ -222,6 +222,7 @@ const MemberFinance = () => {
     enrolledStatus: status,
     startDate,
   } = currentEnrolment;
+
   // useEffect(() => {
   //   if (currentEnrolment?._id && member?._id) {
   //     billMemberOfClass(currentEnrolment?._id, member?._id).then((data) =>
@@ -320,6 +321,7 @@ const MemberFinance = () => {
         ],
       },
     ],
+
     [
       discountSchemeItems,
       selectedDiscountScheme,

@@ -41,7 +41,7 @@ const validationSchema = yup
   })
   .required();
 
-const NewTransaction = ({ billId, newTransaction, subtotal }) => {
+const NewTransaction = ({ billId, newTransaction, total }) => {
   const member = useSelector((state) => state.members.currentMember || {});
 
   const setError = useSetError();
@@ -59,7 +59,7 @@ const NewTransaction = ({ billId, newTransaction, subtotal }) => {
       billId,
       reference: "",
       type: "",
-      amount: subtotal,
+      amount: total,
       paymentDate: new Date(),
       // .toISOString().split("T")[0],
       paymentMethod: "CASH",

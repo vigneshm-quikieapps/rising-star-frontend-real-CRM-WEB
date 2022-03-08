@@ -51,31 +51,39 @@ const ClassList = ({
   };
   console.log("data", data);
   const tableRows = useMemo(() => {
-    return (
-      data?.docs?.map(
-        ({
-          _id,
-          name,
-          categoryId: { name: catName },
-          enrolmentControls: [
-            { name: Age, values: AgeData },
-            { name: Gender, values: GenderData },
-          ],
-        }) => ({
+    if (data?.docs) {
+      return data?.docs?.map(
+        (
+          data,
+          //   {
+          //   _id,
+          //   name,
+          //   categoryId: { name: catName },
+          //   enrolmentControls: [
+          //     { name: Age, values: AgeData },
+          //     { name: Gender, values: GenderData },
+          //   ],
+          // }
+        ) => ({
           onClick: () => {
-            onSelect(_id, name);
+            onSelect(data?._id, data?.name);
             onClose();
           },
 
           items: [
-            toPascal(name),
-            toPascal(catName),
-            AgeData.toString(),
-            toPascal(GenderData.toString()),
+            data?.name || "",
+            // toPascal(catName),
+            // AgeData.toString(),
+            // toPascal(GenderData.toString()),
+            data?.categoryId?.name || "",
+            data?.enrolmentControls[0]?.values?.toString() || 0,
+            toPascal(data?.enrolmentControls[1]?.values?.toString()) || "",
           ],
         }),
-      ) || []
-    );
+      );
+    } else {
+      return [];
+    }
   }, [data, onSelect, onClose]);
   // console.log("data", data);
   const pagination = data?.totalPages && data.totalPages > 1 && (
