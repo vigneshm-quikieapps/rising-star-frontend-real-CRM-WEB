@@ -51,30 +51,32 @@ const EnrolmentList = ({
   };
 
   const tableRows = useMemo(() => {
-    return (
-      data?.docs?.map(
-        ({
-          _id,
-          class: { name: className },
-          enrolledStatus,
-          session: {
-            name: sessionName,
-            term: { label: termName },
-          },
-        }) => ({
-          onClick: () => {
-            onSelect(_id, className);
-            onClose();
-          },
-          items: [
-            toPascal(className),
-            toPascal(enrolmentStatusMap[enrolledStatus]),
-            toPascal(termName),
-            toPascal(sessionName),
-          ],
-        }),
-      ) || []
-    );
+    if (data?.docs) {
+      return (
+        data?.docs?.map(
+          ({
+            _id,
+            class: { name: className },
+            enrolledStatus,
+            session: {
+              name: sessionName,
+              term: { label: termName },
+            },
+          }) => ({
+            onClick: () => {
+              onSelect(_id, className);
+              onClose();
+            },
+            items: [
+              toPascal(className),
+              toPascal(enrolmentStatusMap[enrolledStatus]),
+              toPascal(termName),
+              toPascal(sessionName),
+            ],
+          }),
+        ) || []
+      );
+    }
   }, [data, onSelect, onClose]);
 
   const pagination = data?.totalPages && data.totalPages > 1 && (
