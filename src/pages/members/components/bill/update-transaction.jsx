@@ -73,7 +73,7 @@ const UpdateTransaction = ({
   };
   defaultValues.reference = transaction && transaction.reference;
   defaultValues.type = transaction && transaction.transactionType;
-  defaultValues.amount = total;
+  defaultValues.amount = Number(total).toFixed(2);
   defaultValues.paymentDate = transaction && transaction.paidAt;
   defaultValues.paymentMethod = transaction && transaction.method;
   defaultValues.batchProcessId = transaction && transaction.batchProcessId;

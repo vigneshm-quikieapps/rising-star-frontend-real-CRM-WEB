@@ -118,6 +118,7 @@ const MemberFinance = () => {
 
   const [showEnrolmentList, setShowEnrolmentList] = useState(false);
   const [selectedDiscountScheme, setSelectedDiscountScheme] = useState("");
+  // const [selectedDiscountName, setSelectedDiscountName] = useState("");
   const setError = useSetError();
   const [monthFlag, setMonthFlag] = useState("");
   const [timeStamp, setTimeStamp] = useState({ year: null, month: null });
@@ -178,8 +179,10 @@ const MemberFinance = () => {
     console.log("discpunt", body);
   };
 
-  const discountSchemeChangeHandler = (e) =>
+  const discountSchemeChangeHandler = (e) => {
+    console.log(e.target.value);
     setSelectedDiscountScheme(e.target.value);
+  };
 
   const discountPercentage = useMemo(() => {
     if (!discountSchemesData) return 0;
@@ -188,21 +191,6 @@ const MemberFinance = () => {
     );
     return currentDiscountScheme ? +currentDiscountScheme.value : 0;
   }, [discountSchemesData, selectedDiscountScheme]);
-
-  const discountSchemeItems = useMemo(
-    () =>
-      discountSchemesData?.discounts
-        ?.map(
-          ({ _id, name, status }) =>
-            status === "ACTIVE" && (
-              <MenuItem key={_id} value={_id}>
-                {toPascal(name)}
-              </MenuItem>
-            ),
-        )
-        ?.filter((val) => val) || [],
-    [discountSchemesData],
-  );
 
   const currentEnrolment = useMemo(
     () =>
@@ -221,8 +209,32 @@ const MemberFinance = () => {
     },
     enrolledStatus: status,
     startDate,
+    discountDetail,
   } = currentEnrolment;
-
+  const discountSchemeItems = useMemo(() => {
+    return (
+      discountSchemesData?.discounts
+        ?.map(
+          ({ _id, name, status }) =>
+            status === "ACTIVE" && (
+              <MenuItem key={_id} value={_id}>
+                {toPascal(name)}
+              </MenuItem>
+            ),
+        )
+        ?.filter((val) => val) || []
+    );
+  }, [discountSchemesData]);
+  useEffect(() => {
+    let temp = "";
+    console.log(discountSchemesData);
+    temp = discountSchemesData?.discounts?.find(
+      (data) => currentEnrolment?.discountDetail?.name === data.name,
+    );
+    if (temp) {
+      setSelectedDiscountScheme(temp?._id);
+    }
+  }, [currentEnrolment, discountSchemesData]);
   // useEffect(() => {
   //   if (currentEnrolment?._id && member?._id) {
   //     billMemberOfClass(currentEnrolment?._id, member?._id).then((data) =>

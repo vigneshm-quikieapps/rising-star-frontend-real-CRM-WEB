@@ -1,7 +1,7 @@
 import { Box, MenuItem } from "@mui/material";
 import { borderRadius } from "@mui/system";
 import { useState, useEffect, useMemo, useCallback } from "react";
-
+import toPascal from "../../../../utils/to-pascal";
 import {
   TextField,
   DatePicker,
@@ -26,6 +26,7 @@ const Bill = ({
     dueDate = new Date(),
     paid = false,
     items = [],
+    billType,
     partialTransactions,
   } = billData;
 
@@ -78,13 +79,19 @@ const Bill = ({
         {isTerm == true ? (
           <Output title="Term Name" description={termName} />
         ) : (
-          <Output title="Bill Name" description={billName} />
+          <Output title="Bill Name" description={toPascal(billType)} />
         )}
-        <Output title="Fee" description={`\u00A3${subtotal}`} />
-        <Output title="Discount" description={`\u00A3${discount}`} />
-        <Output title="Due" description={`\u00A3${total}`} />
+        <Output
+          title="Fee"
+          description={`\u00A3${Number(subtotal).toFixed(2)}`}
+        />
+        <Output
+          title="Discount"
+          description={`\u00A3${Number(discount).toFixed(2)}`}
+        />
+        <Output title="Due" description={`\u00A3${Number(total).toFixed(2)}`} />
         <Box sx={{ width: "200px" }}>
-          <DatePicker date={dueDate} />
+          <DatePicker date={dueDate} inputFormat="dd/MM/yyyy" />
         </Box>
         <Output
           title="Applied Amount"

@@ -59,7 +59,7 @@ const NewTransaction = ({ billId, newTransaction, total }) => {
       billId,
       reference: "",
       type: "",
-      amount: total,
+      amount: Number(total).toFixed(2),
       paymentDate: new Date(),
       // .toISOString().split("T")[0],
       paymentMethod: "CASH",

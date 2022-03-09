@@ -108,6 +108,7 @@ const Term = ({
           date={startDate}
           onChange={(newDate) => changeHandler(newDate, "startDate")}
           label={null}
+          inputFormat="dd/MM/yyyy"
           textfieldProps={{
             sx: {
               height: "44px",
@@ -121,6 +122,7 @@ const Term = ({
           date={endDate}
           onChange={(newDate) => changeHandler(newDate, "endDate")}
           label={null}
+          inputFormat="dd/MM/yyyy"
           textfieldProps={{
             sx: {
               height: "44px",
@@ -182,7 +184,7 @@ const Terms = () => {
   const dispatch = useDispatch();
   const businessList = useSelector((state) => state.businesses.businessList);
   const { termsOfBusiness, currentPage, totalPages } = useSelector(
-    (state) => state.terms
+    (state) => state.terms,
   );
   const [selectedBusiness, setSelectedBusiness] = useState("");
 
@@ -201,21 +203,21 @@ const Terms = () => {
       dispatch(addTermAction(termData));
       setShowAddTerm(false);
     },
-    [dispatch]
+    [dispatch],
   );
 
   const deleteTermHandler = useCallback(
     (id) => {
       dispatch(deleteTermAction(id));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const editTermHandler = useCallback(
     (termData) => {
       dispatch(editTermAction(termData));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const handlePageChange = useCallback(
@@ -223,7 +225,7 @@ const Terms = () => {
       if (value <= totalPages && value !== currentPage)
         dispatch(getTermsOfBusiness(selectedBusiness, { page: value }));
     },
-    [dispatch, currentPage, totalPages, selectedBusiness]
+    [dispatch, currentPage, totalPages, selectedBusiness],
   );
 
   const termList = useMemo(
@@ -259,7 +261,7 @@ const Terms = () => {
                     onEdit={editTermHandler}
                     onDelete={deleteTermHandler}
                   />
-                )
+                ),
               )}
             </TableBody>
           </Table>
@@ -282,7 +284,7 @@ const Terms = () => {
       deleteTermHandler,
       editTermHandler,
       handlePageChange,
-    ]
+    ],
   );
 
   return (
