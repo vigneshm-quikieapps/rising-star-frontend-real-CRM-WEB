@@ -159,7 +159,7 @@ const PaymentUpload = () => {
   };
   const refreshHandle = getXlsx();
 
-  console.log("refreshHandle", refreshHandle);
+  // console.log("refreshHandle", refreshHandle);
 
   return (
     <>

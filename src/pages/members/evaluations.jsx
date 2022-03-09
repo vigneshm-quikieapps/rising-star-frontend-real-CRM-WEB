@@ -349,7 +349,7 @@ const MemberEvaluations = () => {
       </StyleBox>
       {levels &&
         levels.map((data, index) => {
-          console.log("data", data);
+          // console.log("data", data);
           const status = levelStatusIndicator(data.status);
           return (
             <Accordion

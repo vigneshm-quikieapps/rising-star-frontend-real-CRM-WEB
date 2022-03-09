@@ -63,7 +63,7 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
       }
     }
     data();
-    console.log(data);
+    // console.log(data);
     // setisLoading(isLoading)
     // setisError(isError)
     // setError(error)

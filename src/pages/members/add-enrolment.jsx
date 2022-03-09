@@ -215,7 +215,7 @@ const AddEnrolment = () => {
       </Box>
     );
 
-  return (
+  return sessionList.length > 0 ? (
     <>
       <Box sx={{ display: "flex", alignItems: "center", mb: 1.5 }}>
         <IconButton
@@ -324,7 +324,7 @@ const AddEnrolment = () => {
           </Grid>
         </AccordionDetails>
       </Accordion>
-      {showClassList && (
+      {showClassList && member?._id && (
         <ClassList
           open={showClassList}
           onClose={() => setShowClassList(false)}
@@ -385,6 +385,19 @@ const AddEnrolment = () => {
           </Button>
         </DialogActions>
       </Dialog>
+    </>
+  ) : (
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          height: "500px",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
     </>
   );
 };

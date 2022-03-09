@@ -78,7 +78,7 @@ const Session = ({
   areSessionsTouched,
 }) => {
   const allCoaches = useSelector((state) => state.businesses.coachesOfBusiness);
-  console.log("allCoaches", allCoaches);
+  // console.log("allCoaches", allCoaches);
   const termsOfBusiness = useSelector((state) => state.terms.termsOfBusiness);
   const [touched, setTouched] = useState(false);
 

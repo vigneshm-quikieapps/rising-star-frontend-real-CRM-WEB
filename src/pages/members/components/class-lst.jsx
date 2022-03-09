@@ -49,7 +49,7 @@ const ClassList = ({
   const pageChangeHandler = (_, value) => {
     setPage(value);
   };
-  console.log("data", data);
+  // console.log("data", data);
   const tableRows = useMemo(() => {
     if (data?.docs) {
       return data?.docs?.map(

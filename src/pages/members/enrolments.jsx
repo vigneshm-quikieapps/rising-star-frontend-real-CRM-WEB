@@ -270,77 +270,63 @@ const Enrolment = () => {
           />
         </Grid>
       </Card>
-      {!isLoading ? (
-        <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-              <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
-                Enrolment Details
-              </Typography>
-              <GradientButton
-                active
-                sx={{ mr: 2 }}
-                onClick={() => addNewEnrolment(member._id)}
-              >
-                Add a new enrolment
-              </GradientButton>
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid sx={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-              <Output
-                title="Class Name"
-                description={toPascal(currentEnrolment?.class?.name)}
-              />
-              <Output title="Last Action Date" description={lastActionDate} />
-              <Output
-                title="Drop/Cancel Reason"
-                description={
-                  currentEnrolment?.enrolledStatus === "DROPPED" &&
-                  currentEnrolment?.discontinuationReason
-                }
-              />
-              <Output
-                title="Enrol Status"
-                description={
-                  enrolmentStatusMap[currentEnrolment?.enrolledStatus]
-                }
-              />
-              <Output title="Enrol Date/Time" description={enrolmentDate} />
-              <Output title="Member Start Date" description={startDate} />
-              <Output
-                title="Term"
-                description={toPascal(currentEnrolment?.session?.term?.label)}
-              />
-              <Output
-                title="Term Start Date"
-                description={calcDate(
-                  currentEnrolment?.session?.term?.startDate,
-                )}
-              />
-              <Output
-                title="Term End Date"
-                description={calcDate(currentEnrolment?.session?.term?.endDate)}
-              />
-              <Output
-                title="Session"
-                description={toPascal(currentEnrolment?.session?.name)}
-              />
-              <Output title="Timings" description={pattern} />
-            </Grid>
-          </AccordionDetails>
-        </Accordion>
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      )}
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+            <Typography variant="h2" sx={{ fontSize: "20px", flex: 1 }}>
+              Enrolment Details
+            </Typography>
+            <GradientButton
+              disabled={currentEnrolment ? false : true}
+              active
+              sx={{ mr: 2 }}
+              onClick={() => addNewEnrolment(member._id)}
+            >
+              Add a new enrolment
+            </GradientButton>
+          </Box>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid sx={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+            <Output
+              title="Class Name"
+              description={toPascal(currentEnrolment?.class?.name)}
+            />
+            <Output title="Last Action Date" description={lastActionDate} />
+            <Output
+              title="Drop/Cancel Reason"
+              description={
+                currentEnrolment?.enrolledStatus === "DROPPED" &&
+                currentEnrolment?.discontinuationReason
+              }
+            />
+            <Output
+              title="Enrol Status"
+              description={enrolmentStatusMap[currentEnrolment?.enrolledStatus]}
+            />
+            <Output title="Enrol Date/Time" description={enrolmentDate} />
+            <Output title="Member Start Date" description={startDate} />
+            <Output
+              title="Term"
+              description={toPascal(currentEnrolment?.session?.term?.label)}
+            />
+            <Output
+              title="Term Start Date"
+              description={calcDate(currentEnrolment?.session?.term?.startDate)}
+            />
+            <Output
+              title="Term End Date"
+              description={calcDate(currentEnrolment?.session?.term?.endDate)}
+            />
+            <Output
+              title="Session"
+              description={toPascal(currentEnrolment?.session?.name)}
+            />
+            <Output title="Timings" description={pattern} />
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+
       <Box
         sx={{
           "& .MuiButton-root": {

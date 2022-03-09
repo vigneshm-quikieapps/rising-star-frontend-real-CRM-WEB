@@ -111,7 +111,7 @@ const SessionList = ({
       ) || []
     );
   }, [data, onSelect, onClose]);
-  console.log("session", data);
+  // console.log("session", data);
 
   const pagination = data?.totalPages && data.totalPages > 1 && (
     <Pagination

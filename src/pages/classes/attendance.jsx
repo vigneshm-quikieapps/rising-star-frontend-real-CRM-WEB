@@ -208,7 +208,7 @@ const Attendance = () => {
               <VerifiedIcon title={condition} type={"conditions"} />,
               // <Status status="green" title="No Info" />,
               paymentStatus,
-              startDate,
+              reformatDate(startDate),
               <CheckBox
                 checked={attended}
                 onChange={() => {
@@ -424,7 +424,7 @@ const Attendance = () => {
     const sessionEndDate = new Date(sessionInfo && sessionInfo[1].endDate);
     return today >= sessionEndDate ? sessionEndDate : today;
   }, [sessionInfo]);
-  console.log("classSessionsInTerm", classSessionsInTerm);
+  // console.log("classSessionsInTerm", classSessionsInTerm);
   return mounted.current ? (
     <Box>
       <Card>

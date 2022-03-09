@@ -176,11 +176,11 @@ const MemberFinance = () => {
       enrolmentId: selectedEnrolment,
     };
     await addDiscount(body);
-    console.log("discpunt", body);
+    // console.log("discpunt", body);
   };
 
   const discountSchemeChangeHandler = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setSelectedDiscountScheme(e.target.value);
   };
 
@@ -227,7 +227,7 @@ const MemberFinance = () => {
   }, [discountSchemesData]);
   useEffect(() => {
     let temp = "";
-    console.log(discountSchemesData);
+    // console.log(discountSchemesData);
     temp = discountSchemesData?.discounts?.find(
       (data) => currentEnrolment?.discountDetail?.name === data.name,
     );
@@ -258,7 +258,7 @@ const MemberFinance = () => {
 
   const billOfClass = (selectedEnrolment, memId) => {
     billMemberOfClass(selectedEnrolment, memId);
-    console.log("bill", billsData);
+    // console.log("bill", billsData);
   };
   const reloadPage = () => {};
   const [onSelectBillData, setOnSelectBillData] = useState();
@@ -578,13 +578,17 @@ const MemberFinance = () => {
               </MenuItem>
             </TextField>
           </Box>
-          {onSelectBillData?.map(({ _id, ...data }) => (
-            <Bill
-              key={_id}
-              billData={{ _id, ...data }}
-              showStatus={setSaveStatus}
-            />
-          ))}
+          {onSelectBillData?.map(({ _id, termId, ...data }) => {
+            if (!termId) {
+              return (
+                <Bill
+                  key={_id}
+                  billData={{ _id, ...data }}
+                  showStatus={setSaveStatus}
+                />
+              );
+            }
+          })}
         </AccordionDetails>
         {onSelectBillData?.length > 0 && (
           <Pagination
