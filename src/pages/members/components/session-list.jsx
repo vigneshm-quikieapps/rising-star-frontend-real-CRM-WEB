@@ -57,8 +57,14 @@ const SessionList = ({
 
   const timings = (pattern) => {
     const days = pattern.map(({ day }) => day).join(", ");
-    const startTime = new Date(pattern[0].startTime).toLocaleTimeString();
-    const endTime = new Date(pattern[0].endTime).toLocaleTimeString();
+    const startTime = new Date(pattern[0].startTime).toLocaleTimeString(
+      navigator.language,
+      { hour: "2-digit", minute: "2-digit" },
+    );
+    const endTime = new Date(pattern[0].endTime).toLocaleTimeString(
+      navigator.language,
+      { hour: "2-digit", minute: "2-digit" },
+    );
     return `${toPascal(days)}, ${startTime} to ${endTime}`.replace(
       /:00 /g,
       " ",
@@ -67,48 +73,57 @@ const SessionList = ({
 
   const tableRows = useMemo(() => {
     return (
-      data?.docs?.map(
-        ({
-          _id,
-          name,
-          pattern,
-          startDate,
-          endDate,
-          term: {
-            label: termName,
-            startDate: termStateDate,
-            endDate: termEndDate,
-          },
-          status,
-          // session: {
-          //   name: sessionName,
-          //   term: { label: termName },
-          // },
-        }) => ({
-          onClick: () => {
-            onSelect(
-              _id,
-              name,
-              termStateDate,
-              termEndDate,
-              termName,
+      (data?.docs &&
+        data?.docs?.map(
+          ({
+            _id,
+            name,
+            pattern,
+            startDate,
+            endDate,
+            term,
+            // term: {
+            //   label: termName,
+            //   startDate: termStateDate,
+            //   endDate: termEndDate,
+            // },
+            status,
+            // session: {
+            //   name: sessionName,
+            //   term: { label: termName },
+            // },
+          }) => ({
+            onClick: () => {
+              onSelect(
+                _id,
+                name,
+                term?.startDate,
+                term?.endDate,
+                term?.label,
+                // termStateDate,
+                // termEndDate,
+                // termName,
+                timings(pattern),
+              );
+              onClose();
+            },
+            items: [
+              toPascal(name),
               timings(pattern),
-            );
-            onClose();
-          },
-          items: [
-            toPascal(name),
-            timings(pattern),
-            reformatDate(startDate.split("T")[0]),
-            reformatDate(endDate.split("T")[0]),
-            toPascal(termName),
-            toPascal(status).replaceAll("_", " "),
+              // reformatDate(startDate.split("T")[0]),
+              // reformatDate(endDate.split("T")[0]),
+              // toPascal(termName),
+              reformatDate(term?.startDate.split("T")[0]),
+              reformatDate(term?.endDate.split("T")[0]),
+              toPascal(term?.label),
+              toPascal(status).replaceAll("_", " "),
 
-            // toPascal(termName),
-            // toPascal(sessionName),
-          ],
-        }),
-      ) || []
+              // toPascal(termName),
+              // toPascal(sessionName),
+            ],
+          }),
+        )) ||
+      []
     );
   }, [data, onSelect, onClose]);
   // console.log("session", data);
