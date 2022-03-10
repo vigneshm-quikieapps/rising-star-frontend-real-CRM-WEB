@@ -51,11 +51,12 @@ const ClassList = ({
   };
   // console.log("data", data);
   const tableRows = useMemo(() => {
+    if (!data?.docs) return [];
     if (data?.docs) {
       return data?.docs?.map(
         (
           data,
-          //   {
+          // {
           //   _id,
           //   name,
           //   categoryId: { name: catName },
@@ -63,7 +64,7 @@ const ClassList = ({
           //     { name: Age, values: AgeData },
           //     { name: Gender, values: GenderData },
           //   ],
-          // }
+          // },
         ) => ({
           onClick: () => {
             onSelect(data?._id, data?.name);
@@ -76,8 +77,14 @@ const ClassList = ({
             // AgeData.toString(),
             // toPascal(GenderData.toString()),
             data?.categoryId?.name || "",
-            data?.enrolmentControls[0]?.values?.toString() || 0,
-            toPascal(data?.enrolmentControls[1]?.values?.toString()) || "",
+            data?.enrolmentControls
+              ? data?.enrolmentControls[0]?.values?.toString()
+              : "",
+            toPascal(
+              data?.enrolmentControls
+                ? data?.enrolmentControls[1]?.values?.toString()
+                : "",
+            ),
           ],
         }),
       );
