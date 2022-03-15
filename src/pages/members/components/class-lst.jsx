@@ -78,11 +78,15 @@ const ClassList = ({
             // toPascal(GenderData.toString()),
             data?.categoryId?.name || "",
             data?.enrolmentControls
-              ? data?.enrolmentControls[0]?.values?.toString()
+              ? data?.enrolmentControls[0]?.values
+                  ?.toString()
+                  .replaceAll(",", ", ")
               : "",
             toPascal(
               data?.enrolmentControls
-                ? data?.enrolmentControls[1]?.values?.toString()
+                ? data?.enrolmentControls[1]?.values
+                    ?.toString()
+                    .replaceAll(",", ", ")
                 : "",
             ),
           ],

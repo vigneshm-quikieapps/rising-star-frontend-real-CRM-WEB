@@ -44,6 +44,10 @@ import { useAddDiscount } from "../../services/mutations";
 import { billMemberOfClass } from "../../services/enrolmentServices";
 import { DataSaverOn } from "@mui/icons-material";
 
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
 const validationSchema = Yup.object()
   .shape({
     billData: Yup.array()
@@ -266,8 +270,14 @@ const MemberFinance = () => {
   const timings = useMemo(() => {
     if (!pattern.length) return " - - - ";
     const days = pattern.map(({ day }) => day).join(", ");
-    const startTime = new Date(pattern[0].startTime).toLocaleTimeString();
-    const endTime = new Date(pattern[0].endTime).toLocaleTimeString();
+    const startTime = new Date(pattern[0].startTime).toLocaleTimeString(
+      navigator.language,
+      { hour: "2-digit", minute: "2-digit" },
+    );
+    const endTime = new Date(pattern[0].endTime).toLocaleTimeString(
+      navigator.language,
+      { hour: "2-digit", minute: "2-digit" },
+    );
     return `${toPascal(days)}, ${startTime} to ${endTime}`.replace(
       /:00 /g,
       " ",
@@ -477,7 +487,7 @@ const MemberFinance = () => {
           <Output
             title="Member Start Date"
             description={
-              startDate ? new Date(startDate).toLocaleDateString() : " - - - "
+              startDate ? reformatDate(startDate.split("T")[0]) : " - - - "
             }
           />
         </Grid>
@@ -573,7 +583,6 @@ const MemberFinance = () => {
               sx={{ width: "320px" }}
             >
               <MenuItem value="Jan-mar">
-                <span style={monthPickerStyles.spanStyle}>month by</span>
                 <div style={monthPickerStyles.divStyle}>{monthFlag}</div>
               </MenuItem>
             </TextField>

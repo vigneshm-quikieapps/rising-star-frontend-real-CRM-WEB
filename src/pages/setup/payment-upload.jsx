@@ -79,7 +79,11 @@ const PaymentUpload = () => {
       );
   };
   const handleChange = (newValue) => {
-    setValue(newValue.toISOString().split("T")[0]);
+    setValue(
+      new Date(newValue.getFullYear(), newValue.getMonth(), 2)
+        .toISOString()
+        .split("T")[0],
+    );
   };
   const pagination = (
     <Pagination
@@ -127,7 +131,7 @@ const PaymentUpload = () => {
     );
     if (message.data.message) {
       setUploadXlsxMessage(message.data.message);
-      if (message.data.message === "Payment upload successfull") {
+      if (message.data.message === "Payment upload successful.") {
         setTitle("Information");
         setIcon(informationIcon);
       } else {
@@ -136,7 +140,7 @@ const PaymentUpload = () => {
       }
     } else {
       if (message.data.errors.length > 1) {
-        setUploadXlsxMessage("BillDate or Payment File is missing");
+        setUploadXlsxMessage("Billdate or payment file is missing.");
         setTitle("Error");
         setIcon(errorIcon);
       } else {
@@ -211,13 +215,24 @@ const PaymentUpload = () => {
         </TextField>
         <GradientButton onClick={handlePaymentSubmit}> Submit</GradientButton>
       </Grid>
-      <Box sx={{ mb: 3 }}>
-        <DatePicker
+      <Box sx={{ mb: 3, width: "20%" }}>
+        {/* <DatePicker
           label="Month/Year"
           inputFormat="MM/yyyy"
           value={value}
           onChange={handleChange}
           renderInput={(params) => <TextField {...params} />}
+        /> */}
+        <DatePicker
+          label="Month/Year"
+          // date={date}
+          onChange={handleChange}
+          views={["year", "month"]}
+          textfieldProps={{
+            sx: {
+              width: "100%",
+            },
+          }}
         />
       </Box>
       <Grid sx={{ mb: 3 }}>

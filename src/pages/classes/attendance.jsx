@@ -43,8 +43,12 @@ import {
 import { setPageTitle } from "../../redux/action/shared-actions";
 
 const reformatDate = (dateStr) => {
-  let dArr = dateStr.split("-"); // ex input "2010-01-18"
-  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+  if (dateStr) {
+    let dArr = dateStr.split("-"); // ex input "2010-01-18"
+    return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+  } else {
+    return "- - -";
+  }
 };
 const ExpandIcon = () => <ImgIcon>{arrowDownIcon}</ImgIcon>;
 
@@ -502,8 +506,14 @@ const Attendance = () => {
         <Description>{updatedDetail.updatedBy}</Description>
         <Title sx={{ marginLeft: "30px" }}>Last Updated at</Title>
         <Description>
-          {reformatDate(updatedDetail.updatedAt.split(" ")[0])}{" "}
-          {updatedDetail.updatedAt.split(" ")[1]}
+          {reformatDate(updatedDetail.updatedAt?.split(" ")[0])}{" "}
+          {new Date(updatedDetail.updatedAt)?.toLocaleTimeString(
+            navigator.language,
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+            },
+          )}
         </Description>
       </CardRow>
 

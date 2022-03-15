@@ -23,6 +23,11 @@ import {
 
 const RoundIconButton = styled(IconButton)({ borderRadius: "50%" });
 
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
+
 const validationSchema = yup
   .object()
   .shape({
@@ -463,11 +468,11 @@ const UpdateTransaction = ({
       <TableCell>
         <TextField
           disabled={defaultValues.billStatus === "PAID" || "SUSPENDED"}
-          defaultValue="MANUAL"
+          defaultValue="Manual"
           sx={{ width: "120px" }}
           //   InputProps={{ readOnly: true }}
         >
-          <MenuItem value="MANUAL">Manual</MenuItem>
+          <MenuItem value="Manual">Manual</MenuItem>
         </TextField>
       </TableCell>
       <TableCell>
@@ -489,7 +494,9 @@ const UpdateTransaction = ({
           sx={{ width: "120px" }}
         ></TextField> */}
         <Typography>
-          {(transaction && transaction.processDate.slice(0, 10)) || "N/A"}
+          {(transaction &&
+            reformatDate(transaction.processDate.split("T")[0])) ||
+            "N/A"}
         </Typography>
       </TableCell>
       <TableCell>

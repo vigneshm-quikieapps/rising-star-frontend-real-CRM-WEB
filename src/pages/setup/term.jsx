@@ -106,13 +106,15 @@ const Term = ({
       <TableCell>
         <DatePicker
           date={startDate}
+          variant="filled"
           onChange={(newDate) => changeHandler(newDate, "startDate")}
-          label={null}
+          // label={null}
           inputFormat="dd/MM/yyyy"
           textfieldProps={{
             sx: {
               height: "44px",
               "& .MuiFilledInput-input": { py: 0 },
+              verticalAlign: "middle",
             },
           }}
         />
@@ -120,9 +122,10 @@ const Term = ({
       <TableCell>
         <DatePicker
           date={endDate}
+          variant="filled"
           onChange={(newDate) => changeHandler(newDate, "endDate")}
-          label={null}
           inputFormat="dd/MM/yyyy"
+          // label={null}
           textfieldProps={{
             sx: {
               height: "44px",

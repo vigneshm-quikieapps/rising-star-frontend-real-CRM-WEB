@@ -18,6 +18,10 @@ import {
 } from "../../../../components";
 
 const RoundIconButton = styled(IconButton)({ borderRadius: "50%" });
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
 
 const validationSchema = yup
   .object()
@@ -143,12 +147,12 @@ const NewTransaction = ({ billId, newTransaction, total }) => {
       <TableCell>
         <TextField
           select
-          defaultValue="MANUAL"
+          defaultValue="Manual"
           sx={{ width: "120px" }}
           //   InputProps={{ readOnly: true }}
           disabled
         >
-          <MenuItem value="MANUAL">Manual</MenuItem>
+          <MenuItem value="Manual">Manual</MenuItem>
         </TextField>
       </TableCell>
       <TableCell>

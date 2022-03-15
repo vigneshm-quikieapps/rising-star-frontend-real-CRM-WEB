@@ -478,13 +478,13 @@ const Dashboard = () => {
                 MEMBER
               </Typography>
               <CardRow sx={{ justifyContent: "flex-start" }}>
-                <Status color={"#f1383c"} />
+                <Status color={"#beb8d8"} />
                 <Typography sx={{ opacity: 0.5, fontSize: "14px" }}>
                   Active
                 </Typography>
               </CardRow>
               <CardRow sx={{ justifyContent: "flex-start" }}>
-                <Status color={"#beb8d8"} />
+                <Status color={"#f1383c"} />
                 <Typography sx={{ opacity: 0.5, fontSize: "14px" }}>
                   Drops
                 </Typography>

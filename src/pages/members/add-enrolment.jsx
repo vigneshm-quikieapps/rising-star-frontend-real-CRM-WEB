@@ -41,6 +41,15 @@ import { regularEnrollment } from "../../services/enrolmentServices";
 import { useAddEnrolment } from "../../services/mutations";
 import DialogBox from "../../components/dialog";
 
+const reformatDate = (dateStr) => {
+  if (dateStr) {
+    let dArr = dateStr.split("-"); // ex input "2010-01-18"
+    return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+  } else {
+    return " - - - ";
+  }
+};
+
 const AddEnrolment = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -301,7 +310,7 @@ const AddEnrolment = () => {
             /> */}
             <Output
               title="Term Start Date"
-              description={calcDate(selectedTermSDate)}
+              description={reformatDate(selectedTermSDate.split("T")[0])}
             />
             {/* <Output
               title="Term End Date"
@@ -309,7 +318,7 @@ const AddEnrolment = () => {
             /> */}
             <Output
               title="Term End Date"
-              description={calcDate(selectedTermEDate)}
+              description={reformatDate(selectedTermEDate.split("T")[0])}
             />
             <Output />
             {/* <Output title="Term" description={termName} /> */}

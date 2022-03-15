@@ -81,7 +81,7 @@ export const enrollmentHeaders = [
   "Enroled Date/Time",
   "Enrol Status",
   "Drop/Cancel Reason",
-  "Dropped Date/Time",
+  "Dropped Date",
 ];
 export const shortWeekNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 export const shortWeekNamesStartingWithSunday = [
