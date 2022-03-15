@@ -274,7 +274,7 @@ const Members = () => {
         <TextField
           onChange={searchValueChangeHandler}
           value={searchValue}
-          placeholder="Search member by name"
+          placeholder="Search by member name"
           sx={{ flex: 1, mr: "20px" }}
           InputProps={{
             startAdornment: (

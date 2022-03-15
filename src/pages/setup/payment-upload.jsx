@@ -34,7 +34,11 @@ import { transformError } from "../../utils";
 
 const reformatDate = (dateStr) => {
   let dArr = dateStr.split("-"); // ex input "2010-01-18"
-  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+  let TArr = new Date(dateStr).toLocaleTimeString(navigator.language, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0] + " / " + TArr; //ex out: "18/01/10
 };
 
 const PaymentUpload = () => {
@@ -49,6 +53,7 @@ const PaymentUpload = () => {
   const [uploadXlsxMessage, setUploadXlsxMessage] = useState("");
   const [title, setTitle] = useState("");
   const [icon, setIcon] = useState();
+  const [dialogActionName, setDialogActionName] = useState("");
   const setError = useSetError();
 
   const classesState = useSelector((state) => state.classes);
@@ -130,19 +135,23 @@ const PaymentUpload = () => {
       if (message.data.message === "Payment upload successfull") {
         setTitle("Information");
         setIcon(informationIcon);
+        setDialogActionName("Ok");
       } else {
         setTitle("Error");
         setIcon(errorIcon);
+        setDialogActionName("Discard");
       }
     } else {
       if (message.data.errors.length > 1) {
         setUploadXlsxMessage("BillDate or Payment File is missing");
         setTitle("Error");
         setIcon(errorIcon);
+        setDialogActionName("Discard");
       } else {
         setUploadXlsxMessage(`${message.data.errors[0].Payment}`);
         setTitle("Error");
         setIcon(errorIcon);
+        setDialogActionName("Discard");
       }
     }
 
@@ -308,7 +317,7 @@ const PaymentUpload = () => {
         <DialogContent>{uploadXlsxMessage}</DialogContent>
         <DialogActions>
           <Button onClick={handleOk} sx={{ color: "#ff2c60" }} autoFocus>
-            Ok
+            {dialogActionName}
           </Button>
         </DialogActions>
       </Dialog>

@@ -9,6 +9,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { ImgIcon } from "../components";
+import ErrorIcon from "../../assets/icons/icon-error.png";
 
 class ErrorBoundary extends ReactComponent {
   constructor(props) {
@@ -33,14 +35,34 @@ class ErrorBoundary extends ReactComponent {
       <Dialog
         open
         onClose={this.removeErrorHandler}
-        sx={{ zIndex: (theme) => theme.zIndex.modal + 2 }}
+        sx={{
+          zIndex: (theme) => theme.zIndex.modal + 2,
+          "& .MuiDialog-paper": {
+            minWidth: "380px",
+            padding: "40px 30px",
+            margin: "27px 300px 31px 200px",
+            alignItems: "center",
+          },
+        }}
       >
-        <DialogTitle>Error Boundary</DialogTitle>
+        <ImgIcon>{ErrorIcon}</ImgIcon>
+
+        <DialogTitle>Error</DialogTitle>
         <DialogContent>
           <DialogContentText>Something went wrong!</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.errorHandler}>Go to home Page</Button>
+          <Button
+            onClick={this.errorHandler}
+            sx={{
+              color: "#ff2c60",
+              border: "solid 1px #f2f1f6",
+              textTransform: "none",
+              fontSize: "20px",
+            }}
+          >
+            Go to home Page
+          </Button>
         </DialogActions>
       </Dialog>
     ) : (
