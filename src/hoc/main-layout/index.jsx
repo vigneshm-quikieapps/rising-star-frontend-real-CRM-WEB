@@ -66,7 +66,7 @@ const MainLayout = ({ children }) => {
       <Header
         drawerOpen={navOpen}
         drawerWidth={drawerWidth}
-        userRole="Business Admin"
+        userRole="Business User"
         userName={userInfo?.name || "Logged Out"}
         handleDrawerOpen={toggleNav}
       />

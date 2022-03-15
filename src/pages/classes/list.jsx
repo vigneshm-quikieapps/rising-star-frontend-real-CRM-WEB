@@ -281,7 +281,7 @@ const Classes = () => {
         <TextField
           onChange={searchValueChangeHandler}
           value={searchValue}
-          placeholder="Search class by name"
+          placeholder="Search by class name"
           sx={{ flex: 1, mr: "20px" }}
           InputProps={{
             startAdornment: (

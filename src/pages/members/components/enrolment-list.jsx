@@ -54,24 +54,31 @@ const EnrolmentList = ({
     if (data?.docs) {
       return (
         data?.docs?.map(
-          ({
-            _id,
-            class: { name: className },
-            enrolledStatus,
-            session: {
-              name: sessionName,
-              term: { label: termName },
-            },
-          }) => ({
+          (
+            data,
+            //   {
+            //   _id,
+            //   class: { name: className },
+            //   enrolledStatus,
+            //   session: {
+            //     name: sessionName,
+            //     term: { label: termName },
+            //   },
+            // }
+          ) => ({
             onClick: () => {
-              onSelect(_id, className);
+              onSelect(data?._id, data?.class?.name);
               onClose();
             },
             items: [
-              toPascal(className),
-              toPascal(enrolmentStatusMap[enrolledStatus]),
-              toPascal(termName),
-              toPascal(sessionName),
+              // toPascal(className),
+              // toPascal(enrolmentStatusMap[enrolledStatus]),
+              // toPascal(termName),
+              // toPascal(sessionName),
+              data?.class?.name || "",
+              toPascal(enrolmentStatusMap[data?.enrolledStatus]),
+              toPascal(data?.session?.term?.label),
+              toPascal(data?.session?.name),
             ],
           }),
         ) || []

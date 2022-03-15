@@ -28,7 +28,7 @@ const PaymentModal = styled(Dialog)(({ theme }) => ({
 
 const TableHeading = (
   <Typography sx={{ fontSize: "20px", fontWeight: "bold", padding: "20px" }}>
-    Payment Upload Result
+    Payment Upload Results
   </Typography>
 );
 
@@ -102,9 +102,9 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
           },
           items: [
             toPascal(memberName),
-            toPascal(membershipNumber),
+            membershipNumber,
             amount,
-            toPascal(type),
+            type,
             toPascal(paymentMethod),
             toPascal(uploadStatus),
             toPascal(noDataFound),
@@ -212,7 +212,7 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
               "Type",
               "Payment Method",
               "Upload Status",
-              "Discripency",
+              "Discrepancy",
             ]}
             rows={tableRows}
             pagination={pagination}

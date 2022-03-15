@@ -42,7 +42,7 @@ const tableHeaders = [
   "Term Label",
   "Start Date",
   "End Date",
-  "TermFee",
+  "Term Fee",
   "Actions",
 ];
 

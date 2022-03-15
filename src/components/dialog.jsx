@@ -31,13 +31,23 @@ export default function DialogBox(props) {
         </DialogContent>
         <DialogActions>
           <Button
-            sx={{ color: "#ff2c60", border: "solid 1px #f2f1f6" }}
+            sx={{
+              color: "#ff2c60",
+              border: "solid 1px #f2f1f6",
+              textTransform: "none",
+              fontSize: "20px",
+            }}
             onClick={onNo}
           >
             No
           </Button>
           <Button
-            sx={{ color: "#ff2c60", border: "solid 1px #f2f1f6" }}
+            sx={{
+              color: "#ff2c60",
+              border: "solid 1px #f2f1f6",
+              textTransform: "none",
+              fontSize: "20px",
+            }}
             onClick={onYes}
             autoFocus
           >

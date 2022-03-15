@@ -26,7 +26,7 @@ export const ErrorDialogProvider = ({ children }) => {
         {children}
         <WarningDialog
           open={!!error}
-          title="Error!"
+          title="Error"
           description={errorMessage}
           onAccept={removeError}
           acceptButtonTitle="Discard"
