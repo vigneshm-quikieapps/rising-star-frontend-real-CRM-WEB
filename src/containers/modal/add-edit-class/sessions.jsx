@@ -67,7 +67,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
       return dispatch(
         addSessionToClass({ classId, ...sessionData }, () => {
           setShowAddSession(false);
-        })
+        }),
       );
     }
     setClassSessions((prevSessions) => {
@@ -85,7 +85,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
           const { index, ...dataWithoutIndex } = data;
           if (sessionIndex === index) return dataWithoutIndex;
           return prevSessionData;
-        }
+        },
       );
       return updatedSessions;
     });
@@ -94,7 +94,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
   const deleteSessionHandler = ({ index, id }) => {
     if (!id) {
       setClassSessions((prevSessions) =>
-        prevSessions.filter((session, sessionIndex) => sessionIndex !== index)
+        prevSessions.filter((session, sessionIndex) => sessionIndex !== index),
       );
     } else {
       dispatch(deleteSessionFromClass(id));
@@ -113,6 +113,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
                   e.stopPropagation();
                   setShowAddSession(true);
                 }}
+                sx={{ fontSize: "16px", fontWeight: "bold" }}
               >
                 <AddIcon /> Add Session
               </GradientButton>

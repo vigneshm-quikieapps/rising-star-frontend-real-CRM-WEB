@@ -549,7 +549,7 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                     handleAddClass(isEditMode);
                   }}
                 >
-                  {isEditMode ? "Edit" : "Save"}
+                  {isEditMode ? "Save" : "Save"}
                 </GradientButton>
                 <GradientButton size="large" invert onClick={handleWarn}>
                   Discard

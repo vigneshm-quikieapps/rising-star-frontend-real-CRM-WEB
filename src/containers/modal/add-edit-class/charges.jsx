@@ -82,6 +82,7 @@ const Charges = (props) => {
                   e.stopPropagation();
                   addChargeRow();
                 }}
+                sx={{ fontSize: "16px", fontWeight: "bold" }}
               >
                 <AddIcon />
                 Add Charge

@@ -99,6 +99,9 @@ const Charge = (props) => {
           value={data.amount}
           sx={{
             width: "45%",
+            "& .MuiOutlinedInput-input": {
+              padding: "13px 0px !important",
+            },
           }}
           placeholder={"Amount"}
           InputProps={{

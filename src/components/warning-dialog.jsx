@@ -51,6 +51,9 @@ export default function DialogBox({
               border: "solid 1px #f2f1f6",
               textTransform: "none",
               fontSize: "20px",
+              fontWeight: "600px",
+              borderRadius: "12px",
+              width: "73px",
             }}
             onClick={onReject}
             autoFocus
@@ -64,6 +67,9 @@ export default function DialogBox({
             border: "solid 1px #f2f1f6",
             textTransform: "none",
             fontSize: "20px",
+            fontWeight: "600px",
+            borderRadius: "12px",
+            width: "73px",
           }}
           onClick={onAccept}
         >
