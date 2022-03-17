@@ -319,21 +319,26 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
               }}
             >
               <CardRow>
-                <Description
+                <Typography
                   sx={{
-                    fontSize: "16px",
-                    fontWeight: "bold",
+                    fontSize: "20px",
+                    fontWeight: "600",
                     margin: "17px 0px 30px 0px",
                   }}
                 >
                   Basic Information
-                </Description>
+                </Typography>
               </CardRow>
               <CardRow sx={{ marginBottom: "20px" }}>
                 <StyledTextField
-                  variant="filled"
-                  sx={{ width: "30%" }}
+                  sx={{
+                    width: "30%",
+                  }}
                   label="Class Name*"
+                  // floatingLabelStyle={{ background: "#f4f4f4" }}
+                  InputLabelProps={{
+                    style: { background: "#f4f4f4" },
+                  }}
                   value={className}
                   onChange={(e) => {
                     setClassName(e.target.value);
@@ -341,10 +346,12 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                 />
 
                 <StyledTextField
-                  variant="filled"
                   select
                   sx={{ width: "30%" }}
                   label="Business Name*"
+                  InputLabelProps={{
+                    style: { background: "#f4f4f4" },
+                  }}
                   value={currentUserBusinesses.length ? selectedBusinessId : ""}
                   onChange={(e) => {
                     let businessId = e.target.value;
@@ -365,10 +372,12 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                 </StyledTextField>
 
                 <StyledTextField
-                  variant="filled"
                   select
                   sx={{ width: "30%" }}
-                  label="Class Status"
+                  label="Class Status*"
+                  InputLabelProps={{
+                    style: { background: "#f4f4f4" },
+                  }}
                   value={selectedStatus}
                   onChange={(e) => {
                     setSelectedStatus(e.target.value);
@@ -381,10 +390,12 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
 
               <CardRow sx={{ marginBottom: "20px" }}>
                 <StyledTextField
-                  variant="filled"
                   select
                   sx={{ width: "30%" }}
-                  label="Registration Consent Form"
+                  label="Registration Consent Form*"
+                  InputLabelProps={{
+                    style: { background: "#f4f4f4" },
+                  }}
                   value={selectedConsentForm}
                   onChange={(e) => {
                     setSelectedConsentForm(e.target.value);
@@ -395,9 +406,11 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
 
                 <StyledTextField
                   select
-                  variant="filled"
                   sx={{ width: "30%" }}
                   label="Class Category*"
+                  InputLabelProps={{
+                    style: { background: "#f4f4f4" },
+                  }}
                   value={categories.length ? selectedCategory : ""}
                   onChange={(e) => {
                     setSelectedCategory(e.target.value);
@@ -418,9 +431,11 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
 
                 <StyledTextField
                   select
-                  variant="filled"
                   sx={{ width: "30%" }}
                   label="Evaluation Scheme*"
+                  InputLabelProps={{
+                    style: { background: "#f4f4f4" },
+                  }}
                   value={
                     evaluationSchemeList.length ? selectedEvaluationScheme : ""
                   }
@@ -450,7 +465,6 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                       height: "auto",
                     },
                   }}
-                  variant="filled"
                   multiline
                   rows={4}
                   placeholder={"About this class"}
@@ -470,7 +484,6 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                     <AccordionDetails>
                       <CardRow sx={{ marginTop: "10px" }}>
                         <StyledTextField
-                          variant="filled"
                           select
                           SelectProps={{
                             multiple: true,
@@ -480,6 +493,9 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                           }}
                           sx={{ width: "40%" }}
                           label="Age"
+                          InputLabelProps={{
+                            style: { background: "#f4f4f4" },
+                          }}
                           value={ages}
                           onChange={handleAgeSelect}
                         >
@@ -496,7 +512,6 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                           )}
                         </StyledTextField>
                         <StyledTextField
-                          variant="filled"
                           select
                           SelectProps={{
                             multiple: true,
@@ -506,6 +521,9 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                           }}
                           sx={{ width: "40%" }}
                           label="Gender"
+                          InputLabelProps={{
+                            style: { background: "#f4f4f4" },
+                          }}
                           value={genders}
                           onChange={handleGenderSelect}
                         >
@@ -551,7 +569,18 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                 >
                   {isEditMode ? "Save" : "Save"}
                 </GradientButton>
-                <GradientButton size="large" invert onClick={handleWarn}>
+                <GradientButton
+                  size="large"
+                  invert
+                  onClick={handleWarn}
+                  sx={{
+                    "&:hover": {
+                      backgroundImage:
+                        "linear-gradient(106deg, #ff1a6d, #ff6e2d 100%)",
+                      color: "white",
+                    },
+                  }}
+                >
                   Discard
                 </GradientButton>
               </CardRow>

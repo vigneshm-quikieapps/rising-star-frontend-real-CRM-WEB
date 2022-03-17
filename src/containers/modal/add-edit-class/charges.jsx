@@ -100,8 +100,10 @@ const Charges = (props) => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Charge Name</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Mandatory</TableCell>
+                    <TableCell sx={{ width: "50px", marginLeft: "5px" }}>
+                      Amount
+                    </TableCell>
+                    <TableCell sx={{ width: "50px" }}>Mandatory</TableCell>
                     <TableCell>Pay Frequency</TableCell>
                     <TableCell>Action</TableCell>
                   </TableRow>

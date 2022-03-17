@@ -17,7 +17,7 @@ const PayFrequencyOptions = [
   },
   {
     value: "TRIAL",
-    name: "trial",
+    name: "Trial",
   },
 ];
 
@@ -98,7 +98,7 @@ const Charge = (props) => {
         <StyledTextField
           value={data.amount}
           sx={{
-            width: "45%",
+            width: "100px",
             "& .MuiOutlinedInput-input": {
               padding: "13px 0px !important",
             },
@@ -111,7 +111,7 @@ const Charge = (props) => {
         ></StyledTextField>
       </TableCell>
 
-      <TableCell>
+      <TableCell sx={{ padding: "14px 33px" }}>
         <CheckBox checked={data.isMandatory} onClick={handleMandatoryChange} />
       </TableCell>
 
