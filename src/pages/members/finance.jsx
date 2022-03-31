@@ -463,11 +463,12 @@ const MemberFinance = () => {
                 );
               })}
           </TextField>
-          <Box />
+
           <Output
             title="Club Membership Number"
             description={clubMembershipId}
           />
+          <Box />
           <GradientButton
             sx={{ maxWidth: "fit-content" }}
             onClick={() => setShowEnrolmentList(true)}

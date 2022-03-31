@@ -239,8 +239,25 @@ const Enrolment = () => {
   return (
     <>
       <Card>
-        <HeadingText>{member.name}</HeadingText>
-        <SubHeadingText>Student/Member</SubHeadingText>
+        <Typography
+          sx={{ fontSize: "28px", fontWeight: "bold", lineHeight: "normal" }}
+          component="div"
+        >
+          {member?.name ? member?.name : "- - -"}
+        </Typography>
+        <Typography
+          sx={{
+            color: "#0008",
+            margin: "6px 0px 10px 0",
+            fontSize: "14px",
+            fontWeight: "bold",
+            lineHeight: "normal",
+          }}
+          component="div"
+        >
+          Student/Member
+        </Typography>
+
         <Grid>
           <TextField
             select
@@ -263,7 +280,7 @@ const Enrolment = () => {
                 );
               })}
           </TextField>
-          <Box />
+          {/* <Box /> */}
           <Output
             title="Club Membership Number"
             description={clubMembershipId}

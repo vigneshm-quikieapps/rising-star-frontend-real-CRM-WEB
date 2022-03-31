@@ -66,10 +66,22 @@ const MemberConsent = () => {
   return (
     <Box>
       <StyleBox>
-        <Typography variant="h4" component="div">
+        <Typography
+          sx={{ fontSize: "28px", fontWeight: "bold", lineHeight: "normal" }}
+          component="div"
+        >
           {currentMember ? currentMember.name : "- - -"}
         </Typography>
-        <Typography variant="subtitle2" component="div">
+        <Typography
+          sx={{
+            color: "#0008",
+            margin: "6px 0px 10px 0",
+            fontSize: "14px",
+            fontWeight: "bold",
+            lineHeight: "normal",
+          }}
+          component="div"
+        >
           Student/Member
         </Typography>
         <Grid container alignItems="center">

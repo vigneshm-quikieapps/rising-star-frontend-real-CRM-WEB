@@ -9,12 +9,14 @@ const DateRange = ({
   title,
   onChange,
   year,
-  isRangeRequired,
+  isRangeRequired = true,
 }) => {
   const open = Boolean(anchorEl);
   const [from, setFrom] = useState(0);
   const [to, setTo] = useState(0);
   const [selectedYear, setSelectedYear] = useState(year);
+  const [fromSelectedYear, setFromSelectedYear] = useState(year);
+  const [toSelectedYear, setToSelectedYear] = useState(year);
 
   const years = useMemo(() => {
     return Array(11)
@@ -22,8 +24,8 @@ const DateRange = ({
       .map((_, index) => Number(year) - 5 + index);
   }, [year]);
 
-  const rangeStatus =
-    isRangeRequired === undefined || isRangeRequired === true ? true : false;
+  // const rangeStatus =
+  //   isRangeRequired === undefined || isRangeRequired === true ? true : false;
 
   const onMonthChange = (index, field) => {
     switch (field) {
@@ -60,14 +62,14 @@ const DateRange = ({
           horizontal: "center",
         }}
       >
-        {rangeStatus ? (
+        {isRangeRequired ? (
           <Box sx={{ padding: "15px" }}>
             <CardRow sx={{ padding: "7px 0" }}>
               <Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>
                 {title}
               </Typography>
 
-              <TextField
+              {/* <TextField
                 select
                 value={selectedYear}
                 onChange={(e) => {
@@ -82,15 +84,17 @@ const DateRange = ({
                     {item}
                   </MenuItem>
                 ))}
-              </TextField>
+              </TextField> */}
             </CardRow>
 
             <CardRow sx={{ flexWrap: "nowrap" }}>
               <Box sx={{ width: "240px" }}>
                 <MonthPicker
                   title="From"
-                  onChange={(i) => {
-                    onMonthChange(i, "From");
+                  year={year}
+                  onChange={(month, year) => {
+                    onMonthChange(month, "From");
+                    setFromSelectedYear(year, "From");
                   }}
                 />
               </Box>
@@ -106,8 +110,10 @@ const DateRange = ({
               <Box sx={{ width: "240px" }}>
                 <MonthPicker
                   title="To"
-                  onChange={(i) => {
-                    onMonthChange(i, "To");
+                  year={year}
+                  onChange={(month, year) => {
+                    onMonthChange(month, "To");
+                    setToSelectedYear(year, "To");
                   }}
                 />
               </Box>
@@ -116,8 +122,8 @@ const DateRange = ({
             <GradientButton
               onClick={() =>
                 onChange(
-                  new Date(selectedYear, from),
-                  new Date(selectedYear, to),
+                  new Date(fromSelectedYear, from),
+                  new Date(toSelectedYear, to + 1, 0),
                 )
               }
             >

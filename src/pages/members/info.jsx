@@ -24,6 +24,10 @@ const Details = ({ title, details }) => (
     </AccordionDetails>
   </Accordion>
 );
+const reformatDate = (dateStr) => {
+  let dArr = dateStr.split("-"); // ex input "2010-01-18"
+  return dArr[2] + "-" + dArr[1] + "-" + dArr[0]; //ex out: "18/01/10"
+};
 
 const extractContactInfo = (
   contact = { name: "", relationship: "", contact: "" },
@@ -32,7 +36,7 @@ const extractContactInfo = (
   return {
     Name: toPascal(name),
     Relationship: toPascal(relationship),
-    "Contact Number*": mobileNo,
+    "Contact Number": mobileNo,
   };
 };
 
@@ -45,11 +49,11 @@ const MemberInfo = () => {
   const basicInfo = useMemo(() => {
     if (!currentMember) return {};
     const { name, gender, dob } = currentMember;
-    const dateOfBirth = new Date(dob.split("T")[0]).toDateString();
+    const dateOfBirth = reformatDate(new Date(dob).toISOString().split("T")[0]);
     return {
       "Full Name": toPascal(name),
-      "Gender*": toPascal(gender),
-      "Date of Birth*": dateOfBirth,
+      Gender: toPascal(gender),
+      "Date of Birth": dateOfBirth,
     };
   }, [currentMember]);
 
@@ -57,7 +61,7 @@ const MemberInfo = () => {
     if (!currentMember) return {};
     const { email, name: parentName, mobileNo } = currentMember.userId;
     return {
-      "Full Name*": toPascal(parentName),
+      "Full Name": toPascal(parentName),
       Email: email,
       "Contact Number": mobileNo,
     };
@@ -91,7 +95,25 @@ const MemberInfo = () => {
           p: "20px",
         }}
       >
-        <Typography variant="h2" sx={{ fontSize: "28px", fontWeight: "bold" }}>
+        <Typography
+          sx={{ fontSize: "28px", fontWeight: "bold", lineHeight: "normal" }}
+          component="div"
+        >
+          {basicInfo["Full Name"]}
+        </Typography>
+        <Typography
+          sx={{
+            color: "#0008",
+            margin: "6px 0px 10px 0",
+            fontSize: "14px",
+            fontWeight: "bold",
+            lineHeight: "normal",
+          }}
+          component="div"
+        >
+          Student/Member
+        </Typography>
+        {/* <Typography variant="h2" sx={{ fontSize: "28px", fontWeight: "bold" }}>
           {basicInfo["Full Name"]}
         </Typography>
         <Typography
@@ -102,7 +124,7 @@ const MemberInfo = () => {
           }}
         >
           Student / Member
-        </Typography>
+        </Typography> */}
         <Outputs items={basicInfo} columnCount={3} />
       </Box>
       <Details title="Parent / Carer Details" details={parentInfo} />

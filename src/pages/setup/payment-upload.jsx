@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import "./style.css";
 import {
   Box,
   CircularProgress,
@@ -245,17 +245,33 @@ const PaymentUpload = () => {
         />
       </Box>
       <Grid sx={{ mb: 3 }}>
-        <label
+        {/* <label for="fileUpload">Upload file</label> */}
+        <Box sx={{ border: "1px solid #b3b3b3", borderRadius: "10px" }}>
+          <input
+            type="file"
+            id="file-upload"
+            name="selectedFile"
+            onChange={(e) => {
+              onChangeFile(e);
+            }}
+          />
+        </Box>
+
+        {/* <label
           for="file-upload"
           style={{
-            background:
-              "linear-gradient(90deg, rgb(283, 14, 116) 20%, rgb(253, 127, 76) 90%)",
-            border: 0,
-            color: "white",
+            background: "white",
+            border: "1px solid red",
+            color: "red",
             height: "47px",
             textAlign: "center",
             paddingTop: "10px",
             borderRadius: "8px",
+            fontWeight: "bold",
+            "&:hover": {
+              backgroundImage: "red",
+              color: "white",
+            },
           }}
         >
           Upload File
@@ -268,12 +284,11 @@ const PaymentUpload = () => {
           onChange={(e) => {
             onChangeFile(e);
           }}
-        />
+        /> */}
         {/* <TextField
           id="file-upload"
           type="file"
           name="selectedFile"
-
           onChange={(e) => {
             onChangeFile(e);
           }}
@@ -282,7 +297,21 @@ const PaymentUpload = () => {
             Select File
           </GradientButton>
         </TextField> */}
-        <GradientButton onClick={handleDeleteFunction}>Delete</GradientButton>
+        <GradientButton
+          sx={{
+            fontWeight: "bold",
+            "&:hover": {
+              backgroundImage: "linear-gradient(106deg, #ff1a6d, #ff6e2d 100%)",
+              color: "white",
+            },
+          }}
+          onClick={handleDeleteFunction}
+          invert
+          active
+        >
+          Delete
+        </GradientButton>
+        {/* <GradientButton onClick={handleDeleteFunction}>Delete</GradientButton> */}
       </Grid>
       {isError ? (
         <Typography color="error" component="pre">

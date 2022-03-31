@@ -1,14 +1,43 @@
-import { Typography } from "@mui/material";
+import { Typography, MenuItem } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
-import { CardRow } from "../../components";
+import { useState, useMemo, useEffect } from "react";
+import { CardRow, TextField } from "../../components";
 import { ShortMonthNames } from "../../helper/constants";
 
-const MonthPicker = ({ title, onChange }) => {
+const MonthPicker = ({ title, onChange, year }) => {
+  const years = useMemo(() => {
+    return Array(11)
+      .fill(1)
+      .map((_, index) => Number(year) - 10 + index);
+  }, [year]);
   const [selectedMonth, setSelectedMonth] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(year);
+  useEffect(() => {
+    onChange(selectedMonth, selectedYear);
+  }, [selectedMonth, selectedYear, onChange]);
   return (
     <Box>
-      {title && <Typography sx={{ fontSize: "14px" }}>{title}</Typography>}
+      {title && (
+        <Typography sx={{ fontSize: "14px", height: "48px" }} component="div">
+          {title}
+          <TextField
+            select
+            value={selectedYear}
+            onChange={(e) => {
+              setSelectedYear(e.target.value, title);
+            }}
+            sx={{ width: "116px", float: "right" }}
+            variant="filled"
+            label={"Year"}
+          >
+            {years.map((item) => (
+              <MenuItem key={item} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Typography>
+      )}
       <CardRow sx={{ marginTop: "10px" }}>
         {ShortMonthNames.map((month, index) => {
           const isSelected = selectedMonth === index;
