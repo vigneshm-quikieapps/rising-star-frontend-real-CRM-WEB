@@ -18,7 +18,12 @@ const PaymentListHeading = ({ title, description, action }) => (
         {description}
       </Typography>
     </Box>
-    <GradientButton onClick={action || getXlsx()}>Refresh</GradientButton>
+    <GradientButton
+      sx={{ fontSize: "16px", fontWeight: "bold" }}
+      onClick={action || getXlsx()}
+    >
+      Refresh
+    </GradientButton>
   </Box>
 );
 

@@ -199,7 +199,7 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
             open={showError}
             title="Error"
             description={transformError(error)}
-            acceptButtonTitle="Discard"
+            acceptButtonTitle="OK"
             onAccept={() => setShowError(false)}
           />
         ) : (
@@ -222,8 +222,12 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
         )}
       </DialogContent>
       <DialogActions>
-        <GradientButton onClick={onClose} autoFocus>
-          Back to payment Upload page
+        <GradientButton
+          sx={{ fontSize: "18px", fontWeight: "bold" }}
+          onClick={onClose}
+          autoFocus
+        >
+          Back to Payment Upload page
         </GradientButton>
       </DialogActions>
     </PaymentModal>

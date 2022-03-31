@@ -311,6 +311,7 @@ const MemberEvaluations = () => {
             <TextField
               select
               variant="outlined"
+              InputLabelProps={{ style: { background: "#fff" } }}
               label="Business Name*"
               value={businessId}
               sx={{ width: "100%" }}
@@ -333,6 +334,7 @@ const MemberEvaluations = () => {
             <TextField
               select
               variant="outlined"
+              InputLabelProps={{ style: { background: "#fff" } }}
               label="Evaluation Scheme"
               sx={{ width: "100%" }}
               value={evaluationSchemeId}
@@ -433,9 +435,16 @@ const MemberEvaluations = () => {
         <GradientButton
           invert
           size="large"
-          sx={{ marginLeft: "10px", textTransform: "none" }}
+          sx={{
+            marginLeft: "10px",
+            textTransform: "none",
+            "&:hover": {
+              backgroundImage: "linear-gradient(106deg, #ff1a6d, #ff6e2d 100%)",
+              color: "white",
+            },
+          }}
         >
-          Cancel
+          Discard
         </GradientButton>
       </Box>
     </Box>

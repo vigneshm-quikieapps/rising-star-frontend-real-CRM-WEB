@@ -25,7 +25,7 @@ const EnrolmentsModal = styled(Dialog)(({ theme }) => ({
 
 const TableHeading = (
   <Typography sx={{ fontSize: "20px", fontWeight: "bold", padding: "20px" }}>
-    Enrolment Details
+    Class List
   </Typography>
 );
 
@@ -115,9 +115,9 @@ const ClassList = ({
             zIndex: 1,
           }}
         >
-          <>
-            <Output description={localStorage.getItem("BusinessName")} />
-          </>
+          <Typography sx={{ fontSize: "28px", fontWeight: "bold" }}>
+            {localStorage.getItem("BusinessName")}
+          </Typography>
         </DialogTitle>
       </ElevationScroll>
       <IconButton
@@ -141,7 +141,7 @@ const ClassList = ({
             open={showError}
             title="Error"
             description={transformError(error)}
-            acceptButtonTitle="Discard"
+            acceptButtonTitle="OK"
             onAccept={() => setShowError(false)}
           />
         ) : (

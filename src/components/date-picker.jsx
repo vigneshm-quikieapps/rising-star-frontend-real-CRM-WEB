@@ -5,7 +5,7 @@ import DatePicker from "@mui/lab/DatePicker";
 import Textfield from "./textfield";
 
 export default function BasicDatePicker({
-  label = "Select a date",
+  label = "",
   date,
   onChange,
   textfieldProps = {},
@@ -21,7 +21,8 @@ export default function BasicDatePicker({
         }}
         renderInput={(params) => (
           <Textfield
-            variant="filled"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
             {...params}
             {...textfieldProps}
             sx={{ width: "100%" }}

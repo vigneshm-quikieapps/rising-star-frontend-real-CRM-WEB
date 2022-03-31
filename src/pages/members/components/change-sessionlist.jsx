@@ -176,7 +176,7 @@ const ChangeSessionList = ({
             open={showError}
             title="Error"
             description={transformError(error)}
-            acceptButtonTitle="Discard"
+            acceptButtonTitle="OK"
             onAccept={() => setShowError(false)}
           />
         ) : (

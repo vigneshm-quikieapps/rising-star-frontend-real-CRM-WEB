@@ -129,6 +129,8 @@ const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
           sx={{ gridArea: "name" }}
           label="Member Name"
           name="name"
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           onChange={valuesChangeHandler}
           value={name}
         />
@@ -136,6 +138,8 @@ const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
           sx={{ gridArea: "parent" }}
           label="Parent / Carer Name"
           name="parent.name"
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           onChange={valuesChangeHandler}
           value={valuesState["parent.name"]}
         />
@@ -143,6 +147,8 @@ const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
           sx={{ gridArea: "email" }}
           label="Parent / Carer Email"
           name="parent.email"
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           onChange={valuesChangeHandler}
           value={valuesState["parent.email"]}
         />
@@ -150,6 +156,8 @@ const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
           sx={{ gridArea: "phone" }}
           label="Parent / Carer Phone"
           name="parent.mobileNo"
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           onChange={valuesChangeHandler}
           value={valuesState["parent.mobileNo"]}
         />
@@ -158,6 +166,8 @@ const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
             key={name}
             name={name}
             area={name + "Op"}
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
             value={operatorsState[name]}
             onChange={operatorsChangeHandler}
           />

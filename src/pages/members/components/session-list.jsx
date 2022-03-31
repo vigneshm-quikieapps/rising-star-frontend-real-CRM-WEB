@@ -147,7 +147,9 @@ const SessionList = ({
           }}
         >
           <>
-            Select an Session
+            <Typography sx={{ fontSize: "28px", fontWeight: "bold" }}>
+              {localStorage.getItem("BusinessName")}
+            </Typography>
             <Output
               title="Student Name"
               description={memberName}
@@ -177,7 +179,7 @@ const SessionList = ({
             open={showError}
             title="Error"
             description={transformError(error)}
-            acceptButtonTitle="Discard"
+            acceptButtonTitle="OK"
             onAccept={() => setShowError(false)}
           />
         ) : (

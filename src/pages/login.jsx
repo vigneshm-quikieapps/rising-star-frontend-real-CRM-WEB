@@ -39,7 +39,7 @@ const Login = () => {
   const [error, setError] = useState([]);
   const [visiblePass, setVisiblePass] = useState(false);
   const [credentials, setCredentials] = useState({
-    mobileNo: "",
+    email: "",
     password: "",
   });
 
@@ -108,9 +108,10 @@ const Login = () => {
         <TextField
           label="Email"
           variant="outlined"
-          name="mobileNo"
+          name="email"
           onChange={handleChange}
-          value={credentials.mobileNo}
+          InputLabelProps={{ style: { background: "#fff" } }}
+          value={credentials.email}
           InputProps={{
             endAdornment: (
               <InputAdornment position="start">
@@ -129,6 +130,7 @@ const Login = () => {
         <TextField
           label="Password"
           variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           name="password"
           type={visiblePass ? "text" : "password"}
           onChange={handleChange}

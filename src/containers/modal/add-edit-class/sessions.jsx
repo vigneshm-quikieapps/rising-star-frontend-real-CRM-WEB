@@ -104,7 +104,7 @@ const Sessions = ({ sessionList, setClassSessions, classId, touched }) => {
   return (
     <CardRow>
       <AccordionContainer>
-        <Accordion defaultExpanded>
+        <Accordion defaultExpanded={false}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <CardRow sx={{ width: "100%", padding: "0 10px 0 0" }}>
               <Typography>Class Schedule</Typography>

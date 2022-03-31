@@ -245,7 +245,8 @@ const AddEnrolment = () => {
         <Grid>
           <TextField
             select
-            variant="filled"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
             label="Business Name"
             value={selectedBusiness}
             onChange={businessChangeHandler}
@@ -285,7 +286,7 @@ const AddEnrolment = () => {
           <Grid sx={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
             <GradientButton
               active
-              sx={{ mr: 2 }}
+              sx={{ mr: 2, fontSize: "16px", fontWeight: "bold" }}
               onClick={() => setShowClassList(true)}
             >
               Search for a Class
@@ -295,7 +296,7 @@ const AddEnrolment = () => {
             <Output />
             <GradientButton
               active
-              sx={{ mr: 2 }}
+              sx={{ mr: 2, fontSize: "16px", fontWeight: "bold" }}
               onClick={() => setShowSessionList(true)}
             >
               Search for a Session
@@ -352,12 +353,23 @@ const AddEnrolment = () => {
         businessId={selectedBusiness}
         memberName={member?.name}
       />
-      <GradientButton onClick={submitEnrolment}>
+      <GradientButton onClick={submitEnrolment} size="large">
         Submit for Enrolment
       </GradientButton>
-      <Button sx={{ ml: 2 }} onClick={handleDiscardEnrolmentWarn}>
+      <GradientButton
+        invert
+        sx={{
+          ml: 2,
+          "&:hover": {
+            backgroundImage: "linear-gradient(106deg, #ff1a6d, #ff6e2d 100%)",
+            color: "white",
+          },
+        }}
+        size="large"
+        onClick={handleDiscardEnrolmentWarn}
+      >
         Discard
-      </Button>
+      </GradientButton>
       <Warning
         open={isWarnDiscardOpen}
         title="Warning"
@@ -378,6 +390,7 @@ const AddEnrolment = () => {
             padding: "40px 30px",
             margin: "27px 300px 31px 200px",
             alignItems: "center",
+            borderRadius: "20px",
           },
         }}
       >
@@ -386,7 +399,15 @@ const AddEnrolment = () => {
         <DialogContent>{enrolmentMessage}</DialogContent>
         <DialogActions>
           <Button
-            sx={{ color: "#ff2c60" }}
+            sx={{
+              color: "#ff2c60",
+              border: "solid 1px #f2f1f6",
+              textTransform: "none",
+              fontSize: "20px",
+              fontWeight: "600px",
+              borderRadius: "12px",
+              width: "100px",
+            }}
             onClick={handleOnClickSubmitEnrolment}
             autoFocus
           >

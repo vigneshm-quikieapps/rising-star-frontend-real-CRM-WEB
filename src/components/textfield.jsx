@@ -11,14 +11,15 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   // applied to label of all variants
   "& label": {
     color: theme.palette.text.secondary,
-    lineHeight: 1,
+    lineHeight: 1.3,
     "&.Mui-focused": {
       color: theme.palette.secondary.main,
+      background: "#fff",
     },
   },
   // applied to label of outlined variant
   "& .MuiInputLabel-outlined": {
-    backgroundColor: theme.palette.background.main,
+    backgroundColor: "#f4f4f4",
     padding: theme.spacing(0, 1),
   },
   // applied to InputBase (FormControl) of all variants

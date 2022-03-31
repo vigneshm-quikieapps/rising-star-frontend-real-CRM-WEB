@@ -330,235 +330,504 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                 </Typography>
               </CardRow>
               <CardRow sx={{ marginBottom: "20px" }}>
-                <StyledTextField
-                  sx={{
-                    width: "30%",
-                  }}
-                  label="Class Name*"
-                  // floatingLabelStyle={{ background: "#f4f4f4" }}
-                  InputLabelProps={{
-                    style: { background: "#f4f4f4" },
-                  }}
-                  value={className}
-                  onChange={(e) => {
-                    setClassName(e.target.value);
-                  }}
-                />
-
-                <StyledTextField
-                  select
-                  sx={{ width: "30%" }}
-                  label="Business Name*"
-                  InputLabelProps={{
-                    style: { background: "#f4f4f4" },
-                  }}
-                  value={currentUserBusinesses.length ? selectedBusinessId : ""}
-                  onChange={(e) => {
-                    let businessId = e.target.value;
-                    setSelectedBusinessId(businessId);
-                  }}
-                >
-                  {currentUserBusinesses.length ? (
-                    currentUserBusinesses.map(({ _id, name }) => {
-                      return (
-                        <MenuItem value={_id} key={_id}>
-                          {name}
-                        </MenuItem>
-                      );
-                    })
-                  ) : (
-                    <MenuItem value="">No options</MenuItem>
-                  )}
-                </StyledTextField>
-
-                <StyledTextField
-                  select
-                  sx={{ width: "30%" }}
-                  label="Class Status*"
-                  InputLabelProps={{
-                    style: { background: "#f4f4f4" },
-                  }}
-                  value={selectedStatus}
-                  onChange={(e) => {
-                    setSelectedStatus(e.target.value);
-                  }}
-                >
-                  <MenuItem value="ACTIVE">Active</MenuItem>
-                  <MenuItem value="INACTIVE">Inactive</MenuItem>
-                </StyledTextField>
+                {className.length > 0 ? (
+                  <StyledTextField
+                    sx={{
+                      width: "30%",
+                      "& .MuiOutlinedInput-input": {
+                        background: "#fff",
+                        borderRadius: "8px",
+                        height: "20px",
+                      },
+                    }}
+                    label="Class Name*"
+                    InputLabelProps={{
+                      style: { background: "#fff" },
+                    }}
+                    variant="outlined"
+                    value={className}
+                    onChange={(e) => {
+                      setClassName(e.target.value);
+                    }}
+                  />
+                ) : (
+                  <StyledTextField
+                    sx={{
+                      width: "30%",
+                    }}
+                    label="Class Name*"
+                    variant="outlined"
+                    value={className}
+                    onChange={(e) => {
+                      setClassName(e.target.value);
+                    }}
+                  />
+                )}
+                {selectedBusinessId.length > 0 ? (
+                  <StyledTextField
+                    select
+                    sx={{
+                      width: "30%",
+                      "& .MuiOutlinedInput-input": {
+                        padding: "11px 16px !important",
+                        background: "#fff",
+                        borderRadius: "8px",
+                        height: "20px",
+                      },
+                    }}
+                    label="Business Name*"
+                    variant="outlined"
+                    InputLabelProps={{ style: { background: "#fff" } }}
+                    value={
+                      currentUserBusinesses.length ? selectedBusinessId : ""
+                    }
+                    onChange={(e) => {
+                      let businessId = e.target.value;
+                      setSelectedBusinessId(businessId);
+                    }}
+                  >
+                    {currentUserBusinesses.length ? (
+                      currentUserBusinesses.map(({ _id, name }) => {
+                        return (
+                          <MenuItem value={_id} key={_id}>
+                            {name}
+                          </MenuItem>
+                        );
+                      })
+                    ) : (
+                      <MenuItem value="">No options</MenuItem>
+                    )}
+                  </StyledTextField>
+                ) : (
+                  <StyledTextField
+                    select
+                    sx={{ width: "30%" }}
+                    label="Business Name*"
+                    variant="outlined"
+                    value={
+                      currentUserBusinesses.length ? selectedBusinessId : ""
+                    }
+                    onChange={(e) => {
+                      let businessId = e.target.value;
+                      setSelectedBusinessId(businessId);
+                    }}
+                  >
+                    {currentUserBusinesses.length ? (
+                      currentUserBusinesses.map(({ _id, name }) => {
+                        return (
+                          <MenuItem value={_id} key={_id}>
+                            {name}
+                          </MenuItem>
+                        );
+                      })
+                    ) : (
+                      <MenuItem value="">No options</MenuItem>
+                    )}
+                  </StyledTextField>
+                )}
+                {selectedStatus.length > 0 ? (
+                  <StyledTextField
+                    select
+                    sx={{
+                      width: "30%",
+                      "& .MuiOutlinedInput-input": {
+                        padding: "11px 16px !important",
+                        background: "#fff",
+                        borderRadius: "8px",
+                        height: "20px",
+                      },
+                    }}
+                    label="Class Status*"
+                    variant="outlined"
+                    InputLabelProps={{ style: { background: "#fff" } }}
+                    value={selectedStatus}
+                    onChange={(e) => {
+                      setSelectedStatus(e.target.value);
+                    }}
+                  >
+                    <MenuItem value="ACTIVE">Active</MenuItem>
+                    <MenuItem value="INACTIVE">Inactive</MenuItem>
+                  </StyledTextField>
+                ) : (
+                  <StyledTextField
+                    select
+                    sx={{ width: "30%" }}
+                    label="Class Status*"
+                    variant="outlined"
+                    value={selectedStatus}
+                    onChange={(e) => {
+                      setSelectedStatus(e.target.value);
+                    }}
+                  >
+                    <MenuItem value="ACTIVE">Active</MenuItem>
+                    <MenuItem value="INACTIVE">Inactive</MenuItem>
+                  </StyledTextField>
+                )}
               </CardRow>
-
               <CardRow sx={{ marginBottom: "20px" }}>
-                <StyledTextField
-                  select
-                  sx={{ width: "30%" }}
-                  label="Registration Consent Form*"
-                  InputLabelProps={{
-                    style: { background: "#f4f4f4" },
-                  }}
-                  value={selectedConsentForm}
-                  onChange={(e) => {
-                    setSelectedConsentForm(e.target.value);
-                  }}
-                >
-                  <MenuItem value="STANDARD">Standard</MenuItem>
-                </StyledTextField>
-
-                <StyledTextField
-                  select
-                  sx={{ width: "30%" }}
-                  label="Class Category*"
-                  InputLabelProps={{
-                    style: { background: "#f4f4f4" },
-                  }}
-                  value={categories.length ? selectedCategory : ""}
-                  onChange={(e) => {
-                    setSelectedCategory(e.target.value);
-                  }}
-                >
-                  {categories.length ? (
-                    categories.map(({ _id, name }) => {
-                      return (
-                        <MenuItem key={_id} value={_id}>
-                          {name}
-                        </MenuItem>
-                      );
-                    })
-                  ) : (
-                    <MenuItem value="">No categories</MenuItem>
-                  )}
-                </StyledTextField>
-
-                <StyledTextField
-                  select
-                  sx={{ width: "30%" }}
-                  label="Evaluation Scheme*"
-                  InputLabelProps={{
-                    style: { background: "#f4f4f4" },
-                  }}
-                  value={
-                    evaluationSchemeList.length ? selectedEvaluationScheme : ""
-                  }
-                  onChange={(e) => {
-                    setSelectedEvaluationScheme(e.target.value);
-                  }}
-                >
-                  {evaluationSchemeList.length ? (
-                    evaluationSchemeList.map(({ _id, name }) => {
-                      return (
-                        <MenuItem key={_id} value={_id}>
-                          {name}
-                        </MenuItem>
-                      );
-                    })
-                  ) : (
-                    <MenuItem value="">No evaluations</MenuItem>
-                  )}
-                </StyledTextField>
+                {selectedConsentForm.length > 0 ? (
+                  <StyledTextField
+                    select
+                    sx={{
+                      width: "30%",
+                      "& .MuiOutlinedInput-input": {
+                        padding: "11px 16px !important",
+                        background: "#fff",
+                        borderRadius: "8px",
+                        height: "20px",
+                      },
+                    }}
+                    label="Registration Consent Form*"
+                    variant="outlined"
+                    InputLabelProps={{ style: { background: "#fff" } }}
+                    value={selectedConsentForm}
+                    onChange={(e) => {
+                      setSelectedConsentForm(e.target.value);
+                    }}
+                  >
+                    <MenuItem value="STANDARD">Standard</MenuItem>
+                  </StyledTextField>
+                ) : (
+                  <StyledTextField
+                    select
+                    sx={{ width: "30%" }}
+                    label="Registration Consent Form*"
+                    variant="outlined"
+                    value={selectedConsentForm}
+                    onChange={(e) => {
+                      setSelectedConsentForm(e.target.value);
+                    }}
+                  >
+                    <MenuItem value="STANDARD">Standard</MenuItem>
+                  </StyledTextField>
+                )}
+                {selectedCategory.length > 0 ? (
+                  <StyledTextField
+                    select
+                    sx={{
+                      width: "30%",
+                      "& .MuiOutlinedInput-input": {
+                        padding: "11px 16px !important",
+                        background: "#fff",
+                        borderRadius: "8px",
+                        height: "20px",
+                      },
+                    }}
+                    label="Class Category*"
+                    variant="outlined"
+                    InputLabelProps={{ style: { background: "#fff" } }}
+                    value={categories.length ? selectedCategory : ""}
+                    onChange={(e) => {
+                      setSelectedCategory(e.target.value);
+                    }}
+                  >
+                    {categories.length ? (
+                      categories.map(({ _id, name }) => {
+                        return (
+                          <MenuItem key={_id} value={_id}>
+                            {name}
+                          </MenuItem>
+                        );
+                      })
+                    ) : (
+                      <MenuItem value="">No categories</MenuItem>
+                    )}
+                  </StyledTextField>
+                ) : (
+                  <StyledTextField
+                    select
+                    sx={{ width: "30%" }}
+                    label="Class Category*"
+                    variant="outlined"
+                    value={categories.length ? selectedCategory : ""}
+                    onChange={(e) => {
+                      setSelectedCategory(e.target.value);
+                    }}
+                  >
+                    {categories.length ? (
+                      categories.map(({ _id, name }) => {
+                        return (
+                          <MenuItem key={_id} value={_id}>
+                            {name}
+                          </MenuItem>
+                        );
+                      })
+                    ) : (
+                      <MenuItem value="">No categories</MenuItem>
+                    )}
+                  </StyledTextField>
+                )}
+                {selectedEvaluationScheme.length > 0 ? (
+                  <StyledTextField
+                    select
+                    sx={{
+                      width: "30%",
+                      "& .MuiOutlinedInput-input": {
+                        padding: "11px 16px !important",
+                        background: "#fff",
+                        borderRadius: "8px",
+                        height: "20px",
+                      },
+                    }}
+                    InputLabelProps={{ style: { background: "#fff" } }}
+                    label="Evaluation Scheme*"
+                    variant="outlined"
+                    value={
+                      evaluationSchemeList.length
+                        ? selectedEvaluationScheme
+                        : ""
+                    }
+                    onChange={(e) => {
+                      setSelectedEvaluationScheme(e.target.value);
+                    }}
+                  >
+                    {evaluationSchemeList.length ? (
+                      evaluationSchemeList.map(({ _id, name }) => {
+                        return (
+                          <MenuItem key={_id} value={_id}>
+                            {name}
+                          </MenuItem>
+                        );
+                      })
+                    ) : (
+                      <MenuItem value="">No evaluations</MenuItem>
+                    )}
+                  </StyledTextField>
+                ) : (
+                  <StyledTextField
+                    select
+                    sx={{ width: "30%" }}
+                    label="Evaluation Scheme*"
+                    variant="outlined"
+                    value={
+                      evaluationSchemeList.length
+                        ? selectedEvaluationScheme
+                        : ""
+                    }
+                    onChange={(e) => {
+                      setSelectedEvaluationScheme(e.target.value);
+                    }}
+                  >
+                    {evaluationSchemeList.length ? (
+                      evaluationSchemeList.map(({ _id, name }) => {
+                        return (
+                          <MenuItem key={_id} value={_id}>
+                            {name}
+                          </MenuItem>
+                        );
+                      })
+                    ) : (
+                      <MenuItem value="">No evaluations</MenuItem>
+                    )}
+                  </StyledTextField>
+                )}
               </CardRow>
 
               <CardRow>
-                <StyledTextField
-                  sx={{
-                    width: "100%",
-                    "& .MuiInputBase-root": {
-                      height: "auto",
-                    },
-                  }}
-                  multiline
-                  rows={4}
-                  placeholder={"About this class"}
-                  value={aboutClass}
-                  onChange={(e) => {
-                    setAboutClass(e.target.value);
-                  }}
-                ></StyledTextField>
+                {aboutClass.length > 0 ? (
+                  <StyledTextField
+                    sx={{
+                      width: "100%",
+                      "& .MuiInputBase-root": {
+                        height: "auto",
+                      },
+                      "& .MuiFormControl-root-MuiTextField-root .MuiOutlinedInput-root":
+                        {
+                          backgroundColor: "#fff !important",
+                        },
+                    }}
+                    multiline
+                    label="About this Class"
+                    rows={4}
+                    variant="outlined"
+                    InputLabelProps={{ style: { background: "#fff" } }}
+                    placeholder={"About this class"}
+                    value={aboutClass}
+                    onChange={(e) => {
+                      setAboutClass(e.target.value);
+                    }}
+                  ></StyledTextField>
+                ) : (
+                  <StyledTextField
+                    sx={{
+                      width: "100%",
+                      "& .MuiInputBase-root": {
+                        height: "auto",
+                      },
+                    }}
+                    multiline
+                    label="About this Class"
+                    rows={4}
+                    variant="outlined"
+                    placeholder={"About this class"}
+                    value={aboutClass}
+                    onChange={(e) => {
+                      setAboutClass(e.target.value);
+                    }}
+                  ></StyledTextField>
+                )}
               </CardRow>
-
               <CardRow>
                 <AccordionContainer>
-                  <Accordion defaultExpanded>
+                  <Accordion defaultExpanded={false}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography>Enrolment Controls</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <CardRow sx={{ marginTop: "10px" }}>
-                        <StyledTextField
-                          select
-                          SelectProps={{
-                            multiple: true,
-                            MenuProps: {
-                              sx: menuSX,
-                            },
-                          }}
-                          sx={{ width: "40%" }}
-                          label="Age"
-                          InputLabelProps={{
-                            style: { background: "#f4f4f4" },
-                          }}
-                          value={ages}
-                          onChange={handleAgeSelect}
-                        >
-                          {ageArray.length ? (
-                            ageArray.map((item) => {
-                              return (
-                                <MenuItem key={item} value={item}>
-                                  {item}
-                                </MenuItem>
-                              );
-                            })
-                          ) : (
-                            <MenuItem value="">No options</MenuItem>
-                          )}
-                        </StyledTextField>
-                        <StyledTextField
-                          select
-                          SelectProps={{
-                            multiple: true,
-                            MenuProps: {
-                              sx: menuSX,
-                            },
-                          }}
-                          sx={{ width: "40%" }}
-                          label="Gender"
-                          InputLabelProps={{
-                            style: { background: "#f4f4f4" },
-                          }}
-                          value={genders}
-                          onChange={handleGenderSelect}
-                        >
-                          {genderArray.length ? (
-                            genderArray.map((item) => {
-                              return (
-                                <MenuItem key={item} value={item}>
-                                  {item
-                                    .slice(0, 1)
-                                    .concat(item.slice(1).toLocaleLowerCase())}
-                                </MenuItem>
-                              );
-                            })
-                          ) : (
-                            <MenuItem value="">No options</MenuItem>
-                          )}
-                        </StyledTextField>
+                        {ages.length > 0 ? (
+                          <StyledTextField
+                            select
+                            SelectProps={{
+                              multiple: true,
+                              MenuProps: {
+                                sx: menuSX,
+                              },
+                            }}
+                            sx={{
+                              width: "40%",
+                              "& .MuiOutlinedInput-input": {
+                                padding: "11px 16px !important",
+                                background: "#fff",
+                                borderRadius: "8px",
+                                height: "20px",
+                              },
+                            }}
+                            label="Age"
+                            InputLabelProps={{ style: { background: "#fff" } }}
+                            variant="outlined"
+                            value={ages}
+                            onChange={handleAgeSelect}
+                          >
+                            {ageArray.length ? (
+                              ageArray.map((item) => {
+                                return (
+                                  <MenuItem key={item} value={item}>
+                                    {item}
+                                  </MenuItem>
+                                );
+                              })
+                            ) : (
+                              <MenuItem value="">No options</MenuItem>
+                            )}
+                          </StyledTextField>
+                        ) : (
+                          <StyledTextField
+                            select
+                            SelectProps={{
+                              multiple: true,
+                              MenuProps: {
+                                sx: menuSX,
+                              },
+                            }}
+                            sx={{ width: "40%" }}
+                            label="Age"
+                            variant="outlined"
+                            value={ages}
+                            onChange={handleAgeSelect}
+                          >
+                            {ageArray.length ? (
+                              ageArray.map((item) => {
+                                return (
+                                  <MenuItem key={item} value={item}>
+                                    {item}
+                                  </MenuItem>
+                                );
+                              })
+                            ) : (
+                              <MenuItem value="">No options</MenuItem>
+                            )}
+                          </StyledTextField>
+                        )}
+                        {genders.length > 0 ? (
+                          <StyledTextField
+                            select
+                            SelectProps={{
+                              multiple: true,
+                              MenuProps: {
+                                sx: menuSX,
+                              },
+                            }}
+                            sx={{
+                              width: "40%",
+                              "& .MuiOutlinedInput-input": {
+                                padding: "11px 16px !important",
+                                background: "#fff",
+                                borderRadius: "8px",
+                                height: "20px",
+                              },
+                            }}
+                            label="Gender"
+                            InputLabelProps={{ style: { background: "#fff" } }}
+                            variant="outlined"
+                            value={genders}
+                            onChange={handleGenderSelect}
+                          >
+                            {genderArray.length ? (
+                              genderArray.map((item) => {
+                                return (
+                                  <MenuItem key={item} value={item}>
+                                    {item
+                                      .slice(0, 1)
+                                      .concat(
+                                        item.slice(1).toLocaleLowerCase(),
+                                      )}
+                                  </MenuItem>
+                                );
+                              })
+                            ) : (
+                              <MenuItem value="">No options</MenuItem>
+                            )}
+                          </StyledTextField>
+                        ) : (
+                          <StyledTextField
+                            select
+                            SelectProps={{
+                              multiple: true,
+                              MenuProps: {
+                                sx: menuSX,
+                              },
+                            }}
+                            sx={{
+                              width: "40%",
+                            }}
+                            label="Gender"
+                            variant="outlined"
+                            value={genders}
+                            onChange={handleGenderSelect}
+                          >
+                            {genderArray.length ? (
+                              genderArray.map((item) => {
+                                return (
+                                  <MenuItem key={item} value={item}>
+                                    {item
+                                      .slice(0, 1)
+                                      .concat(
+                                        item.slice(1).toLocaleLowerCase(),
+                                      )}
+                                  </MenuItem>
+                                );
+                              })
+                            ) : (
+                              <MenuItem value="">No options</MenuItem>
+                            )}
+                          </StyledTextField>
+                        )}
                       </CardRow>
                     </AccordionDetails>
                   </Accordion>
                 </AccordionContainer>
               </CardRow>
-
               <Charges
                 classCharges={classCharges}
                 setClassCharges={setClassCharges}
               />
-
               <Sessions
                 touched={areSessionsTouched}
                 classId={classId}
                 setClassSessions={setClassSessions}
                 sessionList={classSessions}
               />
-
               <CardRow sx={{ justifyContent: "flex-start" }}>
                 <GradientButton
                   size="large"
@@ -584,7 +853,6 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                   Discard
                 </GradientButton>
               </CardRow>
-
               <Warning
                 open={isWarnOpen}
                 title="Warning"

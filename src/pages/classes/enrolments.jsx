@@ -227,7 +227,8 @@ const ClassEnrollments = () => {
             value={selectedTerm}
             label="Term"
             onChange={handleTermChange}
-            variant="filled"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
           >
             {classTerms ? (
               classTerms.map(({ _id, label }) => (
@@ -244,7 +245,8 @@ const ClassEnrollments = () => {
             label="Session"
             value={selectedSession}
             onChange={handleSessionChange}
-            variant="filled"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
           >
             {classSessionsInTerm ? (
               classSessionsInTerm.map(({ _id, name }) => {

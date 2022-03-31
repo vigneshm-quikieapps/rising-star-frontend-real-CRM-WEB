@@ -19,3 +19,6 @@ body {
   padding: 0;
   margin: 0;
 }
+.css-1tcrm42-MuiFormControl-root-MuiTextField-root .MuiOutlinedInput-root {
+  background-color: #fff !important;
+}

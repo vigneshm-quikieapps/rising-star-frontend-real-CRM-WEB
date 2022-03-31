@@ -117,8 +117,7 @@ const Bill = ({
               height: "48px",
               padding: "0px 0px",
               fontSize: "16px",
-              fontWeight: "normal",
-              border: "1px solid",
+              fontWeight: "bold",
             }}
             // disabled={billStatus === "PAID"}
             onClick={enterNewTransaction}

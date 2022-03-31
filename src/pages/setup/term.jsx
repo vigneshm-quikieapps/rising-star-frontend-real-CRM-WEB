@@ -307,7 +307,8 @@ const Terms = () => {
       </Box>
       <TextField
         select
-        variant="filled"
+        variant="outlined"
+        InputLabelProps={{ style: { background: "#fff" } }}
         sx={{ minWidth: "40%" }}
         label="Business Name*"
         value={selectedBusiness}

@@ -97,6 +97,8 @@ const AdvancedSearch = ({
           label="Class Name"
           onChange={nameChangeHandler}
           value={name}
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           sx={{ width: "calc(50% - 120px)" }}
         />
         <TextField
@@ -106,6 +108,7 @@ const AdvancedSearch = ({
           label="Status"
           sx={{ width: "calc(50% - 120px)" }}
           variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
         >
           <MenuItem value="ACTIVE">Active</MenuItem>
           <MenuItem value="INACTIVE">In-Active</MenuItem>
@@ -115,6 +118,8 @@ const AdvancedSearch = ({
           sx={{ width: "200px" }}
           label="Business Name"
           value={business}
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           onChange={businessChangeHandler}
         >
           {businessList.map((business) => (
@@ -128,6 +133,8 @@ const AdvancedSearch = ({
           sx={{ width: "calc(50% - 120px)" }}
           label="Operator"
           value={nameOperator}
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           onChange={nameOperatorChangeHandler}
         >
           <MenuItem value="EQUALS">Equals to</MenuItem>
@@ -138,6 +145,8 @@ const AdvancedSearch = ({
           sx={{ width: "calc(50% - 120px)" }}
           label="Operator"
           value={statusOperator}
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           onChange={statusOperatorChangeHandler}
         >
           <MenuItem value="EQUALS">Equals to</MenuItem>

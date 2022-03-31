@@ -30,6 +30,7 @@ export default function DialogBox({
           padding: "40px 30px",
           margin: "27px 300px 31px 200px",
           alignItems: "center",
+          borderRadius: "20px",
         },
       }}
     >
@@ -53,7 +54,7 @@ export default function DialogBox({
               fontSize: "20px",
               fontWeight: "600px",
               borderRadius: "12px",
-              width: "73px",
+              width: "100px",
             }}
             onClick={onReject}
             autoFocus
@@ -69,7 +70,7 @@ export default function DialogBox({
             fontSize: "20px",
             fontWeight: "600px",
             borderRadius: "12px",
-            width: "73px",
+            width: "100px",
           }}
           onClick={onAccept}
         >
