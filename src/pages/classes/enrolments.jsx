@@ -119,7 +119,7 @@ const ClassEnrollments = () => {
           return {
             onClick: () => history.push(`/members/info/${_id}`),
             items: [
-              toPascal(member?.name),
+              member?.name,
               allergy,
               condition,
               startDate ? reformatDate(startDate.split("T")[0]) : "N/A",
@@ -201,9 +201,9 @@ const ClassEnrollments = () => {
         },
       ),
       Pattern: toPascal(days),
-      Facility: toPascal(facility),
+      Facility: facility,
       "Session Enrolment Status": toPascal(status).replaceAll("_", " "),
-      "Coach Name": toPascal(coach?.name),
+      "Coach Name": coach?.name,
       "Full class capacity": fullcapacity,
       Enrolled: fullcapacityfilled,
       "Waitlist Capacity": waitcapacity,

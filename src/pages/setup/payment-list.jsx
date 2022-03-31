@@ -101,11 +101,11 @@ const PaymentFullList = ({ open, onClose, businessId, classId }) => {
             onClose();
           },
           items: [
-            toPascal(memberName),
+            memberName,
             membershipNumber,
             amount,
             type,
-            toPascal(paymentMethod),
+            (paymentMethod),
             toPascal(uploadStatus),
             toPascal(noDataFound),
           ],

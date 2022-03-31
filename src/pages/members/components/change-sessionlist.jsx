@@ -113,11 +113,11 @@ const ChangeSessionList = ({
               onClose();
             },
             items: [
-              toPascal(data?.name) || "",
+              (data?.name) || "",
               timings(data?.pattern) || "",
               reformatDate(data?.termData?.startDate?.split("T")[0]) || "- - -",
               reformatDate(data?.termData?.endDate?.split("T")[0]) || "- - -",
-              toPascal(data?.termData?.label) || "",
+              (data?.termData?.label) || "",
               toPascal(data?.status) || "",
               // toPascal(termName),
               // toPascal(sessionName),

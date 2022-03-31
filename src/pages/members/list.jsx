@@ -229,9 +229,9 @@ const Members = () => {
         id: singleMember.id,
         onClick: () => handleRowClick(id),
         items: [
-          toPascal(name),
+          (name),
           toPascal(gender),
-          toPascal(parentName),
+          (parentName),
           parentEmail,
           parentPhone,
         ],

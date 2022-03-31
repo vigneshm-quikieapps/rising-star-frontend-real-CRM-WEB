@@ -77,8 +77,8 @@ const EnrolmentList = ({
               // toPascal(sessionName),
               data?.class?.name || "",
               toPascal(enrolmentStatusMap[data?.enrolledStatus]),
-              toPascal(data?.session?.term?.label),
-              toPascal(data?.session?.name),
+              (data?.session?.term?.label),
+              data?.session?.name,
             ],
           }),
         ) || []

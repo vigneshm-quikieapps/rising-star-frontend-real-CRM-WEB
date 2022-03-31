@@ -108,14 +108,14 @@ const SessionList = ({
               onClose();
             },
             items: [
-              toPascal(name),
+              (name),
               timings(pattern),
               // reformatDate(startDate.split("T")[0]),
               // reformatDate(endDate.split("T")[0]),
               // toPascal(termName),
               reformatDate(term?.startDate.split("T")[0]),
               reformatDate(term?.endDate.split("T")[0]),
-              toPascal(term?.label),
+              (term?.label),
               toPascal(status).replaceAll("_", " "),
 
               // toPascal(termName),

@@ -111,7 +111,7 @@ const PaymentUpload = () => {
       data?.docs?.map(
         ({ _id, batchProcessId, createdAt, updatedAt, status }) => ({
           items: [
-            toPascal(batchProcessId),
+            batchProcessId,
             reformatDate(createdAt.split("T")[0]),
             reformatDate(updatedAt.split("T")[0]),
             toPascal(status).replaceAll("_", " "),
@@ -145,7 +145,7 @@ const PaymentUpload = () => {
       }
     } else {
       if (message.data.errors.length > 1) {
-        setUploadXlsxMessage("Billdate or payment file is missing.");
+        setUploadXlsxMessage("Bill date or payment file is missing.");
         setTitle("Error");
         setIcon(errorIcon);
       } else {

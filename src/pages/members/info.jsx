@@ -34,7 +34,7 @@ const extractContactInfo = (
 ) => {
   const { name, relationship, contact: mobileNo } = contact;
   return {
-    Name: toPascal(name),
+    Name: (name),
     Relationship: toPascal(relationship),
     "Contact Number": mobileNo,
   };
@@ -51,7 +51,7 @@ const MemberInfo = () => {
     const { name, gender, dob } = currentMember;
     const dateOfBirth = reformatDate(new Date(dob).toISOString().split("T")[0]);
     return {
-      "Full Name": toPascal(name),
+      "Full Name": (name),
       Gender: toPascal(gender),
       "Date of Birth": dateOfBirth,
     };
@@ -61,7 +61,7 @@ const MemberInfo = () => {
     if (!currentMember) return {};
     const { email, name: parentName, mobileNo } = currentMember.userId;
     return {
-      "Full Name": toPascal(parentName),
+      "Full Name": (parentName),
       Email: email,
       "Contact Number": mobileNo,
     };

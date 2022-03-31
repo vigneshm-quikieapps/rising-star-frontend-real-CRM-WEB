@@ -222,7 +222,7 @@ const MemberFinance = () => {
           ({ _id, name, status }) =>
             status === "ACTIVE" && (
               <MenuItem key={_id} value={_id}>
-                {toPascal(name)}
+                {(name)}
               </MenuItem>
             ),
         )
@@ -316,7 +316,7 @@ const MemberFinance = () => {
   const chargeRows = useMemo(
     () =>
       classCharges.map(({ name, amount, payFrequency }) => ({
-        items: [toPascal(name), `\u00A3${amount}`, toPascal(payFrequency)],
+        items: [(name), `\u00A3${amount}`, toPascal(payFrequency)],
       })),
     [classCharges],
   );

@@ -102,8 +102,8 @@ const ClassPayments = () => {
         currentSession?.pattern[0].startTime || "",
       )}`,
       "End Time": `${timeConverter(currentSession?.pattern[0].endTime || "")}`,
-      Facility: toPascal(currentSession?.facility) || "",
-      "Coach Name": toPascal(currentSession?.coach.name) || "",
+      Facility: currentSession?.facility || "",
+      "Coach Name": currentSession?.coach.name || "",
       Pattern: toPascal(days) || "",
       "Full Class Capacity": currentSession?.fullcapacity || "",
       Enrolled: currentSession?.fullcapacityfilled || "",
@@ -135,7 +135,7 @@ const ClassPayments = () => {
     return paymentList.map(({ _id, member: { name }, paid }) => ({
       id: _id,
       items: [
-        toPascal(name),
+        name,
         <Status
           status={paid ? "green" : "red"}
           title={paid ? "Paid" : "Unpaid"}

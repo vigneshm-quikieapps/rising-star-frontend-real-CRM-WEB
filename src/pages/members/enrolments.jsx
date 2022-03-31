@@ -308,7 +308,7 @@ const Enrolment = () => {
           <Grid sx={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
             <Output
               title="Class Name"
-              description={toPascal(currentEnrolment?.class?.name)}
+              description={(currentEnrolment?.class?.name)}
             />
             <Output title="Last Action Date" description={lastActionDate} />
             <Output
@@ -326,7 +326,7 @@ const Enrolment = () => {
             <Output title="Member Start Date" description={startDate} />
             <Output
               title="Term"
-              description={toPascal(currentEnrolment?.session?.term?.label)}
+              description={(currentEnrolment?.session?.term?.label)}
             />
             <Output
               title="Term Start Date"
@@ -338,7 +338,7 @@ const Enrolment = () => {
             />
             <Output
               title="Session"
-              description={toPascal(currentEnrolment?.session?.name)}
+              description={(currentEnrolment?.session?.name)}
             />
             <Output title="Timings" description={pattern} />
           </Grid>

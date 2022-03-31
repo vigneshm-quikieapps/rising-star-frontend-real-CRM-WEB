@@ -35,9 +35,9 @@ const ClassInfo = () => {
   return name ? (
     <Card>
       <CardRow>
-        <HeadingText>{toPascal(name)}</HeadingText>
+        <HeadingText>{name}</HeadingText>
       </CardRow>
-      <SubHeadingText>{toPascal(businessName)}</SubHeadingText>
+      <SubHeadingText>{businessName}</SubHeadingText>
       <CardRow>
         <Outputs items={items} columnCount={3} />
       </CardRow>

@@ -55,7 +55,7 @@ const ClassDefinition = () => {
         return (
           <OutputsContainer
             key={_id}
-            header={{ title: "Charge", description: toPascal(name) }}
+            header={{ title: "Charge", description: name }}
           >
             <Outputs items={outputItems} />
           </OutputsContainer>
@@ -88,7 +88,7 @@ const ClassDefinition = () => {
           "Start Date": reformatDate(startDate.split("T")[0]),
           "End Date": reformatDate(endDate.split("T")[0]),
           "Trail Session Allowed": trailAllowed ? "Yes" : "No",
-          "Session Name": toPascal(name),
+          "Session Name": name,
           Pattern: toPascal(days),
           "Start Time": new Date(startTime).toLocaleTimeString(
             navigator.language,
@@ -98,15 +98,15 @@ const ClassDefinition = () => {
             hour: "2-digit",
             minute: "2-digit",
           }),
-          "Coach Name": toPascal(coachName),
+          "Coach Name": coachName,
           "Full Class Capacity": fullcapacity,
           "Waitlist Capacity": waitcapacity,
-          Facility: toPascal(facility),
+          Facility: facility,
         };
         return (
           <OutputsContainer
             key={_id}
-            header={{ title: "Term", description: toPascal(termLabel) }}
+            header={{ title: "Term", description: termLabel }}
           >
             <Outputs items={outputItems} />
           </OutputsContainer>
@@ -117,7 +117,7 @@ const ClassDefinition = () => {
 
   const enrolmentControlItems = useMemo(() => {
     return enrolmentControls.reduce((prev, { name = "", values = [] }) => {
-      let title = toPascal(name);
+      let title = name;
       const description = toPascal(values.join(", "));
       return { ...prev, [title]: description };
     }, {});

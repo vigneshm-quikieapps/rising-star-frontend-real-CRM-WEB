@@ -233,8 +233,8 @@ const Classes = () => {
         id: singleClass.id,
         onClick: () => handleRowClick(id),
         items: [
-          toPascal(name),
-          toPascal(businessName),
+          name,
+          businessName,
           <Status status={statusColors[status]} title={statusText[status]} />,
           <ActionButtons
             onEdit={(e) => handleEdit(e, id)}
