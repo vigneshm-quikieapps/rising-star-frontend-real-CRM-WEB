@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { CardRow, TextField } from "../../components";
 import { ShortMonthNames } from "../../helper/constants";
 
-const MonthPicker = ({ title, onChange, year }) => {
+const MonthPicker = ({ title, onChange, year, isRangeRequired }) => {
   const years = useMemo(() => {
     return Array(11)
       .fill(1)
@@ -20,22 +20,24 @@ const MonthPicker = ({ title, onChange, year }) => {
       {title && (
         <Typography sx={{ fontSize: "14px", height: "48px" }} component="div">
           {title}
-          <TextField
-            select
-            value={selectedYear}
-            onChange={(e) => {
-              setSelectedYear(e.target.value, title);
-            }}
-            sx={{ width: "116px", float: "right" }}
-            variant="filled"
-            label={"Year"}
-          >
-            {years.map((item) => (
-              <MenuItem key={item} value={item}>
-                {item}
-              </MenuItem>
-            ))}
-          </TextField>
+          {!isRangeRequired && (
+            <TextField
+              select
+              value={selectedYear}
+              onChange={(e) => {
+                setSelectedYear(e.target.value, title);
+              }}
+              sx={{ width: "116px", float: "right" }}
+              variant="filled"
+              label={"Year"}
+            >
+              {years.map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
         </Typography>
       )}
       <CardRow sx={{ marginTop: "10px" }}>

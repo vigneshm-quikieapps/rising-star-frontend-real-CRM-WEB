@@ -158,6 +158,7 @@ const DateRange = ({
             <CardRow sx={{ flexWrap: "nowrap" }}>
               <Box sx={{ width: "240px" }}>
                 <MonthPicker
+                  isRangeRequired
                   title="Months"
                   onChange={(i) => {
                     onMonthChange(i, "From");
