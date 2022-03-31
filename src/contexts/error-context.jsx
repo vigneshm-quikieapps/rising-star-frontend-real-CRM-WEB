@@ -29,7 +29,7 @@ export const ErrorDialogProvider = ({ children }) => {
           title="Error"
           description={errorMessage}
           onAccept={removeError}
-          acceptButtonTitle="Discard"
+          acceptButtonTitle="OK"
         />
       </>
     </Provider>

@@ -139,23 +139,19 @@ const PaymentUpload = () => {
       if (message.data.message === "Payment upload successful.") {
         setTitle("Information");
         setIcon(informationIcon);
-        setDialogActionName("Ok");
       } else {
         setTitle("Error");
         setIcon(errorIcon);
-        setDialogActionName("Discard");
       }
     } else {
       if (message.data.errors.length > 1) {
         setUploadXlsxMessage("Billdate or payment file is missing.");
         setTitle("Error");
         setIcon(errorIcon);
-        setDialogActionName("Discard");
       } else {
         setUploadXlsxMessage(`${message.data.errors[0].Payment}`);
         setTitle("Error");
         setIcon(errorIcon);
-        setDialogActionName("Discard");
       }
     }
 
@@ -192,7 +188,8 @@ const PaymentUpload = () => {
       <Grid sx={{ mb: 3 }}>
         <TextField
           select
-          variant="filled"
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           label="Business Name"
           name="selectedBusiness"
           value={selectedBusiness}
@@ -208,7 +205,8 @@ const PaymentUpload = () => {
         </TextField>
         <TextField
           select
-          variant="filled"
+          variant="outlined"
+          InputLabelProps={{ style: { background: "#fff" } }}
           label="Class Name"
           name="selectedClass"
           value={selectedClass}
@@ -353,6 +351,7 @@ const PaymentUpload = () => {
             padding: "40px 30px",
             margin: "27px 300px 31px 200px",
             alignItems: "center",
+            borderRadius: "20px",
           },
         }}
       >
@@ -360,8 +359,20 @@ const PaymentUpload = () => {
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>{uploadXlsxMessage}</DialogContent>
         <DialogActions>
-          <Button onClick={handleOk} sx={{ color: "#ff2c60" }} autoFocus>
-            {dialogActionName}
+          <Button
+            onClick={handleOk}
+            sx={{
+              color: "#ff2c60",
+              border: "solid 1px #f2f1f6",
+              textTransform: "none",
+              fontSize: "20px",
+              fontWeight: "600px",
+              borderRadius: "12px",
+              width: "100px",
+            }}
+            autoFocus
+          >
+            OK
           </Button>
         </DialogActions>
       </Dialog>

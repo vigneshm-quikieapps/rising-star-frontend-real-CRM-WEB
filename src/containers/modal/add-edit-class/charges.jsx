@@ -66,7 +66,7 @@ const Charges = (props) => {
   return (
     <CardRow>
       <AccordionContainer>
-        <Accordion defaultExpanded>
+        <Accordion defaultExpanded={false}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <CardRow
               sx={{

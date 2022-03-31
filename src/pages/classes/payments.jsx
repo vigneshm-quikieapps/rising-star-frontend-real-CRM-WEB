@@ -157,7 +157,8 @@ const ClassPayments = () => {
             <TextField
               select
               label="Term"
-              variant="filled"
+              variant="outlined"
+              InputLabelProps={{ style: { background: "#fff" } }}
               sx={{ width: "100%" }}
               value={selectedTerm}
               onChange={termChangeHandler}
@@ -173,7 +174,8 @@ const ClassPayments = () => {
             <TextField
               select
               label="Session"
-              variant="filled"
+              variant="outlined"
+              InputLabelProps={{ style: { background: "#fff" } }}
               sx={{ width: "100%" }}
               value={selectedSession}
               onChange={sessionChangeHandler}

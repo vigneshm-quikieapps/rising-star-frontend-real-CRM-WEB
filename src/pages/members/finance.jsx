@@ -335,7 +335,12 @@ const MemberFinance = () => {
           </TextField>,
           <Typography>{discountPercentage + "%"}</Typography>,
           <GradientButton
-            sx={{ display: "block", ml: "auto" }}
+            sx={{
+              display: "block",
+              ml: "auto",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
             onClick={applyDiscountHandler}
           >
             Apply
@@ -443,7 +448,8 @@ const MemberFinance = () => {
         <Grid>
           <TextField
             select
-            variant="filled"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
             label="Business Name"
             value={selectedBusiness}
             onChange={businessChangeHandler}
@@ -470,7 +476,11 @@ const MemberFinance = () => {
           />
           <Box />
           <GradientButton
-            sx={{ maxWidth: "fit-content" }}
+            sx={{
+              maxWidth: "fit-content",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
             onClick={() => setShowEnrolmentList(true)}
           >
             Member Enrolments
@@ -613,7 +623,8 @@ const MemberFinance = () => {
       </Accordion>
 
       <GradientButton
-        sx={{ maxWidth: "fit-content" }}
+        sx={{ maxWidth: "fit-content", mb: "3px" }}
+        size="large"
         onClick={() => {
           setShowSave(false);
           updateBillTransactions();

@@ -447,7 +447,8 @@ const Attendance = () => {
               setTouched(false);
               handleTermChange(e);
             }}
-            variant="filled"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
           >
             {classTerms ? (
               classTerms.map(({ _id, label }) => (
@@ -464,7 +465,8 @@ const Attendance = () => {
             label="Session"
             value={selectedSession}
             onChange={sessionChangeHandler}
-            variant="filled"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
           >
             {classSessionsInTerm ? (
               classSessionsInTerm.map(({ _id, name }) => {
@@ -525,7 +527,14 @@ const Attendance = () => {
             </Typography>
             {touched && (
               <>
-                <GradientButton sx={{ marginRight: "1%" }} onClick={onSave}>
+                <GradientButton
+                  sx={{
+                    marginRight: "1%",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={onSave}
+                >
                   Save
                 </GradientButton>
                 <IconButton

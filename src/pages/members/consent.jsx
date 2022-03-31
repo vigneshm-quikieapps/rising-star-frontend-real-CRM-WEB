@@ -89,7 +89,8 @@ const MemberConsent = () => {
             <TextField
               select
               label="Business Name"
-              variant="filled"
+              variant="outlined"
+              InputLabelProps={{ style: { background: "#fff" } }}
               sx={{ width: "100%" }}
               value={selectedBusiness}
               onChange={businessChangeHandler}

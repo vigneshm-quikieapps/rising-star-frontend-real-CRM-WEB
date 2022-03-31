@@ -30,6 +30,7 @@ const ErrorDialog = () => {
           padding: "40px 30px",
           margin: "27px 300px 31px 200px",
           alignItems: "center",
+          borderRadius: "20px",
         },
       }}
     >
@@ -47,10 +48,13 @@ const ErrorDialog = () => {
             border: "solid 1px #f2f1f6",
             textTransform: "none",
             fontSize: "20px",
+            fontWeight: "600px",
+            borderRadius: "12px",
+            width: "100px",
           }}
           autoFocus
         >
-          Discard
+          OK
         </Button>
       </DialogActions>
     </Dialog>

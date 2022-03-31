@@ -261,7 +261,8 @@ const Enrolment = () => {
         <Grid>
           <TextField
             select
-            variant="filled"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
             label="Business Name"
             value={selectedBusiness}
             onChange={businessChangeHandler}
@@ -296,7 +297,7 @@ const Enrolment = () => {
             <GradientButton
               disabled={currentEnrolment ? false : true}
               active
-              sx={{ mr: 2 }}
+              sx={{ mr: 2, fontSize: "16px", fontWeight: "bold" }}
               onClick={() => addNewEnrolment(member._id)}
             >
               Add a new enrolment
