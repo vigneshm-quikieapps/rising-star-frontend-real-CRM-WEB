@@ -628,13 +628,17 @@ const AddEditClassModal = ({ classObj, isEditMode }) => {
                   <StyledTextField
                     sx={{
                       width: "100%",
+
                       "& .MuiInputBase-root": {
                         height: "auto",
                       },
-                      "& .MuiFormControl-root-MuiTextField-root .MuiOutlinedInput-root":
-                        {
-                          backgroundColor: "#fff !important",
-                        },
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#fff !important",
+                      },
+                      // "& .MuiFormControl-root-MuiTextField-root .MuiOutlinedInput-root":
+                      //   {
+                      //     backgroundColor: "#fff !important",
+                      //   },
                     }}
                     multiline
                     label="About this Class"

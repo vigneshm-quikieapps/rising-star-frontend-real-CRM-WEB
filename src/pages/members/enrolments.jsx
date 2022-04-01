@@ -248,7 +248,7 @@ const Enrolment = () => {
         <Typography
           sx={{
             color: "#0008",
-            margin: "6px 0px 10px 0",
+            margin: "6px 0px 20px 0",
             fontSize: "14px",
             fontWeight: "bold",
             lineHeight: "normal",
@@ -308,7 +308,7 @@ const Enrolment = () => {
           <Grid sx={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
             <Output
               title="Class Name"
-              description={(currentEnrolment?.class?.name)}
+              description={currentEnrolment?.class?.name}
             />
             <Output title="Last Action Date" description={lastActionDate} />
             <Output
@@ -326,7 +326,7 @@ const Enrolment = () => {
             <Output title="Member Start Date" description={startDate} />
             <Output
               title="Term"
-              description={(currentEnrolment?.session?.term?.label)}
+              description={currentEnrolment?.session?.term?.label}
             />
             <Output
               title="Term Start Date"
@@ -338,7 +338,7 @@ const Enrolment = () => {
             />
             <Output
               title="Session"
-              description={(currentEnrolment?.session?.name)}
+              description={currentEnrolment?.session?.name}
             />
             <Output title="Timings" description={pattern} />
           </Grid>

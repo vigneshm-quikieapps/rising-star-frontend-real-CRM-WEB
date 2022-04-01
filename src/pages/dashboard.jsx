@@ -336,7 +336,7 @@ const Dashboard = () => {
                 variant="h2"
                 sx={{ fontSize: "28px", fontWeight: "bold" }}
               >
-                £{paymentData.totalPaidAmount}
+                £{Number(paymentData.totalPaidAmount).toFixed(2)}
               </Typography>
               <Typography sx={{ opacity: 0.5, fontSize: "12px" }}>
                 Paid
@@ -348,7 +348,7 @@ const Dashboard = () => {
                 variant="h2"
                 sx={{ fontSize: "28px", fontWeight: "bold" }}
               >
-                £{paymentData.totalUnPaidAmount}
+                £{Number(paymentData.totalUnPaidAmount).toFixed(2)}
               </Typography>
               <Typography sx={{ opacity: 0.5, fontSize: "12px" }}>
                 Not Paid

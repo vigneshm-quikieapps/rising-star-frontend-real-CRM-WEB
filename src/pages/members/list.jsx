@@ -125,42 +125,96 @@ const AdvancedSearch = ({ open, setOpen, setFilters, name, setName }) => {
         >
           Basic Search
         </Button>
+        {name.length > 0 ? (
+          <TextField
+            sx={{ gridArea: "name" }}
+            label="Member Name"
+            name="name"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
+            onChange={valuesChangeHandler}
+            value={name}
+          />
+        ) : (
+          <TextField
+            sx={{ gridArea: "name", backgroundColor: "#f4f4f4" }}
+            label="Member Name"
+            name="name"
+            variant="outlined"
+            onChange={valuesChangeHandler}
+            value={name}
+          />
+        )}
+        {valuesState["parent.name"].length > 0 ? (
+          <TextField
+            sx={{ gridArea: "parent" }}
+            label="Parent / Carer Name"
+            name="parent.name"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
+            onChange={valuesChangeHandler}
+            value={valuesState["parent.name"]}
+          />
+        ) : (
+          <TextField
+            sx={{ gridArea: "parent", backgroundColor: "#f4f4f4" }}
+            label="Parent / Carer Name"
+            name="parent.name"
+            variant="outlined"
+            onChange={valuesChangeHandler}
+            value={valuesState["parent.name"]}
+          />
+        )}
+        {valuesState["parent.email"].length > 0 ? (
+          <TextField
+            sx={{ gridArea: "email" }}
+            label="Parent / Carer Email"
+            name="parent.email"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
+            onChange={valuesChangeHandler}
+            value={valuesState["parent.email"]}
+          />
+        ) : (
+          <TextField
+            sx={{ gridArea: "email", backgroundColor: "#f4f4f4" }}
+            label="Parent / Carer Email"
+            name="parent.email"
+            variant="outlined"
+            onChange={valuesChangeHandler}
+            value={valuesState["parent.email"]}
+          />
+        )}
         <TextField
-          sx={{ gridArea: "name" }}
-          label="Member Name"
-          name="name"
-          variant="outlined"
-          InputLabelProps={{ style: { background: "#fff" } }}
-          onChange={valuesChangeHandler}
-          value={name}
-        />
-        <TextField
-          sx={{ gridArea: "parent" }}
-          label="Parent / Carer Name"
-          name="parent.name"
-          variant="outlined"
-          InputLabelProps={{ style: { background: "#fff" } }}
-          onChange={valuesChangeHandler}
-          value={valuesState["parent.name"]}
-        />
-        <TextField
-          sx={{ gridArea: "email" }}
+          sx={{ gridArea: "email", backgroundColor: "#f4f4f4" }}
           label="Parent / Carer Email"
           name="parent.email"
           variant="outlined"
-          InputLabelProps={{ style: { background: "#fff" } }}
           onChange={valuesChangeHandler}
           value={valuesState["parent.email"]}
         />
-        <TextField
-          sx={{ gridArea: "phone" }}
-          label="Parent / Carer Phone"
-          name="parent.mobileNo"
-          variant="outlined"
-          InputLabelProps={{ style: { background: "#fff" } }}
-          onChange={valuesChangeHandler}
-          value={valuesState["parent.mobileNo"]}
-        />
+        {valuesState["parent.mobileNo"] ? (
+          <TextField
+            sx={{ gridArea: "phone" }}
+            label="Parent / Carer Phone"
+            name="parent.mobileNo"
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
+            onChange={valuesChangeHandler}
+            value={valuesState["parent.mobileNo"]}
+          />
+        ) : (
+          <TextField
+            sx={{ gridArea: "phone", backgroundColor: "#f4f4f4" }}
+            label="Parent / Carer Phone"
+            name="parent.mobileNo"
+            variant="outlined"
+            // InputLabelProps={{ style: { background: "#fff" } }}
+            onChange={valuesChangeHandler}
+            value={valuesState["parent.mobileNo"]}
+          />
+        )}
+
         {Object.keys(operatorsState).map((name) => (
           <OperatorField
             key={name}
@@ -228,13 +282,7 @@ const Members = () => {
       return {
         id: singleMember.id,
         onClick: () => handleRowClick(id),
-        items: [
-          (name),
-          toPascal(gender),
-          (parentName),
-          parentEmail,
-          parentPhone,
-        ],
+        items: [name, toPascal(gender), parentName, parentEmail, parentPhone],
       };
     });
   }, [memberList, handleRowClick]);

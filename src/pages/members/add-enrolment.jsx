@@ -241,7 +241,9 @@ const AddEnrolment = () => {
       </Box>
       <Card>
         <HeadingText>{member.name}</HeadingText>
-        <SubHeadingText>Student/Member</SubHeadingText>
+        <SubHeadingText sx={{ marginBottom: "20px" }}>
+          Student/Member
+        </SubHeadingText>
         <Grid>
           <TextField
             select

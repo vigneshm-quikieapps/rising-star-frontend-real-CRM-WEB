@@ -75,7 +75,7 @@ const MemberConsent = () => {
         <Typography
           sx={{
             color: "#0008",
-            margin: "6px 0px 10px 0",
+            margin: "6px 0px 20px 0",
             fontSize: "14px",
             fontWeight: "bold",
             lineHeight: "normal",

@@ -93,14 +93,25 @@ const AdvancedSearch = ({
         >
           Basic Search
         </Button>
-        <TextField
-          label="Class Name"
-          onChange={nameChangeHandler}
-          value={name}
-          variant="outlined"
-          InputLabelProps={{ style: { background: "#fff" } }}
-          sx={{ width: "calc(50% - 120px)" }}
-        />
+        {name.length > 0 ? (
+          <TextField
+            label="Class Name"
+            onChange={nameChangeHandler}
+            value={name}
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
+            sx={{ width: "calc(50% - 120px)" }}
+          />
+        ) : (
+          <TextField
+            label="Class Name"
+            onChange={nameChangeHandler}
+            value={name}
+            variant="outlined"
+            sx={{ width: "calc(50% - 120px)", backgroundColor: "#f4f4f4" }}
+          />
+        )}
+
         <TextField
           select
           onChange={statusChangeHandler}
@@ -113,21 +124,39 @@ const AdvancedSearch = ({
           <MenuItem value="ACTIVE">Active</MenuItem>
           <MenuItem value="INACTIVE">In-Active</MenuItem>
         </TextField>
-        <TextField
-          select
-          sx={{ width: "200px" }}
-          label="Business Name"
-          value={business}
-          variant="outlined"
-          InputLabelProps={{ style: { background: "#fff" } }}
-          onChange={businessChangeHandler}
-        >
-          {businessList.map((business) => (
-            <MenuItem key={business._id} value={business._id}>
-              {business.name}
-            </MenuItem>
-          ))}
-        </TextField>
+        {business.length > 0 ? (
+          <TextField
+            select
+            sx={{ width: "200px" }}
+            label="Business Name"
+            value={business}
+            variant="outlined"
+            InputLabelProps={{ style: { background: "#fff" } }}
+            onChange={businessChangeHandler}
+          >
+            {businessList.map((business) => (
+              <MenuItem key={business._id} value={business._id}>
+                {business.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        ) : (
+          <TextField
+            select
+            sx={{ width: "200px", backgroundColor: "#f4f4f4" }}
+            label="Business Name"
+            value={business}
+            variant="outlined"
+            onChange={businessChangeHandler}
+          >
+            {businessList.map((business) => (
+              <MenuItem key={business._id} value={business._id}>
+                {business.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
+
         <TextField
           select
           sx={{ width: "calc(50% - 120px)" }}
